@@ -3,40 +3,77 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:detector_rail";
-    public double Hardness => 0.7;
-    public double ExplosionResistance => 0.7;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "metal";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:detector_rail";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.125, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => true;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.detector_rail";
-    public bool CanRespawnIn => true;
+public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock, IPowered, IRailDirected, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.detector_rail", 0.7f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:detector_rail", BlockInfo.VanillaOnly, "minecraft:blocks/detector_rail");
+    private static readonly BlockStateInfo I0 = new(0.7f, 0, 1, PushReaction.PushPull, 0, "metal", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, true, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S89 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S89 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 2326];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithShape(RailDirection shape) => this with { Shape = shape };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,55 +81,55 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
             return Powered switch {
                 true => Shape switch {
                     RailDirection.NorthSouth => Waterlogged switch {
-                        true => 2011,
-                        false => 2012,
+                        true => 2326,
+                        false => 2327,
                     },
                     RailDirection.EastWest => Waterlogged switch {
-                        true => 2013,
-                        false => 2014,
+                        true => 2328,
+                        false => 2329,
                     },
                     RailDirection.AscendingEast => Waterlogged switch {
-                        true => 2015,
-                        false => 2016,
+                        true => 2330,
+                        false => 2331,
                     },
                     RailDirection.AscendingWest => Waterlogged switch {
-                        true => 2017,
-                        false => 2018,
+                        true => 2332,
+                        false => 2333,
                     },
                     RailDirection.AscendingNorth => Waterlogged switch {
-                        true => 2019,
-                        false => 2020,
+                        true => 2334,
+                        false => 2335,
                     },
                     RailDirection.AscendingSouth => Waterlogged switch {
-                        true => 2021,
-                        false => 2022,
+                        true => 2336,
+                        false => 2337,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                 },
                 false => Shape switch {
                     RailDirection.NorthSouth => Waterlogged switch {
-                        true => 2023,
-                        false => 2024,
+                        true => 2338,
+                        false => 2339,
                     },
                     RailDirection.EastWest => Waterlogged switch {
-                        true => 2025,
-                        false => 2026,
+                        true => 2340,
+                        false => 2341,
                     },
                     RailDirection.AscendingEast => Waterlogged switch {
-                        true => 2027,
-                        false => 2028,
+                        true => 2342,
+                        false => 2343,
                     },
                     RailDirection.AscendingWest => Waterlogged switch {
-                        true => 2029,
-                        false => 2030,
+                        true => 2344,
+                        false => 2345,
                     },
                     RailDirection.AscendingNorth => Waterlogged switch {
-                        true => 2031,
-                        false => 2032,
+                        true => 2346,
+                        false => 2347,
                     },
                     RailDirection.AscendingSouth => Waterlogged switch {
-                        true => 2033,
-                        false => 2034,
+                        true => 2348,
+                        false => 2349,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                 },
@@ -102,30 +139,30 @@ public record DetectorRailBlock(Identifier Identifier, bool Powered, RailDirecti
     
     public IBlock WithState(uint state) {
         return state switch {
-            2011 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, true),
-            2012 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, false),
-            2013 => new DetectorRailBlock(Identifier, true, RailDirection.EastWest, true),
-            2014 => new DetectorRailBlock(Identifier, true, RailDirection.EastWest, false),
-            2015 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingEast, true),
-            2016 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingEast, false),
-            2017 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingWest, true),
-            2018 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingWest, false),
-            2019 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingNorth, true),
-            2020 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingNorth, false),
-            2021 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingSouth, true),
-            2022 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingSouth, false),
-            2023 => new DetectorRailBlock(Identifier, false, RailDirection.NorthSouth, true),
-            2024 => new DetectorRailBlock(Identifier, false, RailDirection.NorthSouth, false),
-            2025 => new DetectorRailBlock(Identifier, false, RailDirection.EastWest, true),
-            2026 => new DetectorRailBlock(Identifier, false, RailDirection.EastWest, false),
-            2027 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingEast, true),
-            2028 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingEast, false),
-            2029 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingWest, true),
-            2030 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingWest, false),
-            2031 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingNorth, true),
-            2032 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingNorth, false),
-            2033 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, true),
-            2034 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, false),
+            2326 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, true),
+            2327 => new DetectorRailBlock(Identifier, true, RailDirection.NorthSouth, false),
+            2328 => new DetectorRailBlock(Identifier, true, RailDirection.EastWest, true),
+            2329 => new DetectorRailBlock(Identifier, true, RailDirection.EastWest, false),
+            2330 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingEast, true),
+            2331 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingEast, false),
+            2332 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingWest, true),
+            2333 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingWest, false),
+            2334 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingNorth, true),
+            2335 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingNorth, false),
+            2336 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingSouth, true),
+            2337 => new DetectorRailBlock(Identifier, true, RailDirection.AscendingSouth, false),
+            2338 => new DetectorRailBlock(Identifier, false, RailDirection.NorthSouth, true),
+            2339 => new DetectorRailBlock(Identifier, false, RailDirection.NorthSouth, false),
+            2340 => new DetectorRailBlock(Identifier, false, RailDirection.EastWest, true),
+            2341 => new DetectorRailBlock(Identifier, false, RailDirection.EastWest, false),
+            2342 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingEast, true),
+            2343 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingEast, false),
+            2344 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingWest, true),
+            2345 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingWest, false),
+            2346 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingNorth, true),
+            2347 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingNorth, false),
+            2348 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, true),
+            2349 => new DetectorRailBlock(Identifier, false, RailDirection.AscendingSouth, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

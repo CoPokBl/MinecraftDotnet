@@ -14,12 +14,15 @@ using Minecraft.Packets.Login.ServerBound;
 using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
-using NBT;
+using Minecraft.Text;
 
 namespace ManagedServer.Features.Basic;
 
 [CallsEvent(typeof(PlayerPreLoginEvent), typeof(PlayerLoginEvent))]
-public class LoginProcedureFeature(bool encryption = true, bool requestAuthentication = false) : ScopedFeature {
+public class LoginProcedureFeature(
+    bool encryption = true,
+    bool requestAuthentication = false,
+    bool verifyProtocolVersion = true) : ScopedFeature {
     public static readonly Tag<(Guid, string)> LoginInfoTag = new("minecraftdotnet:loginprocfeat:logininfo");
     
     // this tag is used to mark that the player is ready to login once all login steps are done
@@ -27,6 +30,10 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
     
     // We'll just say we know vanilla for now
     private readonly KnownDataPack[] _knownPacks = [ new("minecraft", "core", ProtocolConstants.CurrentVersionString) ];
+
+    // Vanilla generates this once per server start and sends the same one to every client,
+    // and a feature instance is per server, so matching that is just a field
+    private readonly Guid _sessionId = Guid.NewGuid();
 
     public override void Register() {
         if (Scope is not ManagedMinecraftServer) {
@@ -80,6 +87,19 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
         
         switch (e.Packet) {
             case ServerBoundLoginStartPacket ls: {
+                // A client on the wrong version gets all the way through login and dies in
+                // configuration instead, on whatever registry entry happens to be new this
+                // version, so say it plainly here rather than letting that happen
+                int protocolVersion = e.Connection.Handshake?.ProtocolVersion
+                                      ?? ProtocolConstants.ProtocolVersion;
+                if (verifyProtocolVersion && protocolVersion != ProtocolConstants.ProtocolVersion) {
+                    e.Connection.Kick(TextComponent.FromLegacyString(
+                        protocolVersion < ProtocolConstants.ProtocolVersion
+                            ? $"&cOutdated client! Please use {ProtocolConstants.CurrentVersionString}"
+                            : $"&cOutdated server! I'm still on {ProtocolConstants.CurrentVersionString}"));
+                    break;
+                }
+
                 e.Connection.SetTag(LoginInfoTag, (ls.Uuid, ls.Name));
                 e.Connection.SetCompression(10);
                 if (encryption) {
@@ -115,7 +135,8 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
             (Guid, string) ls = e.Connection.GetTag(LoginInfoTag);
             e.Connection.SendPacket(new ClientBoundLoginSuccessPacket {
                 Uuid = ls.Item1,
-                Username = ls.Item2
+                Username = ls.Item2,
+                SessionId = _sessionId
             });
         }
     }
@@ -133,10 +154,8 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
             }
             
             case ServerBoundKnownPacksPacket: {
-                // compile all the registries that we actually have
-                // and then manually send the other required ones
-                // that aren't implemented yet
-                
+                // Send every registry we have, which is every registry the client synchronises
+
                 // Turns out we have to send tags first
                 List<ClientBoundUpdateTagsPacket.TagSet> tags = [];
                 foreach (ISubRegistry subReg in Scope.Server.Registry.SubRegistries) {
@@ -156,68 +175,12 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                     if (reg is not INbtSerialisableRegistry nbtReg) {
                         continue;
                     }
-                    
+
                     registryPackets.Add(new ClientBoundRegistryDataPacket(nbtReg));
                 }
                 e.Connection.SendPackets(registryPackets);
-            
-                e.Connection.SendPackets(
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:zombie_nautilus_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:cat_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:tabby", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:chicken_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:cow_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:frog_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:pig_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:warm", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:wolf_sound_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:big", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:wolf_variant",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:ashen", null }
-                        }
-                    },
-                    new ClientBoundRegistryDataPacket {
-                        RegistryId = "minecraft:worldgen/biome",
-                        Entries = new Dictionary<string, INbtTag?> {
-                            { "minecraft:plains", null }
-                        }
-                    },
-                    new ClientBoundFinishConfigurationPacket()
-                );
+
+                e.Connection.SendPacket(new ClientBoundFinishConfigurationPacket());
                 break;
             }
         }
@@ -240,7 +203,8 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                     throw new Exception("You must specify a spawn world for joining players in the PlayerPreLoginEvent.");
                 }
 
-                int pEntityId = Random.Shared.Next();
+                // Zero is vanilla's "id not assigned yet" and makes the client throw on sight
+                int pEntityId = Random.Shared.Next(1, int.MaxValue);
                 
                 ClientBoundLoginPacket packet = new() {
                     DimensionName = preLoginEvent.World.DimensionId,
@@ -249,6 +213,7 @@ public class LoginProcedureFeature(bool encryption = true, bool requestAuthentic
                     DoLimitedCrafting = false,
                     EnableRespawnScreen = true,
                     EnforcesSecureChat = false,
+                    OnlineMode = requestAuthentication,
                     EntityId = pEntityId,
                     GameMode = preLoginEvent.GameMode,
                     SeaLevel = 64,

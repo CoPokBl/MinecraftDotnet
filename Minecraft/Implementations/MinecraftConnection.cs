@@ -65,19 +65,102 @@ public abstract class MinecraftConnection : MappedTaggable {
     /// <summary>
     /// What to do with debug log messages.
     /// </summary>
-    public Action<string> DebugLog = _ => { };
+    private static readonly Action<string> NoLog = _ => { };
+
+    public Action<string> DebugLog = NoLog;
     
     /// <summary>
-    /// Event that is invoked when the connection is disconnected.
+    /// Raised once, when the connection is finished with. Everything hanging off a connection cleans
+    /// itself up here: the player despawns, the world lets go of their chunk view, the server drops
+    /// them from its lists.
+    /// <p/>
+    /// A handler added after the connection has already gone runs <b>immediately</b>, on the thread
+    /// that added it. Registration is racy by nature: a consumer subscribing from a login event is
+    /// doing so on the network thread while the socket may already be dead, and the old behaviour
+    /// left that handler on a list nothing would ever call again. A minigame's "take them out of the
+    /// queue" cleanup silently never running is how a lobby ends up starting a game for somebody who
+    /// left.
     /// </summary>
-    public event Action? Disconnected;
-    
+    public event Action? Disconnected {
+        add {
+            if (value == null) {
+                return;
+            }
+
+            lock (_disconnectLock) {
+                if (!_disconnected) {
+                    _disconnectedHandlers += value;
+                    return;
+                }
+            }
+
+            value();
+        }
+
+        remove {
+            if (value == null) {
+                return;
+            }
+
+            lock (_disconnectLock) {
+                _disconnectedHandlers -= value;
+            }
+        }
+    }
+
+    private readonly object _disconnectLock = new();
+    private Action? _disconnectedHandlers;
+    private volatile bool _disconnected;
+
     /// <summary>
-    /// Invokes the <see cref="Disconnected"/> event.
-    /// Implementations should call this when the connection is disconnected.
+    /// Whether <see cref="Disconnected"/> has fired. A send after this point goes nowhere, so
+    /// anything expensive to build can be skipped.
+    /// </summary>
+    public bool IsDisconnected => _disconnected;
+
+    /// <summary>
+    /// Runs the <see cref="Disconnected"/> handlers, <b>at most once for the life of the
+    /// connection</b>. Implementations call this when the connection is finished with.
+    /// <p/>
+    /// Firing once is the whole point. Two threads can notice the same dead socket in the same
+    /// moment, the read loop and whichever thread was mid broadcast, and the teardown a handler does
+    /// is not something that can be done twice: the second pass reaches an entity that no longer has
+    /// a manager or a world.
+    /// <p/>
+    /// Handlers are also independent of each other. They were a multicast delegate, so the first one
+    /// to throw took the rest of the teardown with it, and the leak that leaves (a player still in
+    /// the world's list, still holding a chunk view, still being sent packets) is far worse than
+    /// whatever threw. Failures are collected and rethrown together once everything has run.
     /// </summary>
     protected void InvokeDisconnected() {
-        Disconnected?.Invoke();
+        Action? handlers;
+        lock (_disconnectLock) {
+            if (_disconnected) {
+                return;
+            }
+
+            _disconnected = true;
+            handlers = _disconnectedHandlers;
+            _disconnectedHandlers = null;
+        }
+
+        if (handlers == null) {
+            return;
+        }
+
+        List<Exception>? failures = null;
+        foreach (Delegate handler in handlers.GetInvocationList()) {
+            try {
+                ((Action)handler)();
+            }
+            catch (Exception e) {
+                (failures ??= []).Add(e);
+            }
+        }
+
+        if (failures != null) {
+            throw new AggregateException("One or more disconnect handlers failed.", failures);
+        }
     }
     
     /// <summary>
@@ -112,9 +195,17 @@ public abstract class MinecraftConnection : MappedTaggable {
 #endregion
     
 #region util_methods
+    /// <summary>
+    /// Whether anything is listening. Callers on a hot path should test this before building their
+    /// message, since the argument is evaluated whether or not it goes anywhere.
+    /// </summary>
+    protected bool LoggingEnabled => DebugLog != NoLog;
+
     protected void Log(string s) {
+        if (!LoggingEnabled) {
+            return;
+        }
         DebugLog($"[{GetType().FullName}] [{State}] {s}");
-        // Console.WriteLine($"[{GetType().FullName}] [{State}] {s}");
     }
 #endregion
 

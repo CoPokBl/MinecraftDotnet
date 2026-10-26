@@ -447,5 +447,13 @@ public class ClientBoundEntityEventPacket : ClientBoundPacket {
         /// State is part of entity metadata.
         /// </summary>
         SnifferDig = 63,
+
+        // BOAT
+
+        /// <summary>A bubble column under the boat pulled it down; whoever steers it applies the drag.</summary>
+        BoatBubbleColumnDown = 71,
+
+        /// <summary>A bubble column under the boat launched it; whoever steers it applies the lift.</summary>
+        BoatBubbleColumnUp = 72,
     }
 }

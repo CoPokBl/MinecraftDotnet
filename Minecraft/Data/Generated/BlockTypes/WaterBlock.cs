@@ -3,6 +3,7 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -10,54 +11,82 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaterBlock(Identifier Identifier, int Level) : IBlock {
-    public Identifier Category => "minecraft:liquid";
-    public double Hardness => 100;
-    public double ExplosionResistance => 100;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => true;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => true;
-    public string SoundType => "empty";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => null;
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 12;
-    public string TranslationKey => "block.minecraft.water";
-    public bool CanRespawnIn => false;
+    private static readonly BlockInfo Data = new("block.minecraft.water", 100f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, null, BlockInfo.VanillaOnly, null);
+    private static readonly BlockStateInfo I0 = new(100f, 0, 1, PushReaction.Popped, 12, "empty", NoteBlockInstrument.Harp, false, false, false, false, false, true, true, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { Fluid = "minecraft:flowing_water" };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 89];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
 
 
     public uint StateId {
         get {
             return Level switch {
-                0 => 86,
-                1 => 87,
-                2 => 88,
-                3 => 89,
-                4 => 90,
-                5 => 91,
-                6 => 92,
-                7 => 93,
-                8 => 94,
-                9 => 95,
-                10 => 96,
-                11 => 97,
-                12 => 98,
-                13 => 99,
-                14 => 100,
-                15 => 101,
+                0 => 89,
+                1 => 90,
+                2 => 91,
+                3 => 92,
+                4 => 93,
+                5 => 94,
+                6 => 95,
+                7 => 96,
+                8 => 97,
+                9 => 98,
+                10 => 99,
+                11 => 100,
+                12 => 101,
+                13 => 102,
+                14 => 103,
+                15 => 104,
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
         }
@@ -65,22 +94,22 @@ public record WaterBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            86 => new WaterBlock(Identifier, 0),
-            87 => new WaterBlock(Identifier, 1),
-            88 => new WaterBlock(Identifier, 2),
-            89 => new WaterBlock(Identifier, 3),
-            90 => new WaterBlock(Identifier, 4),
-            91 => new WaterBlock(Identifier, 5),
-            92 => new WaterBlock(Identifier, 6),
-            93 => new WaterBlock(Identifier, 7),
-            94 => new WaterBlock(Identifier, 8),
-            95 => new WaterBlock(Identifier, 9),
-            96 => new WaterBlock(Identifier, 10),
-            97 => new WaterBlock(Identifier, 11),
-            98 => new WaterBlock(Identifier, 12),
-            99 => new WaterBlock(Identifier, 13),
-            100 => new WaterBlock(Identifier, 14),
-            101 => new WaterBlock(Identifier, 15),
+            89 => new WaterBlock(Identifier, 0),
+            90 => new WaterBlock(Identifier, 1),
+            91 => new WaterBlock(Identifier, 2),
+            92 => new WaterBlock(Identifier, 3),
+            93 => new WaterBlock(Identifier, 4),
+            94 => new WaterBlock(Identifier, 5),
+            95 => new WaterBlock(Identifier, 6),
+            96 => new WaterBlock(Identifier, 7),
+            97 => new WaterBlock(Identifier, 8),
+            98 => new WaterBlock(Identifier, 9),
+            99 => new WaterBlock(Identifier, 10),
+            100 => new WaterBlock(Identifier, 11),
+            101 => new WaterBlock(Identifier, 12),
+            102 => new WaterBlock(Identifier, 13),
+            103 => new WaterBlock(Identifier, 14),
+            104 => new WaterBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

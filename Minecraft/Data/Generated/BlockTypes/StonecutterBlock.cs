@@ -3,49 +3,76 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock {
-    public Identifier Category => "minecraft:stonecutter";
-    public double Hardness => 3.5;
-    public double ExplosionResistance => 3.5;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:stonecutter";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5625, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5625, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5625, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5625, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 11;
-    public string TranslationKey => "block.minecraft.stonecutter";
-    public bool CanRespawnIn => false;
+public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock, IHorizontalFacing {
+    private static readonly BlockInfo Data = new("block.minecraft.stonecutter", 3.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:stonecutter", BlockInfo.VanillaOnly, "minecraft:blocks/stonecutter");
+    private static readonly BlockStateInfo I0 = new(3.5f, 0, 0, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S413, BlockShapes.S413, BlockShapes.S1, BlockShapes.S413, BlockShapes.S413, BlockShapes.S413);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => 20599,
-                Direction.South => 20600,
-                Direction.West => 20601,
-                Direction.East => 20602,
+                Direction.North => 24158,
+                Direction.South => 24159,
+                Direction.West => 24160,
+                Direction.East => 24161,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -53,10 +80,10 @@ public record StonecutterBlock(Identifier Identifier, Direction Facing) : IBlock
     
     public IBlock WithState(uint state) {
         return state switch {
-            20599 => new StonecutterBlock(Identifier, Direction.North),
-            20600 => new StonecutterBlock(Identifier, Direction.South),
-            20601 => new StonecutterBlock(Identifier, Direction.West),
-            20602 => new StonecutterBlock(Identifier, Direction.East),
+            24158 => new StonecutterBlock(Identifier, Direction.North),
+            24159 => new StonecutterBlock(Identifier, Direction.South),
+            24160 => new StonecutterBlock(Identifier, Direction.West),
+            24161 => new StonecutterBlock(Identifier, Direction.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

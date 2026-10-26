@@ -3,40 +3,119 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WeatheredCopperBarsBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
-    public Identifier Category => "minecraft:weathering_copper_bar";
-    public double Hardness => 5;
-    public double ExplosionResistance => 6;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "copper";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:weathered_copper_bars";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 1.0, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 1.0, 0.5625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.weathered_copper_bars";
-    public bool CanRespawnIn => false;
+public record WeatheredCopperBarsBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.weathered_copper_bars", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:weathered_copper_bars", BlockInfo.VanillaOnly, "minecraft:blocks/weathered_copper_bars");
+    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.PushPull, 0, "copper", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, true, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S372, BlockShapes.S372, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S372);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
+    private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S374, CollisionShape = BlockShapes.S374, SupportShape = BlockShapes.S374 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S375, CollisionShape = BlockShapes.S375, SupportShape = BlockShapes.S375 };
+    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S374, CollisionShape = BlockShapes.S374, SupportShape = BlockShapes.S374 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S375, CollisionShape = BlockShapes.S375, SupportShape = BlockShapes.S375 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S376, CollisionShape = BlockShapes.S376, SupportShape = BlockShapes.S376 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S377, CollisionShape = BlockShapes.S377, SupportShape = BlockShapes.S377 };
+    private static readonly BlockStateInfo I10 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S376, CollisionShape = BlockShapes.S376, SupportShape = BlockShapes.S376 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S377, CollisionShape = BlockShapes.S377, SupportShape = BlockShapes.S377 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S378, CollisionShape = BlockShapes.S378, SupportShape = BlockShapes.S378 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S379, CollisionShape = BlockShapes.S379, SupportShape = BlockShapes.S379 };
+    private static readonly BlockStateInfo I14 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S378, CollisionShape = BlockShapes.S378, SupportShape = BlockShapes.S378 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S379, CollisionShape = BlockShapes.S379, SupportShape = BlockShapes.S379 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S380, CollisionShape = BlockShapes.S380, SupportShape = BlockShapes.S380 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S381, CollisionShape = BlockShapes.S381, SupportShape = BlockShapes.S381 };
+    private static readonly BlockStateInfo I18 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S380, CollisionShape = BlockShapes.S380, SupportShape = BlockShapes.S380 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S381, CollisionShape = BlockShapes.S381, SupportShape = BlockShapes.S381 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S382, CollisionShape = BlockShapes.S382, SupportShape = BlockShapes.S382 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S383, CollisionShape = BlockShapes.S383, SupportShape = BlockShapes.S383 };
+    private static readonly BlockStateInfo I22 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S382, CollisionShape = BlockShapes.S382, SupportShape = BlockShapes.S382 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S383, CollisionShape = BlockShapes.S383, SupportShape = BlockShapes.S383 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S384, CollisionShape = BlockShapes.S384, SupportShape = BlockShapes.S384 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S385, CollisionShape = BlockShapes.S385, SupportShape = BlockShapes.S385 };
+    private static readonly BlockStateInfo I26 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S384, CollisionShape = BlockShapes.S384, SupportShape = BlockShapes.S384 };
+    private static readonly BlockStateInfo I27 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S385, CollisionShape = BlockShapes.S385, SupportShape = BlockShapes.S385 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S386, CollisionShape = BlockShapes.S386, SupportShape = BlockShapes.S386 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S387, CollisionShape = BlockShapes.S387, SupportShape = BlockShapes.S387 };
+    private static readonly BlockStateInfo I30 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S386, CollisionShape = BlockShapes.S386, SupportShape = BlockShapes.S386 };
+    private static readonly BlockStateInfo I31 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S387, CollisionShape = BlockShapes.S387, SupportShape = BlockShapes.S387 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 9788];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
+
+    public bool HasFace(BlockFace face) => face is BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -46,44 +125,44 @@ public record WeatheredCopperBarsBlock(Identifier Identifier, bool East, bool No
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7853,
-                                false => 7854,
+                                true => 9788,
+                                false => 9789,
                             },
                             false => West switch {
-                                true => 7855,
-                                false => 7856,
+                                true => 9790,
+                                false => 9791,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7857,
-                                false => 7858,
+                                true => 9792,
+                                false => 9793,
                             },
                             false => West switch {
-                                true => 7859,
-                                false => 7860,
+                                true => 9794,
+                                false => 9795,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7861,
-                                false => 7862,
+                                true => 9796,
+                                false => 9797,
                             },
                             false => West switch {
-                                true => 7863,
-                                false => 7864,
+                                true => 9798,
+                                false => 9799,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7865,
-                                false => 7866,
+                                true => 9800,
+                                false => 9801,
                             },
                             false => West switch {
-                                true => 7867,
-                                false => 7868,
+                                true => 9802,
+                                false => 9803,
                             },
                         },
                     },
@@ -92,44 +171,44 @@ public record WeatheredCopperBarsBlock(Identifier Identifier, bool East, bool No
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7869,
-                                false => 7870,
+                                true => 9804,
+                                false => 9805,
                             },
                             false => West switch {
-                                true => 7871,
-                                false => 7872,
+                                true => 9806,
+                                false => 9807,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7873,
-                                false => 7874,
+                                true => 9808,
+                                false => 9809,
                             },
                             false => West switch {
-                                true => 7875,
-                                false => 7876,
+                                true => 9810,
+                                false => 9811,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7877,
-                                false => 7878,
+                                true => 9812,
+                                false => 9813,
                             },
                             false => West switch {
-                                true => 7879,
-                                false => 7880,
+                                true => 9814,
+                                false => 9815,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7881,
-                                false => 7882,
+                                true => 9816,
+                                false => 9817,
                             },
                             false => West switch {
-                                true => 7883,
-                                false => 7884,
+                                true => 9818,
+                                false => 9819,
                             },
                         },
                     },
@@ -140,38 +219,38 @@ public record WeatheredCopperBarsBlock(Identifier Identifier, bool East, bool No
     
     public IBlock WithState(uint state) {
         return state switch {
-            7853 => new WeatheredCopperBarsBlock(Identifier, true, true, true, true, true),
-            7854 => new WeatheredCopperBarsBlock(Identifier, true, true, true, true, false),
-            7855 => new WeatheredCopperBarsBlock(Identifier, true, true, true, false, true),
-            7856 => new WeatheredCopperBarsBlock(Identifier, true, true, true, false, false),
-            7857 => new WeatheredCopperBarsBlock(Identifier, true, true, false, true, true),
-            7858 => new WeatheredCopperBarsBlock(Identifier, true, true, false, true, false),
-            7859 => new WeatheredCopperBarsBlock(Identifier, true, true, false, false, true),
-            7860 => new WeatheredCopperBarsBlock(Identifier, true, true, false, false, false),
-            7861 => new WeatheredCopperBarsBlock(Identifier, true, false, true, true, true),
-            7862 => new WeatheredCopperBarsBlock(Identifier, true, false, true, true, false),
-            7863 => new WeatheredCopperBarsBlock(Identifier, true, false, true, false, true),
-            7864 => new WeatheredCopperBarsBlock(Identifier, true, false, true, false, false),
-            7865 => new WeatheredCopperBarsBlock(Identifier, true, false, false, true, true),
-            7866 => new WeatheredCopperBarsBlock(Identifier, true, false, false, true, false),
-            7867 => new WeatheredCopperBarsBlock(Identifier, true, false, false, false, true),
-            7868 => new WeatheredCopperBarsBlock(Identifier, true, false, false, false, false),
-            7869 => new WeatheredCopperBarsBlock(Identifier, false, true, true, true, true),
-            7870 => new WeatheredCopperBarsBlock(Identifier, false, true, true, true, false),
-            7871 => new WeatheredCopperBarsBlock(Identifier, false, true, true, false, true),
-            7872 => new WeatheredCopperBarsBlock(Identifier, false, true, true, false, false),
-            7873 => new WeatheredCopperBarsBlock(Identifier, false, true, false, true, true),
-            7874 => new WeatheredCopperBarsBlock(Identifier, false, true, false, true, false),
-            7875 => new WeatheredCopperBarsBlock(Identifier, false, true, false, false, true),
-            7876 => new WeatheredCopperBarsBlock(Identifier, false, true, false, false, false),
-            7877 => new WeatheredCopperBarsBlock(Identifier, false, false, true, true, true),
-            7878 => new WeatheredCopperBarsBlock(Identifier, false, false, true, true, false),
-            7879 => new WeatheredCopperBarsBlock(Identifier, false, false, true, false, true),
-            7880 => new WeatheredCopperBarsBlock(Identifier, false, false, true, false, false),
-            7881 => new WeatheredCopperBarsBlock(Identifier, false, false, false, true, true),
-            7882 => new WeatheredCopperBarsBlock(Identifier, false, false, false, true, false),
-            7883 => new WeatheredCopperBarsBlock(Identifier, false, false, false, false, true),
-            7884 => new WeatheredCopperBarsBlock(Identifier, false, false, false, false, false),
+            9788 => new WeatheredCopperBarsBlock(Identifier, true, true, true, true, true),
+            9789 => new WeatheredCopperBarsBlock(Identifier, true, true, true, true, false),
+            9790 => new WeatheredCopperBarsBlock(Identifier, true, true, true, false, true),
+            9791 => new WeatheredCopperBarsBlock(Identifier, true, true, true, false, false),
+            9792 => new WeatheredCopperBarsBlock(Identifier, true, true, false, true, true),
+            9793 => new WeatheredCopperBarsBlock(Identifier, true, true, false, true, false),
+            9794 => new WeatheredCopperBarsBlock(Identifier, true, true, false, false, true),
+            9795 => new WeatheredCopperBarsBlock(Identifier, true, true, false, false, false),
+            9796 => new WeatheredCopperBarsBlock(Identifier, true, false, true, true, true),
+            9797 => new WeatheredCopperBarsBlock(Identifier, true, false, true, true, false),
+            9798 => new WeatheredCopperBarsBlock(Identifier, true, false, true, false, true),
+            9799 => new WeatheredCopperBarsBlock(Identifier, true, false, true, false, false),
+            9800 => new WeatheredCopperBarsBlock(Identifier, true, false, false, true, true),
+            9801 => new WeatheredCopperBarsBlock(Identifier, true, false, false, true, false),
+            9802 => new WeatheredCopperBarsBlock(Identifier, true, false, false, false, true),
+            9803 => new WeatheredCopperBarsBlock(Identifier, true, false, false, false, false),
+            9804 => new WeatheredCopperBarsBlock(Identifier, false, true, true, true, true),
+            9805 => new WeatheredCopperBarsBlock(Identifier, false, true, true, true, false),
+            9806 => new WeatheredCopperBarsBlock(Identifier, false, true, true, false, true),
+            9807 => new WeatheredCopperBarsBlock(Identifier, false, true, true, false, false),
+            9808 => new WeatheredCopperBarsBlock(Identifier, false, true, false, true, true),
+            9809 => new WeatheredCopperBarsBlock(Identifier, false, true, false, true, false),
+            9810 => new WeatheredCopperBarsBlock(Identifier, false, true, false, false, true),
+            9811 => new WeatheredCopperBarsBlock(Identifier, false, true, false, false, false),
+            9812 => new WeatheredCopperBarsBlock(Identifier, false, false, true, true, true),
+            9813 => new WeatheredCopperBarsBlock(Identifier, false, false, true, true, false),
+            9814 => new WeatheredCopperBarsBlock(Identifier, false, false, true, false, true),
+            9815 => new WeatheredCopperBarsBlock(Identifier, false, false, true, false, false),
+            9816 => new WeatheredCopperBarsBlock(Identifier, false, false, false, true, true),
+            9817 => new WeatheredCopperBarsBlock(Identifier, false, false, false, true, false),
+            9818 => new WeatheredCopperBarsBlock(Identifier, false, false, false, false, true),
+            9819 => new WeatheredCopperBarsBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

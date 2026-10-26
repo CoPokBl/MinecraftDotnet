@@ -3,60 +3,95 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CreeperWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock {
-    public Identifier Category => "minecraft:wall_skull";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:skull";
-    public Identifier? Item => "minecraft:creeper_head";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.25, 0.5] -> [0.75, 0.75, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.25, 0.5] -> [0.75, 0.75, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.25, 0.5] -> [0.75, 0.75, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.25, 0.5] -> [0.75, 0.75, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.creeper_head";
-    public bool CanRespawnIn => true;
+public record CreeperWallHeadBlock(Identifier Identifier, Direction Facing, bool Powered) : IBlock, IHorizontalFacing, IPowered {
+    private static readonly BlockInfo Data = new("block.minecraft.creeper_head", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:creeper_head", BlockInfo.VanillaOnly, "minecraft:blocks/creeper_head");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S516, BlockShapes.S516, BlockShapes.S1, BlockShapes.S516, BlockShapes.S516, BlockShapes.S516);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S517, CollisionShape = BlockShapes.S517, OcclusionShape = BlockShapes.S517, VisualShape = BlockShapes.S517, SupportShape = BlockShapes.S517 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S518, CollisionShape = BlockShapes.S518, OcclusionShape = BlockShapes.S518, VisualShape = BlockShapes.S518, SupportShape = BlockShapes.S518 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S519, CollisionShape = BlockShapes.S519, OcclusionShape = BlockShapes.S519, VisualShape = BlockShapes.S519, SupportShape = BlockShapes.S519 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I0, I1, I1, I2, I2, I3, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 12874];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
 
     public uint StateId {
         get {
             return Facing switch {
                 Direction.North => Powered switch {
-                    true => 10905,
-                    false => 10906,
+                    true => 12874,
+                    false => 12875,
                 },
                 Direction.South => Powered switch {
-                    true => 10907,
-                    false => 10908,
+                    true => 12876,
+                    false => 12877,
                 },
                 Direction.West => Powered switch {
-                    true => 10909,
-                    false => 10910,
+                    true => 12878,
+                    false => 12879,
                 },
                 Direction.East => Powered switch {
-                    true => 10911,
-                    false => 10912,
+                    true => 12880,
+                    false => 12881,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +100,14 @@ public record CreeperWallHeadBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            10905 => new CreeperWallHeadBlock(Identifier, Direction.North, true),
-            10906 => new CreeperWallHeadBlock(Identifier, Direction.North, false),
-            10907 => new CreeperWallHeadBlock(Identifier, Direction.South, true),
-            10908 => new CreeperWallHeadBlock(Identifier, Direction.South, false),
-            10909 => new CreeperWallHeadBlock(Identifier, Direction.West, true),
-            10910 => new CreeperWallHeadBlock(Identifier, Direction.West, false),
-            10911 => new CreeperWallHeadBlock(Identifier, Direction.East, true),
-            10912 => new CreeperWallHeadBlock(Identifier, Direction.East, false),
+            12874 => new CreeperWallHeadBlock(Identifier, Direction.North, true),
+            12875 => new CreeperWallHeadBlock(Identifier, Direction.North, false),
+            12876 => new CreeperWallHeadBlock(Identifier, Direction.South, true),
+            12877 => new CreeperWallHeadBlock(Identifier, Direction.South, false),
+            12878 => new CreeperWallHeadBlock(Identifier, Direction.West, true),
+            12879 => new CreeperWallHeadBlock(Identifier, Direction.West, false),
+            12880 => new CreeperWallHeadBlock(Identifier, Direction.East, true),
+            12881 => new CreeperWallHeadBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

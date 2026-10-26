@@ -3,232 +3,281 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SpruceTrapdoorBlock(Identifier Identifier, Direction Facing, SpruceTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:trapdoor";
-    public double Hardness => 3;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:spruce_trapdoor";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.1875, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.1875, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.1875, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 34;
-    public string TranslationKey => "block.minecraft.spruce_trapdoor";
-    public bool CanRespawnIn => false;
+public record SpruceTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.spruce_trapdoor", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:spruce_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/spruce_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 34, "wood", NoteBlockInstrument.Bass, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
+    private static readonly BlockStateInfo I4 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S115, CollisionShape = BlockShapes.S115, VisualShape = BlockShapes.S115, SupportShape = BlockShapes.S115 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S115, CollisionShape = BlockShapes.S115, VisualShape = BlockShapes.S115, SupportShape = BlockShapes.S115 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20, SupportShape = BlockShapes.S20 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20, SupportShape = BlockShapes.S20 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19, SupportShape = BlockShapes.S19 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19, SupportShape = BlockShapes.S19 };
+    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S17, CollisionShape = BlockShapes.S17, VisualShape = BlockShapes.S17, SupportShape = BlockShapes.S17 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S17, CollisionShape = BlockShapes.S17, VisualShape = BlockShapes.S17, SupportShape = BlockShapes.S17 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 8848];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithHalf(TopBottom half) => this with { Half = half };
+
+    public IBlock WithOpen(bool open) => this with { Open = open };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => HalfValue switch {
-                    Half.Top => Open switch {
+                Direction.North => Half switch {
+                    TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 6977,
-                                false => 6978,
+                                true => 8848,
+                                false => 8849,
                             },
                             false => Waterlogged switch {
-                                true => 6979,
-                                false => 6980,
+                                true => 8850,
+                                false => 8851,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 6981,
-                                false => 6982,
+                                true => 8852,
+                                false => 8853,
                             },
                             false => Waterlogged switch {
-                                true => 6983,
-                                false => 6984,
+                                true => 8854,
+                                false => 8855,
                             },
                         },
                     },
-                    Half.Bottom => Open switch {
+                    TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 6985,
-                                false => 6986,
+                                true => 8856,
+                                false => 8857,
                             },
                             false => Waterlogged switch {
-                                true => 6987,
-                                false => 6988,
+                                true => 8858,
+                                false => 8859,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 6989,
-                                false => 6990,
+                                true => 8860,
+                                false => 8861,
                             },
                             false => Waterlogged switch {
-                                true => 6991,
-                                false => 6992,
+                                true => 8862,
+                                false => 8863,
                             },
                         },
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
-                Direction.South => HalfValue switch {
-                    Half.Top => Open switch {
+                Direction.South => Half switch {
+                    TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 6993,
-                                false => 6994,
+                                true => 8864,
+                                false => 8865,
                             },
                             false => Waterlogged switch {
-                                true => 6995,
-                                false => 6996,
+                                true => 8866,
+                                false => 8867,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 6997,
-                                false => 6998,
+                                true => 8868,
+                                false => 8869,
                             },
                             false => Waterlogged switch {
-                                true => 6999,
-                                false => 7000,
+                                true => 8870,
+                                false => 8871,
                             },
                         },
                     },
-                    Half.Bottom => Open switch {
+                    TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7001,
-                                false => 7002,
+                                true => 8872,
+                                false => 8873,
                             },
                             false => Waterlogged switch {
-                                true => 7003,
-                                false => 7004,
+                                true => 8874,
+                                false => 8875,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7005,
-                                false => 7006,
+                                true => 8876,
+                                false => 8877,
                             },
                             false => Waterlogged switch {
-                                true => 7007,
-                                false => 7008,
+                                true => 8878,
+                                false => 8879,
                             },
                         },
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
-                Direction.West => HalfValue switch {
-                    Half.Top => Open switch {
+                Direction.West => Half switch {
+                    TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7009,
-                                false => 7010,
+                                true => 8880,
+                                false => 8881,
                             },
                             false => Waterlogged switch {
-                                true => 7011,
-                                false => 7012,
+                                true => 8882,
+                                false => 8883,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7013,
-                                false => 7014,
+                                true => 8884,
+                                false => 8885,
                             },
                             false => Waterlogged switch {
-                                true => 7015,
-                                false => 7016,
+                                true => 8886,
+                                false => 8887,
                             },
                         },
                     },
-                    Half.Bottom => Open switch {
+                    TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7017,
-                                false => 7018,
+                                true => 8888,
+                                false => 8889,
                             },
                             false => Waterlogged switch {
-                                true => 7019,
-                                false => 7020,
+                                true => 8890,
+                                false => 8891,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7021,
-                                false => 7022,
+                                true => 8892,
+                                false => 8893,
                             },
                             false => Waterlogged switch {
-                                true => 7023,
-                                false => 7024,
+                                true => 8894,
+                                false => 8895,
                             },
                         },
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
-                Direction.East => HalfValue switch {
-                    Half.Top => Open switch {
+                Direction.East => Half switch {
+                    TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7025,
-                                false => 7026,
+                                true => 8896,
+                                false => 8897,
                             },
                             false => Waterlogged switch {
-                                true => 7027,
-                                false => 7028,
+                                true => 8898,
+                                false => 8899,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7029,
-                                false => 7030,
+                                true => 8900,
+                                false => 8901,
                             },
                             false => Waterlogged switch {
-                                true => 7031,
-                                false => 7032,
+                                true => 8902,
+                                false => 8903,
                             },
                         },
                     },
-                    Half.Bottom => Open switch {
+                    TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 7033,
-                                false => 7034,
+                                true => 8904,
+                                false => 8905,
                             },
                             false => Waterlogged switch {
-                                true => 7035,
-                                false => 7036,
+                                true => 8906,
+                                false => 8907,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 7037,
-                                false => 7038,
+                                true => 8908,
+                                false => 8909,
                             },
                             false => Waterlogged switch {
-                                true => 7039,
-                                false => 7040,
+                                true => 8910,
+                                false => 8911,
                             },
                         },
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -237,70 +286,70 @@ public record SpruceTrapdoorBlock(Identifier Identifier, Direction Facing, Spruc
     
     public IBlock WithState(uint state) {
         return state switch {
-            6977 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, true),
-            6978 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, false),
-            6979 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, true),
-            6980 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, false),
-            6981 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, true),
-            6982 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, false),
-            6983 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, true),
-            6984 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, false),
-            6985 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, true),
-            6986 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, false),
-            6987 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, true),
-            6988 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, false),
-            6989 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, true),
-            6990 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, false),
-            6991 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, true),
-            6992 => new SpruceTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, false),
-            6993 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, true),
-            6994 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, false),
-            6995 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, true),
-            6996 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, false),
-            6997 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, true),
-            6998 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, false),
-            6999 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, true),
-            7000 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, false),
-            7001 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, true),
-            7002 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, false),
-            7003 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, true),
-            7004 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, false),
-            7005 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, true),
-            7006 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, false),
-            7007 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, true),
-            7008 => new SpruceTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, false),
-            7009 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, true),
-            7010 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, false),
-            7011 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, true),
-            7012 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, false),
-            7013 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, true),
-            7014 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, false),
-            7015 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, true),
-            7016 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, false),
-            7017 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, true),
-            7018 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, false),
-            7019 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, true),
-            7020 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, false),
-            7021 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, true),
-            7022 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, false),
-            7023 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, true),
-            7024 => new SpruceTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, false),
-            7025 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, true),
-            7026 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, false),
-            7027 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, true),
-            7028 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, false),
-            7029 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, true),
-            7030 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, false),
-            7031 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, true),
-            7032 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, false),
-            7033 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, true),
-            7034 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, false),
-            7035 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, true),
-            7036 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, false),
-            7037 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, true),
-            7038 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, false),
-            7039 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, true),
-            7040 => new SpruceTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, false),
+            8848 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            8849 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            8850 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            8851 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            8852 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            8853 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            8854 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            8855 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            8856 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            8857 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            8858 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            8859 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            8860 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            8861 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            8862 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            8863 => new SpruceTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            8864 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            8865 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            8866 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            8867 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            8868 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            8869 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            8870 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            8871 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            8872 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            8873 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            8874 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            8875 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            8876 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            8877 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            8878 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            8879 => new SpruceTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            8880 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            8881 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            8882 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            8883 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            8884 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            8885 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            8886 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            8887 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            8888 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            8889 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            8890 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            8891 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            8892 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            8893 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            8894 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            8895 => new SpruceTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            8896 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            8897 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            8898 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            8899 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            8900 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            8901 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            8902 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            8903 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            8904 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            8905 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            8906 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            8907 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            8908 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            8909 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            8910 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            8911 => new SpruceTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
@@ -308,7 +357,7 @@ public record SpruceTrapdoorBlock(Identifier Identifier, Direction Facing, Spruc
     public IBlock WithState(CompoundTag properties) {
         return this with {
             Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            HalfValue = properties.Contains("half") ? HalfFromString(properties["half"].GetString()) : HalfValue,
+            Half = properties.Contains("half") ? TopBottomExtensions.FromString(properties["half"].GetString()) : Half,
             Open = properties.Contains("open") ? properties["open"].GetString() == "true" : Open,
             Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
             Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
@@ -318,31 +367,11 @@ public record SpruceTrapdoorBlock(Identifier Identifier, Direction Facing, Spruc
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
             ("facing", new StringTag(Facing.ToName())),
-            ("half", new StringTag(HalfToName(HalfValue))),
+            ("half", new StringTag(Half.ToName())),
             ("open", new StringTag(Open.ToString().ToLower())),
             ("powered", new StringTag(Powered.ToString().ToLower())),
             ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     
-    public enum Half {
-        Top,
-        Bottom,
-    }
-
-    public static Half HalfFromString(string value) {
-        return value switch {
-            "top" => Half.Top,
-            "bottom" => Half.Bottom,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Half.")
-        };
-    }
-
-    public static string HalfToName(Half value) {
-        return value switch {
-            Half.Top => "top",
-            Half.Bottom => "bottom",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Half value.")
-        };
-    }
 }

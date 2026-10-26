@@ -3,57 +3,84 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlock {
-    public Identifier Category => "minecraft:jigsaw";
-    public double Hardness => -1;
-    public double ExplosionResistance => 3600000;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:jigsaw";
-    public Identifier? Item => "minecraft:jigsaw";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => true;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 22;
-    public string TranslationKey => "block.minecraft.jigsaw";
-    public bool CanRespawnIn => false;
+public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlock, IOriented {
+    private static readonly BlockInfo Data = new("block.minecraft.jigsaw", 3600000f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:jigsaw", "minecraft:jigsaw", BlockInfo.VanillaOnly, null);
+    private static readonly BlockStateInfo I0 = new(-1f, 0, 15, PushReaction.PushPull, 22, "stone", NoteBlockInstrument.Harp, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithOrientation(Orientation orientation) => this with { Orientation = orientation };
 
 
     public uint StateId {
         get {
             return Orientation switch {
-                Orientation.DownEast => 21524,
-                Orientation.DownNorth => 21525,
-                Orientation.DownSouth => 21526,
-                Orientation.DownWest => 21527,
-                Orientation.UpEast => 21528,
-                Orientation.UpNorth => 21529,
-                Orientation.UpSouth => 21530,
-                Orientation.UpWest => 21531,
-                Orientation.WestUp => 21532,
-                Orientation.EastUp => 21533,
-                Orientation.NorthUp => 21534,
-                Orientation.SouthUp => 21535,
+                Orientation.DownEast => 25083,
+                Orientation.DownNorth => 25084,
+                Orientation.DownSouth => 25085,
+                Orientation.DownWest => 25086,
+                Orientation.UpEast => 25087,
+                Orientation.UpNorth => 25088,
+                Orientation.UpSouth => 25089,
+                Orientation.UpWest => 25090,
+                Orientation.WestUp => 25091,
+                Orientation.EastUp => 25092,
+                Orientation.NorthUp => 25093,
+                Orientation.SouthUp => 25094,
                 _ => throw new ArgumentOutOfRangeException(nameof(Orientation), Orientation, "Unknown value for property orientation.")
             };
         }
@@ -61,18 +88,18 @@ public record JigsawBlock(Identifier Identifier, Orientation Orientation) : IBlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            21524 => new JigsawBlock(Identifier, Orientation.DownEast),
-            21525 => new JigsawBlock(Identifier, Orientation.DownNorth),
-            21526 => new JigsawBlock(Identifier, Orientation.DownSouth),
-            21527 => new JigsawBlock(Identifier, Orientation.DownWest),
-            21528 => new JigsawBlock(Identifier, Orientation.UpEast),
-            21529 => new JigsawBlock(Identifier, Orientation.UpNorth),
-            21530 => new JigsawBlock(Identifier, Orientation.UpSouth),
-            21531 => new JigsawBlock(Identifier, Orientation.UpWest),
-            21532 => new JigsawBlock(Identifier, Orientation.WestUp),
-            21533 => new JigsawBlock(Identifier, Orientation.EastUp),
-            21534 => new JigsawBlock(Identifier, Orientation.NorthUp),
-            21535 => new JigsawBlock(Identifier, Orientation.SouthUp),
+            25083 => new JigsawBlock(Identifier, Orientation.DownEast),
+            25084 => new JigsawBlock(Identifier, Orientation.DownNorth),
+            25085 => new JigsawBlock(Identifier, Orientation.DownSouth),
+            25086 => new JigsawBlock(Identifier, Orientation.DownWest),
+            25087 => new JigsawBlock(Identifier, Orientation.UpEast),
+            25088 => new JigsawBlock(Identifier, Orientation.UpNorth),
+            25089 => new JigsawBlock(Identifier, Orientation.UpSouth),
+            25090 => new JigsawBlock(Identifier, Orientation.UpWest),
+            25091 => new JigsawBlock(Identifier, Orientation.WestUp),
+            25092 => new JigsawBlock(Identifier, Orientation.EastUp),
+            25093 => new JigsawBlock(Identifier, Orientation.NorthUp),
+            25094 => new JigsawBlock(Identifier, Orientation.SouthUp),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

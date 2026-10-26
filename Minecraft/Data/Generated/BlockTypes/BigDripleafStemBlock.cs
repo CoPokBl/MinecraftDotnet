@@ -3,60 +3,99 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:big_dripleaf_stem";
-    public double Hardness => 0.1;
-    public double ExplosionResistance => 0.1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "big_dripleaf";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:big_dripleaf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.3125, 0.0, 0.5625] -> [0.6875, 1.0, 0.9375]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 7;
-    public string TranslationKey => "block.minecraft.big_dripleaf_stem";
-    public bool CanRespawnIn => true;
+public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.big_dripleaf_stem", 0.1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:big_dripleaf", BlockInfo.VanillaOnly, "minecraft:blocks/big_dripleaf_stem");
+    private static readonly BlockStateInfo I0 = new(0.1f, 0, 1, PushReaction.Popped, 7, "big_dripleaf", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S358, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S359 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S359 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S360 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S360 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S361 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S361 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 33745];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 27693,
-                    false => 27694,
+                    true => 33745,
+                    false => 33746,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 27695,
-                    false => 27696,
+                    true => 33747,
+                    false => 33748,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 27697,
-                    false => 27698,
+                    true => 33749,
+                    false => 33750,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 27699,
-                    false => 27700,
+                    true => 33751,
+                    false => 33752,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +104,14 @@ public record BigDripleafStemBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            27693 => new BigDripleafStemBlock(Identifier, Direction.North, true),
-            27694 => new BigDripleafStemBlock(Identifier, Direction.North, false),
-            27695 => new BigDripleafStemBlock(Identifier, Direction.South, true),
-            27696 => new BigDripleafStemBlock(Identifier, Direction.South, false),
-            27697 => new BigDripleafStemBlock(Identifier, Direction.West, true),
-            27698 => new BigDripleafStemBlock(Identifier, Direction.West, false),
-            27699 => new BigDripleafStemBlock(Identifier, Direction.East, true),
-            27700 => new BigDripleafStemBlock(Identifier, Direction.East, false),
+            33745 => new BigDripleafStemBlock(Identifier, Direction.North, true),
+            33746 => new BigDripleafStemBlock(Identifier, Direction.North, false),
+            33747 => new BigDripleafStemBlock(Identifier, Direction.South, true),
+            33748 => new BigDripleafStemBlock(Identifier, Direction.South, false),
+            33749 => new BigDripleafStemBlock(Identifier, Direction.West, true),
+            33750 => new BigDripleafStemBlock(Identifier, Direction.West, false),
+            33751 => new BigDripleafStemBlock(Identifier, Direction.East, true),
+            33752 => new BigDripleafStemBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

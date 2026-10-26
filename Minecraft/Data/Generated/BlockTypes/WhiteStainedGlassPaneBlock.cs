@@ -3,40 +3,119 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WhiteStainedGlassPaneBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
-    public Identifier Category => "minecraft:stained_glass_pane";
-    public double Hardness => 0.3;
-    public double ExplosionResistance => 0.3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "glass";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:white_stained_glass_pane";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 1.0, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 1.0, 0.5625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.white_stained_glass_pane";
-    public bool CanRespawnIn => false;
+public record WhiteStainedGlassPaneBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.white_stained_glass_pane", 0.3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:white_stained_glass_pane", BlockInfo.VanillaOnly, "minecraft:blocks/white_stained_glass_pane");
+    private static readonly BlockStateInfo I0 = new(0.3f, 0, 1, PushReaction.PushPull, 0, "glass", NoteBlockInstrument.Hat, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S372, BlockShapes.S372, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S372);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
+    private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S374, CollisionShape = BlockShapes.S374, SupportShape = BlockShapes.S374 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S375, CollisionShape = BlockShapes.S375, SupportShape = BlockShapes.S375 };
+    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S374, CollisionShape = BlockShapes.S374, SupportShape = BlockShapes.S374 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S375, CollisionShape = BlockShapes.S375, SupportShape = BlockShapes.S375 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S376, CollisionShape = BlockShapes.S376, SupportShape = BlockShapes.S376 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S377, CollisionShape = BlockShapes.S377, SupportShape = BlockShapes.S377 };
+    private static readonly BlockStateInfo I10 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S376, CollisionShape = BlockShapes.S376, SupportShape = BlockShapes.S376 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S377, CollisionShape = BlockShapes.S377, SupportShape = BlockShapes.S377 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S378, CollisionShape = BlockShapes.S378, SupportShape = BlockShapes.S378 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S379, CollisionShape = BlockShapes.S379, SupportShape = BlockShapes.S379 };
+    private static readonly BlockStateInfo I14 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S378, CollisionShape = BlockShapes.S378, SupportShape = BlockShapes.S378 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S379, CollisionShape = BlockShapes.S379, SupportShape = BlockShapes.S379 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S380, CollisionShape = BlockShapes.S380, SupportShape = BlockShapes.S380 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S381, CollisionShape = BlockShapes.S381, SupportShape = BlockShapes.S381 };
+    private static readonly BlockStateInfo I18 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S380, CollisionShape = BlockShapes.S380, SupportShape = BlockShapes.S380 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S381, CollisionShape = BlockShapes.S381, SupportShape = BlockShapes.S381 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S382, CollisionShape = BlockShapes.S382, SupportShape = BlockShapes.S382 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S383, CollisionShape = BlockShapes.S383, SupportShape = BlockShapes.S383 };
+    private static readonly BlockStateInfo I22 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S382, CollisionShape = BlockShapes.S382, SupportShape = BlockShapes.S382 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S383, CollisionShape = BlockShapes.S383, SupportShape = BlockShapes.S383 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S384, CollisionShape = BlockShapes.S384, SupportShape = BlockShapes.S384 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S385, CollisionShape = BlockShapes.S385, SupportShape = BlockShapes.S385 };
+    private static readonly BlockStateInfo I26 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S384, CollisionShape = BlockShapes.S384, SupportShape = BlockShapes.S384 };
+    private static readonly BlockStateInfo I27 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S385, CollisionShape = BlockShapes.S385, SupportShape = BlockShapes.S385 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S386, CollisionShape = BlockShapes.S386, SupportShape = BlockShapes.S386 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S387, CollisionShape = BlockShapes.S387, SupportShape = BlockShapes.S387 };
+    private static readonly BlockStateInfo I30 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S386, CollisionShape = BlockShapes.S386, SupportShape = BlockShapes.S386 };
+    private static readonly BlockStateInfo I31 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S387, CollisionShape = BlockShapes.S387, SupportShape = BlockShapes.S387 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 13227];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
+
+    public bool HasFace(BlockFace face) => face is BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -46,44 +125,44 @@ public record WhiteStainedGlassPaneBlock(Identifier Identifier, bool East, bool 
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 11258,
-                                false => 11259,
+                                true => 13227,
+                                false => 13228,
                             },
                             false => West switch {
-                                true => 11260,
-                                false => 11261,
+                                true => 13229,
+                                false => 13230,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 11262,
-                                false => 11263,
+                                true => 13231,
+                                false => 13232,
                             },
                             false => West switch {
-                                true => 11264,
-                                false => 11265,
+                                true => 13233,
+                                false => 13234,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 11266,
-                                false => 11267,
+                                true => 13235,
+                                false => 13236,
                             },
                             false => West switch {
-                                true => 11268,
-                                false => 11269,
+                                true => 13237,
+                                false => 13238,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 11270,
-                                false => 11271,
+                                true => 13239,
+                                false => 13240,
                             },
                             false => West switch {
-                                true => 11272,
-                                false => 11273,
+                                true => 13241,
+                                false => 13242,
                             },
                         },
                     },
@@ -92,44 +171,44 @@ public record WhiteStainedGlassPaneBlock(Identifier Identifier, bool East, bool 
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 11274,
-                                false => 11275,
+                                true => 13243,
+                                false => 13244,
                             },
                             false => West switch {
-                                true => 11276,
-                                false => 11277,
+                                true => 13245,
+                                false => 13246,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 11278,
-                                false => 11279,
+                                true => 13247,
+                                false => 13248,
                             },
                             false => West switch {
-                                true => 11280,
-                                false => 11281,
+                                true => 13249,
+                                false => 13250,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 11282,
-                                false => 11283,
+                                true => 13251,
+                                false => 13252,
                             },
                             false => West switch {
-                                true => 11284,
-                                false => 11285,
+                                true => 13253,
+                                false => 13254,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 11286,
-                                false => 11287,
+                                true => 13255,
+                                false => 13256,
                             },
                             false => West switch {
-                                true => 11288,
-                                false => 11289,
+                                true => 13257,
+                                false => 13258,
                             },
                         },
                     },
@@ -140,38 +219,38 @@ public record WhiteStainedGlassPaneBlock(Identifier Identifier, bool East, bool 
     
     public IBlock WithState(uint state) {
         return state switch {
-            11258 => new WhiteStainedGlassPaneBlock(Identifier, true, true, true, true, true),
-            11259 => new WhiteStainedGlassPaneBlock(Identifier, true, true, true, true, false),
-            11260 => new WhiteStainedGlassPaneBlock(Identifier, true, true, true, false, true),
-            11261 => new WhiteStainedGlassPaneBlock(Identifier, true, true, true, false, false),
-            11262 => new WhiteStainedGlassPaneBlock(Identifier, true, true, false, true, true),
-            11263 => new WhiteStainedGlassPaneBlock(Identifier, true, true, false, true, false),
-            11264 => new WhiteStainedGlassPaneBlock(Identifier, true, true, false, false, true),
-            11265 => new WhiteStainedGlassPaneBlock(Identifier, true, true, false, false, false),
-            11266 => new WhiteStainedGlassPaneBlock(Identifier, true, false, true, true, true),
-            11267 => new WhiteStainedGlassPaneBlock(Identifier, true, false, true, true, false),
-            11268 => new WhiteStainedGlassPaneBlock(Identifier, true, false, true, false, true),
-            11269 => new WhiteStainedGlassPaneBlock(Identifier, true, false, true, false, false),
-            11270 => new WhiteStainedGlassPaneBlock(Identifier, true, false, false, true, true),
-            11271 => new WhiteStainedGlassPaneBlock(Identifier, true, false, false, true, false),
-            11272 => new WhiteStainedGlassPaneBlock(Identifier, true, false, false, false, true),
-            11273 => new WhiteStainedGlassPaneBlock(Identifier, true, false, false, false, false),
-            11274 => new WhiteStainedGlassPaneBlock(Identifier, false, true, true, true, true),
-            11275 => new WhiteStainedGlassPaneBlock(Identifier, false, true, true, true, false),
-            11276 => new WhiteStainedGlassPaneBlock(Identifier, false, true, true, false, true),
-            11277 => new WhiteStainedGlassPaneBlock(Identifier, false, true, true, false, false),
-            11278 => new WhiteStainedGlassPaneBlock(Identifier, false, true, false, true, true),
-            11279 => new WhiteStainedGlassPaneBlock(Identifier, false, true, false, true, false),
-            11280 => new WhiteStainedGlassPaneBlock(Identifier, false, true, false, false, true),
-            11281 => new WhiteStainedGlassPaneBlock(Identifier, false, true, false, false, false),
-            11282 => new WhiteStainedGlassPaneBlock(Identifier, false, false, true, true, true),
-            11283 => new WhiteStainedGlassPaneBlock(Identifier, false, false, true, true, false),
-            11284 => new WhiteStainedGlassPaneBlock(Identifier, false, false, true, false, true),
-            11285 => new WhiteStainedGlassPaneBlock(Identifier, false, false, true, false, false),
-            11286 => new WhiteStainedGlassPaneBlock(Identifier, false, false, false, true, true),
-            11287 => new WhiteStainedGlassPaneBlock(Identifier, false, false, false, true, false),
-            11288 => new WhiteStainedGlassPaneBlock(Identifier, false, false, false, false, true),
-            11289 => new WhiteStainedGlassPaneBlock(Identifier, false, false, false, false, false),
+            13227 => new WhiteStainedGlassPaneBlock(Identifier, true, true, true, true, true),
+            13228 => new WhiteStainedGlassPaneBlock(Identifier, true, true, true, true, false),
+            13229 => new WhiteStainedGlassPaneBlock(Identifier, true, true, true, false, true),
+            13230 => new WhiteStainedGlassPaneBlock(Identifier, true, true, true, false, false),
+            13231 => new WhiteStainedGlassPaneBlock(Identifier, true, true, false, true, true),
+            13232 => new WhiteStainedGlassPaneBlock(Identifier, true, true, false, true, false),
+            13233 => new WhiteStainedGlassPaneBlock(Identifier, true, true, false, false, true),
+            13234 => new WhiteStainedGlassPaneBlock(Identifier, true, true, false, false, false),
+            13235 => new WhiteStainedGlassPaneBlock(Identifier, true, false, true, true, true),
+            13236 => new WhiteStainedGlassPaneBlock(Identifier, true, false, true, true, false),
+            13237 => new WhiteStainedGlassPaneBlock(Identifier, true, false, true, false, true),
+            13238 => new WhiteStainedGlassPaneBlock(Identifier, true, false, true, false, false),
+            13239 => new WhiteStainedGlassPaneBlock(Identifier, true, false, false, true, true),
+            13240 => new WhiteStainedGlassPaneBlock(Identifier, true, false, false, true, false),
+            13241 => new WhiteStainedGlassPaneBlock(Identifier, true, false, false, false, true),
+            13242 => new WhiteStainedGlassPaneBlock(Identifier, true, false, false, false, false),
+            13243 => new WhiteStainedGlassPaneBlock(Identifier, false, true, true, true, true),
+            13244 => new WhiteStainedGlassPaneBlock(Identifier, false, true, true, true, false),
+            13245 => new WhiteStainedGlassPaneBlock(Identifier, false, true, true, false, true),
+            13246 => new WhiteStainedGlassPaneBlock(Identifier, false, true, true, false, false),
+            13247 => new WhiteStainedGlassPaneBlock(Identifier, false, true, false, true, true),
+            13248 => new WhiteStainedGlassPaneBlock(Identifier, false, true, false, true, false),
+            13249 => new WhiteStainedGlassPaneBlock(Identifier, false, true, false, false, true),
+            13250 => new WhiteStainedGlassPaneBlock(Identifier, false, true, false, false, false),
+            13251 => new WhiteStainedGlassPaneBlock(Identifier, false, false, true, true, true),
+            13252 => new WhiteStainedGlassPaneBlock(Identifier, false, false, true, true, false),
+            13253 => new WhiteStainedGlassPaneBlock(Identifier, false, false, true, false, true),
+            13254 => new WhiteStainedGlassPaneBlock(Identifier, false, false, true, false, false),
+            13255 => new WhiteStainedGlassPaneBlock(Identifier, false, false, false, true, true),
+            13256 => new WhiteStainedGlassPaneBlock(Identifier, false, false, false, true, false),
+            13257 => new WhiteStainedGlassPaneBlock(Identifier, false, false, false, false, true),
+            13258 => new WhiteStainedGlassPaneBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

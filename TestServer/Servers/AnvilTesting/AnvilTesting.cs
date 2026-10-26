@@ -4,6 +4,7 @@ using ManagedServer.Events;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Generated;
+using Minecraft.Implementations.AnvilWorld;
 using Minecraft.Implementations.Server.Events;
 using Minecraft.Implementations.Server.Features;
 using Minecraft.Packets.Play.ServerBound;
@@ -17,7 +18,8 @@ namespace TestServer.Servers.AnvilTesting;
 public static class AnvilTesting {
 
     public static async Task Start() {
-        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle);
+        ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle,
+            ManagedMinecraftServer.BlockRulesBundle);
         server.AddFeature(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
             VersionName = "dotnet",
             VersionProtocol = connection.Handshake!.ProtocolVersion,
@@ -29,9 +31,9 @@ public static class AnvilTesting {
         }));
         server.ViewDistance = 16;
 
-        Console.WriteLine("Creating world...");
-        // World world = server.CreateWorld(new AnvilLoader("testanvil", VanillaRegistry.Data));
-        World world = server.CreateWorld(new PolarLoader("testpolar.polar", VanillaRegistry.Data));
+        Console.WriteLine("Building the world...");
+        World world = server.CreateWorld(new AnvilLoader("testanvil", VanillaRegistry.Data));
+        // World world = server.CreateWorld(new PolarLoader("testpolar.polar", VanillaRegistry.Data));
         Console.WriteLine("World created.");
         
         server.Events.AddListener<PlayerPreLoginEvent>(e => {
@@ -51,14 +53,15 @@ public static class AnvilTesting {
             }
         });
 
-        world.Events.AddListener<PacketHandleEvent>(e => {
-            if (e.Packet is not ServerBoundChatMessagePacket chat) {
-                return;
-            }
-
-            switch (chat.Message) {
+        world.Events.AddListener<PlayerChatEvent>(e => {
+            switch (e.RawMessage) {
                 case "gc": {
                     GC.Collect();
+                    break;
+                }
+
+                case "spec": {
+                    e.Player.GameMode = GameMode.Spectator;
                     break;
                 }
             }

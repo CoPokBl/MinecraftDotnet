@@ -3,40 +3,119 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record IronBarsBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
-    public Identifier Category => "minecraft:iron_bars";
-    public double Hardness => 5;
-    public double ExplosionResistance => 6;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "iron";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:iron_bars";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 1.0, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 1.0, 0.5625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.iron_bars";
-    public bool CanRespawnIn => false;
+public record IronBarsBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.iron_bars", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:iron_bars", BlockInfo.VanillaOnly, "minecraft:blocks/iron_bars");
+    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.PushPull, 0, "iron", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S372, BlockShapes.S372, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S372);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
+    private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S373, CollisionShape = BlockShapes.S373, SupportShape = BlockShapes.S373 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S374, CollisionShape = BlockShapes.S374, SupportShape = BlockShapes.S374 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S375, CollisionShape = BlockShapes.S375, SupportShape = BlockShapes.S375 };
+    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S374, CollisionShape = BlockShapes.S374, SupportShape = BlockShapes.S374 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S375, CollisionShape = BlockShapes.S375, SupportShape = BlockShapes.S375 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S376, CollisionShape = BlockShapes.S376, SupportShape = BlockShapes.S376 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S377, CollisionShape = BlockShapes.S377, SupportShape = BlockShapes.S377 };
+    private static readonly BlockStateInfo I10 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S376, CollisionShape = BlockShapes.S376, SupportShape = BlockShapes.S376 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S377, CollisionShape = BlockShapes.S377, SupportShape = BlockShapes.S377 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S378, CollisionShape = BlockShapes.S378, SupportShape = BlockShapes.S378 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S379, CollisionShape = BlockShapes.S379, SupportShape = BlockShapes.S379 };
+    private static readonly BlockStateInfo I14 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S378, CollisionShape = BlockShapes.S378, SupportShape = BlockShapes.S378 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S379, CollisionShape = BlockShapes.S379, SupportShape = BlockShapes.S379 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S380, CollisionShape = BlockShapes.S380, SupportShape = BlockShapes.S380 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S381, CollisionShape = BlockShapes.S381, SupportShape = BlockShapes.S381 };
+    private static readonly BlockStateInfo I18 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S380, CollisionShape = BlockShapes.S380, SupportShape = BlockShapes.S380 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S381, CollisionShape = BlockShapes.S381, SupportShape = BlockShapes.S381 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S382, CollisionShape = BlockShapes.S382, SupportShape = BlockShapes.S382 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S383, CollisionShape = BlockShapes.S383, SupportShape = BlockShapes.S383 };
+    private static readonly BlockStateInfo I22 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S382, CollisionShape = BlockShapes.S382, SupportShape = BlockShapes.S382 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S383, CollisionShape = BlockShapes.S383, SupportShape = BlockShapes.S383 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S384, CollisionShape = BlockShapes.S384, SupportShape = BlockShapes.S384 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S385, CollisionShape = BlockShapes.S385, SupportShape = BlockShapes.S385 };
+    private static readonly BlockStateInfo I26 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S384, CollisionShape = BlockShapes.S384, SupportShape = BlockShapes.S384 };
+    private static readonly BlockStateInfo I27 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S385, CollisionShape = BlockShapes.S385, SupportShape = BlockShapes.S385 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S386, CollisionShape = BlockShapes.S386, SupportShape = BlockShapes.S386 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S387, CollisionShape = BlockShapes.S387, SupportShape = BlockShapes.S387 };
+    private static readonly BlockStateInfo I30 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S386, CollisionShape = BlockShapes.S386, SupportShape = BlockShapes.S386 };
+    private static readonly BlockStateInfo I31 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S387, CollisionShape = BlockShapes.S387, SupportShape = BlockShapes.S387 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 9692];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
+
+    public bool HasFace(BlockFace face) => face is BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -46,44 +125,44 @@ public record IronBarsBlock(Identifier Identifier, bool East, bool North, bool S
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7757,
-                                false => 7758,
+                                true => 9692,
+                                false => 9693,
                             },
                             false => West switch {
-                                true => 7759,
-                                false => 7760,
+                                true => 9694,
+                                false => 9695,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7761,
-                                false => 7762,
+                                true => 9696,
+                                false => 9697,
                             },
                             false => West switch {
-                                true => 7763,
-                                false => 7764,
+                                true => 9698,
+                                false => 9699,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7765,
-                                false => 7766,
+                                true => 9700,
+                                false => 9701,
                             },
                             false => West switch {
-                                true => 7767,
-                                false => 7768,
+                                true => 9702,
+                                false => 9703,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7769,
-                                false => 7770,
+                                true => 9704,
+                                false => 9705,
                             },
                             false => West switch {
-                                true => 7771,
-                                false => 7772,
+                                true => 9706,
+                                false => 9707,
                             },
                         },
                     },
@@ -92,44 +171,44 @@ public record IronBarsBlock(Identifier Identifier, bool East, bool North, bool S
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7773,
-                                false => 7774,
+                                true => 9708,
+                                false => 9709,
                             },
                             false => West switch {
-                                true => 7775,
-                                false => 7776,
+                                true => 9710,
+                                false => 9711,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7777,
-                                false => 7778,
+                                true => 9712,
+                                false => 9713,
                             },
                             false => West switch {
-                                true => 7779,
-                                false => 7780,
+                                true => 9714,
+                                false => 9715,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 7781,
-                                false => 7782,
+                                true => 9716,
+                                false => 9717,
                             },
                             false => West switch {
-                                true => 7783,
-                                false => 7784,
+                                true => 9718,
+                                false => 9719,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 7785,
-                                false => 7786,
+                                true => 9720,
+                                false => 9721,
                             },
                             false => West switch {
-                                true => 7787,
-                                false => 7788,
+                                true => 9722,
+                                false => 9723,
                             },
                         },
                     },
@@ -140,38 +219,38 @@ public record IronBarsBlock(Identifier Identifier, bool East, bool North, bool S
     
     public IBlock WithState(uint state) {
         return state switch {
-            7757 => new IronBarsBlock(Identifier, true, true, true, true, true),
-            7758 => new IronBarsBlock(Identifier, true, true, true, true, false),
-            7759 => new IronBarsBlock(Identifier, true, true, true, false, true),
-            7760 => new IronBarsBlock(Identifier, true, true, true, false, false),
-            7761 => new IronBarsBlock(Identifier, true, true, false, true, true),
-            7762 => new IronBarsBlock(Identifier, true, true, false, true, false),
-            7763 => new IronBarsBlock(Identifier, true, true, false, false, true),
-            7764 => new IronBarsBlock(Identifier, true, true, false, false, false),
-            7765 => new IronBarsBlock(Identifier, true, false, true, true, true),
-            7766 => new IronBarsBlock(Identifier, true, false, true, true, false),
-            7767 => new IronBarsBlock(Identifier, true, false, true, false, true),
-            7768 => new IronBarsBlock(Identifier, true, false, true, false, false),
-            7769 => new IronBarsBlock(Identifier, true, false, false, true, true),
-            7770 => new IronBarsBlock(Identifier, true, false, false, true, false),
-            7771 => new IronBarsBlock(Identifier, true, false, false, false, true),
-            7772 => new IronBarsBlock(Identifier, true, false, false, false, false),
-            7773 => new IronBarsBlock(Identifier, false, true, true, true, true),
-            7774 => new IronBarsBlock(Identifier, false, true, true, true, false),
-            7775 => new IronBarsBlock(Identifier, false, true, true, false, true),
-            7776 => new IronBarsBlock(Identifier, false, true, true, false, false),
-            7777 => new IronBarsBlock(Identifier, false, true, false, true, true),
-            7778 => new IronBarsBlock(Identifier, false, true, false, true, false),
-            7779 => new IronBarsBlock(Identifier, false, true, false, false, true),
-            7780 => new IronBarsBlock(Identifier, false, true, false, false, false),
-            7781 => new IronBarsBlock(Identifier, false, false, true, true, true),
-            7782 => new IronBarsBlock(Identifier, false, false, true, true, false),
-            7783 => new IronBarsBlock(Identifier, false, false, true, false, true),
-            7784 => new IronBarsBlock(Identifier, false, false, true, false, false),
-            7785 => new IronBarsBlock(Identifier, false, false, false, true, true),
-            7786 => new IronBarsBlock(Identifier, false, false, false, true, false),
-            7787 => new IronBarsBlock(Identifier, false, false, false, false, true),
-            7788 => new IronBarsBlock(Identifier, false, false, false, false, false),
+            9692 => new IronBarsBlock(Identifier, true, true, true, true, true),
+            9693 => new IronBarsBlock(Identifier, true, true, true, true, false),
+            9694 => new IronBarsBlock(Identifier, true, true, true, false, true),
+            9695 => new IronBarsBlock(Identifier, true, true, true, false, false),
+            9696 => new IronBarsBlock(Identifier, true, true, false, true, true),
+            9697 => new IronBarsBlock(Identifier, true, true, false, true, false),
+            9698 => new IronBarsBlock(Identifier, true, true, false, false, true),
+            9699 => new IronBarsBlock(Identifier, true, true, false, false, false),
+            9700 => new IronBarsBlock(Identifier, true, false, true, true, true),
+            9701 => new IronBarsBlock(Identifier, true, false, true, true, false),
+            9702 => new IronBarsBlock(Identifier, true, false, true, false, true),
+            9703 => new IronBarsBlock(Identifier, true, false, true, false, false),
+            9704 => new IronBarsBlock(Identifier, true, false, false, true, true),
+            9705 => new IronBarsBlock(Identifier, true, false, false, true, false),
+            9706 => new IronBarsBlock(Identifier, true, false, false, false, true),
+            9707 => new IronBarsBlock(Identifier, true, false, false, false, false),
+            9708 => new IronBarsBlock(Identifier, false, true, true, true, true),
+            9709 => new IronBarsBlock(Identifier, false, true, true, true, false),
+            9710 => new IronBarsBlock(Identifier, false, true, true, false, true),
+            9711 => new IronBarsBlock(Identifier, false, true, true, false, false),
+            9712 => new IronBarsBlock(Identifier, false, true, false, true, true),
+            9713 => new IronBarsBlock(Identifier, false, true, false, true, false),
+            9714 => new IronBarsBlock(Identifier, false, true, false, false, true),
+            9715 => new IronBarsBlock(Identifier, false, true, false, false, false),
+            9716 => new IronBarsBlock(Identifier, false, false, true, true, true),
+            9717 => new IronBarsBlock(Identifier, false, false, true, true, false),
+            9718 => new IronBarsBlock(Identifier, false, false, true, false, true),
+            9719 => new IronBarsBlock(Identifier, false, false, true, false, false),
+            9720 => new IronBarsBlock(Identifier, false, false, false, true, true),
+            9721 => new IronBarsBlock(Identifier, false, false, false, true, false),
+            9722 => new IronBarsBlock(Identifier, false, false, false, false, true),
+            9723 => new IronBarsBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

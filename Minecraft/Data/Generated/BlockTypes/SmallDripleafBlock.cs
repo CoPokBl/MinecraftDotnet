@@ -3,40 +3,75 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockHalf Half, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:small_dripleaf";
-    public double Hardness => 0;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "small_dripleaf";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:small_dripleaf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.125, 0.0, 0.125] -> [0.875, 0.8125, 0.875]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 7;
-    public string TranslationKey => "block.minecraft.small_dripleaf";
-    public bool CanRespawnIn => true;
+public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockHalf Half, bool Waterlogged) : IBlock, IHorizontalFacing, IDoubleHalved, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.small_dripleaf", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.Xyz, 0.25f, 0.1f, null, "minecraft:small_dripleaf", BlockInfo.VanillaOnly, "minecraft:blocks/small_dripleaf");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Popped, 7, "small_dripleaf", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S521, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 33753];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithHalf(BlockHalf half) => this with { Half = half };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,45 +79,45 @@ public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockH
             return Facing switch {
                 Direction.North => Half switch {
                     BlockHalf.Upper => Waterlogged switch {
-                        true => 27701,
-                        false => 27702,
+                        true => 33753,
+                        false => 33754,
                     },
                     BlockHalf.Lower => Waterlogged switch {
-                        true => 27703,
-                        false => 27704,
+                        true => 33755,
+                        false => 33756,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 Direction.South => Half switch {
                     BlockHalf.Upper => Waterlogged switch {
-                        true => 27705,
-                        false => 27706,
+                        true => 33757,
+                        false => 33758,
                     },
                     BlockHalf.Lower => Waterlogged switch {
-                        true => 27707,
-                        false => 27708,
+                        true => 33759,
+                        false => 33760,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 Direction.West => Half switch {
                     BlockHalf.Upper => Waterlogged switch {
-                        true => 27709,
-                        false => 27710,
+                        true => 33761,
+                        false => 33762,
                     },
                     BlockHalf.Lower => Waterlogged switch {
-                        true => 27711,
-                        false => 27712,
+                        true => 33763,
+                        false => 33764,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 Direction.East => Half switch {
                     BlockHalf.Upper => Waterlogged switch {
-                        true => 27713,
-                        false => 27714,
+                        true => 33765,
+                        false => 33766,
                     },
                     BlockHalf.Lower => Waterlogged switch {
-                        true => 27715,
-                        false => 27716,
+                        true => 33767,
+                        false => 33768,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
@@ -93,22 +128,22 @@ public record SmallDripleafBlock(Identifier Identifier, Direction Facing, BlockH
     
     public IBlock WithState(uint state) {
         return state switch {
-            27701 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, true),
-            27702 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, false),
-            27703 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Lower, true),
-            27704 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Lower, false),
-            27705 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Upper, true),
-            27706 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Upper, false),
-            27707 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Lower, true),
-            27708 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Lower, false),
-            27709 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Upper, true),
-            27710 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Upper, false),
-            27711 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Lower, true),
-            27712 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Lower, false),
-            27713 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Upper, true),
-            27714 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Upper, false),
-            27715 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, true),
-            27716 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, false),
+            33753 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, true),
+            33754 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Upper, false),
+            33755 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Lower, true),
+            33756 => new SmallDripleafBlock(Identifier, Direction.North, BlockHalf.Lower, false),
+            33757 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Upper, true),
+            33758 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Upper, false),
+            33759 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Lower, true),
+            33760 => new SmallDripleafBlock(Identifier, Direction.South, BlockHalf.Lower, false),
+            33761 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Upper, true),
+            33762 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Upper, false),
+            33763 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Lower, true),
+            33764 => new SmallDripleafBlock(Identifier, Direction.West, BlockHalf.Lower, false),
+            33765 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Upper, true),
+            33766 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Upper, false),
+            33767 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, true),
+            33768 => new SmallDripleafBlock(Identifier, Direction.East, BlockHalf.Lower, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -433,6 +433,72 @@ public class ServerSchedulerTest {
         Assert.That(order, Is.EqualTo(new[] { 1, 2, 3 }));
     }
 
+    // ── Re-entrancy and thread safety ───────────────────────────────────────
+
+    [Test]
+    public void ScheduleTask_Ticks_TaskCanScheduleAnotherTask() {
+        bool innerRan = false;
+        _scheduler.ScheduleTask(1, () => _scheduler.ScheduleTask(1, () => innerRan = true));
+
+        AdvanceTicks(1);
+        Assert.That(innerRan, Is.False, "Inner task should not run on the tick that scheduled it");
+
+        AdvanceTicks(1);
+        Assert.That(innerRan, Is.True, "Task scheduled from inside a tick task must not be dropped");
+    }
+
+    [Test]
+    public void ScheduleTask_Ticks_TaskCanCancelAnotherTaskDueOnTheSameTick() {
+        bool secondRan = false;
+        bool thirdRan = false;
+        ScheduledTask second = null!;
+
+        _scheduler.ScheduleTask(1, () => second.Cancel());
+        second = _scheduler.ScheduleTask(1, () => secondRan = true);
+        _scheduler.ScheduleTask(1, () => thirdRan = true);
+
+        Assert.DoesNotThrow(() => AdvanceTicks(1));
+        Assert.That(secondRan, Is.False, "Cancelled mid-tick task should not run");
+        Assert.That(thirdRan, Is.True, "Cancelling one task must not drop the others");
+    }
+
+    /// <summary>
+    /// Chunk loading schedules onto the tick thread from the thread pool, so the tick task list
+    /// is written concurrently with the tick thread draining it. Before it was locked, that raced:
+    /// List.Add publishes the new count before the element itself, so the drain could observe a
+    /// slot holding a null task and throw <see cref="NullReferenceException"/>.
+    /// </summary>
+    [Test]
+    public void ScheduleNextTick_FromManyThreadsConcurrentlyWithTicking() {
+        const int threads = 4;
+        const int perThread = 500;
+
+        List<string> logs = [];
+        _server.LogAction = msg => { lock (logs) logs.Add(msg); };
+
+        int ran = 0;
+        using CountdownEvent scheduled = new(threads);
+        for (int t = 0; t < threads; t++) {
+            new Thread(() => {
+                for (int i = 0; i < perThread; i++) {
+                    _scheduler.ScheduleNextTick(() => Interlocked.Increment(ref ran));
+                }
+                scheduled.Signal();
+            }) { IsBackground = true }.Start();
+        }
+
+        // Keep ticking while the schedulers run, then drain whatever is left. Yielding keeps this
+        // from starving the timer-based tests that may be running alongside it.
+        while (!scheduled.IsSet) {
+            AdvanceTicks(1);
+            Thread.Yield();
+        }
+        AdvanceTicks(2);
+
+        Assert.That(ran, Is.EqualTo(threads * perThread), "Every scheduled task should run exactly once");
+        Assert.That(logs, Has.None.Matches<string>(m => m.Contains(nameof(NullReferenceException))));
+    }
+
     [Test]
     public void ScheduleRepeatingTask_Ticks_ZeroDelay_RunsEveryTick() {
         int counter = 0;

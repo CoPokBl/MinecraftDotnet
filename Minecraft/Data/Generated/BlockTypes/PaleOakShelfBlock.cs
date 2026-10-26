@@ -3,40 +3,81 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PaleOakShelfBlock(Identifier Identifier, Direction Facing, bool Powered, PaleOakShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:shelf";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "shelf";
-    public Identifier? BlockEntity => "minecraft:shelf";
-    public Identifier? Item => "minecraft:pale_oak_shelf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 14;
-    public string TranslationKey => "block.minecraft.pale_oak_shelf";
-    public bool CanRespawnIn => false;
+public record PaleOakShelfBlock(Identifier Identifier, Direction Facing, bool Powered, PaleOakShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock, IHorizontalFacing, IPowered, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.pale_oak_shelf", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:shelf", "minecraft:pale_oak_shelf", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_shelf");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 14, "shelf", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, [], "minecraft:water", BlockShapes.S83, BlockShapes.S83, BlockShapes.S1, BlockShapes.S83, BlockShapes.S83, BlockShapes.S83);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 4668];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -45,39 +86,39 @@ public record PaleOakShelfBlock(Identifier Identifier, Direction Facing, bool Po
                 Direction.North => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2975,
-                            false => 2976,
+                            true => 4668,
+                            false => 4669,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2977,
-                            false => 2978,
+                            true => 4670,
+                            false => 4671,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2979,
-                            false => 2980,
+                            true => 4672,
+                            false => 4673,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2981,
-                            false => 2982,
+                            true => 4674,
+                            false => 4675,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2983,
-                            false => 2984,
+                            true => 4676,
+                            false => 4677,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2985,
-                            false => 2986,
+                            true => 4678,
+                            false => 4679,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2987,
-                            false => 2988,
+                            true => 4680,
+                            false => 4681,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2989,
-                            false => 2990,
+                            true => 4682,
+                            false => 4683,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -85,39 +126,39 @@ public record PaleOakShelfBlock(Identifier Identifier, Direction Facing, bool Po
                 Direction.South => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2991,
-                            false => 2992,
+                            true => 4684,
+                            false => 4685,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2993,
-                            false => 2994,
+                            true => 4686,
+                            false => 4687,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2995,
-                            false => 2996,
+                            true => 4688,
+                            false => 4689,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2997,
-                            false => 2998,
+                            true => 4690,
+                            false => 4691,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2999,
-                            false => 3000,
+                            true => 4692,
+                            false => 4693,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3001,
-                            false => 3002,
+                            true => 4694,
+                            false => 4695,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3003,
-                            false => 3004,
+                            true => 4696,
+                            false => 4697,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3005,
-                            false => 3006,
+                            true => 4698,
+                            false => 4699,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -125,39 +166,39 @@ public record PaleOakShelfBlock(Identifier Identifier, Direction Facing, bool Po
                 Direction.West => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3007,
-                            false => 3008,
+                            true => 4700,
+                            false => 4701,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3009,
-                            false => 3010,
+                            true => 4702,
+                            false => 4703,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3011,
-                            false => 3012,
+                            true => 4704,
+                            false => 4705,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3013,
-                            false => 3014,
+                            true => 4706,
+                            false => 4707,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3015,
-                            false => 3016,
+                            true => 4708,
+                            false => 4709,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3017,
-                            false => 3018,
+                            true => 4710,
+                            false => 4711,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3019,
-                            false => 3020,
+                            true => 4712,
+                            false => 4713,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3021,
-                            false => 3022,
+                            true => 4714,
+                            false => 4715,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -165,39 +206,39 @@ public record PaleOakShelfBlock(Identifier Identifier, Direction Facing, bool Po
                 Direction.East => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3023,
-                            false => 3024,
+                            true => 4716,
+                            false => 4717,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3025,
-                            false => 3026,
+                            true => 4718,
+                            false => 4719,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3027,
-                            false => 3028,
+                            true => 4720,
+                            false => 4721,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3029,
-                            false => 3030,
+                            true => 4722,
+                            false => 4723,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3031,
-                            false => 3032,
+                            true => 4724,
+                            false => 4725,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3033,
-                            false => 3034,
+                            true => 4726,
+                            false => 4727,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3035,
-                            false => 3036,
+                            true => 4728,
+                            false => 4729,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3037,
-                            false => 3038,
+                            true => 4730,
+                            false => 4731,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -209,70 +250,70 @@ public record PaleOakShelfBlock(Identifier Identifier, Direction Facing, bool Po
     
     public IBlock WithState(uint state) {
         return state switch {
-            2975 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
-            2976 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
-            2977 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
-            2978 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
-            2979 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
-            2980 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
-            2981 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
-            2982 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
-            2983 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
-            2984 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
-            2985 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
-            2986 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
-            2987 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
-            2988 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
-            2989 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
-            2990 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
-            2991 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
-            2992 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
-            2993 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
-            2994 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
-            2995 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
-            2996 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
-            2997 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
-            2998 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
-            2999 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
-            3000 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
-            3001 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
-            3002 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
-            3003 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
-            3004 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
-            3005 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
-            3006 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
-            3007 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
-            3008 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
-            3009 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
-            3010 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
-            3011 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
-            3012 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
-            3013 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
-            3014 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
-            3015 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
-            3016 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
-            3017 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
-            3018 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
-            3019 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
-            3020 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
-            3021 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
-            3022 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
-            3023 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
-            3024 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
-            3025 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
-            3026 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
-            3027 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
-            3028 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
-            3029 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
-            3030 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
-            3031 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
-            3032 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
-            3033 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
-            3034 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
-            3035 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
-            3036 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
-            3037 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
-            3038 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
+            4668 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
+            4669 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
+            4670 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
+            4671 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
+            4672 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
+            4673 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
+            4674 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
+            4675 => new PaleOakShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
+            4676 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
+            4677 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
+            4678 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
+            4679 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
+            4680 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
+            4681 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
+            4682 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
+            4683 => new PaleOakShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
+            4684 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
+            4685 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
+            4686 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
+            4687 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
+            4688 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
+            4689 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
+            4690 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
+            4691 => new PaleOakShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
+            4692 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
+            4693 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
+            4694 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
+            4695 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
+            4696 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
+            4697 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
+            4698 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
+            4699 => new PaleOakShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
+            4700 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
+            4701 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
+            4702 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
+            4703 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
+            4704 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
+            4705 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
+            4706 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
+            4707 => new PaleOakShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
+            4708 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
+            4709 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
+            4710 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
+            4711 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
+            4712 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
+            4713 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
+            4714 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
+            4715 => new PaleOakShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
+            4716 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
+            4717 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
+            4718 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
+            4719 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
+            4720 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
+            4721 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
+            4722 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
+            4723 => new PaleOakShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
+            4724 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
+            4725 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
+            4726 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
+            4727 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
+            4728 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
+            4729 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
+            4730 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
+            4731 => new PaleOakShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

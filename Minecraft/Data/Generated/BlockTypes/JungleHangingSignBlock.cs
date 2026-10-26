@@ -3,40 +3,79 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record JungleHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:ceiling_hanging_sign";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "hanging_sign";
-    public Identifier? BlockEntity => "minecraft:hanging_sign";
-    public Identifier? Item => "minecraft:jungle_hanging_sign";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.4375] -> [0.9375, 0.625, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 10;
-    public string TranslationKey => "block.minecraft.jungle_hanging_sign";
-    public bool CanRespawnIn => true;
+public record JungleHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock, IAttached, IRotated, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.jungle_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:jungle_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 10, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 7823];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAttached(bool attached) => this with { Attached = attached };
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,135 +83,135 @@ public record JungleHangingSignBlock(Identifier Identifier, bool Attached, int R
             return Attached switch {
                 true => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6026,
-                        false => 6027,
+                        true => 7823,
+                        false => 7824,
                     },
                     1 => Waterlogged switch {
-                        true => 6028,
-                        false => 6029,
+                        true => 7825,
+                        false => 7826,
                     },
                     2 => Waterlogged switch {
-                        true => 6030,
-                        false => 6031,
+                        true => 7827,
+                        false => 7828,
                     },
                     3 => Waterlogged switch {
-                        true => 6032,
-                        false => 6033,
+                        true => 7829,
+                        false => 7830,
                     },
                     4 => Waterlogged switch {
-                        true => 6034,
-                        false => 6035,
+                        true => 7831,
+                        false => 7832,
                     },
                     5 => Waterlogged switch {
-                        true => 6036,
-                        false => 6037,
+                        true => 7833,
+                        false => 7834,
                     },
                     6 => Waterlogged switch {
-                        true => 6038,
-                        false => 6039,
+                        true => 7835,
+                        false => 7836,
                     },
                     7 => Waterlogged switch {
-                        true => 6040,
-                        false => 6041,
+                        true => 7837,
+                        false => 7838,
                     },
                     8 => Waterlogged switch {
-                        true => 6042,
-                        false => 6043,
+                        true => 7839,
+                        false => 7840,
                     },
                     9 => Waterlogged switch {
-                        true => 6044,
-                        false => 6045,
+                        true => 7841,
+                        false => 7842,
                     },
                     10 => Waterlogged switch {
-                        true => 6046,
-                        false => 6047,
+                        true => 7843,
+                        false => 7844,
                     },
                     11 => Waterlogged switch {
-                        true => 6048,
-                        false => 6049,
+                        true => 7845,
+                        false => 7846,
                     },
                     12 => Waterlogged switch {
-                        true => 6050,
-                        false => 6051,
+                        true => 7847,
+                        false => 7848,
                     },
                     13 => Waterlogged switch {
-                        true => 6052,
-                        false => 6053,
+                        true => 7849,
+                        false => 7850,
                     },
                     14 => Waterlogged switch {
-                        true => 6054,
-                        false => 6055,
+                        true => 7851,
+                        false => 7852,
                     },
                     15 => Waterlogged switch {
-                        true => 6056,
-                        false => 6057,
+                        true => 7853,
+                        false => 7854,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6058,
-                        false => 6059,
+                        true => 7855,
+                        false => 7856,
                     },
                     1 => Waterlogged switch {
-                        true => 6060,
-                        false => 6061,
+                        true => 7857,
+                        false => 7858,
                     },
                     2 => Waterlogged switch {
-                        true => 6062,
-                        false => 6063,
+                        true => 7859,
+                        false => 7860,
                     },
                     3 => Waterlogged switch {
-                        true => 6064,
-                        false => 6065,
+                        true => 7861,
+                        false => 7862,
                     },
                     4 => Waterlogged switch {
-                        true => 6066,
-                        false => 6067,
+                        true => 7863,
+                        false => 7864,
                     },
                     5 => Waterlogged switch {
-                        true => 6068,
-                        false => 6069,
+                        true => 7865,
+                        false => 7866,
                     },
                     6 => Waterlogged switch {
-                        true => 6070,
-                        false => 6071,
+                        true => 7867,
+                        false => 7868,
                     },
                     7 => Waterlogged switch {
-                        true => 6072,
-                        false => 6073,
+                        true => 7869,
+                        false => 7870,
                     },
                     8 => Waterlogged switch {
-                        true => 6074,
-                        false => 6075,
+                        true => 7871,
+                        false => 7872,
                     },
                     9 => Waterlogged switch {
-                        true => 6076,
-                        false => 6077,
+                        true => 7873,
+                        false => 7874,
                     },
                     10 => Waterlogged switch {
-                        true => 6078,
-                        false => 6079,
+                        true => 7875,
+                        false => 7876,
                     },
                     11 => Waterlogged switch {
-                        true => 6080,
-                        false => 6081,
+                        true => 7877,
+                        false => 7878,
                     },
                     12 => Waterlogged switch {
-                        true => 6082,
-                        false => 6083,
+                        true => 7879,
+                        false => 7880,
                     },
                     13 => Waterlogged switch {
-                        true => 6084,
-                        false => 6085,
+                        true => 7881,
+                        false => 7882,
                     },
                     14 => Waterlogged switch {
-                        true => 6086,
-                        false => 6087,
+                        true => 7883,
+                        false => 7884,
                     },
                     15 => Waterlogged switch {
-                        true => 6088,
-                        false => 6089,
+                        true => 7885,
+                        false => 7886,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
@@ -182,70 +221,70 @@ public record JungleHangingSignBlock(Identifier Identifier, bool Attached, int R
     
     public IBlock WithState(uint state) {
         return state switch {
-            6026 => new JungleHangingSignBlock(Identifier, true, 0, true),
-            6027 => new JungleHangingSignBlock(Identifier, true, 0, false),
-            6028 => new JungleHangingSignBlock(Identifier, true, 1, true),
-            6029 => new JungleHangingSignBlock(Identifier, true, 1, false),
-            6030 => new JungleHangingSignBlock(Identifier, true, 2, true),
-            6031 => new JungleHangingSignBlock(Identifier, true, 2, false),
-            6032 => new JungleHangingSignBlock(Identifier, true, 3, true),
-            6033 => new JungleHangingSignBlock(Identifier, true, 3, false),
-            6034 => new JungleHangingSignBlock(Identifier, true, 4, true),
-            6035 => new JungleHangingSignBlock(Identifier, true, 4, false),
-            6036 => new JungleHangingSignBlock(Identifier, true, 5, true),
-            6037 => new JungleHangingSignBlock(Identifier, true, 5, false),
-            6038 => new JungleHangingSignBlock(Identifier, true, 6, true),
-            6039 => new JungleHangingSignBlock(Identifier, true, 6, false),
-            6040 => new JungleHangingSignBlock(Identifier, true, 7, true),
-            6041 => new JungleHangingSignBlock(Identifier, true, 7, false),
-            6042 => new JungleHangingSignBlock(Identifier, true, 8, true),
-            6043 => new JungleHangingSignBlock(Identifier, true, 8, false),
-            6044 => new JungleHangingSignBlock(Identifier, true, 9, true),
-            6045 => new JungleHangingSignBlock(Identifier, true, 9, false),
-            6046 => new JungleHangingSignBlock(Identifier, true, 10, true),
-            6047 => new JungleHangingSignBlock(Identifier, true, 10, false),
-            6048 => new JungleHangingSignBlock(Identifier, true, 11, true),
-            6049 => new JungleHangingSignBlock(Identifier, true, 11, false),
-            6050 => new JungleHangingSignBlock(Identifier, true, 12, true),
-            6051 => new JungleHangingSignBlock(Identifier, true, 12, false),
-            6052 => new JungleHangingSignBlock(Identifier, true, 13, true),
-            6053 => new JungleHangingSignBlock(Identifier, true, 13, false),
-            6054 => new JungleHangingSignBlock(Identifier, true, 14, true),
-            6055 => new JungleHangingSignBlock(Identifier, true, 14, false),
-            6056 => new JungleHangingSignBlock(Identifier, true, 15, true),
-            6057 => new JungleHangingSignBlock(Identifier, true, 15, false),
-            6058 => new JungleHangingSignBlock(Identifier, false, 0, true),
-            6059 => new JungleHangingSignBlock(Identifier, false, 0, false),
-            6060 => new JungleHangingSignBlock(Identifier, false, 1, true),
-            6061 => new JungleHangingSignBlock(Identifier, false, 1, false),
-            6062 => new JungleHangingSignBlock(Identifier, false, 2, true),
-            6063 => new JungleHangingSignBlock(Identifier, false, 2, false),
-            6064 => new JungleHangingSignBlock(Identifier, false, 3, true),
-            6065 => new JungleHangingSignBlock(Identifier, false, 3, false),
-            6066 => new JungleHangingSignBlock(Identifier, false, 4, true),
-            6067 => new JungleHangingSignBlock(Identifier, false, 4, false),
-            6068 => new JungleHangingSignBlock(Identifier, false, 5, true),
-            6069 => new JungleHangingSignBlock(Identifier, false, 5, false),
-            6070 => new JungleHangingSignBlock(Identifier, false, 6, true),
-            6071 => new JungleHangingSignBlock(Identifier, false, 6, false),
-            6072 => new JungleHangingSignBlock(Identifier, false, 7, true),
-            6073 => new JungleHangingSignBlock(Identifier, false, 7, false),
-            6074 => new JungleHangingSignBlock(Identifier, false, 8, true),
-            6075 => new JungleHangingSignBlock(Identifier, false, 8, false),
-            6076 => new JungleHangingSignBlock(Identifier, false, 9, true),
-            6077 => new JungleHangingSignBlock(Identifier, false, 9, false),
-            6078 => new JungleHangingSignBlock(Identifier, false, 10, true),
-            6079 => new JungleHangingSignBlock(Identifier, false, 10, false),
-            6080 => new JungleHangingSignBlock(Identifier, false, 11, true),
-            6081 => new JungleHangingSignBlock(Identifier, false, 11, false),
-            6082 => new JungleHangingSignBlock(Identifier, false, 12, true),
-            6083 => new JungleHangingSignBlock(Identifier, false, 12, false),
-            6084 => new JungleHangingSignBlock(Identifier, false, 13, true),
-            6085 => new JungleHangingSignBlock(Identifier, false, 13, false),
-            6086 => new JungleHangingSignBlock(Identifier, false, 14, true),
-            6087 => new JungleHangingSignBlock(Identifier, false, 14, false),
-            6088 => new JungleHangingSignBlock(Identifier, false, 15, true),
-            6089 => new JungleHangingSignBlock(Identifier, false, 15, false),
+            7823 => new JungleHangingSignBlock(Identifier, true, 0, true),
+            7824 => new JungleHangingSignBlock(Identifier, true, 0, false),
+            7825 => new JungleHangingSignBlock(Identifier, true, 1, true),
+            7826 => new JungleHangingSignBlock(Identifier, true, 1, false),
+            7827 => new JungleHangingSignBlock(Identifier, true, 2, true),
+            7828 => new JungleHangingSignBlock(Identifier, true, 2, false),
+            7829 => new JungleHangingSignBlock(Identifier, true, 3, true),
+            7830 => new JungleHangingSignBlock(Identifier, true, 3, false),
+            7831 => new JungleHangingSignBlock(Identifier, true, 4, true),
+            7832 => new JungleHangingSignBlock(Identifier, true, 4, false),
+            7833 => new JungleHangingSignBlock(Identifier, true, 5, true),
+            7834 => new JungleHangingSignBlock(Identifier, true, 5, false),
+            7835 => new JungleHangingSignBlock(Identifier, true, 6, true),
+            7836 => new JungleHangingSignBlock(Identifier, true, 6, false),
+            7837 => new JungleHangingSignBlock(Identifier, true, 7, true),
+            7838 => new JungleHangingSignBlock(Identifier, true, 7, false),
+            7839 => new JungleHangingSignBlock(Identifier, true, 8, true),
+            7840 => new JungleHangingSignBlock(Identifier, true, 8, false),
+            7841 => new JungleHangingSignBlock(Identifier, true, 9, true),
+            7842 => new JungleHangingSignBlock(Identifier, true, 9, false),
+            7843 => new JungleHangingSignBlock(Identifier, true, 10, true),
+            7844 => new JungleHangingSignBlock(Identifier, true, 10, false),
+            7845 => new JungleHangingSignBlock(Identifier, true, 11, true),
+            7846 => new JungleHangingSignBlock(Identifier, true, 11, false),
+            7847 => new JungleHangingSignBlock(Identifier, true, 12, true),
+            7848 => new JungleHangingSignBlock(Identifier, true, 12, false),
+            7849 => new JungleHangingSignBlock(Identifier, true, 13, true),
+            7850 => new JungleHangingSignBlock(Identifier, true, 13, false),
+            7851 => new JungleHangingSignBlock(Identifier, true, 14, true),
+            7852 => new JungleHangingSignBlock(Identifier, true, 14, false),
+            7853 => new JungleHangingSignBlock(Identifier, true, 15, true),
+            7854 => new JungleHangingSignBlock(Identifier, true, 15, false),
+            7855 => new JungleHangingSignBlock(Identifier, false, 0, true),
+            7856 => new JungleHangingSignBlock(Identifier, false, 0, false),
+            7857 => new JungleHangingSignBlock(Identifier, false, 1, true),
+            7858 => new JungleHangingSignBlock(Identifier, false, 1, false),
+            7859 => new JungleHangingSignBlock(Identifier, false, 2, true),
+            7860 => new JungleHangingSignBlock(Identifier, false, 2, false),
+            7861 => new JungleHangingSignBlock(Identifier, false, 3, true),
+            7862 => new JungleHangingSignBlock(Identifier, false, 3, false),
+            7863 => new JungleHangingSignBlock(Identifier, false, 4, true),
+            7864 => new JungleHangingSignBlock(Identifier, false, 4, false),
+            7865 => new JungleHangingSignBlock(Identifier, false, 5, true),
+            7866 => new JungleHangingSignBlock(Identifier, false, 5, false),
+            7867 => new JungleHangingSignBlock(Identifier, false, 6, true),
+            7868 => new JungleHangingSignBlock(Identifier, false, 6, false),
+            7869 => new JungleHangingSignBlock(Identifier, false, 7, true),
+            7870 => new JungleHangingSignBlock(Identifier, false, 7, false),
+            7871 => new JungleHangingSignBlock(Identifier, false, 8, true),
+            7872 => new JungleHangingSignBlock(Identifier, false, 8, false),
+            7873 => new JungleHangingSignBlock(Identifier, false, 9, true),
+            7874 => new JungleHangingSignBlock(Identifier, false, 9, false),
+            7875 => new JungleHangingSignBlock(Identifier, false, 10, true),
+            7876 => new JungleHangingSignBlock(Identifier, false, 10, false),
+            7877 => new JungleHangingSignBlock(Identifier, false, 11, true),
+            7878 => new JungleHangingSignBlock(Identifier, false, 11, false),
+            7879 => new JungleHangingSignBlock(Identifier, false, 12, true),
+            7880 => new JungleHangingSignBlock(Identifier, false, 12, false),
+            7881 => new JungleHangingSignBlock(Identifier, false, 13, true),
+            7882 => new JungleHangingSignBlock(Identifier, false, 13, false),
+            7883 => new JungleHangingSignBlock(Identifier, false, 14, true),
+            7884 => new JungleHangingSignBlock(Identifier, false, 14, false),
+            7885 => new JungleHangingSignBlock(Identifier, false, 15, true),
+            7886 => new JungleHangingSignBlock(Identifier, false, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

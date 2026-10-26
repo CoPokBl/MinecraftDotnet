@@ -1,5 +1,5 @@
 using BenchmarkDotNet.Attributes;
-using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Schemas.Chunks;
@@ -73,6 +73,26 @@ public class CalculatedLightingBenchmark {
     public LightData LightSources() {
         _provider.Invalidate(PosLights);
         return _provider.GetLighting(PosLights, _lightSourcesChunk, null, _registry, hasSkyLight: true);
+    }
+
+    // The four above light a chunk with nothing around it. A server has the neighbours, and light
+    // is computed over the three by three, so these are the numbers that matter in one.
+
+    [Benchmark(Description = "Terrain chunk with all eight neighbours loaded")]
+    public LightData TerrainWithNeighbours() {
+        _provider.Invalidate(PosTerrain);
+        return _provider.GetLighting(PosTerrain, _terrainChunk, Neighbour, _registry, hasSkyLight: true);
+    }
+
+    [Benchmark(Description = "Light sources chunk with all eight neighbours loaded")]
+    public LightData LightSourcesWithNeighbours() {
+        _provider.Invalidate(PosLights);
+        return _provider.GetLighting(PosLights, _lightSourcesChunk, Neighbour, _registry, hasSkyLight: true);
+    }
+
+    /// <summary>Terrain in all nine slots, so every chunk of the region has to be built and lit.</summary>
+    private ChunkData? Neighbour(Vec2<int> pos) {
+        return _terrainChunk;
     }
 
     // ── Chunk builders ────────────────────────────────────────────────────────

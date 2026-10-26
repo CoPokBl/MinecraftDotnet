@@ -8,6 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <InternalsVisibleTo Include="ClientLib.Testing" />
+      <InternalsVisibleTo Include="Conformance" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\Minecraft\Minecraft.csproj" />
     </ItemGroup>
 

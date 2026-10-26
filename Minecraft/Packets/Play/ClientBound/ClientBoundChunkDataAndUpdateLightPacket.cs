@@ -24,6 +24,6 @@ public class ClientBoundChunkDataAndUpdateLightPacket : ClientBoundPacket {
         ChunkX = r.ReadInteger(),
         ChunkZ = r.ReadInteger(),
         Data = ChunkData.Read(r, reg),
-        Light = LightData.FullBright  // TODO .Read()
+        Light = LightData.Read(r)
     };
 }

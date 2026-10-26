@@ -1,0 +1,47 @@
+{
+  "name": "Default",
+  "terrainFilter": "linear",
+  "targets": [
+    { "name": "colour", "format": "rgba8", "filter": "nearest" },
+    { "name": "depth", "format": "depth32f", "filter": "nearest" },
+    { "name": "outline", "format": "rgba8" },
+    { "name": "outlineSwap", "format": "rgba8" },
+    { "name": "outlineDepth", "format": "depth32f", "filter": "nearest" }
+  ],
+  "passes": [
+    { "name": "clear", "type": "fullscreen", "program": "clear", "outputs": ["colour"], "depth": "depth", "clearDepth": true },
+    { "name": "sky", "geometry": "sky", "program": "sky", "outputs": ["colour"], "blend": "premultiplied", "depthTest": false, "depthWrite": false, "depthClamp": true },
+
+    { "name": "solid", "geometry": "terrain_solid", "program": "terrain", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal" },
+    { "name": "cutout", "geometry": "terrain_cutout", "program": "terrain", "defines": { "ALPHA_CUTOUT": "0.5", "CUTOUT": "1" }, "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "cull": false, "polygonOffset": [-1, -4] },
+    { "name": "entities", "geometry": "entities", "program": "entity", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "cull": false },
+    { "name": "endPortal", "geometry": "end_portal", "program": "end_portal", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal" },
+    { "name": "particles", "geometry": "particles", "program": "particle", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "cull": false },
+    { "name": "crumbling", "geometry": "crumbling", "program": "crumbling", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "blend": "doubleMultiply", "depthWrite": false, "polygonOffset": [-1, -10] },
+
+    { "name": "entityShadows", "geometry": "entity_shadows", "program": "entity_shadow", "inputs": ["depth"], "outputs": ["colour"], "blend": "alpha" },
+    { "name": "translucentEntities", "geometry": "entities_translucent", "program": "entity", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "blend": "alpha", "cull": false },
+    { "name": "glint", "geometry": "glint", "program": "glint", "outputs": ["colour"], "depth": "depth", "blend": "additive", "depthFunc": "equal", "depthWrite": false, "cull": false },
+    { "name": "additiveEntities", "geometry": "entities_additive", "program": "additive_entity", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "blend": "additive", "cull": false },
+    { "name": "text", "geometry": "text", "program": "text", "outputs": ["colour"], "depth": "depth", "blend": "alpha", "depthFunc": "lequal", "polygonOffset": [-1, -10], "cull": false },
+    { "name": "lines", "geometry": "lines", "program": "lines", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "blend": "alpha", "cull": false },
+    { "name": "waterMask", "geometry": "water_mask", "program": "water_mask", "depth": "depth", "depthFunc": "lequal" },
+
+    { "name": "translucent", "geometry": "terrain_translucent", "program": "terrain", "defines": { "ALPHA_CUTOUT": "0.1" }, "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "blend": "alpha" },
+    { "name": "translucentParticles", "geometry": "particles_translucent", "program": "particle", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "blend": "alpha", "cull": false },
+    { "name": "clouds", "geometry": "clouds", "program": "clouds", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "blend": "alpha", "depthClamp": true },
+    { "name": "weather", "geometry": "weather", "program": "weather", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "blend": "alpha", "depthWrite": false, "cull": false },
+    { "name": "textSeeThrough", "geometry": "text_see_through", "program": "text", "defines": { "SEE_THROUGH": "1" }, "outputs": ["colour"], "depth": "depth", "blend": "alpha", "depthTest": false, "depthWrite": false, "cull": false },
+
+    { "name": "hand", "geometry": "hand", "program": "entity", "outputs": ["colour"], "depth": "depth", "depthFunc": "lequal", "cull": false, "depthRange": [0, 0.05], "depthClamp": true },
+    { "name": "handGlint", "geometry": "hand_glint", "program": "glint", "outputs": ["colour"], "depth": "depth", "blend": "additive", "depthFunc": "equal", "depthWrite": false, "cull": false, "depthRange": [0, 0.05], "depthClamp": true },
+
+    { "name": "entityOutline", "geometry": "entity_outline", "when": "entity_outline", "program": "entity_outline", "outputs": ["outline"], "depth": "outlineDepth", "depthFunc": "lequal", "clear": [0, 0, 0, 0], "clearDepth": true, "cull": false },
+    { "name": "outlineEdges", "type": "fullscreen", "when": "entity_outline", "program": "entity_outline_edges", "inputs": ["outline"], "outputs": ["outlineSwap"] },
+    { "name": "outlineBlurX", "type": "fullscreen", "when": "entity_outline", "program": "entity_outline_blur", "defines": { "BLUR_INPUT": "outlineSwap", "BLUR_DIR": "vec2(1.0, 0.0)" }, "inputs": ["outlineSwap"], "outputs": ["outline"] },
+    { "name": "outlineBlurY", "type": "fullscreen", "when": "entity_outline", "program": "entity_outline_blur", "defines": { "BLUR_INPUT": "outline", "BLUR_DIR": "vec2(0.0, 1.0)" }, "inputs": ["outline"], "outputs": ["outlineSwap"] },
+    { "name": "outlineComposite", "type": "fullscreen", "when": "entity_outline", "program": "entity_outline_composite", "inputs": ["outlineSwap"], "outputs": ["colour"], "blend": "alpha" },
+
+    { "name": "final", "type": "fullscreen", "program": "final", "inputs": ["colour"], "outputs": ["screen"] }
+  ]
+}

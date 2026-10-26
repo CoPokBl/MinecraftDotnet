@@ -1,18 +1,22 @@
 using System.Diagnostics;
 using System.Reflection;
 using ManagedServer.Commands;
+using ManagedServer.Damage;
+using Minecraft.Implementations;
 using Minecraft.Implementations.Events;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Events.Attributes;
 using ManagedServer.Features;
+using ManagedServer.Interaction;
 using ManagedServer.Login;
 using ManagedServer.Permissions;
 using ManagedServer.Permissions.ContainerImpl;
+using ManagedServer.Placement;
 using ManagedServer.Scheduling;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
-using ManagedServer.Worlds.Lighting;
+using Minecraft.Lighting;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Server;
 using Minecraft.Implementations.Server.Connections;
@@ -28,11 +32,37 @@ namespace ManagedServer;
 // TODO: Remove MinecraftServer inheritance
 public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudience, IFeatureScope {
     public List<World> Worlds { get; } = [];
-    public List<Player> Players { get; } = [];
+    public SnapshotList<Player> Players { get; } = new();
     public ManagedMinecraftServer Server => this;
     public FeatureHandler FeatureHandler { get; }
     public ServerScheduler Scheduler { get; }
     public ulong CurrentTick { get; private set; }
+
+    /// <summary>
+    /// What every hit is reduced by, before it reaches an entity's health. Always present, but empty
+    /// until a feature puts something in it, so hits land whole by default. See
+    /// <see cref="Damage.DamagePipeline"/>.
+    /// </summary>
+    public DamagePipeline DamagePipeline { get; } = new();
+
+    /// <summary>
+    /// Which rule decides the state a block is placed in, and how it reacts to its neighbours. Always
+    /// present and, like <see cref="DamagePipeline"/>, <b>empty</b> until something fills it: every
+    /// block places its default state and reacts to nothing. Register
+    /// <see cref="Features.Basic.VanillaPlacementRulesFeature"/> for vanilla's answers, all of them or
+    /// the ones you want. See <see cref="Placement.BlockPlacementRules"/>.
+    /// </summary>
+    public BlockPlacementRules BlockPlacementRules { get; } = new();
+
+    /// <summary>
+    /// What a block does when it is right clicked. Always present and, like
+    /// <see cref="BlockPlacementRules"/>, <b>empty</b> until something fills it: every block is inert
+    /// and the click falls straight through to the held item. Register
+    /// <see cref="Features.Basic.VanillaBlockInteractionsFeature"/> for vanilla's answers, all of them
+    /// or the ones you want. See <see cref="Interaction.BlockInteractionRules"/>.
+    /// </summary>
+    public BlockInteractionRules BlockInteractionRules { get; } = new();
+
     public string ServerId { get; set; } = Random.Shared.Next(int.MaxValue).ToString();  // must be <=20 chars
     public Func<Player, IPermissionContainer> PermissionsProvider { get; set; } = _ => new MapPermissionContainer();
     
@@ -53,8 +83,33 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     // Configurable stuff
     public List<Command> Commands { get; set; } = [];
     public int ViewDistance { get; set; } = 8;
+    /// <summary>
+    /// How many chunks a world will hand one player in a single flush. The real throttle: a player
+    /// owed more than this gets the rest on later ticks, nearest first.
+    /// </summary>
     public int WorldPacketsPerTick { get; set; } = 3000;
-    public int WorldTickDelayMs { get; set; } = 50;
+
+    /// <summary>
+    /// The thread pool budget every world's chunk generation shares. One per server rather than one
+    /// per world, because the pool is one and four worlds each taking most of it is the same problem
+    /// as one world taking all of it.
+    /// </summary>
+    /// <remarks>
+    /// <see cref="ChunkGenerationQueue.MaxConcurrency"/> is the knob. Raise it for a server that does
+    /// nothing but stream terrain, lower it for one that has other work to do; leaving it alone
+    /// leaves two cores for everything that is not terrain.
+    /// </remarks>
+    public ChunkGenerationQueue ChunkGeneration { get; }
+
+    /// <summary>
+    /// A floor on the gap between two flushes of the same world, on top of the tick rate. Zero, so
+    /// the tick rate is the only pacing.
+    /// <p/>
+    /// It used to default to 50 against a 50ms tick, which meant ordinary jitter in
+    /// <see cref="Environment.TickCount64"/> pushed roughly every other flush under the threshold and
+    /// halved streaming throughput for no stated reason.
+    /// </summary>
+    public int WorldTickDelayMs { get; set; }
     public bool AllowListeningToUnCalledEvents { get; set; } = false;
     public int TargetTicksPerSecond { get; set; } = 20;
     
@@ -78,7 +133,8 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     public ManagedMinecraftServer(params IServerFeature[] feats) {
         FeatureHandler = new FeatureHandler(this);
         Scheduler = new ServerScheduler(this);
-        
+        ChunkGeneration = new ChunkGenerationQueue(HandleError);
+
         foreach (IServerFeature feat in feats) {
             AddFeature(feat);
         }
@@ -262,7 +318,7 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
     }
 
     public Player[] GetViewers() {
-        return Players.ToArray();
+        return Players.Snapshot;
     }
 
     public void SendPacket(MinecraftPacket packet) {
@@ -278,6 +334,13 @@ public partial class ManagedMinecraftServer : MinecraftServer, IViewable, IAudie
         connection.Registry = Registry;
         Connections.Add(connection);
         Events.AddChild<IPacketEvent>(connection.Events, pe => pe.Connection == connection);
-        connection.Disconnected += () => Connections.Remove(connection);
+
+        // The node is detached again as well as the connection dropped, for the reason given on
+        // MinecraftServer.AddConnection: every event walks the children, so one left behind per
+        // connection ever made costs every event for the rest of the run.
+        connection.Disconnected += () => {
+            Connections.Remove(connection);
+            Events.RemoveChild(connection.Events);
+        };
     }
 }

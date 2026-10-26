@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Text;
@@ -7,6 +8,9 @@ namespace Minecraft.Data.Components.Types;
 
 public record LoreComponent() : IDataComponent<TextComponent[]> {
     public override Identifier Identifier => "minecraft:lore";
+
+    public override NbtCodec<TextComponent[]>? Codec => Persistent;
+    private static readonly NbtCodec<TextComponent[]> Persistent = NbtCodecs.TextList();
     
     public override DataWriter WriteData(TextComponent[] val, DataWriter writer, MinecraftRegistry registry) {
         return writer.WritePrefixedArray(val, (t, w) => w.WriteNbt(t));

@@ -30,14 +30,36 @@ public class DataReader(byte[] data) : Stream {
     }
 
     public byte Read() {
-        return Read(1)[0];
+        if (Pos >= _data.Length) {
+            throw new EndOfStreamException("Reached the end of the data.");
+        }
+
+        return _data[Pos++];
+    }
+
+    /// <summary>
+    /// The next <paramref name="bytes"/> without copying them, for the scalar reads. A packed chunk is
+    /// four thousand longs, and handing each one its own array is most of what reading a chunk costs.
+    /// </summary>
+    /// <remarks>
+    /// Only safe because nothing here holds the span past the call that made it, and
+    /// <see cref="UpdateData"/> is the one thing that swaps the array underneath.
+    /// </remarks>
+    private ReadOnlySpan<byte> ReadSpan(int bytes) {
+        if (Pos + bytes > _data.Length) {
+            throw new EndOfStreamException("Reached the end of the data.");
+        }
+
+        ReadOnlySpan<byte> span = _data.AsSpan(Pos, bytes);
+        Pos += bytes;
+        return span;
     }
 
     public byte[] Read(uint bytes) => Read((int)bytes);
     
     public byte[] Read(int bytes) {
         if (Pos + bytes > _data.Length) {
-            throw new Exception("Reached the end of the data.");
+            throw new EndOfStreamException("Reached the end of the data.");
         }
 
         byte[] newData = _data[Pos..(Pos + bytes)];
@@ -45,13 +67,27 @@ public class DataReader(byte[] data) : Stream {
         return newData;
     }
 
-    public T? ReadPrefixedOptional<T>(Func<DataReader, T> reader) {
+    public T? ReadPrefixedOptional<T>(Func<DataReader, T> reader) where T : class {
         bool exists = ReadBoolean();
-        return exists ? reader(this) : default;
+        return exists ? reader(this) : null;
     }
     
-    public T? ReadPrefixedOptional<T>(MinecraftRegistry reg) where T : INetworkType<T> {
+    public T? ReadPrefixedOptional<T>(MinecraftRegistry reg) where T : class, INetworkType<T> {
         return ReadPrefixedOptional(r => T.ReadData(r, reg));
+    }
+
+    /// <summary>
+    /// <see cref="ReadPrefixedOptional{T}(Func{DataReader,T})"/> for a value type, which has to be a
+    /// separate method: an unconstrained <c>T?</c> is plain <c>T</c> for a struct, so an absent value
+    /// would come back as a present zero.
+    /// </summary>
+    public T? ReadPrefixedOptionalValue<T>(Func<DataReader, T> reader) where T : struct {
+        bool exists = ReadBoolean();
+        return exists ? reader(this) : null;
+    }
+
+    public T? ReadPrefixedOptionalValue<T>(MinecraftRegistry reg) where T : struct, INetworkType<T> {
+        return ReadPrefixedOptionalValue(r => T.ReadData(r, reg));
     }
 
     public T Read<T>(MinecraftRegistry reg) where T : INetworkType<T> {
@@ -63,7 +99,7 @@ public class DataReader(byte[] data) : Stream {
         int position = 0;
 
         while (true) {
-            byte currentByte = Read(1)[0];
+            byte currentByte = Read();
             value |= (currentByte & ProtocolConstants.SegmentBits) << position;
 
             if ((currentByte & ProtocolConstants.ContinueBit) == 0) break;
@@ -96,35 +132,27 @@ public class DataReader(byte[] data) : Stream {
 
     public string ReadString() {
         int length = ReadVarInt();
-        return Encoding.UTF8.GetString(Read(length));
+        return Encoding.UTF8.GetString(ReadSpan(length));
     }
     
     public ushort ReadUShort() {
-        byte[] bytes = Read(2);
-        return (ushort)((bytes[0] << 8) | bytes[1]);
+        return BinaryPrimitives.ReadUInt16BigEndian(ReadSpan(2));
     }
     
     public long ReadLong() {
-        byte[] bytes = Read(8);
-        long value = 0;
-        for (int i = 0; i < 8; i++) {
-            value |= (long)(bytes[i] & 0xFF) << (56 - i * 8); // Big-endian
-        }
-        return value;
+        return BinaryPrimitives.ReadInt64BigEndian(ReadSpan(8));
     }
 
     public short ReadShort() {
-        byte[] bytes = Read(2);
-        return BinaryPrimitives.ReadInt16BigEndian(bytes);
+        return BinaryPrimitives.ReadInt16BigEndian(ReadSpan(2));
     }
 
     public int ReadInteger() {
-        byte[] bytes = Read(4);
-        return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
+        return BinaryPrimitives.ReadInt32BigEndian(ReadSpan(4));
     }
 
     public uint ReadUInteger() {
-        return BinaryPrimitives.ReadUInt32BigEndian(Read(4));
+        return BinaryPrimitives.ReadUInt32BigEndian(ReadSpan(4));
     }
     
     public Vec3<double> ReadVec3() {
@@ -148,25 +176,20 @@ public class DataReader(byte[] data) : Stream {
         return new Vec3<float>(x, y, z);
     }
     
+    public Vec3<double> ReadLpVec3() {
+        return LpVec3.Read(this);
+    }
+
     public float ReadFloat() {
-        byte[] bytes = Read(4);
-        if (BitConverter.IsLittleEndian) {
-            Array.Reverse(bytes);
-        }
-        return BitConverter.ToSingle(bytes, 0);
+        return BinaryPrimitives.ReadSingleBigEndian(ReadSpan(4));
     }
     
     public double ReadDouble() {
-        byte[] bytes = Read(8);
-        if (BitConverter.IsLittleEndian) {
-            Array.Reverse(bytes);
-        }
-        return BitConverter.ToDouble(bytes, 0);
+        return BinaryPrimitives.ReadDoubleBigEndian(ReadSpan(8));
     }
 
     public bool ReadBoolean() {
-        byte[] bytes = Read(1);
-        return bytes[0] != 0;
+        return Read() != 0;
     }
     
     // Sign-extension helper for bits-bit two's complement
@@ -180,13 +203,7 @@ public class DataReader(byte[] data) : Stream {
     // Should be 8 bytes in total and big-endian.
     public Vec3<int> ReadPosition() {
         // Read 8 bytes
-        byte[] buffer = Read(8);
-
-        // Combine into a 64-bit big-endian value:
-        long packed = 0;
-        for (int i = 0; i < 8; i++) {
-            packed = (packed << 8) | (uint)(buffer[i] & 0xFF);
-        }
+        long packed = ReadLong();
 
         // Extract X (26 bits), Z (26 bits), Y (12 bits)
         int x = (int)((packed >> 38) & 0x3FFFFFF);
@@ -217,60 +234,75 @@ public class DataReader(byte[] data) : Stream {
         return value;
     }
     
+    /// <remarks>
+    /// Shifts the entries out of each long rather than building a <see cref="BitArray"/> per long and
+    /// a sliced, reversed one per entry. That is three objects an entry, twelve thousand over a
+    /// section, and it is the whole cost of reading a stored or received chunk back.
+    /// </remarks>
     public ushort[] ReadPacketDataArray(int bitsPerEntry, int entryCount) {
-        int entriesPerLong = 64 / bitsPerEntry;  // How many entries fit into one long
-        int longCount = (int)Math.Ceiling((double)entryCount / entriesPerLong);
-    
+        int entriesPerLong = 64 / bitsPerEntry;  // entries never straddle a long
+        int longCount = (entryCount + entriesPerLong - 1) / entriesPerLong;
+
         ushort[] entries = new ushort[entryCount];
+        UnpackLongs(entries, longCount, bitsPerEntry, entriesPerLong);
+        return entries;
+    }
+
+    /// <summary>
+    /// Fills <paramref name="entries"/> from <paramref name="longCount"/> packed longs read from here,
+    /// stopping when it is full so a trailing long with spare room does not run off the end.
+    /// </summary>
+    private void UnpackLongs(ushort[] entries, int longCount, int bitsPerEntry, int entriesPerLong) {
+        long mask = (1L << bitsPerEntry) - 1L;
         int currentEntry = 0;
 
         for (int i = 0; i < longCount; i++) {
-            // Read out one long of data
-            byte[] bytes = Read(sizeof(long));
-            Array.Reverse(bytes);
-            BitArray bits = new(bytes);
+            long value = ReadLong();
+            for (int j = 0; j < entriesPerLong && currentEntry < entries.Length; j++) {
+                entries[currentEntry++] = (ushort)((value >> (j * bitsPerEntry)) & mask);
+            }
+        }
+    }
+    
+    /// <summary>
+    /// <see cref="ReadPacketDataArray"/> over 32 bit entries, which is what a direct palette needs:
+    /// its entries are raw block state ids rather than indices into a small table.
+    /// </summary>
+    /// <remarks>
+    /// Shifts the entries out of each long rather than going through a <see cref="BitArray"/> per long
+    /// and a sliced, reversed one per entry, which costs about three objects an entry and so some
+    /// twelve thousand over a direct section.
+    /// </remarks>
+    public uint[] ReadPacketDataArray32(int bitsPerEntry, int entryCount) {
+        int entriesPerLong = 64 / bitsPerEntry;  // entries never straddle a long
+        int longCount = (entryCount + entriesPerLong - 1) / entriesPerLong;
 
-            for (int j = 0; j < entriesPerLong; j++) {
-                ushort entry = FromNBitInteger(bitsPerEntry, bits.Range(j*bitsPerEntry, bitsPerEntry).Reverse());
-                entries[currentEntry++] = entry;
-                if (currentEntry == entryCount) {
-                    break;  // it's the last long
-                }
+        uint[] entries = new uint[entryCount];
+        long mask = bitsPerEntry == 64 ? -1L : (1L << bitsPerEntry) - 1L;
+        int currentEntry = 0;
+
+        for (int i = 0; i < longCount; i++) {
+            long value = ReadLong();
+            for (int j = 0; j < entriesPerLong && currentEntry < entryCount; j++) {
+                entries[currentEntry++] = (uint)((value >> (j * bitsPerEntry)) & mask);
             }
         }
 
         return entries;
     }
-    
+
     public ushort[] ReadPrefixedPacketDataArray(int bitsPerEntry) {
-        int entriesPerLong = 64 / bitsPerEntry;  // How many entries fit into one long
-        int longCount = ReadVarInt();  // Read the number of longs
-        int entryCount = longCount * entriesPerLong;  // Total number of entries
-    
-        ushort[] entries = new ushort[entryCount];
-        int currentEntry = 0;
+        int entriesPerLong = 64 / bitsPerEntry;  // entries never straddle a long
+        int longCount = ReadVarInt();
 
-        for (int i = 0; i < longCount; i++) {
-            // Read out one long of data
-            byte[] bytes = Read(sizeof(long));
-            Array.Reverse(bytes);
-            BitArray bits = new(bytes);
-
-            for (int j = 0; j < entriesPerLong; j++) {
-                ushort entry = FromNBitInteger(bitsPerEntry, bits.Range(j*bitsPerEntry, bitsPerEntry).Reverse());
-                entries[currentEntry++] = entry;
-                if (currentEntry == entryCount) {
-                    break;  // it's the last long
-                }
-            }
-        }
-
+        ushort[] entries = new ushort[longCount * entriesPerLong];
+        UnpackLongs(entries, longCount, bitsPerEntry, entriesPerLong);
         return entries;
     }
     
     // reads a signed 8-bit integer (two's complement)
     public new sbyte ReadByte() {
-        byte b = Read(1)[0];
+        byte b = Read();
         if (b >= 128) {
             // Convert to two's complement for negative values
             return (sbyte)(b - 256); // 256 - 128 = 128, so -128 becomes 128
@@ -314,6 +346,15 @@ public class DataReader(byte[] data) : Stream {
             : Or<TP, T>.FromValue1(readerAdapter1.Invoke(id - 1));
     }
     
+    /// <summary>
+    /// Reads a vanilla <c>Holder</c>: a zero means the value follows inline, anything else is a
+    /// registry protocol id offset by one.
+    /// </summary>
+    public T ReadHolder<T>(Func<int, T> byId, Func<DataReader, T> inlineReader) {
+        int id = ReadVarInt();
+        return id == 0 ? inlineReader.Invoke(this) : byId.Invoke(id - 1);
+    }
+
     public T[] ReadPrefixedArray<T>(Func<DataReader, T> readerAdapter) {
         return ReadArray(ReadVarInt(), readerAdapter);
     }
@@ -339,7 +380,9 @@ public class DataReader(byte[] data) : Stream {
     }
     
     public byte[] ReadRemaining() {
-        return _data[Pos..];
+        byte[] remaining = _data[Pos..];
+        Pos = _data.Length;
+        return remaining;
     }
     
     public override void Flush() {

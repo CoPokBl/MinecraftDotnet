@@ -1,11 +1,18 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
+using NBT;
 
 namespace Minecraft.Data.Components.Types;
 
 public record UseRemainderComponent() : IDataComponent<ItemStack> {
     public override Identifier Identifier => "minecraft:use_remainder";
+
+    public override NbtCodec<ItemStack>? Codec => Persistent;
+    private static readonly NbtCodec<ItemStack> Persistent = new(
+        (val, registry) => val.ToNbt(registry),
+        ItemStack.FromNbt);
     
     public override DataWriter WriteData(ItemStack val, DataWriter writer, MinecraftRegistry registry) {
         return writer.Write(val, registry);

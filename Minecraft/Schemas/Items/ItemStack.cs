@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using Minecraft.Data;
 using Minecraft.Data.Components;
+using Minecraft.Data.Enchantments;
 using Minecraft.Data.Generated;
 using Minecraft.Data.Items;
 using Minecraft.Implementations.Tags;
@@ -34,10 +35,33 @@ public class ItemStack(
     public static readonly ItemStack Air = new(Item.Air, 0);
 
     public ItemStack With<T>(IDataComponent<T> component, T value) where T : notnull {
+        return With((IDataComponent)component, value);
+    }
+
+    /// <summary>
+    /// The same, for a component whose value type is not known at the call site. Reading a stack out
+    /// of data is that: the component comes back from the registry as an <see cref="IDataComponent"/>
+    /// and its codec answers an <see cref="object"/>.
+    /// </summary>
+    public ItemStack With(IDataComponent component, object value) {
         Dictionary<IDataComponent, object> newComponents = new(_components) {
             [component] = value
         };
-        return new ItemStack(Type, Count, newComponents, _removeComponents);
+        // A patch says either what a component is or that it is gone, never both, so setting one that
+        // had been removed takes the removal back off.
+        return new ItemStack(Type, Count, newComponents,
+            _removeComponents.Where(c => !c.Equals(component)).ToArray());
+    }
+
+    /// <summary>
+    /// The stack without <paramref name="component"/>, including without the one its item type carries
+    /// by default. That is the difference from never setting it: the removal travels to the client, so
+    /// a shield with <c>minecraft:blocks_attacks</c> taken off stops blocking there as well as here.
+    /// </summary>
+    public ItemStack Without<T>(IDataComponent<T> component) {
+        return new ItemStack(Type, Count,
+            _components.Where(kvp => !kvp.Key.Equals(component)).ToDictionary(),
+            _removeComponents.Contains(component) ? _removeComponents : [.._removeComponents, component]);
     }
     
     public ItemStack WithCount(int count) {
@@ -121,9 +145,9 @@ public class ItemStack(
         if (component == null && ignoreDefaults) {
             throw new KeyNotFoundException($"Component {type.Identifier} not found in ItemStack.");
         }
-        
-        // Look for default value
-        if (Type.DefaultComponents.TryGetValue(type, out object? defaultComponent)) {
+
+        // Look for default value, unless the stack says the item's default is gone
+        if (!_removeComponents.Contains(type) && Type.DefaultComponents.TryGetValue(type, out object? defaultComponent)) {
             return (T)defaultComponent;
         }
         
@@ -139,11 +163,43 @@ public class ItemStack(
     }
     
     public bool Has<T>(IDataComponent<T> type) {
-        return _components.ContainsKey(type) || Type.DefaultComponents.ContainsKey(type);
+        if (_components.ContainsKey(type)) {
+            return true;
+        }
+
+        return !_removeComponents.Contains(type) && Type.DefaultComponents.ContainsKey(type);
     }
 
     public T? GetStructOrNull<T>(IDataComponent<T> type) where T : struct {
         return Has(type) ? Get(type) : null;
+    }
+
+    /// <summary>
+    /// <c>EnchantmentHelper.getItemEnchantmentLevel</c>: the level of one enchantment on this stack,
+    /// or zero when it is not on it.
+    /// </summary>
+    public int GetEnchantmentLevel(IEnchantment enchantment) {
+        foreach ((IEnchantment present, int level) in GetOrDefault(DataComponent.Enchantments, [])) {
+            if (present.Identifier == enchantment.Identifier) {
+                return level;
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// <see cref="GetEnchantmentLevel(IEnchantment)"/> by name, for a caller holding an identifier
+    /// rather than the registry entry. An enchantment that is not on the stack reads as level zero.
+    /// </summary>
+    public int GetEnchantmentLevel(Identifier enchantment) {
+        foreach ((IEnchantment present, int level) in GetOrDefault(DataComponent.Enchantments, [])) {
+            if (present.Identifier == enchantment) {
+                return level;
+            }
+        }
+
+        return 0;
     }
 
     public TradeItem AsTradeItem() {
@@ -157,16 +213,75 @@ public class ItemStack(
         
         writer.WriteVarInt(Count);
         writer.WriteVarInt(registry.Items.GetProtocolId(Type));
-        
-        writer.WriteVarInt(_components.Count);  // components to add
-        writer.WriteVarInt(_removeComponents.Length);  // components to remove
+        return WriteComponentPatch(writer, registry);
+    }
 
-        writer.WriteArray(_components, (kvp, w) => w
-            .WriteVarInt(registry.DataComponents.GetProtocolId(kvp.Key))
-            .Write(wr => kvp.Key.WriteData(kvp.Value, wr, registry)));
-        
-        return writer.WriteArray(_removeComponents, (component, w) => w
-            .WriteVarInt(registry.DataComponents.GetProtocolId(component)));
+    /// <summary>
+    /// The stack as a datapack or a saved world spells it, which is vanilla's <c>ItemStack.CODEC</c>.
+    /// </summary>
+    /// <remarks>
+    /// <b>Not the wire form.</b> That is <see cref="WriteData"/>, where a component is a protocol id
+    /// and a payload with no key names in it.
+    /// <p/>
+    /// A count of one is left off, as vanilla leaves it off. A component the patch removes is written
+    /// under its name with a <c>!</c> in front, which is how one patch says both what a component is
+    /// and that another is gone.
+    /// </remarks>
+    public CompoundTag ToNbt(MinecraftRegistry registry) {
+        List<(string, INbtTag)> fields = [("id", new StringTag(Type.Identifier.ToString()))];
+
+        if (Count != 1) {
+            fields.Add(("count", new IntegerTag(Count)));
+        }
+
+        List<(string, INbtTag)> patch = [];
+
+        foreach ((IDataComponent component, object value) in _components) {
+            patch.Add((component.Identifier.ToString(), component.ToNbt(value, registry)));
+        }
+
+        foreach (IDataComponent component in _removeComponents) {
+            patch.Add(("!" + component.Identifier, new CompoundTag()));
+        }
+
+        if (patch.Count != 0) {
+            fields.Add(("components", new CompoundTag(patch.ToArray())));
+        }
+
+        return new CompoundTag(fields.ToArray());
+    }
+
+    /// <inheritdoc cref="ToNbt"/>
+    public static ItemStack FromNbt(INbtTag tag, MinecraftRegistry registry) {
+        CompoundTag compound = tag.GetCompound();
+        Dictionary<IDataComponent, object> components = [];
+        List<IDataComponent> removed = [];
+
+        if (compound["components"] is { } patch) {
+            foreach ((string key, INbtTag value) in patch.GetCompound().Children) {
+                bool remove = key.StartsWith('!');
+                Identifier name = remove ? key[1..] : key;
+
+                if (!registry.DataComponents.Contains(name)) {
+                    throw new InvalidOperationException($"No data component called \"{name}\".");
+                }
+
+                IDataComponent component = registry.DataComponents[name];
+
+                if (remove) {
+                    removed.Add(component);
+                    continue;
+                }
+
+                components[component] = component.FromNbt(value, registry);
+            }
+        }
+
+        return new ItemStack(
+            registry.Items[(Identifier)compound["id"].GetString()],
+            compound.Contains("count") ? compound["count"].AsInt() : 1,
+            components,
+            removed.ToArray());
     }
 
     public static ItemStack ReadData(DataReader reader, MinecraftRegistry registry) {
@@ -174,9 +289,40 @@ public class ItemStack(
         if (count == 0) {
             return Air;
         }
-        
+
         int itemId = reader.ReadVarInt();
-        
+        return ReadComponentPatch(reader, registry, registry.Items[itemId], count);
+    }
+
+    /// <summary>
+    /// Writes the stack in the "template" form recipe displays use. It always names an item, so
+    /// there is no encoding for an empty stack, and the item comes before the count.
+    /// </summary>
+    public DataWriter WriteTemplateData(DataWriter writer, MinecraftRegistry registry) {
+        writer.WriteVarInt(registry.Items.GetProtocolId(Type));
+        writer.WriteVarInt(Count);
+        return WriteComponentPatch(writer, registry);
+    }
+
+    public static ItemStack ReadTemplateData(DataReader reader, MinecraftRegistry registry) {
+        IItem item = registry.Items[reader.ReadVarInt()];
+        int count = reader.ReadVarInt();
+        return ReadComponentPatch(reader, registry, item, count);
+    }
+
+    private DataWriter WriteComponentPatch(DataWriter writer, MinecraftRegistry registry) {
+        writer.WriteVarInt(_components.Count);  // components to add
+        writer.WriteVarInt(_removeComponents.Length);  // components to remove
+
+        writer.WriteArray(_components, (kvp, w) => w
+            .WriteVarInt(registry.DataComponents.GetProtocolId(kvp.Key))
+            .Write(wr => kvp.Key.WriteData(kvp.Value, wr, registry)));
+
+        return writer.WriteArray(_removeComponents, (component, w) => w
+            .WriteVarInt(registry.DataComponents.GetProtocolId(component)));
+    }
+
+    private static ItemStack ReadComponentPatch(DataReader reader, MinecraftRegistry registry, IItem item, int count) {
         int addCount = reader.ReadVarInt();
         int removeCount = reader.ReadVarInt();
 
@@ -185,13 +331,13 @@ public class ItemStack(
             IDataComponent component = registry.DataComponents[netId];
             return new KeyValuePair<IDataComponent, object>(component, component.ReadData(r, registry));
         });
-        
+
         IDataComponent[] removeComponents = reader.ReadArray(removeCount, r => {
             int netId = r.ReadVarInt();
             return registry.DataComponents[netId];
         });
-        
-        return new ItemStack(registry.Items[itemId], count, new Dictionary<IDataComponent, object>(components), removeComponents);
+
+        return new ItemStack(item, count, new Dictionary<IDataComponent, object>(components), removeComponents);
     }
 
     public T GetTag<T>(Tag<T> tag) {

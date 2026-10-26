@@ -10,5 +10,6 @@ public enum SoundCategory {
     Neutral = 6,
     Players = 7,
     Ambient = 8,
-    Voice = 9
+    Voice = 9,
+    Ui = 10
 }

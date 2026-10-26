@@ -6,9 +6,13 @@ using Minecraft.Schemas.Items;
 
 namespace ManagedServer.Features.Basic;
 
+/// <summary>
+/// Feature that calls <see cref="PlayerDropItemEvent"/> and subtracts one from the item count
+/// whenever a player clicks their drop bind while holding an item.
+/// </summary>
 [CallsEvent(typeof(PlayerDropItemEvent))]
 public class DropItemsEventFeature : ScopedFeature {
-    
+
     public override void Register() {
         AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundPlayerActionPacket packet) {
@@ -18,7 +22,7 @@ public class DropItemsEventFeature : ScopedFeature {
             if (e.Player.GameMode == GameMode.Spectator) {
                 return;
             }
-            
+
             if (packet.ActionStatus == ServerBoundPlayerActionPacket.Status.DropItem) {
                 ItemStack item = e.Player.HeldItem.WithCount(1);
                 if (item.IsAir()) {

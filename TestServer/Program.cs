@@ -1,9 +1,15 @@
 ﻿using TestServer.Servers.AnvilTesting;
 using TestServer.Servers.BlockSumoFFA;
+using TestServer.Servers.Crafting;
+using TestServer.Servers.Dialogs;
 using TestServer.Servers.Everything;
 using TestServer.Servers.MlgRush;
+using TestServer.Servers.MobAi;
+using TestServer.Servers.Persistence;
+using TestServer.Servers.Placement;
 using TestServer.Servers.SkyWarsLuckyBlock;
 using TestServer.Servers.Transferer;
+using TestServer.Servers.Worldgen;
 
 // File.WriteAllBytes("polar.polar", PolarLoader.CreateWorld(new AnvilLoader("anvil", VanillaRegistry.Data)));
 // return 0;
@@ -50,6 +56,30 @@ switch (args[0]) {
     
     case "transfer":
         await TransferTest.Start();
+        break;
+
+    case "dialogs":
+        await DialogTest.Start();
+        break;
+
+    case "mobai":
+        await MobAiTest.Start();
+        break;
+
+    case "placement":
+        await PlacementTest.Start();
+        break;
+
+    case "worldgen":
+        await WorldgenTest.Start();
+        break;
+
+    case "crafting":
+        await CraftingTest.Start();
+        break;
+
+    case "persistence":
+        await PersistenceTest.Start();
         break;
     
     default:

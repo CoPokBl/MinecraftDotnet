@@ -29,7 +29,27 @@ public abstract class Inventory : IViewable {
     public virtual int[] AddItemSearchOrder => Enumerable.Range(0, Size).ToArray();
     
     public EventNode<IServerEvent> Events { get; }
-    
+
+    /// <summary>
+    /// Whether a shift click may put <paramref name="item"/> into <paramref name="slot"/>. A result
+    /// slot says no, to <b>every</b> stack: filling an empty one and topping up one that already
+    /// holds the same item are both ways to get items into it.
+    /// </summary>
+    public virtual bool AcceptsQuickMove(int slot, ItemStack item) => true;
+
+    /// <summary>
+    /// Whether a shift click <b>out of</b> <paramref name="slot"/> fills the player's inventory from
+    /// the last hotbar slot backwards rather than from the first main inventory slot forwards. A
+    /// chest's slots and every result slot do; an input slot does not.
+    /// </summary>
+    public virtual bool QuickMoveFillsBackwards(int slot) => true;
+
+    /// <summary>
+    /// Whether a shift click this window takes none of falls back to moving the stack between the
+    /// player's hotbar and main inventory instead. A crafting table does, a chest leaves it alone.
+    /// </summary>
+    public virtual bool QuickMoveFallsBackToPlayerSections => false;
+
     /// <summary>
     /// Items in the inventory.
     /// <p/>

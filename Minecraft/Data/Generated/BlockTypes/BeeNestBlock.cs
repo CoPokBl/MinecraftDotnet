@@ -3,79 +3,106 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BeeNestBlock(Identifier Identifier, Direction Facing, int HoneyLevel) : IBlock {
-    public Identifier Category => "minecraft:beehive";
-    public double Hardness => 0.3;
-    public double ExplosionResistance => 0.3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => "minecraft:beehive";
-    public Identifier? Item => "minecraft:bee_nest";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => true;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 18;
-    public string TranslationKey => "block.minecraft.bee_nest";
-    public bool CanRespawnIn => false;
+public record BeeNestBlock(Identifier Identifier, Direction Facing, int HoneyLevel) : IBlock, IHorizontalFacing {
+    private static readonly BlockInfo Data = new("block.minecraft.bee_nest", 0.3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:beehive", "minecraft:bee_nest", BlockInfo.VanillaOnly, "minecraft:blocks/bee_nest");
+    private static readonly BlockStateInfo I0 = new(0.3f, 0, 15, PushReaction.PushPull, 18, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
 
     public uint StateId {
         get {
             return Facing switch {
                 Direction.North => HoneyLevel switch {
-                    0 => 21566,
-                    1 => 21567,
-                    2 => 21568,
-                    3 => 21569,
-                    4 => 21570,
-                    5 => 21571,
+                    0 => 25125,
+                    1 => 25126,
+                    2 => 25127,
+                    3 => 25128,
+                    4 => 25129,
+                    5 => 25130,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 Direction.South => HoneyLevel switch {
-                    0 => 21572,
-                    1 => 21573,
-                    2 => 21574,
-                    3 => 21575,
-                    4 => 21576,
-                    5 => 21577,
+                    0 => 25131,
+                    1 => 25132,
+                    2 => 25133,
+                    3 => 25134,
+                    4 => 25135,
+                    5 => 25136,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 Direction.West => HoneyLevel switch {
-                    0 => 21578,
-                    1 => 21579,
-                    2 => 21580,
-                    3 => 21581,
-                    4 => 21582,
-                    5 => 21583,
+                    0 => 25137,
+                    1 => 25138,
+                    2 => 25139,
+                    3 => 25140,
+                    4 => 25141,
+                    5 => 25142,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 Direction.East => HoneyLevel switch {
-                    0 => 21584,
-                    1 => 21585,
-                    2 => 21586,
-                    3 => 21587,
-                    4 => 21588,
-                    5 => 21589,
+                    0 => 25143,
+                    1 => 25144,
+                    2 => 25145,
+                    3 => 25146,
+                    4 => 25147,
+                    5 => 25148,
                     _ => throw new ArgumentOutOfRangeException(nameof(HoneyLevel), HoneyLevel, "Unknown value for property honey_level.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -85,30 +112,30 @@ public record BeeNestBlock(Identifier Identifier, Direction Facing, int HoneyLev
     
     public IBlock WithState(uint state) {
         return state switch {
-            21566 => new BeeNestBlock(Identifier, Direction.North, 0),
-            21567 => new BeeNestBlock(Identifier, Direction.North, 1),
-            21568 => new BeeNestBlock(Identifier, Direction.North, 2),
-            21569 => new BeeNestBlock(Identifier, Direction.North, 3),
-            21570 => new BeeNestBlock(Identifier, Direction.North, 4),
-            21571 => new BeeNestBlock(Identifier, Direction.North, 5),
-            21572 => new BeeNestBlock(Identifier, Direction.South, 0),
-            21573 => new BeeNestBlock(Identifier, Direction.South, 1),
-            21574 => new BeeNestBlock(Identifier, Direction.South, 2),
-            21575 => new BeeNestBlock(Identifier, Direction.South, 3),
-            21576 => new BeeNestBlock(Identifier, Direction.South, 4),
-            21577 => new BeeNestBlock(Identifier, Direction.South, 5),
-            21578 => new BeeNestBlock(Identifier, Direction.West, 0),
-            21579 => new BeeNestBlock(Identifier, Direction.West, 1),
-            21580 => new BeeNestBlock(Identifier, Direction.West, 2),
-            21581 => new BeeNestBlock(Identifier, Direction.West, 3),
-            21582 => new BeeNestBlock(Identifier, Direction.West, 4),
-            21583 => new BeeNestBlock(Identifier, Direction.West, 5),
-            21584 => new BeeNestBlock(Identifier, Direction.East, 0),
-            21585 => new BeeNestBlock(Identifier, Direction.East, 1),
-            21586 => new BeeNestBlock(Identifier, Direction.East, 2),
-            21587 => new BeeNestBlock(Identifier, Direction.East, 3),
-            21588 => new BeeNestBlock(Identifier, Direction.East, 4),
-            21589 => new BeeNestBlock(Identifier, Direction.East, 5),
+            25125 => new BeeNestBlock(Identifier, Direction.North, 0),
+            25126 => new BeeNestBlock(Identifier, Direction.North, 1),
+            25127 => new BeeNestBlock(Identifier, Direction.North, 2),
+            25128 => new BeeNestBlock(Identifier, Direction.North, 3),
+            25129 => new BeeNestBlock(Identifier, Direction.North, 4),
+            25130 => new BeeNestBlock(Identifier, Direction.North, 5),
+            25131 => new BeeNestBlock(Identifier, Direction.South, 0),
+            25132 => new BeeNestBlock(Identifier, Direction.South, 1),
+            25133 => new BeeNestBlock(Identifier, Direction.South, 2),
+            25134 => new BeeNestBlock(Identifier, Direction.South, 3),
+            25135 => new BeeNestBlock(Identifier, Direction.South, 4),
+            25136 => new BeeNestBlock(Identifier, Direction.South, 5),
+            25137 => new BeeNestBlock(Identifier, Direction.West, 0),
+            25138 => new BeeNestBlock(Identifier, Direction.West, 1),
+            25139 => new BeeNestBlock(Identifier, Direction.West, 2),
+            25140 => new BeeNestBlock(Identifier, Direction.West, 3),
+            25141 => new BeeNestBlock(Identifier, Direction.West, 4),
+            25142 => new BeeNestBlock(Identifier, Direction.West, 5),
+            25143 => new BeeNestBlock(Identifier, Direction.East, 0),
+            25144 => new BeeNestBlock(Identifier, Direction.East, 1),
+            25145 => new BeeNestBlock(Identifier, Direction.East, 2),
+            25146 => new BeeNestBlock(Identifier, Direction.East, 3),
+            25147 => new BeeNestBlock(Identifier, Direction.East, 4),
+            25148 => new BeeNestBlock(Identifier, Direction.East, 5),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

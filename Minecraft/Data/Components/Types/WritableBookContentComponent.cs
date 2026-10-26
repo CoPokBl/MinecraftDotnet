@@ -1,10 +1,29 @@
-﻿using Minecraft.Registry;
+using Minecraft.Data.Components.Codecs;
+using Minecraft.Registry;
 using Minecraft.Schemas;
+using NBT;
+using NBT.Tags;
 
 namespace Minecraft.Data.Components.Types;
 
 public record WritableBookContentComponent() : IDataComponent<WritableBookContentComponent.Data> {
     public override Identifier Identifier => "minecraft:writable_book_content";
+
+    public override NbtCodec<Data>? Codec => Persistent;
+    private static readonly NbtCodec<Data> Persistent = new(
+        (val, _) => new CompoundBuilder()
+            .ListOrOmit("pages", val.Contents, page => Filterable.Write(page.Raw, page.Filtered,
+                text => new StringTag(text)))
+            .Build(),
+        (tag, _) => {
+            NbtNode node = NbtNode.Of(tag, "minecraft:writable_book_content");
+            Data data = new(node.List("pages", page => Filterable.Read(page,
+                "minecraft:writable_book_content",
+                text => text.GetString(),
+                (raw, filtered) => new BookContent(raw, filtered))));
+            node.AssertRead();
+            return data;
+        });
 
     public override DataWriter WriteData(Data val, DataWriter writer, MinecraftRegistry registry) {
         return writer

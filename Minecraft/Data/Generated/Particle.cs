@@ -35,7 +35,7 @@ public static class Particle {
     public static readonly DustColorTransitionParticle DustColorTransition = new("minecraft:dust_color_transition");
     public static readonly DustPillarParticle DustPillar = new("minecraft:dust_pillar");
     public static readonly SimpleParticle DustPlume = new("minecraft:dust_plume");
-    public static readonly SimpleParticle Effect = new("minecraft:effect");
+    public static readonly SpellParticle Effect = new("minecraft:effect");
     public static readonly SimpleParticle EggCrack = new("minecraft:egg_crack");
     public static readonly SimpleParticle ElderGuardian = new("minecraft:elder_guardian");
     public static readonly SimpleParticle ElectricSpark = new("minecraft:electric_spark");
@@ -58,7 +58,11 @@ public static class Particle {
     public static readonly SimpleParticle Firework = new("minecraft:firework");
     public static readonly SimpleParticle Fishing = new("minecraft:fishing");
     public static readonly SimpleParticle Flame = new("minecraft:flame");
-    public static readonly SimpleParticle Flash = new("minecraft:flash");
+    public static readonly ColorParticle Flash = new("minecraft:flash");
+    public static readonly GeyserParticle Geyser = new("minecraft:geyser");
+    public static readonly GeyserBaseParticle GeyserBase = new("minecraft:geyser_base");
+    public static readonly GeyserParticle GeyserPlume = new("minecraft:geyser_plume");
+    public static readonly GeyserBaseParticle GeyserPoof = new("minecraft:geyser_poof");
     public static readonly SimpleParticle Glow = new("minecraft:glow");
     public static readonly SimpleParticle GlowSquidInk = new("minecraft:glow_squid_ink");
     public static readonly SimpleParticle Gust = new("minecraft:gust");
@@ -67,7 +71,7 @@ public static class Particle {
     public static readonly SimpleParticle HappyVillager = new("minecraft:happy_villager");
     public static readonly SimpleParticle Heart = new("minecraft:heart");
     public static readonly SimpleParticle Infested = new("minecraft:infested");
-    public static readonly SimpleParticle InstantEffect = new("minecraft:instant_effect");
+    public static readonly SpellParticle InstantEffect = new("minecraft:instant_effect");
     public static readonly ItemParticle Item = new("minecraft:item");
     public static readonly SimpleParticle ItemCobweb = new("minecraft:item_cobweb");
     public static readonly SimpleParticle ItemSlime = new("minecraft:item_slime");
@@ -80,12 +84,18 @@ public static class Particle {
     public static readonly SimpleParticle Mycelium = new("minecraft:mycelium");
     public static readonly SimpleParticle Nautilus = new("minecraft:nautilus");
     public static readonly SimpleParticle Note = new("minecraft:note");
+    public static readonly SimpleParticle NoxiousGas = new("minecraft:noxious_gas");
+    public static readonly SimpleParticle NoxiousGasCloud = new("minecraft:noxious_gas_cloud");
     public static readonly SimpleParticle OminousSpawning = new("minecraft:ominous_spawning");
+    public static readonly SimpleParticle OrangePoplarLeaves = new("minecraft:orange_poplar_leaves");
     public static readonly SimpleParticle PaleOakLeaves = new("minecraft:pale_oak_leaves");
+    public static readonly SimpleParticle PauseMobGrowth = new("minecraft:pause_mob_growth");
     public static readonly SimpleParticle Poof = new("minecraft:poof");
     public static readonly SimpleParticle Portal = new("minecraft:portal");
     public static readonly SimpleParticle RaidOmen = new("minecraft:raid_omen");
     public static readonly SimpleParticle Rain = new("minecraft:rain");
+    public static readonly SimpleParticle RedPoplarLeaves = new("minecraft:red_poplar_leaves");
+    public static readonly SimpleParticle ResetMobGrowth = new("minecraft:reset_mob_growth");
     public static readonly SimpleParticle ReversePortal = new("minecraft:reverse_portal");
     public static readonly SimpleParticle Scrape = new("minecraft:scrape");
     public static readonly SculkChargeParticle SculkCharge = new("minecraft:sculk_charge");
@@ -104,6 +114,8 @@ public static class Particle {
     public static readonly SimpleParticle Splash = new("minecraft:splash");
     public static readonly SimpleParticle SporeBlossomAir = new("minecraft:spore_blossom_air");
     public static readonly SimpleParticle SquidInk = new("minecraft:squid_ink");
+    public static readonly SimpleParticle SulfurBubbles = new("minecraft:sulfur_bubbles");
+    public static readonly SimpleParticle SulfurCubeGoo = new("minecraft:sulfur_cube_goo");
     public static readonly SimpleParticle SweepAttack = new("minecraft:sweep_attack");
     public static readonly TintedLeavesParticle TintedLeaves = new("minecraft:tinted_leaves");
     public static readonly SimpleParticle TotemOfUndying = new("minecraft:totem_of_undying");
@@ -120,4 +132,5 @@ public static class Particle {
     public static readonly SimpleParticle WhiteAsh = new("minecraft:white_ash");
     public static readonly SimpleParticle WhiteSmoke = new("minecraft:white_smoke");
     public static readonly SimpleParticle Witch = new("minecraft:witch");
+    public static readonly SimpleParticle YellowPoplarLeaves = new("minecraft:yellow_poplar_leaves");
 }

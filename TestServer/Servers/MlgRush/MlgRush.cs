@@ -23,6 +23,7 @@ using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Sound;
 using Minecraft.Schemas.Vec;
 using Minecraft.Text;
+using Minecraft.Implementations.Server.Terrain.Generation;
 
 namespace TestServer.Servers.MlgRush;
 
@@ -103,7 +104,7 @@ public static class MlgRush {
         Console.WriteLine("Server ready, listening...");
         _ = listener.Listen(Port);
 
-        ITerrainProvider terrain = new MlgRushMapProvider();
+        ITerrainProvider terrain = new GeneratorTerrainProvider(new MlgRushMapProvider());
         while (run) {
             World world = server.CreateWorld(terrain);
             world.AddFeature(new SimpleCombatFeature(500));
@@ -158,7 +159,7 @@ public static class MlgRush {
                 MinecraftPacket packet = new ClientBoundParticlePacket {
                     AlwaysVisible = true,
                     LongDistance = true,
-                    MaxSpeed = 1f,
+                    MaxSpeed = new Vec3<float>(1f, 1f, 1f),
                     Offset = Vec3<float>.Zero,
                     Position = pos,
                     ParticleCount = count,
@@ -219,7 +220,6 @@ public static class MlgRush {
                 e.Entity.SendToViewers(new ClientBoundTeleportEntityPacket {
                     EntityId = e.Entity.NetId,
                     Position = new Vec3<double>(0, -100, 0),
-                    Velocity = Vec3<double>.Zero,
                     Yaw = Angle.Zero,
                     Pitch = Angle.Zero,
                     OnGround = false
@@ -245,11 +245,11 @@ public static class MlgRush {
             
             // Win condition
             world.Events.AddListener<PlayerBreakBlockEvent>(e => {
-                if (!(e.Position.Equals(MlgRushMapProvider.P1BedPosClient) || e.Position.Equals(MlgRushMapProvider.P2BedPosClient))) {
+                if (!(e.Position.Equals(MlgRushMapProvider.P1BedPos) || e.Position.Equals(MlgRushMapProvider.P2BedPos))) {
                     return;  // not a bed
                 }
 
-                bool p1Bed = e.Position.Equals(MlgRushMapProvider.P1BedPosClient);
+                bool p1Bed = e.Position.Equals(MlgRushMapProvider.P1BedPos);
 
                 if ((p1Bed && !p1HasBed) || (!p1Bed && !p2HasBed)) {
                     return;  // someone placed a block where the bed was, we can ignore it

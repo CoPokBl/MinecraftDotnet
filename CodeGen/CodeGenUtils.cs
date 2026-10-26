@@ -8,14 +8,20 @@ public static class CodeGenUtils {
     private const string IdentSearch = "Identifier Identifier => \"";
 
     public static string VanillaDataDir = "";
-    public static string MinestomDataDir = "";
+    public static string DumpDir = "";
+
+    /// <summary>The unpacked server jar, ie. the real one rather than the bundler.</summary>
+    public static string ServerJarPath = "";
 
     public static string NamespacedIdToPascalName(string namespacedId) {
         if (namespacedId.Contains(':')) {
             namespacedId = namespacedId.Split(':')[1];
         }
 
-        return string.Join("", namespacedId.Split('_').Select(CapitaliseFirstLetter));
+        string name = string.Join("", namespacedId.Split('_').Select(CapitaliseFirstLetter));
+
+        // Some ids are just numbers (the 11, 13 and 5 music discs), which don't make a member name
+        return name.Length > 0 && char.IsDigit(name[0]) ? '_' + name : name;
     }
     
     public static string CapitaliseFirstLetter(string input) {
@@ -30,8 +36,9 @@ public static class CodeGenUtils {
         return reader.ReadToEnd();
     }
     
-    public static string ReadMinestomDataFile(string fileName) {
-        return File.ReadAllText(Path.Combine(MinestomDataDir, fileName));
+    /// <summary>Reads one of the files <c>Data/Dumper.java</c> writes, see Program.cs.</summary>
+    public static string ReadDumpFile(string fileName) {
+        return File.ReadAllText(Path.Combine(DumpDir, fileName));
     }
     
     public static string ReadVanillaDataFile(params string[] path) {
@@ -92,31 +99,10 @@ public static class CodeGenUtils {
         
         List<(string, int)> entries = [];
         foreach ((string key, JToken? value) in entityEntriesJson) {
-            if (key == "minecraft:intentionally_empty") {
-                continue;  // for some reason, this is in the registry
-            }
-            
             int protocolId = value!["protocol_id"]!.Value<int>();
             entries.Add((key, protocolId));
         }
 
-        return entries.ToArray();
-    }
-
-    public static (string, int)[] GetFileRegEntries(string resFile) {
-        JObject obj = JObject.Parse(ReadMinestomDataFile(resFile));
-        List<(string, int)> entries = [];
-        foreach (KeyValuePair<string, JToken?> entry in obj) {
-            if (entry.Key == "minecraft:intentionally_empty") {
-                continue;  // for some reason, this is in the registry
-            }
-            if (entry.Value is JObject entryObj) {
-                int protocolId = entryObj["id"]!.Value<int>();
-                entries.Add((entry.Key, protocolId));
-            } else {
-                throw new InvalidOperationException($"Expected a JObject for entry '{entry.Key}' in {resFile}.");
-            }
-        }
         return entries.ToArray();
     }
 
@@ -159,16 +145,12 @@ public static class CodeGenUtils {
                 continue;
             }
 
-            if (key == "minecraft:intentionally_empty") {
-                continue;  // for some reason, this is in the registry
-            }
-
             string pascalName = variableNameGetter(key);
             
             // Add to cs file
             string identParam = existingClassName == null ? $"\"{key}\", " : "";
             string extraParams = extraSimpleParams != null ? ", " + extraSimpleParams(key) : string.Empty;
-            file.Append($"{GetIndentation(1)}public static {existingClassName ?? simpleClassName} {pascalName} => " +
+            file.Append($"{GetIndentation(1)}public static readonly {existingClassName ?? simpleClassName} {pascalName} = " +
                         $"new({identParam}{extraParams});\n");
             registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({protocolId}, {className}.{pascalName});");
         }
@@ -188,15 +170,11 @@ public static class CodeGenUtils {
 
         List<string> entryStrings = [];
         foreach ((string key, int protocolId) in entries) {
-            if (key == "minecraft:intentionally_empty") {
-                continue;  // for some reason, this is in the registry
-            }
-
             string pascalName = variableNameGetter(key);
             
             // Add to cs file
             string extraParams = extraSimpleParams != null ? ", " + extraSimpleParams(key) : string.Empty;
-            entryStrings.Add($"public static {simpleClassName} {pascalName} => new(\"{key}\"{extraParams});");
+            entryStrings.Add($"public static readonly {simpleClassName} {pascalName} = new(\"{key}\"{extraParams});");
             registryAdditions.AppendLine($"{GetIndentation(2)}Data.{regVar}.Add({protocolId}, {className}.{pascalName});");
         }
         

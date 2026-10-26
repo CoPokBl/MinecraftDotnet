@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using Minecraft.Data;
 using Minecraft.Data.Generated;
 using Minecraft.Registry;
@@ -35,7 +34,7 @@ public abstract class MinecraftPacket : IProtocolType {
         }
     }
 
-    public byte[] Serialise(ConnectionState state, int compressionThreshold = -1, MinecraftRegistry? registry = null) {
+    public virtual byte[] Serialise(ConnectionState state, int compressionThreshold = -1, MinecraftRegistry? registry = null) {
         registry ??= VanillaRegistry.Data;
         
         int packetId;
@@ -51,24 +50,22 @@ public abstract class MinecraftPacket : IProtocolType {
             throw new NotImplementedException($"Packet {GetType().Name} is not registered for state {state}");
         }
         
-        DataWriter data = new();
-        WriteData(data, registry);
-        WriteData(data);
-
-        DataWriter typeD = new();
-        typeD.WriteVarInt(packetId);
-        byte[] typeBytes = typeD.ToArray();
+        // The packet id and the data are one unit: they are what gets compressed together, and what
+        // the length prefix counts either way. Built once so neither branch below reassembles it.
+        DataWriter body = new();
+        body.WriteVarInt(packetId);
+        WriteData(body, registry);
+        WriteData(body);
+        ReadOnlySpan<byte> bodyBytes = body.AsSpan();
 
         bool compressionEnabled = compressionThreshold >= 0;
-        if (compressionEnabled && typeBytes.Length + data.Length >= compressionThreshold) {
-            Span<byte> dataToCompress = CollectionsMarshal.AsSpan(new DataWriter().WriteVarInt(packetId).Write((IWritable)data).GetRaw());
-            byte[] compressedData = CompressionHelper.CompressZLib(dataToCompress);
+        if (compressionEnabled && bodyBytes.Length >= compressionThreshold) {
+            byte[] compressedData = CompressionHelper.CompressZLib(bodyBytes);
+            int dataLengthLength = DataWriter.VarIntSize(bodyBytes.Length);
 
-            int dataLengthLength = new DataWriter().WriteVarInt(dataToCompress.Length).ToArray().Length;
-
-            return new DataWriter()
+            return new DataWriter(compressedData.Length + 10)
                 .WriteVarInt(dataLengthLength + compressedData.Length)
-                .WriteVarInt(dataToCompress.Length)
+                .WriteVarInt(bodyBytes.Length)
                 .Write(compressedData)
                 .ToArray();
         }
@@ -76,15 +73,14 @@ public abstract class MinecraftPacket : IProtocolType {
         int additionalPacketSize = compressionEnabled ? 1 : 0;  // 1 byte for the data length if compression is enabled
 
         // Don't compress the packet
-        DataWriter w = new();
-        w.WriteVarInt((int)data.Length + typeBytes.Length + additionalPacketSize);  // packet size
-        
+        DataWriter w = new(bodyBytes.Length + 6);
+        w.WriteVarInt(bodyBytes.Length + additionalPacketSize);  // packet size
+
         if (compressionEnabled) {
             w.WriteVarInt(0);  // compression format means we need to specify 0 meaning no compression
         }
-        
-        w.WriteVarInt(packetId);  // packet type
-        w.Write((IWritable)data);  // the data
+
+        w.Write(bodyBytes);
         return w.ToArray();
     }
     

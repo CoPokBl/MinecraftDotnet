@@ -3,67 +3,102 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock {
-    public Identifier Category => "minecraft:turtle_egg";
-    public double Hardness => 0.5;
-    public double ExplosionResistance => 0.5;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "metal";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:turtle_egg";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.75, 0.4375, 0.75]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.75, 0.4375, 0.75]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.75, 0.4375, 0.75]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 2;
-    public string TranslationKey => "block.minecraft.turtle_egg";
-    public bool CanRespawnIn => false;
+public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBlock, IStackable {
+    private static readonly BlockInfo Data = new("block.minecraft.turtle_egg", 0.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:turtle_egg", BlockInfo.VanillaOnly, "minecraft:blocks/turtle_egg");
+    private static readonly BlockStateInfo I0 = new(0.5f, 0, 0, PushReaction.Popped, 2, "metal", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S943, BlockShapes.S943, BlockShapes.S1, BlockShapes.S1, BlockShapes.S943, BlockShapes.S943);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S944, CollisionShape = BlockShapes.S944, VisualShape = BlockShapes.S944, SupportShape = BlockShapes.S944 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I0, I0, I1, I1, I1, I1, I1, I1, I1, I1, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 18447];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public int Count => Eggs;
+
+    public int MaxCount => 4;
+
+    public IBlock WithCount(int count) => this with { Eggs = count };
 
 
     public uint StateId {
         get {
             return Eggs switch {
                 1 => Hatch switch {
-                    0 => 14888,
-                    1 => 14889,
-                    2 => 14890,
+                    0 => 18447,
+                    1 => 18448,
+                    2 => 18449,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 2 => Hatch switch {
-                    0 => 14891,
-                    1 => 14892,
-                    2 => 14893,
+                    0 => 18450,
+                    1 => 18451,
+                    2 => 18452,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 3 => Hatch switch {
-                    0 => 14894,
-                    1 => 14895,
-                    2 => 14896,
+                    0 => 18453,
+                    1 => 18454,
+                    2 => 18455,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 4 => Hatch switch {
-                    0 => 14897,
-                    1 => 14898,
-                    2 => 14899,
+                    0 => 18456,
+                    1 => 18457,
+                    2 => 18458,
                     _ => throw new ArgumentOutOfRangeException(nameof(Hatch), Hatch, "Unknown value for property hatch.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Eggs), Eggs, "Unknown value for property eggs.")
@@ -73,18 +108,18 @@ public record TurtleEggBlock(Identifier Identifier, int Eggs, int Hatch) : IBloc
     
     public IBlock WithState(uint state) {
         return state switch {
-            14888 => new TurtleEggBlock(Identifier, 1, 0),
-            14889 => new TurtleEggBlock(Identifier, 1, 1),
-            14890 => new TurtleEggBlock(Identifier, 1, 2),
-            14891 => new TurtleEggBlock(Identifier, 2, 0),
-            14892 => new TurtleEggBlock(Identifier, 2, 1),
-            14893 => new TurtleEggBlock(Identifier, 2, 2),
-            14894 => new TurtleEggBlock(Identifier, 3, 0),
-            14895 => new TurtleEggBlock(Identifier, 3, 1),
-            14896 => new TurtleEggBlock(Identifier, 3, 2),
-            14897 => new TurtleEggBlock(Identifier, 4, 0),
-            14898 => new TurtleEggBlock(Identifier, 4, 1),
-            14899 => new TurtleEggBlock(Identifier, 4, 2),
+            18447 => new TurtleEggBlock(Identifier, 1, 0),
+            18448 => new TurtleEggBlock(Identifier, 1, 1),
+            18449 => new TurtleEggBlock(Identifier, 1, 2),
+            18450 => new TurtleEggBlock(Identifier, 2, 0),
+            18451 => new TurtleEggBlock(Identifier, 2, 1),
+            18452 => new TurtleEggBlock(Identifier, 2, 2),
+            18453 => new TurtleEggBlock(Identifier, 3, 0),
+            18454 => new TurtleEggBlock(Identifier, 3, 1),
+            18455 => new TurtleEggBlock(Identifier, 3, 2),
+            18456 => new TurtleEggBlock(Identifier, 4, 0),
+            18457 => new TurtleEggBlock(Identifier, 4, 1),
+            18458 => new TurtleEggBlock(Identifier, 4, 2),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

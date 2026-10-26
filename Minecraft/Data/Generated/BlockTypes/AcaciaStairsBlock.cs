@@ -3,240 +3,323 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record AcaciaStairsBlock(Identifier Identifier, Direction Facing, AcaciaStairsBlock.Half HalfValue, StairShape Shape, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:stair";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:acacia_stairs";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5, 1.0], AABB[0.0, 0.5, 0.0] -> [1.0, 1.0, 0.5]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5, 1.0], AABB[0.0, 0.5, 0.0] -> [1.0, 1.0, 0.5]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5, 1.0], AABB[0.0, 0.5, 0.0] -> [1.0, 1.0, 0.5]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5, 1.0], AABB[0.0, 0.5, 0.0] -> [1.0, 1.0, 0.5]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 15;
-    public string TranslationKey => "block.minecraft.acacia_stairs";
-    public bool CanRespawnIn => false;
+public record AcaciaStairsBlock(Identifier Identifier, Direction Facing, TopBottom Half, StairShape Shape, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IStairShaped, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_stairs", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_stairs", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_stairs");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 15, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, true, true, false, false, false, null, "minecraft:water", BlockShapes.S90, BlockShapes.S90, BlockShapes.S1, BlockShapes.S90, BlockShapes.S90, BlockShapes.S90);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S91, CollisionShape = BlockShapes.S91, OcclusionShape = BlockShapes.S91, VisualShape = BlockShapes.S91, SupportShape = BlockShapes.S91 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S92, CollisionShape = BlockShapes.S92, OcclusionShape = BlockShapes.S92, VisualShape = BlockShapes.S92, SupportShape = BlockShapes.S92 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S92, CollisionShape = BlockShapes.S92, OcclusionShape = BlockShapes.S92, VisualShape = BlockShapes.S92, SupportShape = BlockShapes.S92 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S93, CollisionShape = BlockShapes.S93, OcclusionShape = BlockShapes.S93, VisualShape = BlockShapes.S93, SupportShape = BlockShapes.S93 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S93, CollisionShape = BlockShapes.S93, OcclusionShape = BlockShapes.S93, VisualShape = BlockShapes.S93, SupportShape = BlockShapes.S93 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S94, CollisionShape = BlockShapes.S94, OcclusionShape = BlockShapes.S94, VisualShape = BlockShapes.S94, SupportShape = BlockShapes.S94 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S94, CollisionShape = BlockShapes.S94, OcclusionShape = BlockShapes.S94, VisualShape = BlockShapes.S94, SupportShape = BlockShapes.S94 };
+    private static readonly BlockStateInfo I10 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S95, CollisionShape = BlockShapes.S95, OcclusionShape = BlockShapes.S95, VisualShape = BlockShapes.S95, SupportShape = BlockShapes.S95 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S95, CollisionShape = BlockShapes.S95, OcclusionShape = BlockShapes.S95, VisualShape = BlockShapes.S95, SupportShape = BlockShapes.S95 };
+    private static readonly BlockStateInfo I12 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S96, CollisionShape = BlockShapes.S96, OcclusionShape = BlockShapes.S96, VisualShape = BlockShapes.S96, SupportShape = BlockShapes.S96 };
+    private static readonly BlockStateInfo I13 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S96, CollisionShape = BlockShapes.S96, OcclusionShape = BlockShapes.S96, VisualShape = BlockShapes.S96, SupportShape = BlockShapes.S96 };
+    private static readonly BlockStateInfo I14 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S97, CollisionShape = BlockShapes.S97, OcclusionShape = BlockShapes.S97, VisualShape = BlockShapes.S97, SupportShape = BlockShapes.S97 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S97, CollisionShape = BlockShapes.S97, OcclusionShape = BlockShapes.S97, VisualShape = BlockShapes.S97, SupportShape = BlockShapes.S97 };
+    private static readonly BlockStateInfo I16 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S98, CollisionShape = BlockShapes.S98, OcclusionShape = BlockShapes.S98, VisualShape = BlockShapes.S98, SupportShape = BlockShapes.S98 };
+    private static readonly BlockStateInfo I17 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S98, CollisionShape = BlockShapes.S98, OcclusionShape = BlockShapes.S98, VisualShape = BlockShapes.S98, SupportShape = BlockShapes.S98 };
+    private static readonly BlockStateInfo I18 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S99, CollisionShape = BlockShapes.S99, OcclusionShape = BlockShapes.S99, VisualShape = BlockShapes.S99, SupportShape = BlockShapes.S99 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S99, CollisionShape = BlockShapes.S99, OcclusionShape = BlockShapes.S99, VisualShape = BlockShapes.S99, SupportShape = BlockShapes.S99 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S100, CollisionShape = BlockShapes.S100, OcclusionShape = BlockShapes.S100, VisualShape = BlockShapes.S100, SupportShape = BlockShapes.S100 };
+    private static readonly BlockStateInfo I21 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S100, CollisionShape = BlockShapes.S100, OcclusionShape = BlockShapes.S100, VisualShape = BlockShapes.S100, SupportShape = BlockShapes.S100 };
+    private static readonly BlockStateInfo I22 = I0 with { BlockShape = BlockShapes.S101, CollisionShape = BlockShapes.S101, OcclusionShape = BlockShapes.S101, VisualShape = BlockShapes.S101, SupportShape = BlockShapes.S101 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S101, CollisionShape = BlockShapes.S101, OcclusionShape = BlockShapes.S101, VisualShape = BlockShapes.S101, SupportShape = BlockShapes.S101 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S102, CollisionShape = BlockShapes.S102, OcclusionShape = BlockShapes.S102, VisualShape = BlockShapes.S102, SupportShape = BlockShapes.S102 };
+    private static readonly BlockStateInfo I25 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S102, CollisionShape = BlockShapes.S102, OcclusionShape = BlockShapes.S102, VisualShape = BlockShapes.S102, SupportShape = BlockShapes.S102 };
+    private static readonly BlockStateInfo I26 = I0 with { BlockShape = BlockShapes.S103, CollisionShape = BlockShapes.S103, OcclusionShape = BlockShapes.S103, VisualShape = BlockShapes.S103, SupportShape = BlockShapes.S103 };
+    private static readonly BlockStateInfo I27 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S103, CollisionShape = BlockShapes.S103, OcclusionShape = BlockShapes.S103, VisualShape = BlockShapes.S103, SupportShape = BlockShapes.S103 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S104, CollisionShape = BlockShapes.S104, OcclusionShape = BlockShapes.S104, VisualShape = BlockShapes.S104, SupportShape = BlockShapes.S104 };
+    private static readonly BlockStateInfo I29 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S104, CollisionShape = BlockShapes.S104, OcclusionShape = BlockShapes.S104, VisualShape = BlockShapes.S104, SupportShape = BlockShapes.S104 };
+    private static readonly BlockStateInfo I30 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S105, CollisionShape = BlockShapes.S105, OcclusionShape = BlockShapes.S105, VisualShape = BlockShapes.S105, SupportShape = BlockShapes.S105 };
+    private static readonly BlockStateInfo I31 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S105, CollisionShape = BlockShapes.S105, OcclusionShape = BlockShapes.S105, VisualShape = BlockShapes.S105, SupportShape = BlockShapes.S105 };
+    private static readonly BlockStateInfo I32 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S106, CollisionShape = BlockShapes.S106, OcclusionShape = BlockShapes.S106, VisualShape = BlockShapes.S106, SupportShape = BlockShapes.S106 };
+    private static readonly BlockStateInfo I33 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S106, CollisionShape = BlockShapes.S106, OcclusionShape = BlockShapes.S106, VisualShape = BlockShapes.S106, SupportShape = BlockShapes.S106 };
+    private static readonly BlockStateInfo I34 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S107, CollisionShape = BlockShapes.S107, OcclusionShape = BlockShapes.S107, VisualShape = BlockShapes.S107, SupportShape = BlockShapes.S107 };
+    private static readonly BlockStateInfo I35 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S107, CollisionShape = BlockShapes.S107, OcclusionShape = BlockShapes.S107, VisualShape = BlockShapes.S107, SupportShape = BlockShapes.S107 };
+    private static readonly BlockStateInfo I36 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S108, CollisionShape = BlockShapes.S108, OcclusionShape = BlockShapes.S108, VisualShape = BlockShapes.S108, SupportShape = BlockShapes.S108 };
+    private static readonly BlockStateInfo I37 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S108, CollisionShape = BlockShapes.S108, OcclusionShape = BlockShapes.S108, VisualShape = BlockShapes.S108, SupportShape = BlockShapes.S108 };
+    private static readonly BlockStateInfo I38 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S109, CollisionShape = BlockShapes.S109, OcclusionShape = BlockShapes.S109, VisualShape = BlockShapes.S109, SupportShape = BlockShapes.S109 };
+    private static readonly BlockStateInfo I39 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S109, CollisionShape = BlockShapes.S109, OcclusionShape = BlockShapes.S109, VisualShape = BlockShapes.S109, SupportShape = BlockShapes.S109 };
+    private static readonly BlockStateInfo I40 = I0 with { BlockShape = BlockShapes.S110, CollisionShape = BlockShapes.S110, OcclusionShape = BlockShapes.S110, VisualShape = BlockShapes.S110, SupportShape = BlockShapes.S110 };
+    private static readonly BlockStateInfo I41 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S110, CollisionShape = BlockShapes.S110, OcclusionShape = BlockShapes.S110, VisualShape = BlockShapes.S110, SupportShape = BlockShapes.S110 };
+    private static readonly BlockStateInfo I42 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S111, CollisionShape = BlockShapes.S111, OcclusionShape = BlockShapes.S111, VisualShape = BlockShapes.S111, SupportShape = BlockShapes.S111 };
+    private static readonly BlockStateInfo I43 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S111, CollisionShape = BlockShapes.S111, OcclusionShape = BlockShapes.S111, VisualShape = BlockShapes.S111, SupportShape = BlockShapes.S111 };
+    private static readonly BlockStateInfo I44 = I0 with { BlockShape = BlockShapes.S112, CollisionShape = BlockShapes.S112, OcclusionShape = BlockShapes.S112, VisualShape = BlockShapes.S112, SupportShape = BlockShapes.S112 };
+    private static readonly BlockStateInfo I45 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S112, CollisionShape = BlockShapes.S112, OcclusionShape = BlockShapes.S112, VisualShape = BlockShapes.S112, SupportShape = BlockShapes.S112 };
+    private static readonly BlockStateInfo I46 = I0 with { ValidSpawnFor = [], BlockShape = BlockShapes.S113, CollisionShape = BlockShapes.S113, OcclusionShape = BlockShapes.S113, VisualShape = BlockShapes.S113, SupportShape = BlockShapes.S113 };
+    private static readonly BlockStateInfo I47 = I0 with { LightDampening = 0, Flammable = true, ValidSpawnFor = [], Fluid = null, BlockShape = BlockShapes.S113, CollisionShape = BlockShapes.S113, OcclusionShape = BlockShapes.S113, VisualShape = BlockShapes.S113, SupportShape = BlockShapes.S113 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I24, I25, I2, I3, I28, I29, I6, I7, I42, I43, I34, I35, I12, I13, I38, I39, I16, I17, I44, I45, I4, I5, I22, I23, I8, I9, I26, I27, I46, I47, I14, I15, I32, I33, I18, I19, I36, I37
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 13739];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithHalf(TopBottom half) => this with { Half = half };
+
+    public IBlock WithShape(StairShape shape) => this with { Shape = shape };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => HalfValue switch {
-                    Half.Top => Shape switch {
+                Direction.North => Half switch {
+                    TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11770,
-                            false => 11771,
+                            true => 13739,
+                            false => 13740,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11772,
-                            false => 11773,
+                            true => 13741,
+                            false => 13742,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11774,
-                            false => 11775,
+                            true => 13743,
+                            false => 13744,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11776,
-                            false => 11777,
+                            true => 13745,
+                            false => 13746,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11778,
-                            false => 11779,
+                            true => 13747,
+                            false => 13748,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
-                    Half.Bottom => Shape switch {
+                    TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11780,
-                            false => 11781,
+                            true => 13749,
+                            false => 13750,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11782,
-                            false => 11783,
+                            true => 13751,
+                            false => 13752,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11784,
-                            false => 11785,
+                            true => 13753,
+                            false => 13754,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11786,
-                            false => 11787,
+                            true => 13755,
+                            false => 13756,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11788,
-                            false => 11789,
+                            true => 13757,
+                            false => 13758,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
-                Direction.South => HalfValue switch {
-                    Half.Top => Shape switch {
+                Direction.South => Half switch {
+                    TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11790,
-                            false => 11791,
+                            true => 13759,
+                            false => 13760,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11792,
-                            false => 11793,
+                            true => 13761,
+                            false => 13762,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11794,
-                            false => 11795,
+                            true => 13763,
+                            false => 13764,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11796,
-                            false => 11797,
+                            true => 13765,
+                            false => 13766,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11798,
-                            false => 11799,
+                            true => 13767,
+                            false => 13768,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
-                    Half.Bottom => Shape switch {
+                    TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11800,
-                            false => 11801,
+                            true => 13769,
+                            false => 13770,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11802,
-                            false => 11803,
+                            true => 13771,
+                            false => 13772,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11804,
-                            false => 11805,
+                            true => 13773,
+                            false => 13774,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11806,
-                            false => 11807,
+                            true => 13775,
+                            false => 13776,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11808,
-                            false => 11809,
+                            true => 13777,
+                            false => 13778,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
-                Direction.West => HalfValue switch {
-                    Half.Top => Shape switch {
+                Direction.West => Half switch {
+                    TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11810,
-                            false => 11811,
+                            true => 13779,
+                            false => 13780,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11812,
-                            false => 11813,
+                            true => 13781,
+                            false => 13782,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11814,
-                            false => 11815,
+                            true => 13783,
+                            false => 13784,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11816,
-                            false => 11817,
+                            true => 13785,
+                            false => 13786,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11818,
-                            false => 11819,
+                            true => 13787,
+                            false => 13788,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
-                    Half.Bottom => Shape switch {
+                    TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11820,
-                            false => 11821,
+                            true => 13789,
+                            false => 13790,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11822,
-                            false => 11823,
+                            true => 13791,
+                            false => 13792,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11824,
-                            false => 11825,
+                            true => 13793,
+                            false => 13794,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11826,
-                            false => 11827,
+                            true => 13795,
+                            false => 13796,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11828,
-                            false => 11829,
+                            true => 13797,
+                            false => 13798,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
-                Direction.East => HalfValue switch {
-                    Half.Top => Shape switch {
+                Direction.East => Half switch {
+                    TopBottom.Top => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11830,
-                            false => 11831,
+                            true => 13799,
+                            false => 13800,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11832,
-                            false => 11833,
+                            true => 13801,
+                            false => 13802,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11834,
-                            false => 11835,
+                            true => 13803,
+                            false => 13804,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11836,
-                            false => 11837,
+                            true => 13805,
+                            false => 13806,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11838,
-                            false => 11839,
+                            true => 13807,
+                            false => 13808,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
-                    Half.Bottom => Shape switch {
+                    TopBottom.Bottom => Shape switch {
                         StairShape.Straight => Waterlogged switch {
-                            true => 11840,
-                            false => 11841,
+                            true => 13809,
+                            false => 13810,
                         },
                         StairShape.InnerLeft => Waterlogged switch {
-                            true => 11842,
-                            false => 11843,
+                            true => 13811,
+                            false => 13812,
                         },
                         StairShape.InnerRight => Waterlogged switch {
-                            true => 11844,
-                            false => 11845,
+                            true => 13813,
+                            false => 13814,
                         },
                         StairShape.OuterLeft => Waterlogged switch {
-                            true => 11846,
-                            false => 11847,
+                            true => 13815,
+                            false => 13816,
                         },
                         StairShape.OuterRight => Waterlogged switch {
-                            true => 11848,
-                            false => 11849,
+                            true => 13817,
+                            false => 13818,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -245,86 +328,86 @@ public record AcaciaStairsBlock(Identifier Identifier, Direction Facing, AcaciaS
     
     public IBlock WithState(uint state) {
         return state switch {
-            11770 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.Straight, true),
-            11771 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.Straight, false),
-            11772 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.InnerLeft, true),
-            11773 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.InnerLeft, false),
-            11774 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.InnerRight, true),
-            11775 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.InnerRight, false),
-            11776 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.OuterLeft, true),
-            11777 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.OuterLeft, false),
-            11778 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.OuterRight, true),
-            11779 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Top, StairShape.OuterRight, false),
-            11780 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.Straight, true),
-            11781 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.Straight, false),
-            11782 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.InnerLeft, true),
-            11783 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.InnerLeft, false),
-            11784 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.InnerRight, true),
-            11785 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.InnerRight, false),
-            11786 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.OuterLeft, true),
-            11787 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.OuterLeft, false),
-            11788 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.OuterRight, true),
-            11789 => new AcaciaStairsBlock(Identifier, Direction.North, Half.Bottom, StairShape.OuterRight, false),
-            11790 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.Straight, true),
-            11791 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.Straight, false),
-            11792 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.InnerLeft, true),
-            11793 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.InnerLeft, false),
-            11794 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.InnerRight, true),
-            11795 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.InnerRight, false),
-            11796 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.OuterLeft, true),
-            11797 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.OuterLeft, false),
-            11798 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.OuterRight, true),
-            11799 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Top, StairShape.OuterRight, false),
-            11800 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.Straight, true),
-            11801 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.Straight, false),
-            11802 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.InnerLeft, true),
-            11803 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.InnerLeft, false),
-            11804 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.InnerRight, true),
-            11805 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.InnerRight, false),
-            11806 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.OuterLeft, true),
-            11807 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.OuterLeft, false),
-            11808 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.OuterRight, true),
-            11809 => new AcaciaStairsBlock(Identifier, Direction.South, Half.Bottom, StairShape.OuterRight, false),
-            11810 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.Straight, true),
-            11811 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.Straight, false),
-            11812 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.InnerLeft, true),
-            11813 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.InnerLeft, false),
-            11814 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.InnerRight, true),
-            11815 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.InnerRight, false),
-            11816 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.OuterLeft, true),
-            11817 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.OuterLeft, false),
-            11818 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.OuterRight, true),
-            11819 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Top, StairShape.OuterRight, false),
-            11820 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.Straight, true),
-            11821 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.Straight, false),
-            11822 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.InnerLeft, true),
-            11823 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.InnerLeft, false),
-            11824 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.InnerRight, true),
-            11825 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.InnerRight, false),
-            11826 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.OuterLeft, true),
-            11827 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.OuterLeft, false),
-            11828 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.OuterRight, true),
-            11829 => new AcaciaStairsBlock(Identifier, Direction.West, Half.Bottom, StairShape.OuterRight, false),
-            11830 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.Straight, true),
-            11831 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.Straight, false),
-            11832 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.InnerLeft, true),
-            11833 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.InnerLeft, false),
-            11834 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.InnerRight, true),
-            11835 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.InnerRight, false),
-            11836 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.OuterLeft, true),
-            11837 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.OuterLeft, false),
-            11838 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.OuterRight, true),
-            11839 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Top, StairShape.OuterRight, false),
-            11840 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.Straight, true),
-            11841 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.Straight, false),
-            11842 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.InnerLeft, true),
-            11843 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.InnerLeft, false),
-            11844 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.InnerRight, true),
-            11845 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.InnerRight, false),
-            11846 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.OuterLeft, true),
-            11847 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.OuterLeft, false),
-            11848 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.OuterRight, true),
-            11849 => new AcaciaStairsBlock(Identifier, Direction.East, Half.Bottom, StairShape.OuterRight, false),
+            13739 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, true),
+            13740 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.Straight, false),
+            13741 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, true),
+            13742 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerLeft, false),
+            13743 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, true),
+            13744 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.InnerRight, false),
+            13745 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, true),
+            13746 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterLeft, false),
+            13747 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, true),
+            13748 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Top, StairShape.OuterRight, false),
+            13749 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, true),
+            13750 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.Straight, false),
+            13751 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13752 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13753 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, true),
+            13754 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.InnerRight, false),
+            13755 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13756 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13757 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, true),
+            13758 => new AcaciaStairsBlock(Identifier, Direction.North, TopBottom.Bottom, StairShape.OuterRight, false),
+            13759 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, true),
+            13760 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.Straight, false),
+            13761 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, true),
+            13762 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerLeft, false),
+            13763 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, true),
+            13764 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.InnerRight, false),
+            13765 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, true),
+            13766 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterLeft, false),
+            13767 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, true),
+            13768 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Top, StairShape.OuterRight, false),
+            13769 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, true),
+            13770 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.Straight, false),
+            13771 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13772 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13773 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, true),
+            13774 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.InnerRight, false),
+            13775 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13776 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13777 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, true),
+            13778 => new AcaciaStairsBlock(Identifier, Direction.South, TopBottom.Bottom, StairShape.OuterRight, false),
+            13779 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, true),
+            13780 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.Straight, false),
+            13781 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, true),
+            13782 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerLeft, false),
+            13783 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, true),
+            13784 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.InnerRight, false),
+            13785 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, true),
+            13786 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterLeft, false),
+            13787 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, true),
+            13788 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Top, StairShape.OuterRight, false),
+            13789 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, true),
+            13790 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.Straight, false),
+            13791 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13792 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13793 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, true),
+            13794 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.InnerRight, false),
+            13795 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13796 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13797 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, true),
+            13798 => new AcaciaStairsBlock(Identifier, Direction.West, TopBottom.Bottom, StairShape.OuterRight, false),
+            13799 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, true),
+            13800 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.Straight, false),
+            13801 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, true),
+            13802 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerLeft, false),
+            13803 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, true),
+            13804 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.InnerRight, false),
+            13805 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, true),
+            13806 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterLeft, false),
+            13807 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, true),
+            13808 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Top, StairShape.OuterRight, false),
+            13809 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, true),
+            13810 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.Straight, false),
+            13811 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, true),
+            13812 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerLeft, false),
+            13813 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, true),
+            13814 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.InnerRight, false),
+            13815 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, true),
+            13816 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterLeft, false),
+            13817 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, true),
+            13818 => new AcaciaStairsBlock(Identifier, Direction.East, TopBottom.Bottom, StairShape.OuterRight, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
@@ -332,7 +415,7 @@ public record AcaciaStairsBlock(Identifier Identifier, Direction Facing, AcaciaS
     public IBlock WithState(CompoundTag properties) {
         return this with {
             Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            HalfValue = properties.Contains("half") ? HalfFromString(properties["half"].GetString()) : HalfValue,
+            Half = properties.Contains("half") ? TopBottomExtensions.FromString(properties["half"].GetString()) : Half,
             Shape = properties.Contains("shape") ? StairShapeExtensions.FromString(properties["shape"].GetString()) : Shape,
             Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
@@ -341,30 +424,10 @@ public record AcaciaStairsBlock(Identifier Identifier, Direction Facing, AcaciaS
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
             ("facing", new StringTag(Facing.ToName())),
-            ("half", new StringTag(HalfToName(HalfValue))),
+            ("half", new StringTag(Half.ToName())),
             ("shape", new StringTag(Shape.ToName())),
             ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     
-    public enum Half {
-        Top,
-        Bottom,
-    }
-
-    public static Half HalfFromString(string value) {
-        return value switch {
-            "top" => Half.Top,
-            "bottom" => Half.Bottom,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Half.")
-        };
-    }
-
-    public static string HalfToName(Half value) {
-        return value switch {
-            Half.Top => "top",
-            Half.Bottom => "bottom",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Half value.")
-        };
-    }
 }

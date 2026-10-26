@@ -3,40 +3,79 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WaxedOxidizedLightningRodBlock(Identifier Identifier, Cardinal Facing, bool Powered, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:lightning_rod";
-    public double Hardness => 3;
-    public double ExplosionResistance => 6;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "copper";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:waxed_oxidized_lightning_rod";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => true;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 55;
-    public string TranslationKey => "block.minecraft.waxed_oxidized_lightning_rod";
-    public bool CanRespawnIn => false;
+public record WaxedOxidizedLightningRodBlock(Identifier Identifier, Cardinal Facing, bool Powered, bool Waterlogged) : IBlock, IDirectional, IPowered, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.waxed_oxidized_lightning_rod", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_oxidized_lightning_rod", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_oxidized_lightning_rod");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 55, "copper", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, true, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S528, BlockShapes.S528, BlockShapes.S1, BlockShapes.S1, BlockShapes.S528, BlockShapes.S528);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S529, CollisionShape = BlockShapes.S529, VisualShape = BlockShapes.S529, SupportShape = BlockShapes.S529 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S529, CollisionShape = BlockShapes.S529, VisualShape = BlockShapes.S529, SupportShape = BlockShapes.S529 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S66 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S66 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I4, I5, I4, I5, I4, I5
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 33541];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Cardinal facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,62 +83,62 @@ public record WaxedOxidizedLightningRodBlock(Identifier Identifier, Cardinal Fac
             return Facing switch {
                 Cardinal.North => Powered switch {
                     true => Waterlogged switch {
-                        true => 27509,
-                        false => 27510,
+                        true => 33541,
+                        false => 33542,
                     },
                     false => Waterlogged switch {
-                        true => 27511,
-                        false => 27512,
+                        true => 33543,
+                        false => 33544,
                     },
                 },
                 Cardinal.East => Powered switch {
                     true => Waterlogged switch {
-                        true => 27513,
-                        false => 27514,
+                        true => 33545,
+                        false => 33546,
                     },
                     false => Waterlogged switch {
-                        true => 27515,
-                        false => 27516,
+                        true => 33547,
+                        false => 33548,
                     },
                 },
                 Cardinal.South => Powered switch {
                     true => Waterlogged switch {
-                        true => 27517,
-                        false => 27518,
+                        true => 33549,
+                        false => 33550,
                     },
                     false => Waterlogged switch {
-                        true => 27519,
-                        false => 27520,
+                        true => 33551,
+                        false => 33552,
                     },
                 },
                 Cardinal.West => Powered switch {
                     true => Waterlogged switch {
-                        true => 27521,
-                        false => 27522,
+                        true => 33553,
+                        false => 33554,
                     },
                     false => Waterlogged switch {
-                        true => 27523,
-                        false => 27524,
+                        true => 33555,
+                        false => 33556,
                     },
                 },
                 Cardinal.Up => Powered switch {
                     true => Waterlogged switch {
-                        true => 27525,
-                        false => 27526,
+                        true => 33557,
+                        false => 33558,
                     },
                     false => Waterlogged switch {
-                        true => 27527,
-                        false => 27528,
+                        true => 33559,
+                        false => 33560,
                     },
                 },
                 Cardinal.Down => Powered switch {
                     true => Waterlogged switch {
-                        true => 27529,
-                        false => 27530,
+                        true => 33561,
+                        false => 33562,
                     },
                     false => Waterlogged switch {
-                        true => 27531,
-                        false => 27532,
+                        true => 33563,
+                        false => 33564,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
@@ -109,30 +148,30 @@ public record WaxedOxidizedLightningRodBlock(Identifier Identifier, Cardinal Fac
     
     public IBlock WithState(uint state) {
         return state switch {
-            27509 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.North, true, true),
-            27510 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.North, true, false),
-            27511 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.North, false, true),
-            27512 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.North, false, false),
-            27513 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.East, true, true),
-            27514 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.East, true, false),
-            27515 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.East, false, true),
-            27516 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.East, false, false),
-            27517 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.South, true, true),
-            27518 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.South, true, false),
-            27519 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.South, false, true),
-            27520 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.South, false, false),
-            27521 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.West, true, true),
-            27522 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.West, true, false),
-            27523 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.West, false, true),
-            27524 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.West, false, false),
-            27525 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Up, true, true),
-            27526 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Up, true, false),
-            27527 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Up, false, true),
-            27528 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Up, false, false),
-            27529 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Down, true, true),
-            27530 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Down, true, false),
-            27531 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Down, false, true),
-            27532 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Down, false, false),
+            33541 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.North, true, true),
+            33542 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.North, true, false),
+            33543 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.North, false, true),
+            33544 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.North, false, false),
+            33545 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.East, true, true),
+            33546 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.East, true, false),
+            33547 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.East, false, true),
+            33548 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.East, false, false),
+            33549 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.South, true, true),
+            33550 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.South, true, false),
+            33551 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.South, false, true),
+            33552 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.South, false, false),
+            33553 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.West, true, true),
+            33554 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.West, true, false),
+            33555 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.West, false, true),
+            33556 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.West, false, false),
+            33557 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Up, true, true),
+            33558 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Up, true, false),
+            33559 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Up, false, true),
+            33560 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Up, false, false),
+            33561 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Down, true, true),
+            33562 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Down, true, false),
+            33563 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Down, false, true),
+            33564 => new WaxedOxidizedLightningRodBlock(Identifier, Cardinal.Down, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

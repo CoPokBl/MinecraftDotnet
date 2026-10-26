@@ -6,6 +6,15 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>14</LangVersion>
+
+        <!--
+        Chunk generation runs one pool task per chunk and each one allocates megabytes, which
+        workstation GC collects on the allocating thread and therefore inside a chunk load. This is
+        an application's choice rather than a library's, so it is set here and recommended in the
+        readme rather than being put in ManagedServer.csproj.
+        -->
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+        <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     </PropertyGroup>
 
     <ItemGroup>

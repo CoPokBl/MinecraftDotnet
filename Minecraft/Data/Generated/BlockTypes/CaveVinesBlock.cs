@@ -3,148 +3,183 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBlock {
-    public Identifier Category => "minecraft:cave_vines";
-    public double Hardness => 0;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "cave_vines";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:glow_berries";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.0625] -> [0.9375, 1.0, 0.9375]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 7;
-    public string TranslationKey => "block.minecraft.cave_vines";
-    public bool CanRespawnIn => true;
+public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBlock, IAged, IBerried {
+    private static readonly BlockInfo Data = new("block.minecraft.cave_vines", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:glow_berries", BlockInfo.VanillaOnly, "minecraft:blocks/cave_vines");
+    private static readonly BlockStateInfo I0 = new(0f, 14, 0, PushReaction.Popped, 7, "cave_vines", NoteBlockInstrument.Harp, true, false, false, true, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S401, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightEmission = 0 };
+    private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = false };
+    private static readonly BlockStateInfo I3 = I0 with { LightEmission = 0, RandomlyTicking = false };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 33606];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
+
+    public IBlock WithBerries(bool berries) => this with { Berries = berries };
 
 
     public uint StateId {
         get {
             return Age switch {
                 0 => Berries switch {
-                    true => 27554,
-                    false => 27555,
+                    true => 33606,
+                    false => 33607,
                 },
                 1 => Berries switch {
-                    true => 27556,
-                    false => 27557,
+                    true => 33608,
+                    false => 33609,
                 },
                 2 => Berries switch {
-                    true => 27558,
-                    false => 27559,
+                    true => 33610,
+                    false => 33611,
                 },
                 3 => Berries switch {
-                    true => 27560,
-                    false => 27561,
+                    true => 33612,
+                    false => 33613,
                 },
                 4 => Berries switch {
-                    true => 27562,
-                    false => 27563,
+                    true => 33614,
+                    false => 33615,
                 },
                 5 => Berries switch {
-                    true => 27564,
-                    false => 27565,
+                    true => 33616,
+                    false => 33617,
                 },
                 6 => Berries switch {
-                    true => 27566,
-                    false => 27567,
+                    true => 33618,
+                    false => 33619,
                 },
                 7 => Berries switch {
-                    true => 27568,
-                    false => 27569,
+                    true => 33620,
+                    false => 33621,
                 },
                 8 => Berries switch {
-                    true => 27570,
-                    false => 27571,
+                    true => 33622,
+                    false => 33623,
                 },
                 9 => Berries switch {
-                    true => 27572,
-                    false => 27573,
+                    true => 33624,
+                    false => 33625,
                 },
                 10 => Berries switch {
-                    true => 27574,
-                    false => 27575,
+                    true => 33626,
+                    false => 33627,
                 },
                 11 => Berries switch {
-                    true => 27576,
-                    false => 27577,
+                    true => 33628,
+                    false => 33629,
                 },
                 12 => Berries switch {
-                    true => 27578,
-                    false => 27579,
+                    true => 33630,
+                    false => 33631,
                 },
                 13 => Berries switch {
-                    true => 27580,
-                    false => 27581,
+                    true => 33632,
+                    false => 33633,
                 },
                 14 => Berries switch {
-                    true => 27582,
-                    false => 27583,
+                    true => 33634,
+                    false => 33635,
                 },
                 15 => Berries switch {
-                    true => 27584,
-                    false => 27585,
+                    true => 33636,
+                    false => 33637,
                 },
                 16 => Berries switch {
-                    true => 27586,
-                    false => 27587,
+                    true => 33638,
+                    false => 33639,
                 },
                 17 => Berries switch {
-                    true => 27588,
-                    false => 27589,
+                    true => 33640,
+                    false => 33641,
                 },
                 18 => Berries switch {
-                    true => 27590,
-                    false => 27591,
+                    true => 33642,
+                    false => 33643,
                 },
                 19 => Berries switch {
-                    true => 27592,
-                    false => 27593,
+                    true => 33644,
+                    false => 33645,
                 },
                 20 => Berries switch {
-                    true => 27594,
-                    false => 27595,
+                    true => 33646,
+                    false => 33647,
                 },
                 21 => Berries switch {
-                    true => 27596,
-                    false => 27597,
+                    true => 33648,
+                    false => 33649,
                 },
                 22 => Berries switch {
-                    true => 27598,
-                    false => 27599,
+                    true => 33650,
+                    false => 33651,
                 },
                 23 => Berries switch {
-                    true => 27600,
-                    false => 27601,
+                    true => 33652,
+                    false => 33653,
                 },
                 24 => Berries switch {
-                    true => 27602,
-                    false => 27603,
+                    true => 33654,
+                    false => 33655,
                 },
                 25 => Berries switch {
-                    true => 27604,
-                    false => 27605,
+                    true => 33656,
+                    false => 33657,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
@@ -153,58 +188,58 @@ public record CaveVinesBlock(Identifier Identifier, int Age, bool Berries) : IBl
     
     public IBlock WithState(uint state) {
         return state switch {
-            27554 => new CaveVinesBlock(Identifier, 0, true),
-            27555 => new CaveVinesBlock(Identifier, 0, false),
-            27556 => new CaveVinesBlock(Identifier, 1, true),
-            27557 => new CaveVinesBlock(Identifier, 1, false),
-            27558 => new CaveVinesBlock(Identifier, 2, true),
-            27559 => new CaveVinesBlock(Identifier, 2, false),
-            27560 => new CaveVinesBlock(Identifier, 3, true),
-            27561 => new CaveVinesBlock(Identifier, 3, false),
-            27562 => new CaveVinesBlock(Identifier, 4, true),
-            27563 => new CaveVinesBlock(Identifier, 4, false),
-            27564 => new CaveVinesBlock(Identifier, 5, true),
-            27565 => new CaveVinesBlock(Identifier, 5, false),
-            27566 => new CaveVinesBlock(Identifier, 6, true),
-            27567 => new CaveVinesBlock(Identifier, 6, false),
-            27568 => new CaveVinesBlock(Identifier, 7, true),
-            27569 => new CaveVinesBlock(Identifier, 7, false),
-            27570 => new CaveVinesBlock(Identifier, 8, true),
-            27571 => new CaveVinesBlock(Identifier, 8, false),
-            27572 => new CaveVinesBlock(Identifier, 9, true),
-            27573 => new CaveVinesBlock(Identifier, 9, false),
-            27574 => new CaveVinesBlock(Identifier, 10, true),
-            27575 => new CaveVinesBlock(Identifier, 10, false),
-            27576 => new CaveVinesBlock(Identifier, 11, true),
-            27577 => new CaveVinesBlock(Identifier, 11, false),
-            27578 => new CaveVinesBlock(Identifier, 12, true),
-            27579 => new CaveVinesBlock(Identifier, 12, false),
-            27580 => new CaveVinesBlock(Identifier, 13, true),
-            27581 => new CaveVinesBlock(Identifier, 13, false),
-            27582 => new CaveVinesBlock(Identifier, 14, true),
-            27583 => new CaveVinesBlock(Identifier, 14, false),
-            27584 => new CaveVinesBlock(Identifier, 15, true),
-            27585 => new CaveVinesBlock(Identifier, 15, false),
-            27586 => new CaveVinesBlock(Identifier, 16, true),
-            27587 => new CaveVinesBlock(Identifier, 16, false),
-            27588 => new CaveVinesBlock(Identifier, 17, true),
-            27589 => new CaveVinesBlock(Identifier, 17, false),
-            27590 => new CaveVinesBlock(Identifier, 18, true),
-            27591 => new CaveVinesBlock(Identifier, 18, false),
-            27592 => new CaveVinesBlock(Identifier, 19, true),
-            27593 => new CaveVinesBlock(Identifier, 19, false),
-            27594 => new CaveVinesBlock(Identifier, 20, true),
-            27595 => new CaveVinesBlock(Identifier, 20, false),
-            27596 => new CaveVinesBlock(Identifier, 21, true),
-            27597 => new CaveVinesBlock(Identifier, 21, false),
-            27598 => new CaveVinesBlock(Identifier, 22, true),
-            27599 => new CaveVinesBlock(Identifier, 22, false),
-            27600 => new CaveVinesBlock(Identifier, 23, true),
-            27601 => new CaveVinesBlock(Identifier, 23, false),
-            27602 => new CaveVinesBlock(Identifier, 24, true),
-            27603 => new CaveVinesBlock(Identifier, 24, false),
-            27604 => new CaveVinesBlock(Identifier, 25, true),
-            27605 => new CaveVinesBlock(Identifier, 25, false),
+            33606 => new CaveVinesBlock(Identifier, 0, true),
+            33607 => new CaveVinesBlock(Identifier, 0, false),
+            33608 => new CaveVinesBlock(Identifier, 1, true),
+            33609 => new CaveVinesBlock(Identifier, 1, false),
+            33610 => new CaveVinesBlock(Identifier, 2, true),
+            33611 => new CaveVinesBlock(Identifier, 2, false),
+            33612 => new CaveVinesBlock(Identifier, 3, true),
+            33613 => new CaveVinesBlock(Identifier, 3, false),
+            33614 => new CaveVinesBlock(Identifier, 4, true),
+            33615 => new CaveVinesBlock(Identifier, 4, false),
+            33616 => new CaveVinesBlock(Identifier, 5, true),
+            33617 => new CaveVinesBlock(Identifier, 5, false),
+            33618 => new CaveVinesBlock(Identifier, 6, true),
+            33619 => new CaveVinesBlock(Identifier, 6, false),
+            33620 => new CaveVinesBlock(Identifier, 7, true),
+            33621 => new CaveVinesBlock(Identifier, 7, false),
+            33622 => new CaveVinesBlock(Identifier, 8, true),
+            33623 => new CaveVinesBlock(Identifier, 8, false),
+            33624 => new CaveVinesBlock(Identifier, 9, true),
+            33625 => new CaveVinesBlock(Identifier, 9, false),
+            33626 => new CaveVinesBlock(Identifier, 10, true),
+            33627 => new CaveVinesBlock(Identifier, 10, false),
+            33628 => new CaveVinesBlock(Identifier, 11, true),
+            33629 => new CaveVinesBlock(Identifier, 11, false),
+            33630 => new CaveVinesBlock(Identifier, 12, true),
+            33631 => new CaveVinesBlock(Identifier, 12, false),
+            33632 => new CaveVinesBlock(Identifier, 13, true),
+            33633 => new CaveVinesBlock(Identifier, 13, false),
+            33634 => new CaveVinesBlock(Identifier, 14, true),
+            33635 => new CaveVinesBlock(Identifier, 14, false),
+            33636 => new CaveVinesBlock(Identifier, 15, true),
+            33637 => new CaveVinesBlock(Identifier, 15, false),
+            33638 => new CaveVinesBlock(Identifier, 16, true),
+            33639 => new CaveVinesBlock(Identifier, 16, false),
+            33640 => new CaveVinesBlock(Identifier, 17, true),
+            33641 => new CaveVinesBlock(Identifier, 17, false),
+            33642 => new CaveVinesBlock(Identifier, 18, true),
+            33643 => new CaveVinesBlock(Identifier, 18, false),
+            33644 => new CaveVinesBlock(Identifier, 19, true),
+            33645 => new CaveVinesBlock(Identifier, 19, false),
+            33646 => new CaveVinesBlock(Identifier, 20, true),
+            33647 => new CaveVinesBlock(Identifier, 20, false),
+            33648 => new CaveVinesBlock(Identifier, 21, true),
+            33649 => new CaveVinesBlock(Identifier, 21, false),
+            33650 => new CaveVinesBlock(Identifier, 22, true),
+            33651 => new CaveVinesBlock(Identifier, 22, false),
+            33652 => new CaveVinesBlock(Identifier, 23, true),
+            33653 => new CaveVinesBlock(Identifier, 23, false),
+            33654 => new CaveVinesBlock(Identifier, 24, true),
+            33655 => new CaveVinesBlock(Identifier, 24, false),
+            33656 => new CaveVinesBlock(Identifier, 25, true),
+            33657 => new CaveVinesBlock(Identifier, 25, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

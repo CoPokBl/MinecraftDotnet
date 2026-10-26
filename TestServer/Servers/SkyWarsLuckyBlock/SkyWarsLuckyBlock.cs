@@ -1,7 +1,10 @@
 using ManagedServer;
+using ManagedServer.Damage;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features.Basic;
+using ManagedServer.Features.Bundles;
+using ManagedServer.Features.Impl;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using ManagedServer.Worlds.Lighting;
@@ -23,7 +26,9 @@ public static class SkyWarsLuckyBlock {
     
     public static async Task Start() {
         ManagedMinecraftServer server = ManagedMinecraftServer.New(ManagedMinecraftServer.BasicsBundle
-            .With(new PhysicsFeature()));
+            .With(new PhysicsFeature())
+            .With(ManagedMinecraftServer.LiquidsBundle)
+            .With(ManagedMinecraftServer.BlockRulesBundle));
         server.AddFeatures(new ServerListPingFeature(connection => new ClientBoundStatusResponsePacket {
             VersionName = "dotnet",
             VersionProtocol = connection.Handshake!.ProtocolVersion,
@@ -75,18 +80,35 @@ public static class SkyWarsLuckyBlock {
             startTimer = null;
 
             lock (waitingPlayers) {
-                Player[] players = waitingPlayers.ToArray();
+                // Anyone who left while the countdown was running is dropped here rather than being
+                // moved into the game world. Their disconnect has already run, so nothing would ever
+                // take them back out again.
+                Player[] players = waitingPlayers.Where(p => !p.Connection.IsDisconnected).ToArray();
+                waitingPlayers.Clear();
+
+                if (players.Length < 2) {
+                    foreach (Player player in players) {
+                        waitingPlayers.Add(player);
+                    }
+                    return;
+                }
+
                 SkyWarsGame game = new(server, players, () => {
                     foreach (Player player in players) {
                         EnqueuePlayer(player);
                     }
                 });
                 game.Start();
-                waitingPlayers.Clear();
             }
         }
-        
+
         void EnqueuePlayer(Player player) {
+            // Reached from the login event and from the end of a game, and the second of those runs
+            // ten seconds after the winner was decided, by which time anybody could have left.
+            if (player.Connection.IsDisconnected) {
+                return;
+            }
+
             player.GameMode = GameMode.Survival;
             player.Inventory.Clear();
             player.Health = 20;
@@ -98,11 +120,6 @@ public static class SkyWarsLuckyBlock {
             
             lock (waitingPlayers) {
                 waitingPlayers.Add(player);
-                player.Connection.Disconnected += () => {
-                    lock (waitingPlayers) {
-                        waitingPlayers.Remove(player);
-                    }
-                };
 
                 if (waitingPlayers.Count >= 2 && startTimer == null) {
                     startTime = DateTime.Now.AddSeconds(StartTimeSeconds);
@@ -128,6 +145,16 @@ public static class SkyWarsLuckyBlock {
         });
 
         server.Events.AddListener<PlayerLoginEvent>(e => {
+            // Registered once per connection rather than once per queue entry, since a player is
+            // enqueued again after every game they finish. It has to cover the whole life of the
+            // connection anyway: leaving from the lobby and leaving mid game both end here, and the
+            // remove is a no-op for a player who is in a game rather than in the queue.
+            e.Player.Connection.Disconnected += () => {
+                lock (waitingPlayers) {
+                    waitingPlayers.Remove(e.Player);
+                }
+            };
+
             EnqueuePlayer(e.Player);
         });
 

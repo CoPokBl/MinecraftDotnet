@@ -3,172 +3,163 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record RailBlock(Identifier Identifier, RailBlock.Shape ShapeValue, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:rail";
-    public double Hardness => 0.7;
-    public double ExplosionResistance => 0.7;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "metal";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:rail";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.125, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.rail";
-    public bool CanRespawnIn => true;
+public record RailBlock(Identifier Identifier, RailShape Shape, bool Waterlogged) : IBlock, IRailShaped, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.rail", 0.7f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:rail", BlockInfo.VanillaOnly, "minecraft:blocks/rail");
+    private static readonly BlockStateInfo I0 = new(0.7f, 0, 1, PushReaction.PushPull, 0, "metal", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S89 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S89 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I0, I1, I0, I1, I0, I1, I0, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 7315];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithShape(RailShape shape) => this with { Shape = shape };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
-            return ShapeValue switch {
-                Shape.NorthSouth => Waterlogged switch {
-                    true => 5526,
-                    false => 5527,
+            return Shape switch {
+                RailShape.NorthSouth => Waterlogged switch {
+                    true => 7315,
+                    false => 7316,
                 },
-                Shape.EastWest => Waterlogged switch {
-                    true => 5528,
-                    false => 5529,
+                RailShape.EastWest => Waterlogged switch {
+                    true => 7317,
+                    false => 7318,
                 },
-                Shape.AscendingEast => Waterlogged switch {
-                    true => 5530,
-                    false => 5531,
+                RailShape.AscendingEast => Waterlogged switch {
+                    true => 7319,
+                    false => 7320,
                 },
-                Shape.AscendingWest => Waterlogged switch {
-                    true => 5532,
-                    false => 5533,
+                RailShape.AscendingWest => Waterlogged switch {
+                    true => 7321,
+                    false => 7322,
                 },
-                Shape.AscendingNorth => Waterlogged switch {
-                    true => 5534,
-                    false => 5535,
+                RailShape.AscendingNorth => Waterlogged switch {
+                    true => 7323,
+                    false => 7324,
                 },
-                Shape.AscendingSouth => Waterlogged switch {
-                    true => 5536,
-                    false => 5537,
+                RailShape.AscendingSouth => Waterlogged switch {
+                    true => 7325,
+                    false => 7326,
                 },
-                Shape.SouthEast => Waterlogged switch {
-                    true => 5538,
-                    false => 5539,
+                RailShape.SouthEast => Waterlogged switch {
+                    true => 7327,
+                    false => 7328,
                 },
-                Shape.SouthWest => Waterlogged switch {
-                    true => 5540,
-                    false => 5541,
+                RailShape.SouthWest => Waterlogged switch {
+                    true => 7329,
+                    false => 7330,
                 },
-                Shape.NorthWest => Waterlogged switch {
-                    true => 5542,
-                    false => 5543,
+                RailShape.NorthWest => Waterlogged switch {
+                    true => 7331,
+                    false => 7332,
                 },
-                Shape.NorthEast => Waterlogged switch {
-                    true => 5544,
-                    false => 5545,
+                RailShape.NorthEast => Waterlogged switch {
+                    true => 7333,
+                    false => 7334,
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(ShapeValue), ShapeValue, "Unknown value for property shape.")
+                _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            5526 => new RailBlock(Identifier, Shape.NorthSouth, true),
-            5527 => new RailBlock(Identifier, Shape.NorthSouth, false),
-            5528 => new RailBlock(Identifier, Shape.EastWest, true),
-            5529 => new RailBlock(Identifier, Shape.EastWest, false),
-            5530 => new RailBlock(Identifier, Shape.AscendingEast, true),
-            5531 => new RailBlock(Identifier, Shape.AscendingEast, false),
-            5532 => new RailBlock(Identifier, Shape.AscendingWest, true),
-            5533 => new RailBlock(Identifier, Shape.AscendingWest, false),
-            5534 => new RailBlock(Identifier, Shape.AscendingNorth, true),
-            5535 => new RailBlock(Identifier, Shape.AscendingNorth, false),
-            5536 => new RailBlock(Identifier, Shape.AscendingSouth, true),
-            5537 => new RailBlock(Identifier, Shape.AscendingSouth, false),
-            5538 => new RailBlock(Identifier, Shape.SouthEast, true),
-            5539 => new RailBlock(Identifier, Shape.SouthEast, false),
-            5540 => new RailBlock(Identifier, Shape.SouthWest, true),
-            5541 => new RailBlock(Identifier, Shape.SouthWest, false),
-            5542 => new RailBlock(Identifier, Shape.NorthWest, true),
-            5543 => new RailBlock(Identifier, Shape.NorthWest, false),
-            5544 => new RailBlock(Identifier, Shape.NorthEast, true),
-            5545 => new RailBlock(Identifier, Shape.NorthEast, false),
+            7315 => new RailBlock(Identifier, RailShape.NorthSouth, true),
+            7316 => new RailBlock(Identifier, RailShape.NorthSouth, false),
+            7317 => new RailBlock(Identifier, RailShape.EastWest, true),
+            7318 => new RailBlock(Identifier, RailShape.EastWest, false),
+            7319 => new RailBlock(Identifier, RailShape.AscendingEast, true),
+            7320 => new RailBlock(Identifier, RailShape.AscendingEast, false),
+            7321 => new RailBlock(Identifier, RailShape.AscendingWest, true),
+            7322 => new RailBlock(Identifier, RailShape.AscendingWest, false),
+            7323 => new RailBlock(Identifier, RailShape.AscendingNorth, true),
+            7324 => new RailBlock(Identifier, RailShape.AscendingNorth, false),
+            7325 => new RailBlock(Identifier, RailShape.AscendingSouth, true),
+            7326 => new RailBlock(Identifier, RailShape.AscendingSouth, false),
+            7327 => new RailBlock(Identifier, RailShape.SouthEast, true),
+            7328 => new RailBlock(Identifier, RailShape.SouthEast, false),
+            7329 => new RailBlock(Identifier, RailShape.SouthWest, true),
+            7330 => new RailBlock(Identifier, RailShape.SouthWest, false),
+            7331 => new RailBlock(Identifier, RailShape.NorthWest, true),
+            7332 => new RailBlock(Identifier, RailShape.NorthWest, false),
+            7333 => new RailBlock(Identifier, RailShape.NorthEast, true),
+            7334 => new RailBlock(Identifier, RailShape.NorthEast, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            ShapeValue = properties.Contains("shape") ? ShapeFromString(properties["shape"].GetString()) : ShapeValue,
+            Shape = properties.Contains("shape") ? RailShapeExtensions.FromString(properties["shape"].GetString()) : Shape,
             Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
     }
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
-            ("shape", new StringTag(ShapeToName(ShapeValue))),
+            ("shape", new StringTag(Shape.ToName())),
             ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     
-    public enum Shape {
-        NorthSouth,
-        EastWest,
-        AscendingEast,
-        AscendingWest,
-        AscendingNorth,
-        AscendingSouth,
-        SouthEast,
-        SouthWest,
-        NorthWest,
-        NorthEast,
-    }
-
-    public static Shape ShapeFromString(string value) {
-        return value switch {
-            "north_south" => Shape.NorthSouth,
-            "east_west" => Shape.EastWest,
-            "ascending_east" => Shape.AscendingEast,
-            "ascending_west" => Shape.AscendingWest,
-            "ascending_north" => Shape.AscendingNorth,
-            "ascending_south" => Shape.AscendingSouth,
-            "south_east" => Shape.SouthEast,
-            "south_west" => Shape.SouthWest,
-            "north_west" => Shape.NorthWest,
-            "north_east" => Shape.NorthEast,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Shape.")
-        };
-    }
-
-    public static string ShapeToName(Shape value) {
-        return value switch {
-            Shape.NorthSouth => "north_south",
-            Shape.EastWest => "east_west",
-            Shape.AscendingEast => "ascending_east",
-            Shape.AscendingWest => "ascending_west",
-            Shape.AscendingNorth => "ascending_north",
-            Shape.AscendingSouth => "ascending_south",
-            Shape.SouthEast => "south_east",
-            Shape.SouthWest => "south_west",
-            Shape.NorthWest => "north_west",
-            Shape.NorthEast => "north_east",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Shape value.")
-        };
-    }
 }

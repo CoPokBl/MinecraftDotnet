@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks;
@@ -6,6 +7,9 @@ namespace Minecraft.Data.Components.Types;
 
 public record CanPlaceOnComponent() : IDataComponent<BlockPredicate[]> {
     public override Identifier Identifier => "minecraft:can_place_on";
+
+    public override NbtCodec<BlockPredicate[]>? Codec => Persistent;
+    private static readonly NbtCodec<BlockPredicate[]> Persistent = BlockPredicateCodec.Of("minecraft:can_place_on");
     
     public override DataWriter WriteData(BlockPredicate[] val, DataWriter writer, MinecraftRegistry registry) {
         return writer.WritePrefixedArray(val, registry);

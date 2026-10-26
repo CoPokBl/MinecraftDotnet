@@ -2,6 +2,7 @@ using ManagedServer;
 using ManagedServer.Bossbar;
 using ManagedServer.Commands;
 using ManagedServer.Commands.Arguments;
+using ManagedServer.Dialogs;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Features;
@@ -10,6 +11,7 @@ using ManagedServer.Viewables;
 using ManagedServer.Worlds;
 using Minecraft;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Dialogs;
 using Minecraft.Data.DimensionType;
 using Minecraft.Data.Generated;
 using Minecraft.Data.PaintingVariant;
@@ -26,6 +28,8 @@ using Minecraft.Schemas.Items;
 using Minecraft.Schemas.Vec;
 using Minecraft.Schemas.Vec.Relative;
 using Minecraft.Text;
+using NBT.Tags;
+using Minecraft.Implementations.Server.Terrain.Generation;
 
 namespace TestServer.Servers.BlockSumoFFA;
 
@@ -76,10 +80,16 @@ public static class BlockSumoFfa {
                     player.SendMessage("Block: " + CommandArgumentType.BlockState.Format(context.GetArgument<IBlock>("block")));
                 },
                     new Argument<RelativeVec3<int>>("message", CommandArgumentType.BlockPos),
-                    new Argument<NamedTextColor?>("rancol", CommandArgumentType.Color),
+                    new Argument<NamedTextColor?>("rancol", CommandArgumentType.TeamColor),
                     new Argument<(bool X, bool Y, bool Z)>("swiz", CommandArgumentType.Swizzle),
                     new Argument<IBlock>("block", CommandArgumentType.BlockState)))
                 .Build())
+            .Build());
+
+        server.Commands.Add(new CommandBuilder("hello")
+            .WithDefaultSyntax((player, _) => {
+                ShowShowcaseDialog(player);
+            }, _ => true)
             .Build());
 
         CancellationTokenSource cts = new();
@@ -93,7 +103,7 @@ public static class BlockSumoFfa {
             .With(DataComponent.Enchantments, [(Enchantment.Breach, 10)]);
 
         PlayerPosition spawn = new(new Vec3<double>(0, 0, 0), Vec3<double>.Zero, Angle.FromDegrees(-90), Angle.Zero);
-        ITerrainProvider terrain = new BlockSumoMapProvider(12);
+        ITerrainProvider terrain = new GeneratorTerrainProvider(new BlockSumoMapProvider(12));
         World world = server.CreateWorld(terrain);//, "minecraft:potatoland");
         world.AddFeature(new SimpleCombatFeature(500));
 
@@ -268,5 +278,80 @@ public static class BlockSumoFfa {
 
         await listener.Listen(Port);
         Console.WriteLine("Listener stopped");
+    }
+
+    /// <summary>
+    /// Everything a dialog can do, in one screen: every kind of body and input, buttons that run
+    /// server side code, buttons the client handles itself, and buttons that open another dialog.
+    /// </summary>
+    private static void ShowShowcaseDialog(Player player) {
+        player.ShowDialog(new DialogBuilder(TextComponent.Text("Dialog showcase").WithColor(TextColor.Gold).WithBold())
+            .ExternalTitle("Showcase")
+            .Pause(false)
+            .Columns(2)
+            .Body("Every body and input type a dialog can have.")
+            .ItemBody(new DialogItem(Item.DiamondSword.Identifier, 3), "An item body, with a description beside it.")
+            .TextInput("name", "Name", initial: player.Name, maxLength: 32)
+            .TextInput("story", "Your life story", maxLength: 200,
+                multiline: new MultilineOptions(MaxLines: 4, Height: 60))
+            .NumberInput("number", "A number", 0, 100, initial: 50, step: 5)
+            .BooleanInput("shout", "Shout it", onTrue: "LOUDLY", onFalse: "quietly")
+            .OptionInput("colour", "Favourite colour",
+                new SingleOptionEntry("red", TextComponent.Text("Red").WithColor(TextColor.Red), true),
+                new SingleOptionEntry("green", TextComponent.Text("Green").WithColor(TextColor.Green)),
+                new SingleOptionEntry("blue", TextComponent.Text("Blue").WithColor(TextColor.Blue)))
+
+            // Runs here, with everything the player typed
+            .Button("Submit", r => {
+                string message = $"{r.GetString("name")} picked {r.GetString("colour")} " +
+                                 $"and the number {r.GetInt("number")}";
+                player.SendMessage(r.GetBool("shout") ? message.ToUpperInvariant() : message);
+                player.SendMessage("Story: " + r.GetString("story", "(none)"));
+            }, tooltip: "Sends the inputs back to the server", width: 200)
+
+            // Handlers can open another dialog, which is how you chain them
+            .Button("Are you sure?", r => player.ShowDialog(ManagedDialog.Confirmation(
+                "Really?", $"You said your name was {r.GetString("name")}.",
+                _ => player.SendMessage("Confirmed."),
+                _ => player.SendMessage("Denied."))))
+
+            .Button("Stays open", _ => ShowStaysOpenDialog(player),
+                tooltip: "A dialog that survives its own buttons")
+
+            .Button("Wait for me", _ => {
+                // The dialog locks itself until something else closes it
+                player.ShowDialog(new DialogBuilder("Hang on...")
+                    .AfterAction(DialogAfterAction.WaitForResponse)
+                    .CanCloseWithEscape(false)
+                    .Body("This one can't be closed, even with escape. Back in two seconds.")
+                    .Button("Nothing happens", null)
+                    .Build());
+
+                player.Server.Scheduler.ScheduleTask(TimeSpan.FromSeconds(2), () => {
+                    player.ShowDialog(ManagedDialog.Notice("Done", "Told you."));
+                });
+            })
+
+            // The client handles these two itself, so nothing comes back to the server
+            .Button(new DialogActionButton(TextComponent.Text("Open the repo"),
+                Action: new DialogAction.Static("minecraft:open_url",
+                    [("url", new StringTag("https://github.com/CoPokBl/MinecraftDotnet"))])))
+            .Button(new DialogActionButton(TextComponent.Text("Run /helloworld"),
+                Tooltip: TextComponent.Text("Builds the command out of the number input"),
+                Action: new DialogAction.RunCommandTemplate("helloworld $(number)")))
+
+            .ExitButton("Close", _ => player.CloseDialog()));
+    }
+
+    /// <summary>A dialog whose buttons keep working, because it doesn't close after one.</summary>
+    private static void ShowStaysOpenDialog(Player player) {
+        player.ShowDialog(new DialogBuilder("Stays open")
+            .AfterAction(DialogAfterAction.None)
+            .Body("Press as many as you like. Back returns to the showcase.")
+            .Columns(3)
+            .Button("Day", _ => player.World!.Time = 1000)
+            .Button("Night", _ => player.World!.Time = 13000)
+            .Button("Heal", _ => player.Heal())
+            .ExitButton("Back", _ => ShowShowcaseDialog(player)));
     }
 }

@@ -128,13 +128,15 @@ public class ClientBoundUpdateTeamsPacket : ClientBoundPacket {
             .WriteByte((sbyte)Action);
 
         if (Action is Method.CreateTeam or Method.UpdateTeamInfo) {
+            // Only the sixteen colours travel; Reset and the formatting codes are sent as no colour.
+            TeamColor color = Color.ThrowIfNull();
             w.WriteNbt(TeamDisplayName.ThrowIfNull())
-                .WriteByte((sbyte)FriendlyFlags.ThrowIfNull())
+                .WriteNbt(Prefix.ThrowIfNull())
+                .WriteNbt(Suffix.ThrowIfNull())
                 .WriteVarInt((int)NameTagVisibilityRule.ThrowIfNull())
                 .WriteVarInt((int)CollisionRuleOption.ThrowIfNull())
-                .WriteVarInt((int)Color.ThrowIfNull())
-                .WriteNbt(Prefix.ThrowIfNull())
-                .WriteNbt(Suffix.ThrowIfNull());
+                .WritePrefixedOptional(color <= TeamColor.White ? (TeamColor?)color : null, (c, wr) => wr.WriteVarInt((int)c))
+                .WriteByte((sbyte)FriendlyFlags.ThrowIfNull());
         }
 
         if (Action is Method.CreateTeam or Method.AddEntities or Method.RemoveEntities) {
@@ -159,12 +161,12 @@ public class ClientBoundUpdateTeamsPacket : ClientBoundPacket {
         
         if (action is Method.CreateTeam or Method.UpdateTeamInfo) {
             displayName = w.ReadText();
-            friendlyFlags = (FriendlyFlag)w.ReadByte();
-            nameTagVisibility = (NameTagVisibility)w.ReadVarInt();
-            collisionRule = (CollisionRule)w.ReadVarInt();
-            color = (TeamColor)w.ReadVarInt();
             prefix = w.ReadText();
             suffix = w.ReadText();
+            nameTagVisibility = (NameTagVisibility)w.ReadVarInt();
+            collisionRule = (CollisionRule)w.ReadVarInt();
+            color = w.ReadBoolean() ? (TeamColor)w.ReadVarInt() : TeamColor.Reset;
+            friendlyFlags = (FriendlyFlag)w.ReadByte();
         }
         
         if (action is Method.CreateTeam or Method.AddEntities or Method.RemoveEntities) {

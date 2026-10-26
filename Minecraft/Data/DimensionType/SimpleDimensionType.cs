@@ -1,4 +1,5 @@
 using Minecraft.Schemas;
+using Minecraft.Schemas.Tags;
 using NBT;
 using NBT.Tags;
 
@@ -13,11 +14,13 @@ public record SimpleDimensionType(
     int MinY,
     int Height,
     int LogicalHeight,
-    string InfiniBurn,
+    HolderSet InfiniBurn,
     Skybox Skybox,
     CardinalLight CardinalLight,
     float AmbientLight,
     Or<int, CompoundTag>? MonsterSpawnLightLevel,
     int MonsterSpawnBlockLightLimit,
     CompoundTag? Attributes,
-    INbtTag? Timelines) : IDimensionType;
+    INbtTag? Timelines,
+    bool HasEnderDragonFight = false,
+    Identifier? DefaultClock = null) : IDimensionType;

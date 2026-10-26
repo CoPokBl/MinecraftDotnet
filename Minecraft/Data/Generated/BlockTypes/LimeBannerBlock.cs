@@ -3,61 +3,88 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record LimeBannerBlock(Identifier Identifier, int Rotation) : IBlock {
-    public Identifier Category => "minecraft:banner";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => "minecraft:banner";
-    public Identifier? Item => "minecraft:lime_banner";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 1.0, 0.75]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
-    public string TranslationKey => "block.minecraft.lime_banner";
-    public bool CanRespawnIn => true;
+public record LimeBannerBlock(Identifier Identifier, int Rotation) : IBlock, IRotated {
+    private static readonly BlockInfo Data = new("block.minecraft.lime_banner", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:banner", "minecraft:lime_banner", BlockInfo.VanillaOnly, "minecraft:blocks/lime_banner");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
 
 
     public uint StateId {
         get {
             return Rotation switch {
-                0 => 12805,
-                1 => 12806,
-                2 => 12807,
-                3 => 12808,
-                4 => 12809,
-                5 => 12810,
-                6 => 12811,
-                7 => 12812,
-                8 => 12813,
-                9 => 12814,
-                10 => 12815,
-                11 => 12816,
-                12 => 12817,
-                13 => 12818,
-                14 => 12819,
-                15 => 12820,
+                0 => 14854,
+                1 => 14855,
+                2 => 14856,
+                3 => 14857,
+                4 => 14858,
+                5 => 14859,
+                6 => 14860,
+                7 => 14861,
+                8 => 14862,
+                9 => 14863,
+                10 => 14864,
+                11 => 14865,
+                12 => 14866,
+                13 => 14867,
+                14 => 14868,
+                15 => 14869,
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
         }
@@ -65,22 +92,22 @@ public record LimeBannerBlock(Identifier Identifier, int Rotation) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            12805 => new LimeBannerBlock(Identifier, 0),
-            12806 => new LimeBannerBlock(Identifier, 1),
-            12807 => new LimeBannerBlock(Identifier, 2),
-            12808 => new LimeBannerBlock(Identifier, 3),
-            12809 => new LimeBannerBlock(Identifier, 4),
-            12810 => new LimeBannerBlock(Identifier, 5),
-            12811 => new LimeBannerBlock(Identifier, 6),
-            12812 => new LimeBannerBlock(Identifier, 7),
-            12813 => new LimeBannerBlock(Identifier, 8),
-            12814 => new LimeBannerBlock(Identifier, 9),
-            12815 => new LimeBannerBlock(Identifier, 10),
-            12816 => new LimeBannerBlock(Identifier, 11),
-            12817 => new LimeBannerBlock(Identifier, 12),
-            12818 => new LimeBannerBlock(Identifier, 13),
-            12819 => new LimeBannerBlock(Identifier, 14),
-            12820 => new LimeBannerBlock(Identifier, 15),
+            14854 => new LimeBannerBlock(Identifier, 0),
+            14855 => new LimeBannerBlock(Identifier, 1),
+            14856 => new LimeBannerBlock(Identifier, 2),
+            14857 => new LimeBannerBlock(Identifier, 3),
+            14858 => new LimeBannerBlock(Identifier, 4),
+            14859 => new LimeBannerBlock(Identifier, 5),
+            14860 => new LimeBannerBlock(Identifier, 6),
+            14861 => new LimeBannerBlock(Identifier, 7),
+            14862 => new LimeBannerBlock(Identifier, 8),
+            14863 => new LimeBannerBlock(Identifier, 9),
+            14864 => new LimeBannerBlock(Identifier, 10),
+            14865 => new LimeBannerBlock(Identifier, 11),
+            14866 => new LimeBannerBlock(Identifier, 12),
+            14867 => new LimeBannerBlock(Identifier, 13),
+            14868 => new LimeBannerBlock(Identifier, 14),
+            14869 => new LimeBannerBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -1,5 +1,6 @@
 using ManagedServer.Entities.Types;
 using ManagedServer.Features.Bundles;
+using Minecraft.Implementations;
 using Minecraft.Implementations.Events;
 using Minecraft.Implementations.Server.Events;
 
@@ -7,7 +8,7 @@ namespace ManagedServer.Features;
 
 public interface IFeatureScope {
     public EventNode<IServerEvent> Events { get; }
-    public List<Player> Players { get; }
+    public SnapshotList<Player> Players { get; }
     public ManagedMinecraftServer Server { get; }
     public FeatureHandler FeatureHandler { get; }
 }

@@ -61,14 +61,40 @@ public class LightData : IWritable {
     }
 
     public void Write(DataWriter w) {
-        w.WritePrefixedArray(SkyLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
-        w.WritePrefixedArray(BlockLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
-        w.WritePrefixedArray(EmptySkyLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
-        w.WritePrefixedArray(EmptyBlockLightMask.ToLongArray(), (l, writer) => writer.WriteLong(l));
-        
-        w.WritePrefixedArray(SkyLight, (i, writer) =>
-            writer.WritePrefixedArray(i, (b, dataWriter) => dataWriter.WriteUnsignedByte(b)));
-        w.WritePrefixedArray(BlockLight, (i, writer) =>
-            writer.WritePrefixedArray(i, (b, dataWriter) => dataWriter.WriteUnsignedByte(b)));
+        w.WritePrefixedArray((ReadOnlySpan<byte>)SkyLightMask.ToJavaByteArray());
+        w.WritePrefixedArray((ReadOnlySpan<byte>)BlockLightMask.ToJavaByteArray());
+        w.WritePrefixedArray((ReadOnlySpan<byte>)EmptySkyLightMask.ToJavaByteArray());
+        w.WritePrefixedArray((ReadOnlySpan<byte>)EmptyBlockLightMask.ToJavaByteArray());
+
+        // Bulk rather than a nested WritePrefixedArray: a lit chunk carries 48 sections of 2048 bytes,
+        // so a delegate per byte is a hundred thousand calls to append a hundred kilobytes.
+        WriteSections(w, SkyLight);
+        WriteSections(w, BlockLight);
+    }
+
+    private static void WriteSections(DataWriter w, byte[][] sections) {
+        w.WriteVarInt(sections.Length);
+        foreach (byte[] section in sections) {
+            w.WritePrefixedArray((ReadOnlySpan<byte>)section);
+        }
+    }
+
+    public static LightData Read(DataReader r) {
+        return new LightData {
+            SkyLightMask = ReadMask(r),
+            BlockLightMask = ReadMask(r),
+            EmptySkyLightMask = ReadMask(r),
+            EmptyBlockLightMask = ReadMask(r),
+            SkyLight = ReadLightArrays(r),
+            BlockLight = ReadLightArrays(r)
+        };
+
+        static BitArray ReadMask(DataReader r) {
+            return r.Read(r.ReadVarInt()).FromJavaByteArray();
+        }
+
+        static byte[][] ReadLightArrays(DataReader r) {
+            return r.ReadPrefixedArray(reader => reader.Read(reader.ReadVarInt()));
+        }
     }
 }

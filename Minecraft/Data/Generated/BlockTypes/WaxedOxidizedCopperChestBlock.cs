@@ -3,140 +3,183 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WaxedOxidizedCopperChestBlock(Identifier Identifier, WaxedOxidizedCopperChestBlock.Type TypeValue, Direction Facing, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:copper_chest";
-    public double Hardness => 3;
-    public double ExplosionResistance => 6;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "copper";
-    public Identifier? BlockEntity => "minecraft:chest";
-    public Identifier? Item => "minecraft:waxed_oxidized_copper_chest";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.0625] -> [0.9375, 0.875, 0.9375]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.0625] -> [0.9375, 0.875, 0.9375]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.0625] -> [0.9375, 0.875, 0.9375]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.0625] -> [0.9375, 0.875, 0.9375]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 55;
-    public string TranslationKey => "block.minecraft.waxed_oxidized_copper_chest";
-    public bool CanRespawnIn => false;
+public record WaxedOxidizedCopperChestBlock(Identifier Identifier, ChestType Type, Direction Facing, bool Waterlogged) : IBlock, IChestTyped, IHorizontalFacing, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.waxed_oxidized_copper_chest", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chest", "minecraft:waxed_oxidized_copper_chest", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_oxidized_copper_chest");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 55, "copper", NoteBlockInstrument.Harp, false, true, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S416, BlockShapes.S416, BlockShapes.S1, BlockShapes.S416, BlockShapes.S416, BlockShapes.S416);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S417, CollisionShape = BlockShapes.S417, OcclusionShape = BlockShapes.S417, VisualShape = BlockShapes.S417, SupportShape = BlockShapes.S417 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S418, CollisionShape = BlockShapes.S418, OcclusionShape = BlockShapes.S418, VisualShape = BlockShapes.S418, SupportShape = BlockShapes.S418 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S418, CollisionShape = BlockShapes.S418, OcclusionShape = BlockShapes.S418, VisualShape = BlockShapes.S418, SupportShape = BlockShapes.S418 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S419, CollisionShape = BlockShapes.S419, OcclusionShape = BlockShapes.S419, VisualShape = BlockShapes.S419, SupportShape = BlockShapes.S419 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S419, CollisionShape = BlockShapes.S419, OcclusionShape = BlockShapes.S419, VisualShape = BlockShapes.S419, SupportShape = BlockShapes.S419 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S420, CollisionShape = BlockShapes.S420, OcclusionShape = BlockShapes.S420, VisualShape = BlockShapes.S420, SupportShape = BlockShapes.S420 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S420, CollisionShape = BlockShapes.S420, OcclusionShape = BlockShapes.S420, VisualShape = BlockShapes.S420, SupportShape = BlockShapes.S420 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I0, I1, I4, I5, I2, I3, I0, I1, I6, I7, I8, I9, I0, I1, I8, I9, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 33093];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithType(ChestType type) => this with { Type = type };
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
-            return TypeValue switch {
-                Type.Single => Facing switch {
+            return Type switch {
+                ChestType.Single => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27061,
-                        false => 27062,
+                        true => 33093,
+                        false => 33094,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27067,
-                        false => 27068,
+                        true => 33099,
+                        false => 33100,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27073,
-                        false => 27074,
+                        true => 33105,
+                        false => 33106,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27079,
-                        false => 27080,
+                        true => 33111,
+                        false => 33112,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                Type.Left => Facing switch {
+                ChestType.Left => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27063,
-                        false => 27064,
+                        true => 33095,
+                        false => 33096,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27069,
-                        false => 27070,
+                        true => 33101,
+                        false => 33102,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27075,
-                        false => 27076,
+                        true => 33107,
+                        false => 33108,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27081,
-                        false => 27082,
+                        true => 33113,
+                        false => 33114,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                Type.Right => Facing switch {
+                ChestType.Right => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27065,
-                        false => 27066,
+                        true => 33097,
+                        false => 33098,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27071,
-                        false => 27072,
+                        true => 33103,
+                        false => 33104,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27077,
-                        false => 27078,
+                        true => 33109,
+                        false => 33110,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27083,
-                        false => 27084,
+                        true => 33115,
+                        false => 33116,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(TypeValue), TypeValue, "Unknown value for property type.")
+                _ => throw new ArgumentOutOfRangeException(nameof(Type), Type, "Unknown value for property type.")
             };
         }
     }
     
     public IBlock WithState(uint state) {
         return state switch {
-            27061 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.North, true),
-            27062 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.North, false),
-            27063 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.North, true),
-            27064 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.North, false),
-            27065 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.North, true),
-            27066 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.North, false),
-            27067 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.South, true),
-            27068 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.South, false),
-            27069 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.South, true),
-            27070 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.South, false),
-            27071 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.South, true),
-            27072 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.South, false),
-            27073 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.West, true),
-            27074 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.West, false),
-            27075 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.West, true),
-            27076 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.West, false),
-            27077 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.West, true),
-            27078 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.West, false),
-            27079 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.East, true),
-            27080 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Single, Direction.East, false),
-            27081 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.East, true),
-            27082 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Left, Direction.East, false),
-            27083 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.East, true),
-            27084 => new WaxedOxidizedCopperChestBlock(Identifier, Type.Right, Direction.East, false),
+            33093 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Single, Direction.North, true),
+            33094 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Single, Direction.North, false),
+            33095 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Left, Direction.North, true),
+            33096 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Left, Direction.North, false),
+            33097 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Right, Direction.North, true),
+            33098 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Right, Direction.North, false),
+            33099 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Single, Direction.South, true),
+            33100 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Single, Direction.South, false),
+            33101 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Left, Direction.South, true),
+            33102 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Left, Direction.South, false),
+            33103 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Right, Direction.South, true),
+            33104 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Right, Direction.South, false),
+            33105 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Single, Direction.West, true),
+            33106 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Single, Direction.West, false),
+            33107 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Left, Direction.West, true),
+            33108 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Left, Direction.West, false),
+            33109 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Right, Direction.West, true),
+            33110 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Right, Direction.West, false),
+            33111 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Single, Direction.East, true),
+            33112 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Single, Direction.East, false),
+            33113 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Left, Direction.East, true),
+            33114 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Left, Direction.East, false),
+            33115 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Right, Direction.East, true),
+            33116 => new WaxedOxidizedCopperChestBlock(Identifier, ChestType.Right, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
     
     public IBlock WithState(CompoundTag properties) {
         return this with {
-            TypeValue = properties.Contains("type") ? TypeFromString(properties["type"].GetString()) : TypeValue,
+            Type = properties.Contains("type") ? ChestTypeExtensions.FromString(properties["type"].GetString()) : Type,
             Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
             Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
         };
@@ -144,33 +187,10 @@ public record WaxedOxidizedCopperChestBlock(Identifier Identifier, WaxedOxidized
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
-            ("type", new StringTag(TypeToName(TypeValue))),
+            ("type", new StringTag(Type.ToName())),
             ("facing", new StringTag(Facing.ToName())),
             ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     
-    public enum Type {
-        Single,
-        Left,
-        Right,
-    }
-
-    public static Type TypeFromString(string value) {
-        return value switch {
-            "single" => Type.Single,
-            "left" => Type.Left,
-            "right" => Type.Right,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Type.")
-        };
-    }
-
-    public static string TypeToName(Type value) {
-        return value switch {
-            Type.Single => "single",
-            Type.Left => "left",
-            Type.Right => "right",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Type value.")
-        };
-    }
 }

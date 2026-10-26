@@ -8,12 +8,11 @@ public class ClientBoundEntityAnimationPacket : ClientBoundPacket {
     public required int EntityId { get; init; }
     public required AnimationType Animation { get; init; }
 
+    /// <summary>Swings are not among these: they travel as <see cref="ClientBoundSwingAnimationPacket"/>.</summary>
     public enum AnimationType {
-        SwingMainArm = 0,
-        LeaveBed = 2,
-        SwingOffhand = 3,
-        CriticalEffect = 4,
-        MagicCriticalEffect = 5
+        LeaveBed = 0,
+        CriticalEffect = 1,
+        MagicCriticalEffect = 2
     }
 
     protected override DataWriter WriteData(DataWriter w) {

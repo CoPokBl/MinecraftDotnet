@@ -1,97 +1,122 @@
+using ManagedServer.Entities.Types;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
+using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
+using Attribute = Minecraft.Data.Generated.Attribute;
 
 namespace ManagedServer;
 
 public static class BlockUtils {
 
     /// <summary>
-    /// Gets the time it takes to break a block in ticks.
+    /// Gets the time it takes a player to break a block in ticks.
     /// </summary>
+    /// <param name="player">The player breaking the block.</param>
+    /// <param name="block">The block being broken.</param>
+    /// <param name="eyeInWater">Whether the player's eyes are inside water.</param>
+    /// <param name="digSpeedAmplifier">Highest haste/conduit power amplifier, or -1 for neither.</param>
+    /// <param name="miningFatigueAmplifier">Mining fatigue amplifier, or -1 for no mining fatigue.</param>
+    /// <returns>0 for an instant break, -1 if the block can't be broken, otherwise the time in ticks.</returns>
+    public static int GetBreakSpeed(Player player, IBlock block, bool eyeInWater = false,
+        int digSpeedAmplifier = -1, int miningFatigueAmplifier = -1) {
+        return GetBreakSpeed(player.Server.Registry, player.GameMode, block, player.HeldItem, eyeInWater,
+            player.OnGround, (float)player.GetAttributeValue(Attribute.MiningEfficiency),
+            (float)player.GetAttributeValue(Attribute.BlockBreakSpeed),
+            (float)player.GetAttributeValue(Attribute.SubmergedMiningSpeed),
+            digSpeedAmplifier, miningFatigueAmplifier);
+    }
+
+    /// <summary>
+    /// Gets the time it takes to break a block in ticks. Mirrors vanilla's
+    /// BlockBehaviour.getDestroyProgress and Player.getDestroySpeed.
+    /// </summary>
+    /// <param name="registry">Registry used to resolve the tool's block sets.</param>
     /// <param name="gameMode">The player's gamemode.</param>
     /// <param name="block">The block being broken.</param>
-    /// <param name="tool">The tool being used.</param>
-    /// <param name="isInWater">Whether the player is in water.</param>
+    /// <param name="tool">The item held in the main hand.</param>
+    /// <param name="eyeInWater">Whether the player's eyes are inside water.</param>
     /// <param name="onGround">Whether the player is on the ground.</param>
-    /// <returns>The time it takes to break the block in ticks.</returns>
-    public static int GetBreakSpeed(GameMode gameMode, IBlock block, ItemStack tool, bool isInWater, bool onGround) {
+    /// <param name="miningEfficiency">Value of the mining efficiency attribute.</param>
+    /// <param name="blockBreakSpeed">Value of the block break speed attribute.</param>
+    /// <param name="submergedMiningSpeed">Value of the submerged mining speed attribute.</param>
+    /// <param name="digSpeedAmplifier">Highest haste/conduit power amplifier, or -1 for neither.</param>
+    /// <param name="miningFatigueAmplifier">Mining fatigue amplifier, or -1 for no mining fatigue.</param>
+    /// <returns>0 for an instant break, -1 if the block can't be broken, otherwise the time in ticks.</returns>
+    public static int GetBreakSpeed(MinecraftRegistry registry, GameMode gameMode, IBlock block, ItemStack tool,
+        bool eyeInWater, bool onGround, float miningEfficiency = 0f, float blockBreakSpeed = 1f,
+        float submergedMiningSpeed = 0.2f, int digSpeedAmplifier = -1, int miningFatigueAmplifier = -1) {
+
+        Tool? toolData = tool.GetOrNull(DataComponent.Tool);
+
+        // Creative ignores hardness, but tools that opt out of it (swords, tridents) break nothing at all.
         if (gameMode == GameMode.Creative) {
-            return 0;
+            return toolData is { CanMineInCreative: false } ? -1 : 0;
         }
-        
-        double hardness = block.Hardness;
-        if (Math.Abs(hardness + 1) < 0.0001) {  // Good way of doing: hardness == -1
+
+        float hardness = block.Hardness;
+        if (Math.Abs(hardness + 1) < 0.0001f) {  // Good way of doing: hardness == -1
             return -1;  // unbreakable blocks
         }
 
-        // This is hardcoded into the vanilla client.
-        if (IBlock.SimilarTo(block, Block.Bamboo) || IBlock.SimilarTo(block, Block.BambooSapling)) {
-            if (VanillaRegistry.Data.Items.Tags["swords"].GetValueIds(VanillaRegistry.Data).Contains(tool.Type.Identifier)) {
-                return 0;  // swords break bamboo instantly
-            }
+        // The tool's speed applies whether or not it's the correct tool for the block.
+        float speed = toolData?.GetMiningSpeed(block, registry) ?? 1f;
+        if (speed > 1f) {
+            speed += miningEfficiency;
         }
 
-        Tool? toolData = tool.GetOrNull(DataComponent.Tool);
-        
-        bool isBestTool = CanBreakBlock(toolData, block);
-        float speedMultiplier;
-        
-        if (isBestTool) {
-            speedMultiplier = toolData?.GetMiningSpeed(block) ?? 1;
-
-            // Minestom says this is a thing, apparently the wiki is wrong.
-            if (speedMultiplier > 1) {
-                // TODO: Add the attribute value of the player's mining efficiency to the speed mult.
-            }
+        if (digSpeedAmplifier >= 0) {
+            speed *= 1f + (digSpeedAmplifier + 1) * 0.2f;
         }
-        else {
-            speedMultiplier = 1;
-        }
-        
-        // TODO: If player has haste or conduit power then multiply by this:
-        // float level = Math.max(player.getEffectLevel(PotionEffect.HASTE), player.getEffectLevel(PotionEffect.CONDUIT_POWER)) + 1;
-        // return (1F + 0.2F * level);
-        
-        // TODO: If player has mining fatigue then multiply by this:
-        // int level = player.getEffectLevel(PotionEffect.MINING_FATIGUE) + 1;
-        // // Use switch to avoid expensive Math.pow
-        // return switch (level) { // 0.3 ^ min(level, 4)
-        //     case 0 -> 0;
-        //     case 1 -> 0.3F; // 0.3 ^ 1
-        //     case 2 -> 0.09F; // 0.3 ^ 2
-        //     case 3 -> 0.027F; // 0.3 ^ 3
-        //     default -> 0.0081F; // 0.3 ^ 4
-        // };
-        
-        // TODO: Multiply by player attribute value: BLOCK_BREAK_SPEED
 
-        if (isInWater) {
-            speedMultiplier *= 1;  // TODO: Get val from attribute: SUBMERGED_MINING_SPEED
+        if (miningFatigueAmplifier >= 0) {
+            // Computed in double and narrowed, as Math.pow is.
+            speed *= (float)Math.Pow(0.3, miningFatigueAmplifier + 1);
+        }
+
+        speed *= blockBreakSpeed;
+
+        if (eyeInWater) {
+            speed *= submergedMiningSpeed;
         }
 
         if (!onGround) {
-            speedMultiplier /= 5;
+            speed /= 5f;
         }
 
-        double damage = speedMultiplier / hardness;
+        float progress = speed / hardness / (CanBreakBlock(toolData, block, registry) ? 30f : 100f);
 
-        if (isBestTool) {
-            damage /= 30;
-        }
-        else {
-            damage /= 100;
-        }
-
-        if (damage >= 1) {
+        if (progress >= 1f) {
             return 0;  // instant break
         }
-        
-        return (int)Math.Ceiling(1 / damage);
+
+        if (progress <= 0f) {
+            return -1;  // no progress is ever made, so it can't be broken
+        }
+
+        // Vanilla breaks the block on the first tick where progress * ticks >= 1, so match that
+        // multiplication rather than trusting the reciprocal to round the same way.
+        int ticks = Math.Max(1, (int)MathF.Ceiling(1f / progress));
+        while (ticks > 1 && progress * (ticks - 1) >= 1f) {
+            ticks--;
+        }
+        while (progress * ticks < 1f) {
+            ticks++;
+        }
+
+        return ticks;
     }
 
-    private static bool CanBreakBlock(Tool? tool, IBlock block) {
-        return !block.RequiresTool || (tool != null && tool.IsCorrectForDrops(block));
+    /// <summary>
+    /// <c>BlockState.canHarvestBlock</c>, which is both the thirty versus a hundred divisor in the
+    /// break speed above and the gate on whether the block drops anything at all.
+    /// </summary>
+    public static bool CanHarvest(ItemStack tool, IBlock block, MinecraftRegistry registry) {
+        return CanBreakBlock(tool.GetOrNull(DataComponent.Tool), block, registry);
+    }
+
+    private static bool CanBreakBlock(Tool? tool, IBlock block, MinecraftRegistry registry) {
+        return !block.RequiresTool || (tool != null && tool.IsCorrectForDrops(block, registry));
     }
 }

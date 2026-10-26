@@ -24,4 +24,42 @@
       <ProjectReference Include="..\ManagedServer\ManagedServer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <!-- Worlds lit by the vanilla light engine, see Conformance/lighting.sh. -->
+      <None Include="Lighting\vanilla-light.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Fluid boundaries decided by the vanilla shape code, see Conformance/fluid-wall.sh. -->
+      <None Include="Fluids\vanilla-fluid-wall.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Rays clipped by the vanilla block clip, see Conformance/clip.sh. -->
+      <None Include="Fluids\vanilla-clip.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Blocks classified by the vanilla node evaluator, see Conformance/pathtype.sh. -->
+      <None Include="Pathfinding\vanilla-pathtype.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- canSurvive and updateShape as the vanilla blocks answer them, see Conformance/placement.sh. -->
+      <None Include="Placement\vanilla-placement.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Grids matched by the vanilla crafting recipes, see Conformance/crafting.sh. -->
+      <None Include="Recipes\vanilla-crafting.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Every entry of the vanilla noise router over a grid of positions, see Conformance/terrain.sh. -->
+      <None Include="Terrain\vanilla-terrain.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-terrain-nether.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-terrain-end.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-terrainstage.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-terrainstage-nether.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-terrainstage-end.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Every block state turned and flipped by the vanilla blocks, see Conformance/blocktransform.sh. -->
+      <None Include="Terrain\vanilla-blocktransform.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Whole scenes as the real server generated them, see Conformance/worldparity.sh. -->
+      <None Include="Terrain\vanilla-world.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-world-nether.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-world-end.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- The order the vanilla feature sorter puts every placed feature in, see Conformance/featureorder.sh. -->
+      <None Include="Terrain\vanilla-feature-order.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Every structure start the real server laid out, see Conformance/structurelayout.sh. -->
+      <None Include="Terrain\vanilla-structures.txt.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-structures-nether.txt.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Terrain\vanilla-structures-end.txt.gz" CopyToOutputDirectory="PreserveNewest" />
+
+      <!-- The climate table dumped out of OverworldBiomeBuilder, which is what pins the
+           transcription of it. Conformance/biome-parameters.sh regenerates it on a version bump. -->
+      <None Include="Terrain\vanilla-biome-parameters.json.gz" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
 </Project>

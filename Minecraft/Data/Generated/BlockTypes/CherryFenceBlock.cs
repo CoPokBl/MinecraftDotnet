@@ -3,40 +3,119 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CherryFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
-    public Identifier Category => "minecraft:fence";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "cherry_wood";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:cherry_fence";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.5, 0.625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 36;
-    public string TranslationKey => "block.minecraft.cherry_fence";
-    public bool CanRespawnIn => false;
+public record CherryFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.cherry_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cherry_fence", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 36, "cherry_wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
+    private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S27, CollisionShape = BlockShapes.S28, OcclusionShape = BlockShapes.S29, VisualShape = BlockShapes.S27, SupportShape = BlockShapes.S28 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S30, CollisionShape = BlockShapes.S31, OcclusionShape = BlockShapes.S32, VisualShape = BlockShapes.S30, SupportShape = BlockShapes.S31 };
+    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S27, CollisionShape = BlockShapes.S28, OcclusionShape = BlockShapes.S29, VisualShape = BlockShapes.S27, SupportShape = BlockShapes.S28 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S30, CollisionShape = BlockShapes.S31, OcclusionShape = BlockShapes.S32, VisualShape = BlockShapes.S30, SupportShape = BlockShapes.S31 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S33, CollisionShape = BlockShapes.S34, OcclusionShape = BlockShapes.S35, VisualShape = BlockShapes.S33, SupportShape = BlockShapes.S34 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S36, CollisionShape = BlockShapes.S37, OcclusionShape = BlockShapes.S38, VisualShape = BlockShapes.S36, SupportShape = BlockShapes.S37 };
+    private static readonly BlockStateInfo I10 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S33, CollisionShape = BlockShapes.S34, OcclusionShape = BlockShapes.S35, VisualShape = BlockShapes.S33, SupportShape = BlockShapes.S34 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S36, CollisionShape = BlockShapes.S37, OcclusionShape = BlockShapes.S38, VisualShape = BlockShapes.S36, SupportShape = BlockShapes.S37 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S41, VisualShape = BlockShapes.S39, SupportShape = BlockShapes.S40 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S42, CollisionShape = BlockShapes.S43, OcclusionShape = BlockShapes.S44, VisualShape = BlockShapes.S42, SupportShape = BlockShapes.S43 };
+    private static readonly BlockStateInfo I14 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S41, VisualShape = BlockShapes.S39, SupportShape = BlockShapes.S40 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S42, CollisionShape = BlockShapes.S43, OcclusionShape = BlockShapes.S44, VisualShape = BlockShapes.S42, SupportShape = BlockShapes.S43 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S45, CollisionShape = BlockShapes.S46, OcclusionShape = BlockShapes.S47, VisualShape = BlockShapes.S45, SupportShape = BlockShapes.S46 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S50, VisualShape = BlockShapes.S48, SupportShape = BlockShapes.S49 };
+    private static readonly BlockStateInfo I18 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S45, CollisionShape = BlockShapes.S46, OcclusionShape = BlockShapes.S47, VisualShape = BlockShapes.S45, SupportShape = BlockShapes.S46 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S50, VisualShape = BlockShapes.S48, SupportShape = BlockShapes.S49 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S51, CollisionShape = BlockShapes.S52, OcclusionShape = BlockShapes.S53, VisualShape = BlockShapes.S51, SupportShape = BlockShapes.S52 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S54, CollisionShape = BlockShapes.S55, OcclusionShape = BlockShapes.S56, VisualShape = BlockShapes.S54, SupportShape = BlockShapes.S55 };
+    private static readonly BlockStateInfo I22 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S51, CollisionShape = BlockShapes.S52, OcclusionShape = BlockShapes.S53, VisualShape = BlockShapes.S51, SupportShape = BlockShapes.S52 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S54, CollisionShape = BlockShapes.S55, OcclusionShape = BlockShapes.S56, VisualShape = BlockShapes.S54, SupportShape = BlockShapes.S55 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S57, CollisionShape = BlockShapes.S58, OcclusionShape = BlockShapes.S59, VisualShape = BlockShapes.S57, SupportShape = BlockShapes.S58 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S60, CollisionShape = BlockShapes.S61, OcclusionShape = BlockShapes.S62, VisualShape = BlockShapes.S60, SupportShape = BlockShapes.S61 };
+    private static readonly BlockStateInfo I26 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S57, CollisionShape = BlockShapes.S58, OcclusionShape = BlockShapes.S59, VisualShape = BlockShapes.S57, SupportShape = BlockShapes.S58 };
+    private static readonly BlockStateInfo I27 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S60, CollisionShape = BlockShapes.S61, OcclusionShape = BlockShapes.S62, VisualShape = BlockShapes.S60, SupportShape = BlockShapes.S61 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S63, CollisionShape = BlockShapes.S64, OcclusionShape = BlockShapes.S65, VisualShape = BlockShapes.S63, SupportShape = BlockShapes.S64 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S67, OcclusionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S67 };
+    private static readonly BlockStateInfo I30 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S63, CollisionShape = BlockShapes.S64, OcclusionShape = BlockShapes.S65, VisualShape = BlockShapes.S63, SupportShape = BlockShapes.S64 };
+    private static readonly BlockStateInfo I31 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S67, OcclusionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S67 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 15779];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
+
+    public bool HasFace(BlockFace face) => face is BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -46,44 +125,44 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13698,
-                                false => 13699,
+                                true => 15779,
+                                false => 15780,
                             },
                             false => West switch {
-                                true => 13700,
-                                false => 13701,
+                                true => 15781,
+                                false => 15782,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13702,
-                                false => 13703,
+                                true => 15783,
+                                false => 15784,
                             },
                             false => West switch {
-                                true => 13704,
-                                false => 13705,
+                                true => 15785,
+                                false => 15786,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13706,
-                                false => 13707,
+                                true => 15787,
+                                false => 15788,
                             },
                             false => West switch {
-                                true => 13708,
-                                false => 13709,
+                                true => 15789,
+                                false => 15790,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13710,
-                                false => 13711,
+                                true => 15791,
+                                false => 15792,
                             },
                             false => West switch {
-                                true => 13712,
-                                false => 13713,
+                                true => 15793,
+                                false => 15794,
                             },
                         },
                     },
@@ -92,44 +171,44 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13714,
-                                false => 13715,
+                                true => 15795,
+                                false => 15796,
                             },
                             false => West switch {
-                                true => 13716,
-                                false => 13717,
+                                true => 15797,
+                                false => 15798,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13718,
-                                false => 13719,
+                                true => 15799,
+                                false => 15800,
                             },
                             false => West switch {
-                                true => 13720,
-                                false => 13721,
+                                true => 15801,
+                                false => 15802,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13722,
-                                false => 13723,
+                                true => 15803,
+                                false => 15804,
                             },
                             false => West switch {
-                                true => 13724,
-                                false => 13725,
+                                true => 15805,
+                                false => 15806,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13726,
-                                false => 13727,
+                                true => 15807,
+                                false => 15808,
                             },
                             false => West switch {
-                                true => 13728,
-                                false => 13729,
+                                true => 15809,
+                                false => 15810,
                             },
                         },
                     },
@@ -140,38 +219,38 @@ public record CherryFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            13698 => new CherryFenceBlock(Identifier, true, true, true, true, true),
-            13699 => new CherryFenceBlock(Identifier, true, true, true, true, false),
-            13700 => new CherryFenceBlock(Identifier, true, true, true, false, true),
-            13701 => new CherryFenceBlock(Identifier, true, true, true, false, false),
-            13702 => new CherryFenceBlock(Identifier, true, true, false, true, true),
-            13703 => new CherryFenceBlock(Identifier, true, true, false, true, false),
-            13704 => new CherryFenceBlock(Identifier, true, true, false, false, true),
-            13705 => new CherryFenceBlock(Identifier, true, true, false, false, false),
-            13706 => new CherryFenceBlock(Identifier, true, false, true, true, true),
-            13707 => new CherryFenceBlock(Identifier, true, false, true, true, false),
-            13708 => new CherryFenceBlock(Identifier, true, false, true, false, true),
-            13709 => new CherryFenceBlock(Identifier, true, false, true, false, false),
-            13710 => new CherryFenceBlock(Identifier, true, false, false, true, true),
-            13711 => new CherryFenceBlock(Identifier, true, false, false, true, false),
-            13712 => new CherryFenceBlock(Identifier, true, false, false, false, true),
-            13713 => new CherryFenceBlock(Identifier, true, false, false, false, false),
-            13714 => new CherryFenceBlock(Identifier, false, true, true, true, true),
-            13715 => new CherryFenceBlock(Identifier, false, true, true, true, false),
-            13716 => new CherryFenceBlock(Identifier, false, true, true, false, true),
-            13717 => new CherryFenceBlock(Identifier, false, true, true, false, false),
-            13718 => new CherryFenceBlock(Identifier, false, true, false, true, true),
-            13719 => new CherryFenceBlock(Identifier, false, true, false, true, false),
-            13720 => new CherryFenceBlock(Identifier, false, true, false, false, true),
-            13721 => new CherryFenceBlock(Identifier, false, true, false, false, false),
-            13722 => new CherryFenceBlock(Identifier, false, false, true, true, true),
-            13723 => new CherryFenceBlock(Identifier, false, false, true, true, false),
-            13724 => new CherryFenceBlock(Identifier, false, false, true, false, true),
-            13725 => new CherryFenceBlock(Identifier, false, false, true, false, false),
-            13726 => new CherryFenceBlock(Identifier, false, false, false, true, true),
-            13727 => new CherryFenceBlock(Identifier, false, false, false, true, false),
-            13728 => new CherryFenceBlock(Identifier, false, false, false, false, true),
-            13729 => new CherryFenceBlock(Identifier, false, false, false, false, false),
+            15779 => new CherryFenceBlock(Identifier, true, true, true, true, true),
+            15780 => new CherryFenceBlock(Identifier, true, true, true, true, false),
+            15781 => new CherryFenceBlock(Identifier, true, true, true, false, true),
+            15782 => new CherryFenceBlock(Identifier, true, true, true, false, false),
+            15783 => new CherryFenceBlock(Identifier, true, true, false, true, true),
+            15784 => new CherryFenceBlock(Identifier, true, true, false, true, false),
+            15785 => new CherryFenceBlock(Identifier, true, true, false, false, true),
+            15786 => new CherryFenceBlock(Identifier, true, true, false, false, false),
+            15787 => new CherryFenceBlock(Identifier, true, false, true, true, true),
+            15788 => new CherryFenceBlock(Identifier, true, false, true, true, false),
+            15789 => new CherryFenceBlock(Identifier, true, false, true, false, true),
+            15790 => new CherryFenceBlock(Identifier, true, false, true, false, false),
+            15791 => new CherryFenceBlock(Identifier, true, false, false, true, true),
+            15792 => new CherryFenceBlock(Identifier, true, false, false, true, false),
+            15793 => new CherryFenceBlock(Identifier, true, false, false, false, true),
+            15794 => new CherryFenceBlock(Identifier, true, false, false, false, false),
+            15795 => new CherryFenceBlock(Identifier, false, true, true, true, true),
+            15796 => new CherryFenceBlock(Identifier, false, true, true, true, false),
+            15797 => new CherryFenceBlock(Identifier, false, true, true, false, true),
+            15798 => new CherryFenceBlock(Identifier, false, true, true, false, false),
+            15799 => new CherryFenceBlock(Identifier, false, true, false, true, true),
+            15800 => new CherryFenceBlock(Identifier, false, true, false, true, false),
+            15801 => new CherryFenceBlock(Identifier, false, true, false, false, true),
+            15802 => new CherryFenceBlock(Identifier, false, true, false, false, false),
+            15803 => new CherryFenceBlock(Identifier, false, false, true, true, true),
+            15804 => new CherryFenceBlock(Identifier, false, false, true, true, false),
+            15805 => new CherryFenceBlock(Identifier, false, false, true, false, true),
+            15806 => new CherryFenceBlock(Identifier, false, false, true, false, false),
+            15807 => new CherryFenceBlock(Identifier, false, false, false, true, true),
+            15808 => new CherryFenceBlock(Identifier, false, false, false, true, false),
+            15809 => new CherryFenceBlock(Identifier, false, false, false, false, true),
+            15810 => new CherryFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

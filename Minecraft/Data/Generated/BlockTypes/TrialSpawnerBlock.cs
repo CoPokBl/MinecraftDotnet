@@ -3,6 +3,7 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -10,54 +11,83 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawnerBlock.TrialSpawnerState TrialSpawnerStateValue) : IBlock {
-    public Identifier Category => "minecraft:trial_spawner";
-    public double Hardness => 50;
-    public double ExplosionResistance => 50;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "trial_spawner";
-    public Identifier? BlockEntity => "minecraft:trial_spawner";
-    public Identifier? Item => "minecraft:trial_spawner";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => true;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 11;
-    public string TranslationKey => "block.minecraft.trial_spawner";
-    public bool CanRespawnIn => false;
+    private static readonly BlockInfo Data = new("block.minecraft.trial_spawner", 50f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:trial_spawner", "minecraft:trial_spawner", BlockInfo.VanillaOnly, "minecraft:blocks/trial_spawner");
+    private static readonly BlockStateInfo I0 = new(50f, 0, 1, PushReaction.PushPull, 11, "trial_spawner", NoteBlockInstrument.Basedrum, false, false, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
+    private static readonly BlockStateInfo I1 = I0 with { LightEmission = 4 };
+    private static readonly BlockStateInfo I2 = I0 with { LightEmission = 8 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I2, I2, I0, I0, I1, I2, I2, I2, I0
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 35507];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
 
 
     public uint StateId {
         get {
             return Ominous switch {
                 true => TrialSpawnerStateValue switch {
-                    TrialSpawnerState.Inactive => 29455,
-                    TrialSpawnerState.WaitingForPlayers => 29456,
-                    TrialSpawnerState.Active => 29457,
-                    TrialSpawnerState.WaitingForRewardEjection => 29458,
-                    TrialSpawnerState.EjectingReward => 29459,
-                    TrialSpawnerState.Cooldown => 29460,
+                    TrialSpawnerState.Inactive => 35507,
+                    TrialSpawnerState.WaitingForPlayers => 35508,
+                    TrialSpawnerState.Active => 35509,
+                    TrialSpawnerState.WaitingForRewardEjection => 35510,
+                    TrialSpawnerState.EjectingReward => 35511,
+                    TrialSpawnerState.Cooldown => 35512,
                     _ => throw new ArgumentOutOfRangeException(nameof(TrialSpawnerStateValue), TrialSpawnerStateValue, "Unknown value for property trial_spawner_state.")
                 },
                 false => TrialSpawnerStateValue switch {
-                    TrialSpawnerState.Inactive => 29461,
-                    TrialSpawnerState.WaitingForPlayers => 29462,
-                    TrialSpawnerState.Active => 29463,
-                    TrialSpawnerState.WaitingForRewardEjection => 29464,
-                    TrialSpawnerState.EjectingReward => 29465,
-                    TrialSpawnerState.Cooldown => 29466,
+                    TrialSpawnerState.Inactive => 35513,
+                    TrialSpawnerState.WaitingForPlayers => 35514,
+                    TrialSpawnerState.Active => 35515,
+                    TrialSpawnerState.WaitingForRewardEjection => 35516,
+                    TrialSpawnerState.EjectingReward => 35517,
+                    TrialSpawnerState.Cooldown => 35518,
                     _ => throw new ArgumentOutOfRangeException(nameof(TrialSpawnerStateValue), TrialSpawnerStateValue, "Unknown value for property trial_spawner_state.")
                 },
             };
@@ -66,18 +96,18 @@ public record TrialSpawnerBlock(Identifier Identifier, bool Ominous, TrialSpawne
     
     public IBlock WithState(uint state) {
         return state switch {
-            29455 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Inactive),
-            29456 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.WaitingForPlayers),
-            29457 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Active),
-            29458 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.WaitingForRewardEjection),
-            29459 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.EjectingReward),
-            29460 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Cooldown),
-            29461 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Inactive),
-            29462 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.WaitingForPlayers),
-            29463 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Active),
-            29464 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.WaitingForRewardEjection),
-            29465 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.EjectingReward),
-            29466 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Cooldown),
+            35507 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Inactive),
+            35508 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.WaitingForPlayers),
+            35509 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Active),
+            35510 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.WaitingForRewardEjection),
+            35511 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.EjectingReward),
+            35512 => new TrialSpawnerBlock(Identifier, true, TrialSpawnerState.Cooldown),
+            35513 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Inactive),
+            35514 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.WaitingForPlayers),
+            35515 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Active),
+            35516 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.WaitingForRewardEjection),
+            35517 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.EjectingReward),
+            35518 => new TrialSpawnerBlock(Identifier, false, TrialSpawnerState.Cooldown),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

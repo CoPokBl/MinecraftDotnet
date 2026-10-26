@@ -3,60 +3,99 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record DeadTubeCoralWallFanBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:base_coral_wall_fan";
-    public double Hardness => 0;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:dead_tube_coral_fan";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.25, 0.3125] -> [1.0, 0.75, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 21;
-    public string TranslationKey => "block.minecraft.dead_tube_coral_wall_fan";
-    public bool CanRespawnIn => false;
+public record DeadTubeCoralWallFanBlock(Identifier Identifier, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.dead_tube_coral_wall_fan", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:dead_tube_coral_fan", BlockInfo.VanillaOnly, "minecraft:blocks/dead_tube_coral_fan");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.PushPull, 21, "stone", NoteBlockInstrument.Basedrum, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S394, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S395 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S395 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S396 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S396 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S397 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S397 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 18544];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Facing switch {
                 Direction.North => Waterlogged switch {
-                    true => 14985,
-                    false => 14986,
+                    true => 18544,
+                    false => 18545,
                 },
                 Direction.South => Waterlogged switch {
-                    true => 14987,
-                    false => 14988,
+                    true => 18546,
+                    false => 18547,
                 },
                 Direction.West => Waterlogged switch {
-                    true => 14989,
-                    false => 14990,
+                    true => 18548,
+                    false => 18549,
                 },
                 Direction.East => Waterlogged switch {
-                    true => 14991,
-                    false => 14992,
+                    true => 18550,
+                    false => 18551,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -65,14 +104,14 @@ public record DeadTubeCoralWallFanBlock(Identifier Identifier, Direction Facing,
     
     public IBlock WithState(uint state) {
         return state switch {
-            14985 => new DeadTubeCoralWallFanBlock(Identifier, Direction.North, true),
-            14986 => new DeadTubeCoralWallFanBlock(Identifier, Direction.North, false),
-            14987 => new DeadTubeCoralWallFanBlock(Identifier, Direction.South, true),
-            14988 => new DeadTubeCoralWallFanBlock(Identifier, Direction.South, false),
-            14989 => new DeadTubeCoralWallFanBlock(Identifier, Direction.West, true),
-            14990 => new DeadTubeCoralWallFanBlock(Identifier, Direction.West, false),
-            14991 => new DeadTubeCoralWallFanBlock(Identifier, Direction.East, true),
-            14992 => new DeadTubeCoralWallFanBlock(Identifier, Direction.East, false),
+            18544 => new DeadTubeCoralWallFanBlock(Identifier, Direction.North, true),
+            18545 => new DeadTubeCoralWallFanBlock(Identifier, Direction.North, false),
+            18546 => new DeadTubeCoralWallFanBlock(Identifier, Direction.South, true),
+            18547 => new DeadTubeCoralWallFanBlock(Identifier, Direction.South, false),
+            18548 => new DeadTubeCoralWallFanBlock(Identifier, Direction.West, true),
+            18549 => new DeadTubeCoralWallFanBlock(Identifier, Direction.West, false),
+            18550 => new DeadTubeCoralWallFanBlock(Identifier, Direction.East, true),
+            18551 => new DeadTubeCoralWallFanBlock(Identifier, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

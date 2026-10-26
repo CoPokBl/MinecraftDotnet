@@ -3,71 +3,102 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record TwistingVinesBlock(Identifier Identifier, int Age) : IBlock {
-    public Identifier Category => "minecraft:twisting_vines";
-    public double Hardness => 0;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "weeping_vines";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:twisting_vines";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 0.9375, 0.75]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 23;
-    public string TranslationKey => "block.minecraft.twisting_vines";
-    public bool CanRespawnIn => true;
+public record TwistingVinesBlock(Identifier Identifier, int Age) : IBlock, IAged {
+    private static readonly BlockInfo Data = new("block.minecraft.twisting_vines", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:twisting_vines", BlockInfo.VanillaOnly, "minecraft:blocks/twisting_vines");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 23, "weeping_vines", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S945, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { RandomlyTicking = false };
+    private static readonly BlockStateInfo[] States = [
+        I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I0, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 24361];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
 
 
     public uint StateId {
         get {
             return Age switch {
-                0 => 20802,
-                1 => 20803,
-                2 => 20804,
-                3 => 20805,
-                4 => 20806,
-                5 => 20807,
-                6 => 20808,
-                7 => 20809,
-                8 => 20810,
-                9 => 20811,
-                10 => 20812,
-                11 => 20813,
-                12 => 20814,
-                13 => 20815,
-                14 => 20816,
-                15 => 20817,
-                16 => 20818,
-                17 => 20819,
-                18 => 20820,
-                19 => 20821,
-                20 => 20822,
-                21 => 20823,
-                22 => 20824,
-                23 => 20825,
-                24 => 20826,
-                25 => 20827,
+                0 => 24361,
+                1 => 24362,
+                2 => 24363,
+                3 => 24364,
+                4 => 24365,
+                5 => 24366,
+                6 => 24367,
+                7 => 24368,
+                8 => 24369,
+                9 => 24370,
+                10 => 24371,
+                11 => 24372,
+                12 => 24373,
+                13 => 24374,
+                14 => 24375,
+                15 => 24376,
+                16 => 24377,
+                17 => 24378,
+                18 => 24379,
+                19 => 24380,
+                20 => 24381,
+                21 => 24382,
+                22 => 24383,
+                23 => 24384,
+                24 => 24385,
+                25 => 24386,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -75,32 +106,32 @@ public record TwistingVinesBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            20802 => new TwistingVinesBlock(Identifier, 0),
-            20803 => new TwistingVinesBlock(Identifier, 1),
-            20804 => new TwistingVinesBlock(Identifier, 2),
-            20805 => new TwistingVinesBlock(Identifier, 3),
-            20806 => new TwistingVinesBlock(Identifier, 4),
-            20807 => new TwistingVinesBlock(Identifier, 5),
-            20808 => new TwistingVinesBlock(Identifier, 6),
-            20809 => new TwistingVinesBlock(Identifier, 7),
-            20810 => new TwistingVinesBlock(Identifier, 8),
-            20811 => new TwistingVinesBlock(Identifier, 9),
-            20812 => new TwistingVinesBlock(Identifier, 10),
-            20813 => new TwistingVinesBlock(Identifier, 11),
-            20814 => new TwistingVinesBlock(Identifier, 12),
-            20815 => new TwistingVinesBlock(Identifier, 13),
-            20816 => new TwistingVinesBlock(Identifier, 14),
-            20817 => new TwistingVinesBlock(Identifier, 15),
-            20818 => new TwistingVinesBlock(Identifier, 16),
-            20819 => new TwistingVinesBlock(Identifier, 17),
-            20820 => new TwistingVinesBlock(Identifier, 18),
-            20821 => new TwistingVinesBlock(Identifier, 19),
-            20822 => new TwistingVinesBlock(Identifier, 20),
-            20823 => new TwistingVinesBlock(Identifier, 21),
-            20824 => new TwistingVinesBlock(Identifier, 22),
-            20825 => new TwistingVinesBlock(Identifier, 23),
-            20826 => new TwistingVinesBlock(Identifier, 24),
-            20827 => new TwistingVinesBlock(Identifier, 25),
+            24361 => new TwistingVinesBlock(Identifier, 0),
+            24362 => new TwistingVinesBlock(Identifier, 1),
+            24363 => new TwistingVinesBlock(Identifier, 2),
+            24364 => new TwistingVinesBlock(Identifier, 3),
+            24365 => new TwistingVinesBlock(Identifier, 4),
+            24366 => new TwistingVinesBlock(Identifier, 5),
+            24367 => new TwistingVinesBlock(Identifier, 6),
+            24368 => new TwistingVinesBlock(Identifier, 7),
+            24369 => new TwistingVinesBlock(Identifier, 8),
+            24370 => new TwistingVinesBlock(Identifier, 9),
+            24371 => new TwistingVinesBlock(Identifier, 10),
+            24372 => new TwistingVinesBlock(Identifier, 11),
+            24373 => new TwistingVinesBlock(Identifier, 12),
+            24374 => new TwistingVinesBlock(Identifier, 13),
+            24375 => new TwistingVinesBlock(Identifier, 14),
+            24376 => new TwistingVinesBlock(Identifier, 15),
+            24377 => new TwistingVinesBlock(Identifier, 16),
+            24378 => new TwistingVinesBlock(Identifier, 17),
+            24379 => new TwistingVinesBlock(Identifier, 18),
+            24380 => new TwistingVinesBlock(Identifier, 19),
+            24381 => new TwistingVinesBlock(Identifier, 20),
+            24382 => new TwistingVinesBlock(Identifier, 21),
+            24383 => new TwistingVinesBlock(Identifier, 22),
+            24384 => new TwistingVinesBlock(Identifier, 23),
+            24385 => new TwistingVinesBlock(Identifier, 24),
+            24386 => new TwistingVinesBlock(Identifier, 25),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

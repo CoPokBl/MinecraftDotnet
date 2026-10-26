@@ -3,61 +3,88 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record ChainCommandBlockBlock(Identifier Identifier, bool Conditional, Cardinal Facing) : IBlock {
-    public Identifier Category => "minecraft:command";
-    public double Hardness => -1;
-    public double ExplosionResistance => 3600000;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:command_block";
-    public Identifier? Item => "minecraft:chain_command_block";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => true;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 27;
-    public string TranslationKey => "block.minecraft.chain_command_block";
-    public bool CanRespawnIn => false;
+public record ChainCommandBlockBlock(Identifier Identifier, bool Conditional, Cardinal Facing) : IBlock, IDirectional {
+    private static readonly BlockInfo Data = new("block.minecraft.chain_command_block", 3600000f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:command_block", "minecraft:chain_command_block", BlockInfo.VanillaOnly, null);
+    private static readonly BlockStateInfo I0 = new(-1f, 0, 15, PushReaction.PushPull, 27, "stone", NoteBlockInstrument.Harp, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Cardinal facing) => this with { Facing = facing };
 
 
     public uint StateId {
         get {
             return Conditional switch {
                 true => Facing switch {
-                    Cardinal.North => 14627,
-                    Cardinal.East => 14628,
-                    Cardinal.South => 14629,
-                    Cardinal.West => 14630,
-                    Cardinal.Up => 14631,
-                    Cardinal.Down => 14632,
+                    Cardinal.North => 16810,
+                    Cardinal.East => 16811,
+                    Cardinal.South => 16812,
+                    Cardinal.West => 16813,
+                    Cardinal.Up => 16814,
+                    Cardinal.Down => 16815,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
-                    Cardinal.North => 14633,
-                    Cardinal.East => 14634,
-                    Cardinal.South => 14635,
-                    Cardinal.West => 14636,
-                    Cardinal.Up => 14637,
-                    Cardinal.Down => 14638,
+                    Cardinal.North => 16816,
+                    Cardinal.East => 16817,
+                    Cardinal.South => 16818,
+                    Cardinal.West => 16819,
+                    Cardinal.Up => 16820,
+                    Cardinal.Down => 16821,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
@@ -66,18 +93,18 @@ public record ChainCommandBlockBlock(Identifier Identifier, bool Conditional, Ca
     
     public IBlock WithState(uint state) {
         return state switch {
-            14627 => new ChainCommandBlockBlock(Identifier, true, Cardinal.North),
-            14628 => new ChainCommandBlockBlock(Identifier, true, Cardinal.East),
-            14629 => new ChainCommandBlockBlock(Identifier, true, Cardinal.South),
-            14630 => new ChainCommandBlockBlock(Identifier, true, Cardinal.West),
-            14631 => new ChainCommandBlockBlock(Identifier, true, Cardinal.Up),
-            14632 => new ChainCommandBlockBlock(Identifier, true, Cardinal.Down),
-            14633 => new ChainCommandBlockBlock(Identifier, false, Cardinal.North),
-            14634 => new ChainCommandBlockBlock(Identifier, false, Cardinal.East),
-            14635 => new ChainCommandBlockBlock(Identifier, false, Cardinal.South),
-            14636 => new ChainCommandBlockBlock(Identifier, false, Cardinal.West),
-            14637 => new ChainCommandBlockBlock(Identifier, false, Cardinal.Up),
-            14638 => new ChainCommandBlockBlock(Identifier, false, Cardinal.Down),
+            16810 => new ChainCommandBlockBlock(Identifier, true, Cardinal.North),
+            16811 => new ChainCommandBlockBlock(Identifier, true, Cardinal.East),
+            16812 => new ChainCommandBlockBlock(Identifier, true, Cardinal.South),
+            16813 => new ChainCommandBlockBlock(Identifier, true, Cardinal.West),
+            16814 => new ChainCommandBlockBlock(Identifier, true, Cardinal.Up),
+            16815 => new ChainCommandBlockBlock(Identifier, true, Cardinal.Down),
+            16816 => new ChainCommandBlockBlock(Identifier, false, Cardinal.North),
+            16817 => new ChainCommandBlockBlock(Identifier, false, Cardinal.East),
+            16818 => new ChainCommandBlockBlock(Identifier, false, Cardinal.South),
+            16819 => new ChainCommandBlockBlock(Identifier, false, Cardinal.West),
+            16820 => new ChainCommandBlockBlock(Identifier, false, Cardinal.Up),
+            16821 => new ChainCommandBlockBlock(Identifier, false, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

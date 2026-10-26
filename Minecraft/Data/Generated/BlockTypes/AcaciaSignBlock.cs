@@ -3,108 +3,141 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record AcaciaSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:standing_sign";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => "minecraft:sign";
-    public Identifier? Item => "minecraft:acacia_sign";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 1.0, 0.75]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 15;
-    public string TranslationKey => "block.minecraft.acacia_sign";
-    public bool CanRespawnIn => true;
+public record AcaciaSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock, IRotated, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:acacia_sign", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 15, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 6987];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 5230,
-                    false => 5231,
+                    true => 6987,
+                    false => 6988,
                 },
                 1 => Waterlogged switch {
-                    true => 5232,
-                    false => 5233,
+                    true => 6989,
+                    false => 6990,
                 },
                 2 => Waterlogged switch {
-                    true => 5234,
-                    false => 5235,
+                    true => 6991,
+                    false => 6992,
                 },
                 3 => Waterlogged switch {
-                    true => 5236,
-                    false => 5237,
+                    true => 6993,
+                    false => 6994,
                 },
                 4 => Waterlogged switch {
-                    true => 5238,
-                    false => 5239,
+                    true => 6995,
+                    false => 6996,
                 },
                 5 => Waterlogged switch {
-                    true => 5240,
-                    false => 5241,
+                    true => 6997,
+                    false => 6998,
                 },
                 6 => Waterlogged switch {
-                    true => 5242,
-                    false => 5243,
+                    true => 6999,
+                    false => 7000,
                 },
                 7 => Waterlogged switch {
-                    true => 5244,
-                    false => 5245,
+                    true => 7001,
+                    false => 7002,
                 },
                 8 => Waterlogged switch {
-                    true => 5246,
-                    false => 5247,
+                    true => 7003,
+                    false => 7004,
                 },
                 9 => Waterlogged switch {
-                    true => 5248,
-                    false => 5249,
+                    true => 7005,
+                    false => 7006,
                 },
                 10 => Waterlogged switch {
-                    true => 5250,
-                    false => 5251,
+                    true => 7007,
+                    false => 7008,
                 },
                 11 => Waterlogged switch {
-                    true => 5252,
-                    false => 5253,
+                    true => 7009,
+                    false => 7010,
                 },
                 12 => Waterlogged switch {
-                    true => 5254,
-                    false => 5255,
+                    true => 7011,
+                    false => 7012,
                 },
                 13 => Waterlogged switch {
-                    true => 5256,
-                    false => 5257,
+                    true => 7013,
+                    false => 7014,
                 },
                 14 => Waterlogged switch {
-                    true => 5258,
-                    false => 5259,
+                    true => 7015,
+                    false => 7016,
                 },
                 15 => Waterlogged switch {
-                    true => 5260,
-                    false => 5261,
+                    true => 7017,
+                    false => 7018,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -113,38 +146,38 @@ public record AcaciaSignBlock(Identifier Identifier, int Rotation, bool Waterlog
     
     public IBlock WithState(uint state) {
         return state switch {
-            5230 => new AcaciaSignBlock(Identifier, 0, true),
-            5231 => new AcaciaSignBlock(Identifier, 0, false),
-            5232 => new AcaciaSignBlock(Identifier, 1, true),
-            5233 => new AcaciaSignBlock(Identifier, 1, false),
-            5234 => new AcaciaSignBlock(Identifier, 2, true),
-            5235 => new AcaciaSignBlock(Identifier, 2, false),
-            5236 => new AcaciaSignBlock(Identifier, 3, true),
-            5237 => new AcaciaSignBlock(Identifier, 3, false),
-            5238 => new AcaciaSignBlock(Identifier, 4, true),
-            5239 => new AcaciaSignBlock(Identifier, 4, false),
-            5240 => new AcaciaSignBlock(Identifier, 5, true),
-            5241 => new AcaciaSignBlock(Identifier, 5, false),
-            5242 => new AcaciaSignBlock(Identifier, 6, true),
-            5243 => new AcaciaSignBlock(Identifier, 6, false),
-            5244 => new AcaciaSignBlock(Identifier, 7, true),
-            5245 => new AcaciaSignBlock(Identifier, 7, false),
-            5246 => new AcaciaSignBlock(Identifier, 8, true),
-            5247 => new AcaciaSignBlock(Identifier, 8, false),
-            5248 => new AcaciaSignBlock(Identifier, 9, true),
-            5249 => new AcaciaSignBlock(Identifier, 9, false),
-            5250 => new AcaciaSignBlock(Identifier, 10, true),
-            5251 => new AcaciaSignBlock(Identifier, 10, false),
-            5252 => new AcaciaSignBlock(Identifier, 11, true),
-            5253 => new AcaciaSignBlock(Identifier, 11, false),
-            5254 => new AcaciaSignBlock(Identifier, 12, true),
-            5255 => new AcaciaSignBlock(Identifier, 12, false),
-            5256 => new AcaciaSignBlock(Identifier, 13, true),
-            5257 => new AcaciaSignBlock(Identifier, 13, false),
-            5258 => new AcaciaSignBlock(Identifier, 14, true),
-            5259 => new AcaciaSignBlock(Identifier, 14, false),
-            5260 => new AcaciaSignBlock(Identifier, 15, true),
-            5261 => new AcaciaSignBlock(Identifier, 15, false),
+            6987 => new AcaciaSignBlock(Identifier, 0, true),
+            6988 => new AcaciaSignBlock(Identifier, 0, false),
+            6989 => new AcaciaSignBlock(Identifier, 1, true),
+            6990 => new AcaciaSignBlock(Identifier, 1, false),
+            6991 => new AcaciaSignBlock(Identifier, 2, true),
+            6992 => new AcaciaSignBlock(Identifier, 2, false),
+            6993 => new AcaciaSignBlock(Identifier, 3, true),
+            6994 => new AcaciaSignBlock(Identifier, 3, false),
+            6995 => new AcaciaSignBlock(Identifier, 4, true),
+            6996 => new AcaciaSignBlock(Identifier, 4, false),
+            6997 => new AcaciaSignBlock(Identifier, 5, true),
+            6998 => new AcaciaSignBlock(Identifier, 5, false),
+            6999 => new AcaciaSignBlock(Identifier, 6, true),
+            7000 => new AcaciaSignBlock(Identifier, 6, false),
+            7001 => new AcaciaSignBlock(Identifier, 7, true),
+            7002 => new AcaciaSignBlock(Identifier, 7, false),
+            7003 => new AcaciaSignBlock(Identifier, 8, true),
+            7004 => new AcaciaSignBlock(Identifier, 8, false),
+            7005 => new AcaciaSignBlock(Identifier, 9, true),
+            7006 => new AcaciaSignBlock(Identifier, 9, false),
+            7007 => new AcaciaSignBlock(Identifier, 10, true),
+            7008 => new AcaciaSignBlock(Identifier, 10, false),
+            7009 => new AcaciaSignBlock(Identifier, 11, true),
+            7010 => new AcaciaSignBlock(Identifier, 11, false),
+            7011 => new AcaciaSignBlock(Identifier, 12, true),
+            7012 => new AcaciaSignBlock(Identifier, 12, false),
+            7013 => new AcaciaSignBlock(Identifier, 13, true),
+            7014 => new AcaciaSignBlock(Identifier, 13, false),
+            7015 => new AcaciaSignBlock(Identifier, 14, true),
+            7016 => new AcaciaSignBlock(Identifier, 14, false),
+            7017 => new AcaciaSignBlock(Identifier, 15, true),
+            7018 => new AcaciaSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -3,40 +3,247 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide East, WallSide North, WallSide South, WallSide West) : IBlock {
-    public Identifier Category => "minecraft:mossy_carpet";
-    public double Hardness => 0.1;
-    public double ExplosionResistance => 0.1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "moss_carpet";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:pale_moss_carpet";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.0625, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.0625, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.0625, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 22;
-    public string TranslationKey => "block.minecraft.pale_moss_carpet";
-    public bool CanRespawnIn => true;
+public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide East, WallSide North, WallSide South, WallSide West) : IBlock, IBottomed, IWallConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.pale_moss_carpet", 0.1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_moss_carpet", BlockInfo.VanillaOnly, "minecraft:blocks/pale_moss_carpet");
+    private static readonly BlockStateInfo I0 = new(0.1f, 0, 0, PushReaction.Popped, 22, "moss_carpet", NoteBlockInstrument.Harp, true, false, false, true, false, false, false, false, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S371, BlockShapes.S371, BlockShapes.S1, BlockShapes.S1, BlockShapes.S371, BlockShapes.S371);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S660 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S592 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S661 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S662 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S663 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S589 };
+    private static readonly BlockStateInfo I7 = I0 with { BlockShape = BlockShapes.S664 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S588 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S665 };
+    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S666 };
+    private static readonly BlockStateInfo I11 = I0 with { BlockShape = BlockShapes.S667 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S668 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S669 };
+    private static readonly BlockStateInfo I14 = I0 with { BlockShape = BlockShapes.S670 };
+    private static readonly BlockStateInfo I15 = I0 with { BlockShape = BlockShapes.S671 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S672 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S673 };
+    private static readonly BlockStateInfo I18 = I0 with { BlockShape = BlockShapes.S585 };
+    private static readonly BlockStateInfo I19 = I0 with { BlockShape = BlockShapes.S674 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S584 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S675 };
+    private static readonly BlockStateInfo I22 = I0 with { BlockShape = BlockShapes.S676 };
+    private static readonly BlockStateInfo I23 = I0 with { BlockShape = BlockShapes.S677 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S581 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S678 };
+    private static readonly BlockStateInfo I26 = I0 with { BlockShape = BlockShapes.S580 };
+    private static readonly BlockStateInfo I27 = I0 with { BlockShape = BlockShapes.S679 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S680 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S681 };
+    private static readonly BlockStateInfo I30 = I0 with { BlockShape = BlockShapes.S682 };
+    private static readonly BlockStateInfo I31 = I0 with { BlockShape = BlockShapes.S683 };
+    private static readonly BlockStateInfo I32 = I0 with { BlockShape = BlockShapes.S684 };
+    private static readonly BlockStateInfo I33 = I0 with { BlockShape = BlockShapes.S685 };
+    private static readonly BlockStateInfo I34 = I0 with { BlockShape = BlockShapes.S686 };
+    private static readonly BlockStateInfo I35 = I0 with { BlockShape = BlockShapes.S687 };
+    private static readonly BlockStateInfo I36 = I0 with { BlockShape = BlockShapes.S688 };
+    private static readonly BlockStateInfo I37 = I0 with { BlockShape = BlockShapes.S689 };
+    private static readonly BlockStateInfo I38 = I0 with { BlockShape = BlockShapes.S690 };
+    private static readonly BlockStateInfo I39 = I0 with { BlockShape = BlockShapes.S691 };
+    private static readonly BlockStateInfo I40 = I0 with { BlockShape = BlockShapes.S692 };
+    private static readonly BlockStateInfo I41 = I0 with { BlockShape = BlockShapes.S693 };
+    private static readonly BlockStateInfo I42 = I0 with { BlockShape = BlockShapes.S694 };
+    private static readonly BlockStateInfo I43 = I0 with { BlockShape = BlockShapes.S695 };
+    private static readonly BlockStateInfo I44 = I0 with { BlockShape = BlockShapes.S696 };
+    private static readonly BlockStateInfo I45 = I0 with { BlockShape = BlockShapes.S697 };
+    private static readonly BlockStateInfo I46 = I0 with { BlockShape = BlockShapes.S698 };
+    private static readonly BlockStateInfo I47 = I0 with { BlockShape = BlockShapes.S699 };
+    private static readonly BlockStateInfo I48 = I0 with { BlockShape = BlockShapes.S700 };
+    private static readonly BlockStateInfo I49 = I0 with { BlockShape = BlockShapes.S701 };
+    private static readonly BlockStateInfo I50 = I0 with { BlockShape = BlockShapes.S702 };
+    private static readonly BlockStateInfo I51 = I0 with { BlockShape = BlockShapes.S703 };
+    private static readonly BlockStateInfo I52 = I0 with { BlockShape = BlockShapes.S704 };
+    private static readonly BlockStateInfo I53 = I0 with { BlockShape = BlockShapes.S705 };
+    private static readonly BlockStateInfo I54 = I0 with { BlockShape = BlockShapes.S577 };
+    private static readonly BlockStateInfo I55 = I0 with { BlockShape = BlockShapes.S706 };
+    private static readonly BlockStateInfo I56 = I0 with { BlockShape = BlockShapes.S576 };
+    private static readonly BlockStateInfo I57 = I0 with { BlockShape = BlockShapes.S707 };
+    private static readonly BlockStateInfo I58 = I0 with { BlockShape = BlockShapes.S708 };
+    private static readonly BlockStateInfo I59 = I0 with { BlockShape = BlockShapes.S709 };
+    private static readonly BlockStateInfo I60 = I0 with { BlockShape = BlockShapes.S573 };
+    private static readonly BlockStateInfo I61 = I0 with { BlockShape = BlockShapes.S710 };
+    private static readonly BlockStateInfo I62 = I0 with { BlockShape = BlockShapes.S572 };
+    private static readonly BlockStateInfo I63 = I0 with { BlockShape = BlockShapes.S711 };
+    private static readonly BlockStateInfo I64 = I0 with { BlockShape = BlockShapes.S712 };
+    private static readonly BlockStateInfo I65 = I0 with { BlockShape = BlockShapes.S713 };
+    private static readonly BlockStateInfo I66 = I0 with { BlockShape = BlockShapes.S714 };
+    private static readonly BlockStateInfo I67 = I0 with { BlockShape = BlockShapes.S715 };
+    private static readonly BlockStateInfo I68 = I0 with { BlockShape = BlockShapes.S716 };
+    private static readonly BlockStateInfo I69 = I0 with { BlockShape = BlockShapes.S717 };
+    private static readonly BlockStateInfo I70 = I0 with { BlockShape = BlockShapes.S718 };
+    private static readonly BlockStateInfo I71 = I0 with { BlockShape = BlockShapes.S719 };
+    private static readonly BlockStateInfo I72 = I0 with { BlockShape = BlockShapes.S569 };
+    private static readonly BlockStateInfo I73 = I0 with { BlockShape = BlockShapes.S720 };
+    private static readonly BlockStateInfo I74 = I0 with { BlockShape = BlockShapes.S568 };
+    private static readonly BlockStateInfo I75 = I0 with { BlockShape = BlockShapes.S721 };
+    private static readonly BlockStateInfo I76 = I0 with { BlockShape = BlockShapes.S722 };
+    private static readonly BlockStateInfo I77 = I0 with { BlockShape = BlockShapes.S723 };
+    private static readonly BlockStateInfo I78 = I0 with { BlockShape = BlockShapes.S565 };
+    private static readonly BlockStateInfo I79 = I0 with { BlockShape = BlockShapes.S724 };
+    private static readonly BlockStateInfo I80 = I0 with { BlockShape = BlockShapes.S564 };
+    private static readonly BlockStateInfo I81 = I0 with { BlockShape = BlockShapes.S79, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I82 = I0 with { BlockShape = BlockShapes.S725, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I83 = I0 with { BlockShape = BlockShapes.S560, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I84 = I0 with { BlockShape = BlockShapes.S726, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I85 = I0 with { BlockShape = BlockShapes.S727, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I86 = I0 with { BlockShape = BlockShapes.S728, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I87 = I0 with { BlockShape = BlockShapes.S557, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I88 = I0 with { BlockShape = BlockShapes.S729, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I89 = I0 with { BlockShape = BlockShapes.S556, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I90 = I0 with { BlockShape = BlockShapes.S730, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I91 = I0 with { BlockShape = BlockShapes.S731, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I92 = I0 with { BlockShape = BlockShapes.S732, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I93 = I0 with { BlockShape = BlockShapes.S733, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I94 = I0 with { BlockShape = BlockShapes.S734, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I95 = I0 with { BlockShape = BlockShapes.S735, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I96 = I0 with { BlockShape = BlockShapes.S736, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I97 = I0 with { BlockShape = BlockShapes.S737, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I98 = I0 with { BlockShape = BlockShapes.S738, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I99 = I0 with { BlockShape = BlockShapes.S553, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I100 = I0 with { BlockShape = BlockShapes.S739, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I101 = I0 with { BlockShape = BlockShapes.S552, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I102 = I0 with { BlockShape = BlockShapes.S740, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I103 = I0 with { BlockShape = BlockShapes.S741, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I104 = I0 with { BlockShape = BlockShapes.S742, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I105 = I0 with { BlockShape = BlockShapes.S549, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I106 = I0 with { BlockShape = BlockShapes.S743, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I107 = I0 with { BlockShape = BlockShapes.S548, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I108 = I0 with { BlockShape = BlockShapes.S744, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I109 = I0 with { BlockShape = BlockShapes.S745, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I110 = I0 with { BlockShape = BlockShapes.S746, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I111 = I0 with { BlockShape = BlockShapes.S747, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I112 = I0 with { BlockShape = BlockShapes.S748, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I113 = I0 with { BlockShape = BlockShapes.S749, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I114 = I0 with { BlockShape = BlockShapes.S750, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I115 = I0 with { BlockShape = BlockShapes.S751, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I116 = I0 with { BlockShape = BlockShapes.S752, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I117 = I0 with { BlockShape = BlockShapes.S753, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I118 = I0 with { BlockShape = BlockShapes.S754, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I119 = I0 with { BlockShape = BlockShapes.S755, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I120 = I0 with { BlockShape = BlockShapes.S756, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I121 = I0 with { BlockShape = BlockShapes.S757, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I122 = I0 with { BlockShape = BlockShapes.S758, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I123 = I0 with { BlockShape = BlockShapes.S759, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I124 = I0 with { BlockShape = BlockShapes.S760, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I125 = I0 with { BlockShape = BlockShapes.S761, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I126 = I0 with { BlockShape = BlockShapes.S762, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I127 = I0 with { BlockShape = BlockShapes.S763, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I128 = I0 with { BlockShape = BlockShapes.S764, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I129 = I0 with { BlockShape = BlockShapes.S765, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I130 = I0 with { BlockShape = BlockShapes.S766, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I131 = I0 with { BlockShape = BlockShapes.S767, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I132 = I0 with { BlockShape = BlockShapes.S768, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I133 = I0 with { BlockShape = BlockShapes.S769, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I134 = I0 with { BlockShape = BlockShapes.S770, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I135 = I0 with { BlockShape = BlockShapes.S545, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I136 = I0 with { BlockShape = BlockShapes.S771, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I137 = I0 with { BlockShape = BlockShapes.S544, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I138 = I0 with { BlockShape = BlockShapes.S772, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I139 = I0 with { BlockShape = BlockShapes.S773, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I140 = I0 with { BlockShape = BlockShapes.S774, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I141 = I0 with { BlockShape = BlockShapes.S541, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I142 = I0 with { BlockShape = BlockShapes.S775, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I143 = I0 with { BlockShape = BlockShapes.S540, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I144 = I0 with { BlockShape = BlockShapes.S776, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I145 = I0 with { BlockShape = BlockShapes.S777, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I146 = I0 with { BlockShape = BlockShapes.S778, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I147 = I0 with { BlockShape = BlockShapes.S779, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I148 = I0 with { BlockShape = BlockShapes.S780, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I149 = I0 with { BlockShape = BlockShapes.S781, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I150 = I0 with { BlockShape = BlockShapes.S782, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I151 = I0 with { BlockShape = BlockShapes.S783, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I152 = I0 with { BlockShape = BlockShapes.S784, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I153 = I0 with { BlockShape = BlockShapes.S537, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I154 = I0 with { BlockShape = BlockShapes.S785, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I155 = I0 with { BlockShape = BlockShapes.S536, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I156 = I0 with { BlockShape = BlockShapes.S786, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I157 = I0 with { BlockShape = BlockShapes.S787, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I158 = I0 with { BlockShape = BlockShapes.S788, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I159 = I0 with { BlockShape = BlockShapes.S533, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I160 = I0 with { BlockShape = BlockShapes.S789, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I161 = I0 with { BlockShape = BlockShapes.S532, CollisionShape = BlockShapes.S1, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I42, I43, I44, I45, I46, I47, I48, I49, I50, I51, I52, I53, I54, I55, I56, I57, I58, I59, I60, I61, I62, I63, I64, I65, I66, I67, I68, I69, I70, I71, I72, I73, I74, I75, I76, I77, I78, I79, I80, I81, I82, I83, I84, I85, I86, I87, I88, I89, I90, I91, I92, I93, I94, I95, I96, I97, I98, I99, I100, I101, I102, I103, I104, I105, I106, I107, I108, I109, I110, I111, I112, I113, I114, I115, I116, I117, I118, I119, I120, I121, I122, I123, I124, I125, I126, I127, I128, I129, I130, I131, I132, I133, I134, I135, I136, I137, I138, I139, I140, I141, I142, I143, I144, I145, I146, I147, I148, I149, I150, I151, I152, I153, I154, I155, I156, I157, I158, I159, I160, I161
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 35554];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithBottom(bool bottom) => this with { Bottom = bottom };
+
+    public WallSide Side(BlockFace face) => face switch {
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => WallSide.None
+    };
+
+    public IBlock WithSide(BlockFace face, WallSide side) => face switch {
+        BlockFace.NegZ => this with { North = side },
+        BlockFace.PosZ => this with { South = side },
+        BlockFace.NegX => this with { West = side },
+        BlockFace.PosX => this with { East = side },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -46,63 +253,63 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
                     WallSide.None => North switch {
                         WallSide.None => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29502,
-                                WallSide.Low => 29503,
-                                WallSide.Tall => 29504,
+                                WallSide.None => 35554,
+                                WallSide.Low => 35555,
+                                WallSide.Tall => 35556,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29505,
-                                WallSide.Low => 29506,
-                                WallSide.Tall => 29507,
+                                WallSide.None => 35557,
+                                WallSide.Low => 35558,
+                                WallSide.Tall => 35559,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29508,
-                                WallSide.Low => 29509,
-                                WallSide.Tall => 29510,
+                                WallSide.None => 35560,
+                                WallSide.Low => 35561,
+                                WallSide.Tall => 35562,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Low => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29511,
-                                WallSide.Low => 29512,
-                                WallSide.Tall => 29513,
+                                WallSide.None => 35563,
+                                WallSide.Low => 35564,
+                                WallSide.Tall => 35565,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29514,
-                                WallSide.Low => 29515,
-                                WallSide.Tall => 29516,
+                                WallSide.None => 35566,
+                                WallSide.Low => 35567,
+                                WallSide.Tall => 35568,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29517,
-                                WallSide.Low => 29518,
-                                WallSide.Tall => 29519,
+                                WallSide.None => 35569,
+                                WallSide.Low => 35570,
+                                WallSide.Tall => 35571,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Tall => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29520,
-                                WallSide.Low => 29521,
-                                WallSide.Tall => 29522,
+                                WallSide.None => 35572,
+                                WallSide.Low => 35573,
+                                WallSide.Tall => 35574,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29523,
-                                WallSide.Low => 29524,
-                                WallSide.Tall => 29525,
+                                WallSide.None => 35575,
+                                WallSide.Low => 35576,
+                                WallSide.Tall => 35577,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29526,
-                                WallSide.Low => 29527,
-                                WallSide.Tall => 29528,
+                                WallSide.None => 35578,
+                                WallSide.Low => 35579,
+                                WallSide.Tall => 35580,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
@@ -112,63 +319,63 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
                     WallSide.Low => North switch {
                         WallSide.None => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29529,
-                                WallSide.Low => 29530,
-                                WallSide.Tall => 29531,
+                                WallSide.None => 35581,
+                                WallSide.Low => 35582,
+                                WallSide.Tall => 35583,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29532,
-                                WallSide.Low => 29533,
-                                WallSide.Tall => 29534,
+                                WallSide.None => 35584,
+                                WallSide.Low => 35585,
+                                WallSide.Tall => 35586,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29535,
-                                WallSide.Low => 29536,
-                                WallSide.Tall => 29537,
+                                WallSide.None => 35587,
+                                WallSide.Low => 35588,
+                                WallSide.Tall => 35589,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Low => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29538,
-                                WallSide.Low => 29539,
-                                WallSide.Tall => 29540,
+                                WallSide.None => 35590,
+                                WallSide.Low => 35591,
+                                WallSide.Tall => 35592,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29541,
-                                WallSide.Low => 29542,
-                                WallSide.Tall => 29543,
+                                WallSide.None => 35593,
+                                WallSide.Low => 35594,
+                                WallSide.Tall => 35595,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29544,
-                                WallSide.Low => 29545,
-                                WallSide.Tall => 29546,
+                                WallSide.None => 35596,
+                                WallSide.Low => 35597,
+                                WallSide.Tall => 35598,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Tall => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29547,
-                                WallSide.Low => 29548,
-                                WallSide.Tall => 29549,
+                                WallSide.None => 35599,
+                                WallSide.Low => 35600,
+                                WallSide.Tall => 35601,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29550,
-                                WallSide.Low => 29551,
-                                WallSide.Tall => 29552,
+                                WallSide.None => 35602,
+                                WallSide.Low => 35603,
+                                WallSide.Tall => 35604,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29553,
-                                WallSide.Low => 29554,
-                                WallSide.Tall => 29555,
+                                WallSide.None => 35605,
+                                WallSide.Low => 35606,
+                                WallSide.Tall => 35607,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
@@ -178,63 +385,63 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
                     WallSide.Tall => North switch {
                         WallSide.None => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29556,
-                                WallSide.Low => 29557,
-                                WallSide.Tall => 29558,
+                                WallSide.None => 35608,
+                                WallSide.Low => 35609,
+                                WallSide.Tall => 35610,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29559,
-                                WallSide.Low => 29560,
-                                WallSide.Tall => 29561,
+                                WallSide.None => 35611,
+                                WallSide.Low => 35612,
+                                WallSide.Tall => 35613,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29562,
-                                WallSide.Low => 29563,
-                                WallSide.Tall => 29564,
+                                WallSide.None => 35614,
+                                WallSide.Low => 35615,
+                                WallSide.Tall => 35616,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Low => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29565,
-                                WallSide.Low => 29566,
-                                WallSide.Tall => 29567,
+                                WallSide.None => 35617,
+                                WallSide.Low => 35618,
+                                WallSide.Tall => 35619,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29568,
-                                WallSide.Low => 29569,
-                                WallSide.Tall => 29570,
+                                WallSide.None => 35620,
+                                WallSide.Low => 35621,
+                                WallSide.Tall => 35622,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29571,
-                                WallSide.Low => 29572,
-                                WallSide.Tall => 29573,
+                                WallSide.None => 35623,
+                                WallSide.Low => 35624,
+                                WallSide.Tall => 35625,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Tall => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29574,
-                                WallSide.Low => 29575,
-                                WallSide.Tall => 29576,
+                                WallSide.None => 35626,
+                                WallSide.Low => 35627,
+                                WallSide.Tall => 35628,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29577,
-                                WallSide.Low => 29578,
-                                WallSide.Tall => 29579,
+                                WallSide.None => 35629,
+                                WallSide.Low => 35630,
+                                WallSide.Tall => 35631,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29580,
-                                WallSide.Low => 29581,
-                                WallSide.Tall => 29582,
+                                WallSide.None => 35632,
+                                WallSide.Low => 35633,
+                                WallSide.Tall => 35634,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
@@ -247,63 +454,63 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
                     WallSide.None => North switch {
                         WallSide.None => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29583,
-                                WallSide.Low => 29584,
-                                WallSide.Tall => 29585,
+                                WallSide.None => 35635,
+                                WallSide.Low => 35636,
+                                WallSide.Tall => 35637,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29586,
-                                WallSide.Low => 29587,
-                                WallSide.Tall => 29588,
+                                WallSide.None => 35638,
+                                WallSide.Low => 35639,
+                                WallSide.Tall => 35640,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29589,
-                                WallSide.Low => 29590,
-                                WallSide.Tall => 29591,
+                                WallSide.None => 35641,
+                                WallSide.Low => 35642,
+                                WallSide.Tall => 35643,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Low => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29592,
-                                WallSide.Low => 29593,
-                                WallSide.Tall => 29594,
+                                WallSide.None => 35644,
+                                WallSide.Low => 35645,
+                                WallSide.Tall => 35646,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29595,
-                                WallSide.Low => 29596,
-                                WallSide.Tall => 29597,
+                                WallSide.None => 35647,
+                                WallSide.Low => 35648,
+                                WallSide.Tall => 35649,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29598,
-                                WallSide.Low => 29599,
-                                WallSide.Tall => 29600,
+                                WallSide.None => 35650,
+                                WallSide.Low => 35651,
+                                WallSide.Tall => 35652,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Tall => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29601,
-                                WallSide.Low => 29602,
-                                WallSide.Tall => 29603,
+                                WallSide.None => 35653,
+                                WallSide.Low => 35654,
+                                WallSide.Tall => 35655,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29604,
-                                WallSide.Low => 29605,
-                                WallSide.Tall => 29606,
+                                WallSide.None => 35656,
+                                WallSide.Low => 35657,
+                                WallSide.Tall => 35658,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29607,
-                                WallSide.Low => 29608,
-                                WallSide.Tall => 29609,
+                                WallSide.None => 35659,
+                                WallSide.Low => 35660,
+                                WallSide.Tall => 35661,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
@@ -313,63 +520,63 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
                     WallSide.Low => North switch {
                         WallSide.None => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29610,
-                                WallSide.Low => 29611,
-                                WallSide.Tall => 29612,
+                                WallSide.None => 35662,
+                                WallSide.Low => 35663,
+                                WallSide.Tall => 35664,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29613,
-                                WallSide.Low => 29614,
-                                WallSide.Tall => 29615,
+                                WallSide.None => 35665,
+                                WallSide.Low => 35666,
+                                WallSide.Tall => 35667,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29616,
-                                WallSide.Low => 29617,
-                                WallSide.Tall => 29618,
+                                WallSide.None => 35668,
+                                WallSide.Low => 35669,
+                                WallSide.Tall => 35670,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Low => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29619,
-                                WallSide.Low => 29620,
-                                WallSide.Tall => 29621,
+                                WallSide.None => 35671,
+                                WallSide.Low => 35672,
+                                WallSide.Tall => 35673,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29622,
-                                WallSide.Low => 29623,
-                                WallSide.Tall => 29624,
+                                WallSide.None => 35674,
+                                WallSide.Low => 35675,
+                                WallSide.Tall => 35676,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29625,
-                                WallSide.Low => 29626,
-                                WallSide.Tall => 29627,
+                                WallSide.None => 35677,
+                                WallSide.Low => 35678,
+                                WallSide.Tall => 35679,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Tall => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29628,
-                                WallSide.Low => 29629,
-                                WallSide.Tall => 29630,
+                                WallSide.None => 35680,
+                                WallSide.Low => 35681,
+                                WallSide.Tall => 35682,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29631,
-                                WallSide.Low => 29632,
-                                WallSide.Tall => 29633,
+                                WallSide.None => 35683,
+                                WallSide.Low => 35684,
+                                WallSide.Tall => 35685,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29634,
-                                WallSide.Low => 29635,
-                                WallSide.Tall => 29636,
+                                WallSide.None => 35686,
+                                WallSide.Low => 35687,
+                                WallSide.Tall => 35688,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
@@ -379,63 +586,63 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
                     WallSide.Tall => North switch {
                         WallSide.None => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29637,
-                                WallSide.Low => 29638,
-                                WallSide.Tall => 29639,
+                                WallSide.None => 35689,
+                                WallSide.Low => 35690,
+                                WallSide.Tall => 35691,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29640,
-                                WallSide.Low => 29641,
-                                WallSide.Tall => 29642,
+                                WallSide.None => 35692,
+                                WallSide.Low => 35693,
+                                WallSide.Tall => 35694,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29643,
-                                WallSide.Low => 29644,
-                                WallSide.Tall => 29645,
+                                WallSide.None => 35695,
+                                WallSide.Low => 35696,
+                                WallSide.Tall => 35697,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Low => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29646,
-                                WallSide.Low => 29647,
-                                WallSide.Tall => 29648,
+                                WallSide.None => 35698,
+                                WallSide.Low => 35699,
+                                WallSide.Tall => 35700,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29649,
-                                WallSide.Low => 29650,
-                                WallSide.Tall => 29651,
+                                WallSide.None => 35701,
+                                WallSide.Low => 35702,
+                                WallSide.Tall => 35703,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29652,
-                                WallSide.Low => 29653,
-                                WallSide.Tall => 29654,
+                                WallSide.None => 35704,
+                                WallSide.Low => 35705,
+                                WallSide.Tall => 35706,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
                         },
                         WallSide.Tall => South switch {
                             WallSide.None => West switch {
-                                WallSide.None => 29655,
-                                WallSide.Low => 29656,
-                                WallSide.Tall => 29657,
+                                WallSide.None => 35707,
+                                WallSide.Low => 35708,
+                                WallSide.Tall => 35709,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Low => West switch {
-                                WallSide.None => 29658,
-                                WallSide.Low => 29659,
-                                WallSide.Tall => 29660,
+                                WallSide.None => 35710,
+                                WallSide.Low => 35711,
+                                WallSide.Tall => 35712,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             WallSide.Tall => West switch {
-                                WallSide.None => 29661,
-                                WallSide.Low => 29662,
-                                WallSide.Tall => 29663,
+                                WallSide.None => 35713,
+                                WallSide.Low => 35714,
+                                WallSide.Tall => 35715,
                                 _ => throw new ArgumentOutOfRangeException(nameof(West), West, "Unknown value for property west.")
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(South), South, "Unknown value for property south.")
@@ -450,168 +657,168 @@ public record PaleMossCarpetBlock(Identifier Identifier, bool Bottom, WallSide E
     
     public IBlock WithState(uint state) {
         return state switch {
-            29502 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.None, WallSide.None),
-            29503 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.None, WallSide.Low),
-            29504 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.None, WallSide.Tall),
-            29505 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Low, WallSide.None),
-            29506 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Low, WallSide.Low),
-            29507 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Low, WallSide.Tall),
-            29508 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Tall, WallSide.None),
-            29509 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Tall, WallSide.Low),
-            29510 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Tall, WallSide.Tall),
-            29511 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.None, WallSide.None),
-            29512 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.None, WallSide.Low),
-            29513 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.None, WallSide.Tall),
-            29514 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Low, WallSide.None),
-            29515 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Low, WallSide.Low),
-            29516 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Low, WallSide.Tall),
-            29517 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.None),
-            29518 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.Low),
-            29519 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.Tall),
-            29520 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.None, WallSide.None),
-            29521 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.None, WallSide.Low),
-            29522 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.None, WallSide.Tall),
-            29523 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.None),
-            29524 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.Low),
-            29525 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.Tall),
-            29526 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.None),
-            29527 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.Low),
-            29528 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.Tall),
-            29529 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.None, WallSide.None),
-            29530 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.None, WallSide.Low),
-            29531 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.None, WallSide.Tall),
-            29532 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Low, WallSide.None),
-            29533 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Low, WallSide.Low),
-            29534 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Low, WallSide.Tall),
-            29535 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.None),
-            29536 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.Low),
-            29537 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.Tall),
-            29538 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.None, WallSide.None),
-            29539 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.None, WallSide.Low),
-            29540 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.None, WallSide.Tall),
-            29541 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.None),
-            29542 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.Low),
-            29543 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.Tall),
-            29544 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.None),
-            29545 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.Low),
-            29546 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.Tall),
-            29547 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.None),
-            29548 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.Low),
-            29549 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.Tall),
-            29550 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.None),
-            29551 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.Low),
-            29552 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.Tall),
-            29553 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.None),
-            29554 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.Low),
-            29555 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.Tall),
-            29556 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.None, WallSide.None),
-            29557 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.None, WallSide.Low),
-            29558 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.None, WallSide.Tall),
-            29559 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.None),
-            29560 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.Low),
-            29561 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.Tall),
-            29562 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.None),
-            29563 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.Low),
-            29564 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.Tall),
-            29565 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.None),
-            29566 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.Low),
-            29567 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.Tall),
-            29568 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.None),
-            29569 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.Low),
-            29570 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.Tall),
-            29571 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.None),
-            29572 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.Low),
-            29573 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.Tall),
-            29574 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.None),
-            29575 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.Low),
-            29576 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.Tall),
-            29577 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.None),
-            29578 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.Low),
-            29579 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.Tall),
-            29580 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.None),
-            29581 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Low),
-            29582 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Tall),
-            29583 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.None, WallSide.None),
-            29584 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.None, WallSide.Low),
-            29585 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.None, WallSide.Tall),
-            29586 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Low, WallSide.None),
-            29587 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Low, WallSide.Low),
-            29588 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Low, WallSide.Tall),
-            29589 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Tall, WallSide.None),
-            29590 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Tall, WallSide.Low),
-            29591 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Tall, WallSide.Tall),
-            29592 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.None, WallSide.None),
-            29593 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.None, WallSide.Low),
-            29594 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.None, WallSide.Tall),
-            29595 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Low, WallSide.None),
-            29596 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Low, WallSide.Low),
-            29597 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Low, WallSide.Tall),
-            29598 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.None),
-            29599 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.Low),
-            29600 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.Tall),
-            29601 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.None, WallSide.None),
-            29602 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.None, WallSide.Low),
-            29603 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.None, WallSide.Tall),
-            29604 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.None),
-            29605 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.Low),
-            29606 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.Tall),
-            29607 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.None),
-            29608 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.Low),
-            29609 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.Tall),
-            29610 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.None, WallSide.None),
-            29611 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.None, WallSide.Low),
-            29612 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.None, WallSide.Tall),
-            29613 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Low, WallSide.None),
-            29614 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Low, WallSide.Low),
-            29615 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Low, WallSide.Tall),
-            29616 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.None),
-            29617 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.Low),
-            29618 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.Tall),
-            29619 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.None, WallSide.None),
-            29620 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.None, WallSide.Low),
-            29621 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.None, WallSide.Tall),
-            29622 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.None),
-            29623 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.Low),
-            29624 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.Tall),
-            29625 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.None),
-            29626 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.Low),
-            29627 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.Tall),
-            29628 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.None),
-            29629 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.Low),
-            29630 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.Tall),
-            29631 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.None),
-            29632 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.Low),
-            29633 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.Tall),
-            29634 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.None),
-            29635 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.Low),
-            29636 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.Tall),
-            29637 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.None, WallSide.None),
-            29638 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.None, WallSide.Low),
-            29639 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.None, WallSide.Tall),
-            29640 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.None),
-            29641 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.Low),
-            29642 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.Tall),
-            29643 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.None),
-            29644 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.Low),
-            29645 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.Tall),
-            29646 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.None),
-            29647 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.Low),
-            29648 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.Tall),
-            29649 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.None),
-            29650 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.Low),
-            29651 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.Tall),
-            29652 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.None),
-            29653 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.Low),
-            29654 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.Tall),
-            29655 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.None),
-            29656 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.Low),
-            29657 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.Tall),
-            29658 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.None),
-            29659 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.Low),
-            29660 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.Tall),
-            29661 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.None),
-            29662 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Low),
-            29663 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Tall),
+            35554 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.None, WallSide.None),
+            35555 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.None, WallSide.Low),
+            35556 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.None, WallSide.Tall),
+            35557 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Low, WallSide.None),
+            35558 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Low, WallSide.Low),
+            35559 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Low, WallSide.Tall),
+            35560 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Tall, WallSide.None),
+            35561 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Tall, WallSide.Low),
+            35562 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.None, WallSide.Tall, WallSide.Tall),
+            35563 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.None, WallSide.None),
+            35564 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.None, WallSide.Low),
+            35565 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.None, WallSide.Tall),
+            35566 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Low, WallSide.None),
+            35567 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Low, WallSide.Low),
+            35568 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Low, WallSide.Tall),
+            35569 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.None),
+            35570 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.Low),
+            35571 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.Tall),
+            35572 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.None, WallSide.None),
+            35573 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.None, WallSide.Low),
+            35574 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.None, WallSide.Tall),
+            35575 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.None),
+            35576 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.Low),
+            35577 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.Tall),
+            35578 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.None),
+            35579 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.Low),
+            35580 => new PaleMossCarpetBlock(Identifier, true, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.Tall),
+            35581 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.None, WallSide.None),
+            35582 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.None, WallSide.Low),
+            35583 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.None, WallSide.Tall),
+            35584 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Low, WallSide.None),
+            35585 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Low, WallSide.Low),
+            35586 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Low, WallSide.Tall),
+            35587 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.None),
+            35588 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.Low),
+            35589 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.Tall),
+            35590 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.None, WallSide.None),
+            35591 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.None, WallSide.Low),
+            35592 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.None, WallSide.Tall),
+            35593 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.None),
+            35594 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.Low),
+            35595 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.Tall),
+            35596 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.None),
+            35597 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.Low),
+            35598 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.Tall),
+            35599 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.None),
+            35600 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.Low),
+            35601 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.Tall),
+            35602 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.None),
+            35603 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.Low),
+            35604 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.Tall),
+            35605 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.None),
+            35606 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.Low),
+            35607 => new PaleMossCarpetBlock(Identifier, true, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.Tall),
+            35608 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.None, WallSide.None),
+            35609 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.None, WallSide.Low),
+            35610 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.None, WallSide.Tall),
+            35611 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.None),
+            35612 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.Low),
+            35613 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.Tall),
+            35614 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.None),
+            35615 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.Low),
+            35616 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.Tall),
+            35617 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.None),
+            35618 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.Low),
+            35619 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.Tall),
+            35620 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.None),
+            35621 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.Low),
+            35622 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.Tall),
+            35623 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.None),
+            35624 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.Low),
+            35625 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.Tall),
+            35626 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.None),
+            35627 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.Low),
+            35628 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.Tall),
+            35629 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.None),
+            35630 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.Low),
+            35631 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.Tall),
+            35632 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.None),
+            35633 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Low),
+            35634 => new PaleMossCarpetBlock(Identifier, true, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Tall),
+            35635 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.None, WallSide.None),
+            35636 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.None, WallSide.Low),
+            35637 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.None, WallSide.Tall),
+            35638 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Low, WallSide.None),
+            35639 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Low, WallSide.Low),
+            35640 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Low, WallSide.Tall),
+            35641 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Tall, WallSide.None),
+            35642 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Tall, WallSide.Low),
+            35643 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.None, WallSide.Tall, WallSide.Tall),
+            35644 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.None, WallSide.None),
+            35645 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.None, WallSide.Low),
+            35646 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.None, WallSide.Tall),
+            35647 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Low, WallSide.None),
+            35648 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Low, WallSide.Low),
+            35649 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Low, WallSide.Tall),
+            35650 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.None),
+            35651 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.Low),
+            35652 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Low, WallSide.Tall, WallSide.Tall),
+            35653 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.None, WallSide.None),
+            35654 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.None, WallSide.Low),
+            35655 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.None, WallSide.Tall),
+            35656 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.None),
+            35657 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.Low),
+            35658 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Low, WallSide.Tall),
+            35659 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.None),
+            35660 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.Low),
+            35661 => new PaleMossCarpetBlock(Identifier, false, WallSide.None, WallSide.Tall, WallSide.Tall, WallSide.Tall),
+            35662 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.None, WallSide.None),
+            35663 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.None, WallSide.Low),
+            35664 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.None, WallSide.Tall),
+            35665 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Low, WallSide.None),
+            35666 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Low, WallSide.Low),
+            35667 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Low, WallSide.Tall),
+            35668 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.None),
+            35669 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.Low),
+            35670 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.None, WallSide.Tall, WallSide.Tall),
+            35671 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.None, WallSide.None),
+            35672 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.None, WallSide.Low),
+            35673 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.None, WallSide.Tall),
+            35674 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.None),
+            35675 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.Low),
+            35676 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Low, WallSide.Tall),
+            35677 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.None),
+            35678 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.Low),
+            35679 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Low, WallSide.Tall, WallSide.Tall),
+            35680 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.None),
+            35681 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.Low),
+            35682 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.None, WallSide.Tall),
+            35683 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.None),
+            35684 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.Low),
+            35685 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Low, WallSide.Tall),
+            35686 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.None),
+            35687 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.Low),
+            35688 => new PaleMossCarpetBlock(Identifier, false, WallSide.Low, WallSide.Tall, WallSide.Tall, WallSide.Tall),
+            35689 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.None, WallSide.None),
+            35690 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.None, WallSide.Low),
+            35691 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.None, WallSide.Tall),
+            35692 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.None),
+            35693 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.Low),
+            35694 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Low, WallSide.Tall),
+            35695 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.None),
+            35696 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.Low),
+            35697 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.None, WallSide.Tall, WallSide.Tall),
+            35698 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.None),
+            35699 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.Low),
+            35700 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.None, WallSide.Tall),
+            35701 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.None),
+            35702 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.Low),
+            35703 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Low, WallSide.Tall),
+            35704 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.None),
+            35705 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.Low),
+            35706 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Low, WallSide.Tall, WallSide.Tall),
+            35707 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.None),
+            35708 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.Low),
+            35709 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.None, WallSide.Tall),
+            35710 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.None),
+            35711 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.Low),
+            35712 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Low, WallSide.Tall),
+            35713 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.None),
+            35714 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Low),
+            35715 => new PaleMossCarpetBlock(Identifier, false, WallSide.Tall, WallSide.Tall, WallSide.Tall, WallSide.Tall),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

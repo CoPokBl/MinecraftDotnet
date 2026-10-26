@@ -3,108 +3,141 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record MangroveSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:standing_sign";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => "minecraft:sign";
-    public Identifier? Item => "minecraft:mangrove_sign";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 1.0, 0.75]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 28;
-    public string TranslationKey => "block.minecraft.mangrove_sign";
-    public bool CanRespawnIn => true;
+public record MangroveSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock, IRotated, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:mangrove_sign", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 28, "wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 7147];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 5390,
-                    false => 5391,
+                    true => 7147,
+                    false => 7148,
                 },
                 1 => Waterlogged switch {
-                    true => 5392,
-                    false => 5393,
+                    true => 7149,
+                    false => 7150,
                 },
                 2 => Waterlogged switch {
-                    true => 5394,
-                    false => 5395,
+                    true => 7151,
+                    false => 7152,
                 },
                 3 => Waterlogged switch {
-                    true => 5396,
-                    false => 5397,
+                    true => 7153,
+                    false => 7154,
                 },
                 4 => Waterlogged switch {
-                    true => 5398,
-                    false => 5399,
+                    true => 7155,
+                    false => 7156,
                 },
                 5 => Waterlogged switch {
-                    true => 5400,
-                    false => 5401,
+                    true => 7157,
+                    false => 7158,
                 },
                 6 => Waterlogged switch {
-                    true => 5402,
-                    false => 5403,
+                    true => 7159,
+                    false => 7160,
                 },
                 7 => Waterlogged switch {
-                    true => 5404,
-                    false => 5405,
+                    true => 7161,
+                    false => 7162,
                 },
                 8 => Waterlogged switch {
-                    true => 5406,
-                    false => 5407,
+                    true => 7163,
+                    false => 7164,
                 },
                 9 => Waterlogged switch {
-                    true => 5408,
-                    false => 5409,
+                    true => 7165,
+                    false => 7166,
                 },
                 10 => Waterlogged switch {
-                    true => 5410,
-                    false => 5411,
+                    true => 7167,
+                    false => 7168,
                 },
                 11 => Waterlogged switch {
-                    true => 5412,
-                    false => 5413,
+                    true => 7169,
+                    false => 7170,
                 },
                 12 => Waterlogged switch {
-                    true => 5414,
-                    false => 5415,
+                    true => 7171,
+                    false => 7172,
                 },
                 13 => Waterlogged switch {
-                    true => 5416,
-                    false => 5417,
+                    true => 7173,
+                    false => 7174,
                 },
                 14 => Waterlogged switch {
-                    true => 5418,
-                    false => 5419,
+                    true => 7175,
+                    false => 7176,
                 },
                 15 => Waterlogged switch {
-                    true => 5420,
-                    false => 5421,
+                    true => 7177,
+                    false => 7178,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -113,38 +146,38 @@ public record MangroveSignBlock(Identifier Identifier, int Rotation, bool Waterl
     
     public IBlock WithState(uint state) {
         return state switch {
-            5390 => new MangroveSignBlock(Identifier, 0, true),
-            5391 => new MangroveSignBlock(Identifier, 0, false),
-            5392 => new MangroveSignBlock(Identifier, 1, true),
-            5393 => new MangroveSignBlock(Identifier, 1, false),
-            5394 => new MangroveSignBlock(Identifier, 2, true),
-            5395 => new MangroveSignBlock(Identifier, 2, false),
-            5396 => new MangroveSignBlock(Identifier, 3, true),
-            5397 => new MangroveSignBlock(Identifier, 3, false),
-            5398 => new MangroveSignBlock(Identifier, 4, true),
-            5399 => new MangroveSignBlock(Identifier, 4, false),
-            5400 => new MangroveSignBlock(Identifier, 5, true),
-            5401 => new MangroveSignBlock(Identifier, 5, false),
-            5402 => new MangroveSignBlock(Identifier, 6, true),
-            5403 => new MangroveSignBlock(Identifier, 6, false),
-            5404 => new MangroveSignBlock(Identifier, 7, true),
-            5405 => new MangroveSignBlock(Identifier, 7, false),
-            5406 => new MangroveSignBlock(Identifier, 8, true),
-            5407 => new MangroveSignBlock(Identifier, 8, false),
-            5408 => new MangroveSignBlock(Identifier, 9, true),
-            5409 => new MangroveSignBlock(Identifier, 9, false),
-            5410 => new MangroveSignBlock(Identifier, 10, true),
-            5411 => new MangroveSignBlock(Identifier, 10, false),
-            5412 => new MangroveSignBlock(Identifier, 11, true),
-            5413 => new MangroveSignBlock(Identifier, 11, false),
-            5414 => new MangroveSignBlock(Identifier, 12, true),
-            5415 => new MangroveSignBlock(Identifier, 12, false),
-            5416 => new MangroveSignBlock(Identifier, 13, true),
-            5417 => new MangroveSignBlock(Identifier, 13, false),
-            5418 => new MangroveSignBlock(Identifier, 14, true),
-            5419 => new MangroveSignBlock(Identifier, 14, false),
-            5420 => new MangroveSignBlock(Identifier, 15, true),
-            5421 => new MangroveSignBlock(Identifier, 15, false),
+            7147 => new MangroveSignBlock(Identifier, 0, true),
+            7148 => new MangroveSignBlock(Identifier, 0, false),
+            7149 => new MangroveSignBlock(Identifier, 1, true),
+            7150 => new MangroveSignBlock(Identifier, 1, false),
+            7151 => new MangroveSignBlock(Identifier, 2, true),
+            7152 => new MangroveSignBlock(Identifier, 2, false),
+            7153 => new MangroveSignBlock(Identifier, 3, true),
+            7154 => new MangroveSignBlock(Identifier, 3, false),
+            7155 => new MangroveSignBlock(Identifier, 4, true),
+            7156 => new MangroveSignBlock(Identifier, 4, false),
+            7157 => new MangroveSignBlock(Identifier, 5, true),
+            7158 => new MangroveSignBlock(Identifier, 5, false),
+            7159 => new MangroveSignBlock(Identifier, 6, true),
+            7160 => new MangroveSignBlock(Identifier, 6, false),
+            7161 => new MangroveSignBlock(Identifier, 7, true),
+            7162 => new MangroveSignBlock(Identifier, 7, false),
+            7163 => new MangroveSignBlock(Identifier, 8, true),
+            7164 => new MangroveSignBlock(Identifier, 8, false),
+            7165 => new MangroveSignBlock(Identifier, 9, true),
+            7166 => new MangroveSignBlock(Identifier, 9, false),
+            7167 => new MangroveSignBlock(Identifier, 10, true),
+            7168 => new MangroveSignBlock(Identifier, 10, false),
+            7169 => new MangroveSignBlock(Identifier, 11, true),
+            7170 => new MangroveSignBlock(Identifier, 11, false),
+            7171 => new MangroveSignBlock(Identifier, 12, true),
+            7172 => new MangroveSignBlock(Identifier, 12, false),
+            7173 => new MangroveSignBlock(Identifier, 13, true),
+            7174 => new MangroveSignBlock(Identifier, 13, false),
+            7175 => new MangroveSignBlock(Identifier, 14, true),
+            7176 => new MangroveSignBlock(Identifier, 14, false),
+            7177 => new MangroveSignBlock(Identifier, 15, true),
+            7178 => new MangroveSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

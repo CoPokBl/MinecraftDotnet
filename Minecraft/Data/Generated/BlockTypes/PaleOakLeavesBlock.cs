@@ -3,40 +3,77 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PaleOakLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:untinted_particle_leaves";
-    public double Hardness => 0.2;
-    public double ExplosionResistance => 0.2;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "grass";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:pale_oak_leaves";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 6;
-    public string TranslationKey => "block.minecraft.pale_oak_leaves";
-    public bool CanRespawnIn => false;
+public record PaleOakLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock, IDistanced, IPersistent, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.pale_oak_leaves", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:pale_oak_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/pale_oak_leaves");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Popped, 6, "grass", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true };
+    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 463];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithDistance(int distance) => this with { Distance = distance };
+
+    public IBlock WithPersistent(bool persistent) => this with { Persistent = persistent };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,72 +81,72 @@ public record PaleOakLeavesBlock(Identifier Identifier, int Distance, bool Persi
             return Distance switch {
                 1 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 448,
-                        false => 449,
+                        true => 463,
+                        false => 464,
                     },
                     false => Waterlogged switch {
-                        true => 450,
-                        false => 451,
+                        true => 465,
+                        false => 466,
                     },
                 },
                 2 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 452,
-                        false => 453,
+                        true => 467,
+                        false => 468,
                     },
                     false => Waterlogged switch {
-                        true => 454,
-                        false => 455,
+                        true => 469,
+                        false => 470,
                     },
                 },
                 3 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 456,
-                        false => 457,
+                        true => 471,
+                        false => 472,
                     },
                     false => Waterlogged switch {
-                        true => 458,
-                        false => 459,
+                        true => 473,
+                        false => 474,
                     },
                 },
                 4 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 460,
-                        false => 461,
+                        true => 475,
+                        false => 476,
                     },
                     false => Waterlogged switch {
-                        true => 462,
-                        false => 463,
+                        true => 477,
+                        false => 478,
                     },
                 },
                 5 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 464,
-                        false => 465,
+                        true => 479,
+                        false => 480,
                     },
                     false => Waterlogged switch {
-                        true => 466,
-                        false => 467,
+                        true => 481,
+                        false => 482,
                     },
                 },
                 6 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 468,
-                        false => 469,
+                        true => 483,
+                        false => 484,
                     },
                     false => Waterlogged switch {
-                        true => 470,
-                        false => 471,
+                        true => 485,
+                        false => 486,
                     },
                 },
                 7 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 472,
-                        false => 473,
+                        true => 487,
+                        false => 488,
                     },
                     false => Waterlogged switch {
-                        true => 474,
-                        false => 475,
+                        true => 489,
+                        false => 490,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
@@ -119,34 +156,34 @@ public record PaleOakLeavesBlock(Identifier Identifier, int Distance, bool Persi
     
     public IBlock WithState(uint state) {
         return state switch {
-            448 => new PaleOakLeavesBlock(Identifier, 1, true, true),
-            449 => new PaleOakLeavesBlock(Identifier, 1, true, false),
-            450 => new PaleOakLeavesBlock(Identifier, 1, false, true),
-            451 => new PaleOakLeavesBlock(Identifier, 1, false, false),
-            452 => new PaleOakLeavesBlock(Identifier, 2, true, true),
-            453 => new PaleOakLeavesBlock(Identifier, 2, true, false),
-            454 => new PaleOakLeavesBlock(Identifier, 2, false, true),
-            455 => new PaleOakLeavesBlock(Identifier, 2, false, false),
-            456 => new PaleOakLeavesBlock(Identifier, 3, true, true),
-            457 => new PaleOakLeavesBlock(Identifier, 3, true, false),
-            458 => new PaleOakLeavesBlock(Identifier, 3, false, true),
-            459 => new PaleOakLeavesBlock(Identifier, 3, false, false),
-            460 => new PaleOakLeavesBlock(Identifier, 4, true, true),
-            461 => new PaleOakLeavesBlock(Identifier, 4, true, false),
-            462 => new PaleOakLeavesBlock(Identifier, 4, false, true),
-            463 => new PaleOakLeavesBlock(Identifier, 4, false, false),
-            464 => new PaleOakLeavesBlock(Identifier, 5, true, true),
-            465 => new PaleOakLeavesBlock(Identifier, 5, true, false),
-            466 => new PaleOakLeavesBlock(Identifier, 5, false, true),
-            467 => new PaleOakLeavesBlock(Identifier, 5, false, false),
-            468 => new PaleOakLeavesBlock(Identifier, 6, true, true),
-            469 => new PaleOakLeavesBlock(Identifier, 6, true, false),
-            470 => new PaleOakLeavesBlock(Identifier, 6, false, true),
-            471 => new PaleOakLeavesBlock(Identifier, 6, false, false),
-            472 => new PaleOakLeavesBlock(Identifier, 7, true, true),
-            473 => new PaleOakLeavesBlock(Identifier, 7, true, false),
-            474 => new PaleOakLeavesBlock(Identifier, 7, false, true),
-            475 => new PaleOakLeavesBlock(Identifier, 7, false, false),
+            463 => new PaleOakLeavesBlock(Identifier, 1, true, true),
+            464 => new PaleOakLeavesBlock(Identifier, 1, true, false),
+            465 => new PaleOakLeavesBlock(Identifier, 1, false, true),
+            466 => new PaleOakLeavesBlock(Identifier, 1, false, false),
+            467 => new PaleOakLeavesBlock(Identifier, 2, true, true),
+            468 => new PaleOakLeavesBlock(Identifier, 2, true, false),
+            469 => new PaleOakLeavesBlock(Identifier, 2, false, true),
+            470 => new PaleOakLeavesBlock(Identifier, 2, false, false),
+            471 => new PaleOakLeavesBlock(Identifier, 3, true, true),
+            472 => new PaleOakLeavesBlock(Identifier, 3, true, false),
+            473 => new PaleOakLeavesBlock(Identifier, 3, false, true),
+            474 => new PaleOakLeavesBlock(Identifier, 3, false, false),
+            475 => new PaleOakLeavesBlock(Identifier, 4, true, true),
+            476 => new PaleOakLeavesBlock(Identifier, 4, true, false),
+            477 => new PaleOakLeavesBlock(Identifier, 4, false, true),
+            478 => new PaleOakLeavesBlock(Identifier, 4, false, false),
+            479 => new PaleOakLeavesBlock(Identifier, 5, true, true),
+            480 => new PaleOakLeavesBlock(Identifier, 5, true, false),
+            481 => new PaleOakLeavesBlock(Identifier, 5, false, true),
+            482 => new PaleOakLeavesBlock(Identifier, 5, false, false),
+            483 => new PaleOakLeavesBlock(Identifier, 6, true, true),
+            484 => new PaleOakLeavesBlock(Identifier, 6, true, false),
+            485 => new PaleOakLeavesBlock(Identifier, 6, false, true),
+            486 => new PaleOakLeavesBlock(Identifier, 6, false, false),
+            487 => new PaleOakLeavesBlock(Identifier, 7, true, true),
+            488 => new PaleOakLeavesBlock(Identifier, 7, true, false),
+            489 => new PaleOakLeavesBlock(Identifier, 7, false, true),
+            490 => new PaleOakLeavesBlock(Identifier, 7, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

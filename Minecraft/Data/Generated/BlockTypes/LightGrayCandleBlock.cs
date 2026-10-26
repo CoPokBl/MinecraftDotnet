@@ -3,40 +3,93 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record LightGrayCandleBlock(Identifier Identifier, int Candles, bool Lit, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:candle";
-    public double Hardness => 0.1;
-    public double ExplosionResistance => 0.1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "candle";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:light_gray_candle";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 0.375, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 0.375, 0.5625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.4375, 0.0, 0.4375] -> [0.5625, 0.375, 0.5625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 22;
-    public string TranslationKey => "block.minecraft.light_gray_candle";
-    public bool CanRespawnIn => true;
+public record LightGrayCandleBlock(Identifier Identifier, int Candles, bool Lit, bool Waterlogged) : IBlock, IStackable, ILit, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.light_gray_candle", 0.1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:light_gray_candle", BlockInfo.VanillaOnly, "minecraft:blocks/light_gray_candle");
+    private static readonly BlockStateInfo I0 = new(0.1f, 3, 1, PushReaction.Popped, 22, "candle", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S366, BlockShapes.S366, BlockShapes.S1, BlockShapes.S1, BlockShapes.S366, BlockShapes.S366);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { LightEmission = 0 };
+    private static readonly BlockStateInfo I3 = I0 with { LightEmission = 0, LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I4 = I0 with { LightEmission = 6, BlockShape = BlockShapes.S367, CollisionShape = BlockShapes.S367, VisualShape = BlockShapes.S367, SupportShape = BlockShapes.S367 };
+    private static readonly BlockStateInfo I5 = I0 with { LightEmission = 6, LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S367, CollisionShape = BlockShapes.S367, VisualShape = BlockShapes.S367, SupportShape = BlockShapes.S367 };
+    private static readonly BlockStateInfo I6 = I0 with { LightEmission = 0, BlockShape = BlockShapes.S367, CollisionShape = BlockShapes.S367, VisualShape = BlockShapes.S367, SupportShape = BlockShapes.S367 };
+    private static readonly BlockStateInfo I7 = I0 with { LightEmission = 0, LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S367, CollisionShape = BlockShapes.S367, VisualShape = BlockShapes.S367, SupportShape = BlockShapes.S367 };
+    private static readonly BlockStateInfo I8 = I0 with { LightEmission = 9, BlockShape = BlockShapes.S368, CollisionShape = BlockShapes.S368, VisualShape = BlockShapes.S368, SupportShape = BlockShapes.S368 };
+    private static readonly BlockStateInfo I9 = I0 with { LightEmission = 9, LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S368, CollisionShape = BlockShapes.S368, VisualShape = BlockShapes.S368, SupportShape = BlockShapes.S368 };
+    private static readonly BlockStateInfo I10 = I0 with { LightEmission = 0, BlockShape = BlockShapes.S368, CollisionShape = BlockShapes.S368, VisualShape = BlockShapes.S368, SupportShape = BlockShapes.S368 };
+    private static readonly BlockStateInfo I11 = I0 with { LightEmission = 0, LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S368, CollisionShape = BlockShapes.S368, VisualShape = BlockShapes.S368, SupportShape = BlockShapes.S368 };
+    private static readonly BlockStateInfo I12 = I0 with { LightEmission = 12, BlockShape = BlockShapes.S369, CollisionShape = BlockShapes.S369, VisualShape = BlockShapes.S369, SupportShape = BlockShapes.S369 };
+    private static readonly BlockStateInfo I13 = I0 with { LightEmission = 12, LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S369, CollisionShape = BlockShapes.S369, VisualShape = BlockShapes.S369, SupportShape = BlockShapes.S369 };
+    private static readonly BlockStateInfo I14 = I0 with { LightEmission = 0, BlockShape = BlockShapes.S369, CollisionShape = BlockShapes.S369, VisualShape = BlockShapes.S369, SupportShape = BlockShapes.S369 };
+    private static readonly BlockStateInfo I15 = I0 with { LightEmission = 0, LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S369, CollisionShape = BlockShapes.S369, VisualShape = BlockShapes.S369, SupportShape = BlockShapes.S369 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 26597];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public int Count => Candles;
+
+    public int MaxCount => 4;
+
+    public IBlock WithCount(int count) => this with { Candles = count };
+
+    public IBlock WithLit(bool lit) => this with { Lit = lit };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,42 +97,42 @@ public record LightGrayCandleBlock(Identifier Identifier, int Candles, bool Lit,
             return Candles switch {
                 1 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23038,
-                        false => 23039,
+                        true => 26597,
+                        false => 26598,
                     },
                     false => Waterlogged switch {
-                        true => 23040,
-                        false => 23041,
+                        true => 26599,
+                        false => 26600,
                     },
                 },
                 2 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23042,
-                        false => 23043,
+                        true => 26601,
+                        false => 26602,
                     },
                     false => Waterlogged switch {
-                        true => 23044,
-                        false => 23045,
+                        true => 26603,
+                        false => 26604,
                     },
                 },
                 3 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23046,
-                        false => 23047,
+                        true => 26605,
+                        false => 26606,
                     },
                     false => Waterlogged switch {
-                        true => 23048,
-                        false => 23049,
+                        true => 26607,
+                        false => 26608,
                     },
                 },
                 4 => Lit switch {
                     true => Waterlogged switch {
-                        true => 23050,
-                        false => 23051,
+                        true => 26609,
+                        false => 26610,
                     },
                     false => Waterlogged switch {
-                        true => 23052,
-                        false => 23053,
+                        true => 26611,
+                        false => 26612,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Candles), Candles, "Unknown value for property candles.")
@@ -89,22 +142,22 @@ public record LightGrayCandleBlock(Identifier Identifier, int Candles, bool Lit,
     
     public IBlock WithState(uint state) {
         return state switch {
-            23038 => new LightGrayCandleBlock(Identifier, 1, true, true),
-            23039 => new LightGrayCandleBlock(Identifier, 1, true, false),
-            23040 => new LightGrayCandleBlock(Identifier, 1, false, true),
-            23041 => new LightGrayCandleBlock(Identifier, 1, false, false),
-            23042 => new LightGrayCandleBlock(Identifier, 2, true, true),
-            23043 => new LightGrayCandleBlock(Identifier, 2, true, false),
-            23044 => new LightGrayCandleBlock(Identifier, 2, false, true),
-            23045 => new LightGrayCandleBlock(Identifier, 2, false, false),
-            23046 => new LightGrayCandleBlock(Identifier, 3, true, true),
-            23047 => new LightGrayCandleBlock(Identifier, 3, true, false),
-            23048 => new LightGrayCandleBlock(Identifier, 3, false, true),
-            23049 => new LightGrayCandleBlock(Identifier, 3, false, false),
-            23050 => new LightGrayCandleBlock(Identifier, 4, true, true),
-            23051 => new LightGrayCandleBlock(Identifier, 4, true, false),
-            23052 => new LightGrayCandleBlock(Identifier, 4, false, true),
-            23053 => new LightGrayCandleBlock(Identifier, 4, false, false),
+            26597 => new LightGrayCandleBlock(Identifier, 1, true, true),
+            26598 => new LightGrayCandleBlock(Identifier, 1, true, false),
+            26599 => new LightGrayCandleBlock(Identifier, 1, false, true),
+            26600 => new LightGrayCandleBlock(Identifier, 1, false, false),
+            26601 => new LightGrayCandleBlock(Identifier, 2, true, true),
+            26602 => new LightGrayCandleBlock(Identifier, 2, true, false),
+            26603 => new LightGrayCandleBlock(Identifier, 2, false, true),
+            26604 => new LightGrayCandleBlock(Identifier, 2, false, false),
+            26605 => new LightGrayCandleBlock(Identifier, 3, true, true),
+            26606 => new LightGrayCandleBlock(Identifier, 3, true, false),
+            26607 => new LightGrayCandleBlock(Identifier, 3, false, true),
+            26608 => new LightGrayCandleBlock(Identifier, 3, false, false),
+            26609 => new LightGrayCandleBlock(Identifier, 4, true, true),
+            26610 => new LightGrayCandleBlock(Identifier, 4, true, false),
+            26611 => new LightGrayCandleBlock(Identifier, 4, false, true),
+            26612 => new LightGrayCandleBlock(Identifier, 4, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

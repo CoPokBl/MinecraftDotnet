@@ -3,68 +3,95 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggered) : IBlock {
-    public Identifier Category => "minecraft:dropper";
-    public double Hardness => 3.5;
-    public double ExplosionResistance => 3.5;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:dropper";
-    public Identifier? Item => "minecraft:dropper";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => true;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 11;
-    public string TranslationKey => "block.minecraft.dropper";
-    public bool CanRespawnIn => false;
+public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggered) : IBlock, IDirectional {
+    private static readonly BlockInfo Data = new("block.minecraft.dropper", 3.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:dropper", "minecraft:dropper", BlockInfo.VanillaOnly, "minecraft:blocks/dropper");
+    private static readonly BlockStateInfo I0 = new(3.5f, 0, 15, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Basedrum, false, true, true, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Cardinal facing) => this with { Facing = facing };
 
 
     public uint StateId {
         get {
             return Facing switch {
                 Cardinal.North => Triggered switch {
-                    true => 11230,
-                    false => 11231,
+                    true => 13199,
+                    false => 13200,
                 },
                 Cardinal.East => Triggered switch {
-                    true => 11232,
-                    false => 11233,
+                    true => 13201,
+                    false => 13202,
                 },
                 Cardinal.South => Triggered switch {
-                    true => 11234,
-                    false => 11235,
+                    true => 13203,
+                    false => 13204,
                 },
                 Cardinal.West => Triggered switch {
-                    true => 11236,
-                    false => 11237,
+                    true => 13205,
+                    false => 13206,
                 },
                 Cardinal.Up => Triggered switch {
-                    true => 11238,
-                    false => 11239,
+                    true => 13207,
+                    false => 13208,
                 },
                 Cardinal.Down => Triggered switch {
-                    true => 11240,
-                    false => 11241,
+                    true => 13209,
+                    false => 13210,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -73,18 +100,18 @@ public record DropperBlock(Identifier Identifier, Cardinal Facing, bool Triggere
     
     public IBlock WithState(uint state) {
         return state switch {
-            11230 => new DropperBlock(Identifier, Cardinal.North, true),
-            11231 => new DropperBlock(Identifier, Cardinal.North, false),
-            11232 => new DropperBlock(Identifier, Cardinal.East, true),
-            11233 => new DropperBlock(Identifier, Cardinal.East, false),
-            11234 => new DropperBlock(Identifier, Cardinal.South, true),
-            11235 => new DropperBlock(Identifier, Cardinal.South, false),
-            11236 => new DropperBlock(Identifier, Cardinal.West, true),
-            11237 => new DropperBlock(Identifier, Cardinal.West, false),
-            11238 => new DropperBlock(Identifier, Cardinal.Up, true),
-            11239 => new DropperBlock(Identifier, Cardinal.Up, false),
-            11240 => new DropperBlock(Identifier, Cardinal.Down, true),
-            11241 => new DropperBlock(Identifier, Cardinal.Down, false),
+            13199 => new DropperBlock(Identifier, Cardinal.North, true),
+            13200 => new DropperBlock(Identifier, Cardinal.North, false),
+            13201 => new DropperBlock(Identifier, Cardinal.East, true),
+            13202 => new DropperBlock(Identifier, Cardinal.East, false),
+            13203 => new DropperBlock(Identifier, Cardinal.South, true),
+            13204 => new DropperBlock(Identifier, Cardinal.South, false),
+            13205 => new DropperBlock(Identifier, Cardinal.West, true),
+            13206 => new DropperBlock(Identifier, Cardinal.West, false),
+            13207 => new DropperBlock(Identifier, Cardinal.Up, true),
+            13208 => new DropperBlock(Identifier, Cardinal.Up, false),
+            13209 => new DropperBlock(Identifier, Cardinal.Down, true),
+            13210 => new DropperBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -3,61 +3,88 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SugarCaneBlock(Identifier Identifier, int Age) : IBlock {
-    public Identifier Category => "minecraft:sugar_cane";
-    public double Hardness => 0;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "grass";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:sugar_cane";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.125, 0.0, 0.125] -> [0.875, 1.0, 0.875]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 7;
-    public string TranslationKey => "block.minecraft.sugar_cane";
-    public bool CanRespawnIn => true;
+public record SugarCaneBlock(Identifier Identifier, int Age) : IBlock, IAged {
+    private static readonly BlockInfo Data = new("block.minecraft.sugar_cane", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sugar_cane", BlockInfo.VanillaOnly, "minecraft:blocks/sugar_cane");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 0, PushReaction.Popped, 7, "grass", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, true, false, false, false, true, true, false, true, [], null, BlockShapes.S828, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
 
 
     public uint StateId {
         get {
             return Age switch {
-                0 => 6746,
-                1 => 6747,
-                2 => 6748,
-                3 => 6749,
-                4 => 6750,
-                5 => 6751,
-                6 => 6752,
-                7 => 6753,
-                8 => 6754,
-                9 => 6755,
-                10 => 6756,
-                11 => 6757,
-                12 => 6758,
-                13 => 6759,
-                14 => 6760,
-                15 => 6761,
+                0 => 8617,
+                1 => 8618,
+                2 => 8619,
+                3 => 8620,
+                4 => 8621,
+                5 => 8622,
+                6 => 8623,
+                7 => 8624,
+                8 => 8625,
+                9 => 8626,
+                10 => 8627,
+                11 => 8628,
+                12 => 8629,
+                13 => 8630,
+                14 => 8631,
+                15 => 8632,
                 _ => throw new ArgumentOutOfRangeException(nameof(Age), Age, "Unknown value for property age.")
             };
         }
@@ -65,22 +92,22 @@ public record SugarCaneBlock(Identifier Identifier, int Age) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            6746 => new SugarCaneBlock(Identifier, 0),
-            6747 => new SugarCaneBlock(Identifier, 1),
-            6748 => new SugarCaneBlock(Identifier, 2),
-            6749 => new SugarCaneBlock(Identifier, 3),
-            6750 => new SugarCaneBlock(Identifier, 4),
-            6751 => new SugarCaneBlock(Identifier, 5),
-            6752 => new SugarCaneBlock(Identifier, 6),
-            6753 => new SugarCaneBlock(Identifier, 7),
-            6754 => new SugarCaneBlock(Identifier, 8),
-            6755 => new SugarCaneBlock(Identifier, 9),
-            6756 => new SugarCaneBlock(Identifier, 10),
-            6757 => new SugarCaneBlock(Identifier, 11),
-            6758 => new SugarCaneBlock(Identifier, 12),
-            6759 => new SugarCaneBlock(Identifier, 13),
-            6760 => new SugarCaneBlock(Identifier, 14),
-            6761 => new SugarCaneBlock(Identifier, 15),
+            8617 => new SugarCaneBlock(Identifier, 0),
+            8618 => new SugarCaneBlock(Identifier, 1),
+            8619 => new SugarCaneBlock(Identifier, 2),
+            8620 => new SugarCaneBlock(Identifier, 3),
+            8621 => new SugarCaneBlock(Identifier, 4),
+            8622 => new SugarCaneBlock(Identifier, 5),
+            8623 => new SugarCaneBlock(Identifier, 6),
+            8624 => new SugarCaneBlock(Identifier, 7),
+            8625 => new SugarCaneBlock(Identifier, 8),
+            8626 => new SugarCaneBlock(Identifier, 9),
+            8627 => new SugarCaneBlock(Identifier, 10),
+            8628 => new SugarCaneBlock(Identifier, 11),
+            8629 => new SugarCaneBlock(Identifier, 12),
+            8630 => new SugarCaneBlock(Identifier, 13),
+            8631 => new SugarCaneBlock(Identifier, 14),
+            8632 => new SugarCaneBlock(Identifier, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

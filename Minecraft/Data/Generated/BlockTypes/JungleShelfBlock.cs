@@ -3,40 +3,81 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record JungleShelfBlock(Identifier Identifier, Direction Facing, bool Powered, JungleShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:shelf";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "shelf";
-    public Identifier? BlockEntity => "minecraft:shelf";
-    public Identifier? Item => "minecraft:jungle_shelf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 10;
-    public string TranslationKey => "block.minecraft.jungle_shelf";
-    public bool CanRespawnIn => false;
+public record JungleShelfBlock(Identifier Identifier, Direction Facing, bool Powered, JungleShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock, IHorizontalFacing, IPowered, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.jungle_shelf", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:shelf", "minecraft:jungle_shelf", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_shelf");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 10, "shelf", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, [], "minecraft:water", BlockShapes.S83, BlockShapes.S83, BlockShapes.S1, BlockShapes.S83, BlockShapes.S83, BlockShapes.S83);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 4476];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -45,39 +86,39 @@ public record JungleShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.North => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2783,
-                            false => 2784,
+                            true => 4476,
+                            false => 4477,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2785,
-                            false => 2786,
+                            true => 4478,
+                            false => 4479,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2787,
-                            false => 2788,
+                            true => 4480,
+                            false => 4481,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2789,
-                            false => 2790,
+                            true => 4482,
+                            false => 4483,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2791,
-                            false => 2792,
+                            true => 4484,
+                            false => 4485,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2793,
-                            false => 2794,
+                            true => 4486,
+                            false => 4487,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2795,
-                            false => 2796,
+                            true => 4488,
+                            false => 4489,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2797,
-                            false => 2798,
+                            true => 4490,
+                            false => 4491,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -85,39 +126,39 @@ public record JungleShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.South => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2799,
-                            false => 2800,
+                            true => 4492,
+                            false => 4493,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2801,
-                            false => 2802,
+                            true => 4494,
+                            false => 4495,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2803,
-                            false => 2804,
+                            true => 4496,
+                            false => 4497,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2805,
-                            false => 2806,
+                            true => 4498,
+                            false => 4499,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2807,
-                            false => 2808,
+                            true => 4500,
+                            false => 4501,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2809,
-                            false => 2810,
+                            true => 4502,
+                            false => 4503,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2811,
-                            false => 2812,
+                            true => 4504,
+                            false => 4505,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2813,
-                            false => 2814,
+                            true => 4506,
+                            false => 4507,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -125,39 +166,39 @@ public record JungleShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.West => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2815,
-                            false => 2816,
+                            true => 4508,
+                            false => 4509,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2817,
-                            false => 2818,
+                            true => 4510,
+                            false => 4511,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2819,
-                            false => 2820,
+                            true => 4512,
+                            false => 4513,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2821,
-                            false => 2822,
+                            true => 4514,
+                            false => 4515,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2823,
-                            false => 2824,
+                            true => 4516,
+                            false => 4517,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2825,
-                            false => 2826,
+                            true => 4518,
+                            false => 4519,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2827,
-                            false => 2828,
+                            true => 4520,
+                            false => 4521,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2829,
-                            false => 2830,
+                            true => 4522,
+                            false => 4523,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -165,39 +206,39 @@ public record JungleShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.East => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2831,
-                            false => 2832,
+                            true => 4524,
+                            false => 4525,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2833,
-                            false => 2834,
+                            true => 4526,
+                            false => 4527,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2835,
-                            false => 2836,
+                            true => 4528,
+                            false => 4529,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2837,
-                            false => 2838,
+                            true => 4530,
+                            false => 4531,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2839,
-                            false => 2840,
+                            true => 4532,
+                            false => 4533,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2841,
-                            false => 2842,
+                            true => 4534,
+                            false => 4535,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2843,
-                            false => 2844,
+                            true => 4536,
+                            false => 4537,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2845,
-                            false => 2846,
+                            true => 4538,
+                            false => 4539,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -209,70 +250,70 @@ public record JungleShelfBlock(Identifier Identifier, Direction Facing, bool Pow
     
     public IBlock WithState(uint state) {
         return state switch {
-            2783 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
-            2784 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
-            2785 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
-            2786 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
-            2787 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
-            2788 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
-            2789 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
-            2790 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
-            2791 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
-            2792 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
-            2793 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
-            2794 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
-            2795 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
-            2796 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
-            2797 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
-            2798 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
-            2799 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
-            2800 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
-            2801 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
-            2802 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
-            2803 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
-            2804 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
-            2805 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
-            2806 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
-            2807 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
-            2808 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
-            2809 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
-            2810 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
-            2811 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
-            2812 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
-            2813 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
-            2814 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
-            2815 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
-            2816 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
-            2817 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
-            2818 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
-            2819 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
-            2820 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
-            2821 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
-            2822 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
-            2823 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
-            2824 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
-            2825 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
-            2826 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
-            2827 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
-            2828 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
-            2829 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
-            2830 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
-            2831 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
-            2832 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
-            2833 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
-            2834 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
-            2835 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
-            2836 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
-            2837 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
-            2838 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
-            2839 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
-            2840 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
-            2841 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
-            2842 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
-            2843 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
-            2844 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
-            2845 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
-            2846 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
+            4476 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
+            4477 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
+            4478 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
+            4479 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
+            4480 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
+            4481 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
+            4482 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
+            4483 => new JungleShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
+            4484 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
+            4485 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
+            4486 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
+            4487 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
+            4488 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
+            4489 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
+            4490 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
+            4491 => new JungleShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
+            4492 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
+            4493 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
+            4494 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
+            4495 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
+            4496 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
+            4497 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
+            4498 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
+            4499 => new JungleShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
+            4500 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
+            4501 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
+            4502 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
+            4503 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
+            4504 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
+            4505 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
+            4506 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
+            4507 => new JungleShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
+            4508 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
+            4509 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
+            4510 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
+            4511 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
+            4512 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
+            4513 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
+            4514 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
+            4515 => new JungleShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
+            4516 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
+            4517 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
+            4518 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
+            4519 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
+            4520 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
+            4521 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
+            4522 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
+            4523 => new JungleShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
+            4524 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
+            4525 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
+            4526 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
+            4527 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
+            4528 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
+            4529 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
+            4530 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
+            4531 => new JungleShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
+            4532 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
+            4533 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
+            4534 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
+            4535 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
+            4536 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
+            4537 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
+            4538 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
+            4539 => new JungleShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

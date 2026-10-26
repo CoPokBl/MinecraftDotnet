@@ -3,81 +3,110 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WitherSkeletonSkullBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock {
-    public Identifier Category => "minecraft:wither_skull";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:skull";
-    public Identifier? Item => "minecraft:wither_skeleton_skull";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 0.5, 0.75]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 0.5, 0.75]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 0.5, 0.75]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.wither_skeleton_skull";
-    public bool CanRespawnIn => true;
+public record WitherSkeletonSkullBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock, IPowered, IRotated {
+    private static readonly BlockInfo Data = new("block.minecraft.wither_skeleton_skull", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:wither_skeleton_skull", BlockInfo.VanillaOnly, "minecraft:blocks/wither_skeleton_skull");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.WitherSkeleton, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S515, BlockShapes.S515, BlockShapes.S1, BlockShapes.S1, BlockShapes.S515, BlockShapes.S515);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
 
 
     public uint StateId {
         get {
             return Powered switch {
                 true => Rotation switch {
-                    0 => 10753,
-                    1 => 10754,
-                    2 => 10755,
-                    3 => 10756,
-                    4 => 10757,
-                    5 => 10758,
-                    6 => 10759,
-                    7 => 10760,
-                    8 => 10761,
-                    9 => 10762,
-                    10 => 10763,
-                    11 => 10764,
-                    12 => 10765,
-                    13 => 10766,
-                    14 => 10767,
-                    15 => 10768,
+                    0 => 12722,
+                    1 => 12723,
+                    2 => 12724,
+                    3 => 12725,
+                    4 => 12726,
+                    5 => 12727,
+                    6 => 12728,
+                    7 => 12729,
+                    8 => 12730,
+                    9 => 12731,
+                    10 => 12732,
+                    11 => 12733,
+                    12 => 12734,
+                    13 => 12735,
+                    14 => 12736,
+                    15 => 12737,
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
-                    0 => 10769,
-                    1 => 10770,
-                    2 => 10771,
-                    3 => 10772,
-                    4 => 10773,
-                    5 => 10774,
-                    6 => 10775,
-                    7 => 10776,
-                    8 => 10777,
-                    9 => 10778,
-                    10 => 10779,
-                    11 => 10780,
-                    12 => 10781,
-                    13 => 10782,
-                    14 => 10783,
-                    15 => 10784,
+                    0 => 12738,
+                    1 => 12739,
+                    2 => 12740,
+                    3 => 12741,
+                    4 => 12742,
+                    5 => 12743,
+                    6 => 12744,
+                    7 => 12745,
+                    8 => 12746,
+                    9 => 12747,
+                    10 => 12748,
+                    11 => 12749,
+                    12 => 12750,
+                    13 => 12751,
+                    14 => 12752,
+                    15 => 12753,
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
             };
@@ -86,38 +115,38 @@ public record WitherSkeletonSkullBlock(Identifier Identifier, bool Powered, int 
     
     public IBlock WithState(uint state) {
         return state switch {
-            10753 => new WitherSkeletonSkullBlock(Identifier, true, 0),
-            10754 => new WitherSkeletonSkullBlock(Identifier, true, 1),
-            10755 => new WitherSkeletonSkullBlock(Identifier, true, 2),
-            10756 => new WitherSkeletonSkullBlock(Identifier, true, 3),
-            10757 => new WitherSkeletonSkullBlock(Identifier, true, 4),
-            10758 => new WitherSkeletonSkullBlock(Identifier, true, 5),
-            10759 => new WitherSkeletonSkullBlock(Identifier, true, 6),
-            10760 => new WitherSkeletonSkullBlock(Identifier, true, 7),
-            10761 => new WitherSkeletonSkullBlock(Identifier, true, 8),
-            10762 => new WitherSkeletonSkullBlock(Identifier, true, 9),
-            10763 => new WitherSkeletonSkullBlock(Identifier, true, 10),
-            10764 => new WitherSkeletonSkullBlock(Identifier, true, 11),
-            10765 => new WitherSkeletonSkullBlock(Identifier, true, 12),
-            10766 => new WitherSkeletonSkullBlock(Identifier, true, 13),
-            10767 => new WitherSkeletonSkullBlock(Identifier, true, 14),
-            10768 => new WitherSkeletonSkullBlock(Identifier, true, 15),
-            10769 => new WitherSkeletonSkullBlock(Identifier, false, 0),
-            10770 => new WitherSkeletonSkullBlock(Identifier, false, 1),
-            10771 => new WitherSkeletonSkullBlock(Identifier, false, 2),
-            10772 => new WitherSkeletonSkullBlock(Identifier, false, 3),
-            10773 => new WitherSkeletonSkullBlock(Identifier, false, 4),
-            10774 => new WitherSkeletonSkullBlock(Identifier, false, 5),
-            10775 => new WitherSkeletonSkullBlock(Identifier, false, 6),
-            10776 => new WitherSkeletonSkullBlock(Identifier, false, 7),
-            10777 => new WitherSkeletonSkullBlock(Identifier, false, 8),
-            10778 => new WitherSkeletonSkullBlock(Identifier, false, 9),
-            10779 => new WitherSkeletonSkullBlock(Identifier, false, 10),
-            10780 => new WitherSkeletonSkullBlock(Identifier, false, 11),
-            10781 => new WitherSkeletonSkullBlock(Identifier, false, 12),
-            10782 => new WitherSkeletonSkullBlock(Identifier, false, 13),
-            10783 => new WitherSkeletonSkullBlock(Identifier, false, 14),
-            10784 => new WitherSkeletonSkullBlock(Identifier, false, 15),
+            12722 => new WitherSkeletonSkullBlock(Identifier, true, 0),
+            12723 => new WitherSkeletonSkullBlock(Identifier, true, 1),
+            12724 => new WitherSkeletonSkullBlock(Identifier, true, 2),
+            12725 => new WitherSkeletonSkullBlock(Identifier, true, 3),
+            12726 => new WitherSkeletonSkullBlock(Identifier, true, 4),
+            12727 => new WitherSkeletonSkullBlock(Identifier, true, 5),
+            12728 => new WitherSkeletonSkullBlock(Identifier, true, 6),
+            12729 => new WitherSkeletonSkullBlock(Identifier, true, 7),
+            12730 => new WitherSkeletonSkullBlock(Identifier, true, 8),
+            12731 => new WitherSkeletonSkullBlock(Identifier, true, 9),
+            12732 => new WitherSkeletonSkullBlock(Identifier, true, 10),
+            12733 => new WitherSkeletonSkullBlock(Identifier, true, 11),
+            12734 => new WitherSkeletonSkullBlock(Identifier, true, 12),
+            12735 => new WitherSkeletonSkullBlock(Identifier, true, 13),
+            12736 => new WitherSkeletonSkullBlock(Identifier, true, 14),
+            12737 => new WitherSkeletonSkullBlock(Identifier, true, 15),
+            12738 => new WitherSkeletonSkullBlock(Identifier, false, 0),
+            12739 => new WitherSkeletonSkullBlock(Identifier, false, 1),
+            12740 => new WitherSkeletonSkullBlock(Identifier, false, 2),
+            12741 => new WitherSkeletonSkullBlock(Identifier, false, 3),
+            12742 => new WitherSkeletonSkullBlock(Identifier, false, 4),
+            12743 => new WitherSkeletonSkullBlock(Identifier, false, 5),
+            12744 => new WitherSkeletonSkullBlock(Identifier, false, 6),
+            12745 => new WitherSkeletonSkullBlock(Identifier, false, 7),
+            12746 => new WitherSkeletonSkullBlock(Identifier, false, 8),
+            12747 => new WitherSkeletonSkullBlock(Identifier, false, 9),
+            12748 => new WitherSkeletonSkullBlock(Identifier, false, 10),
+            12749 => new WitherSkeletonSkullBlock(Identifier, false, 11),
+            12750 => new WitherSkeletonSkullBlock(Identifier, false, 12),
+            12751 => new WitherSkeletonSkullBlock(Identifier, false, 13),
+            12752 => new WitherSkeletonSkullBlock(Identifier, false, 14),
+            12753 => new WitherSkeletonSkullBlock(Identifier, false, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

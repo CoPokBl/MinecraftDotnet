@@ -3,40 +3,77 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CherryLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:untinted_particle_leaves";
-    public double Hardness => 0.2;
-    public double ExplosionResistance => 0.2;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "cherry_leaves";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:cherry_leaves";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 20;
-    public string TranslationKey => "block.minecraft.cherry_leaves";
-    public bool CanRespawnIn => false;
+public record CherryLeavesBlock(Identifier Identifier, int Distance, bool Persistent, bool Waterlogged) : IBlock, IDistanced, IPersistent, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.cherry_leaves", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cherry_leaves", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_leaves");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Popped, 20, "cherry_leaves", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, ["minecraft:ocelot", "minecraft:parrot"], "minecraft:water", BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { RandomlyTicking = true };
+    private static readonly BlockStateInfo I3 = I0 with { Flammable = true, RandomlyTicking = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 407];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithDistance(int distance) => this with { Distance = distance };
+
+    public IBlock WithPersistent(bool persistent) => this with { Persistent = persistent };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,72 +81,72 @@ public record CherryLeavesBlock(Identifier Identifier, int Distance, bool Persis
             return Distance switch {
                 1 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 392,
-                        false => 393,
+                        true => 407,
+                        false => 408,
                     },
                     false => Waterlogged switch {
-                        true => 394,
-                        false => 395,
+                        true => 409,
+                        false => 410,
                     },
                 },
                 2 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 396,
-                        false => 397,
+                        true => 411,
+                        false => 412,
                     },
                     false => Waterlogged switch {
-                        true => 398,
-                        false => 399,
+                        true => 413,
+                        false => 414,
                     },
                 },
                 3 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 400,
-                        false => 401,
+                        true => 415,
+                        false => 416,
                     },
                     false => Waterlogged switch {
-                        true => 402,
-                        false => 403,
+                        true => 417,
+                        false => 418,
                     },
                 },
                 4 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 404,
-                        false => 405,
+                        true => 419,
+                        false => 420,
                     },
                     false => Waterlogged switch {
-                        true => 406,
-                        false => 407,
+                        true => 421,
+                        false => 422,
                     },
                 },
                 5 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 408,
-                        false => 409,
+                        true => 423,
+                        false => 424,
                     },
                     false => Waterlogged switch {
-                        true => 410,
-                        false => 411,
+                        true => 425,
+                        false => 426,
                     },
                 },
                 6 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 412,
-                        false => 413,
+                        true => 427,
+                        false => 428,
                     },
                     false => Waterlogged switch {
-                        true => 414,
-                        false => 415,
+                        true => 429,
+                        false => 430,
                     },
                 },
                 7 => Persistent switch {
                     true => Waterlogged switch {
-                        true => 416,
-                        false => 417,
+                        true => 431,
+                        false => 432,
                     },
                     false => Waterlogged switch {
-                        true => 418,
-                        false => 419,
+                        true => 433,
+                        false => 434,
                     },
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
@@ -119,34 +156,34 @@ public record CherryLeavesBlock(Identifier Identifier, int Distance, bool Persis
     
     public IBlock WithState(uint state) {
         return state switch {
-            392 => new CherryLeavesBlock(Identifier, 1, true, true),
-            393 => new CherryLeavesBlock(Identifier, 1, true, false),
-            394 => new CherryLeavesBlock(Identifier, 1, false, true),
-            395 => new CherryLeavesBlock(Identifier, 1, false, false),
-            396 => new CherryLeavesBlock(Identifier, 2, true, true),
-            397 => new CherryLeavesBlock(Identifier, 2, true, false),
-            398 => new CherryLeavesBlock(Identifier, 2, false, true),
-            399 => new CherryLeavesBlock(Identifier, 2, false, false),
-            400 => new CherryLeavesBlock(Identifier, 3, true, true),
-            401 => new CherryLeavesBlock(Identifier, 3, true, false),
-            402 => new CherryLeavesBlock(Identifier, 3, false, true),
-            403 => new CherryLeavesBlock(Identifier, 3, false, false),
-            404 => new CherryLeavesBlock(Identifier, 4, true, true),
-            405 => new CherryLeavesBlock(Identifier, 4, true, false),
-            406 => new CherryLeavesBlock(Identifier, 4, false, true),
-            407 => new CherryLeavesBlock(Identifier, 4, false, false),
-            408 => new CherryLeavesBlock(Identifier, 5, true, true),
-            409 => new CherryLeavesBlock(Identifier, 5, true, false),
-            410 => new CherryLeavesBlock(Identifier, 5, false, true),
-            411 => new CherryLeavesBlock(Identifier, 5, false, false),
-            412 => new CherryLeavesBlock(Identifier, 6, true, true),
-            413 => new CherryLeavesBlock(Identifier, 6, true, false),
-            414 => new CherryLeavesBlock(Identifier, 6, false, true),
-            415 => new CherryLeavesBlock(Identifier, 6, false, false),
-            416 => new CherryLeavesBlock(Identifier, 7, true, true),
-            417 => new CherryLeavesBlock(Identifier, 7, true, false),
-            418 => new CherryLeavesBlock(Identifier, 7, false, true),
-            419 => new CherryLeavesBlock(Identifier, 7, false, false),
+            407 => new CherryLeavesBlock(Identifier, 1, true, true),
+            408 => new CherryLeavesBlock(Identifier, 1, true, false),
+            409 => new CherryLeavesBlock(Identifier, 1, false, true),
+            410 => new CherryLeavesBlock(Identifier, 1, false, false),
+            411 => new CherryLeavesBlock(Identifier, 2, true, true),
+            412 => new CherryLeavesBlock(Identifier, 2, true, false),
+            413 => new CherryLeavesBlock(Identifier, 2, false, true),
+            414 => new CherryLeavesBlock(Identifier, 2, false, false),
+            415 => new CherryLeavesBlock(Identifier, 3, true, true),
+            416 => new CherryLeavesBlock(Identifier, 3, true, false),
+            417 => new CherryLeavesBlock(Identifier, 3, false, true),
+            418 => new CherryLeavesBlock(Identifier, 3, false, false),
+            419 => new CherryLeavesBlock(Identifier, 4, true, true),
+            420 => new CherryLeavesBlock(Identifier, 4, true, false),
+            421 => new CherryLeavesBlock(Identifier, 4, false, true),
+            422 => new CherryLeavesBlock(Identifier, 4, false, false),
+            423 => new CherryLeavesBlock(Identifier, 5, true, true),
+            424 => new CherryLeavesBlock(Identifier, 5, true, false),
+            425 => new CherryLeavesBlock(Identifier, 5, false, true),
+            426 => new CherryLeavesBlock(Identifier, 5, false, false),
+            427 => new CherryLeavesBlock(Identifier, 6, true, true),
+            428 => new CherryLeavesBlock(Identifier, 6, true, false),
+            429 => new CherryLeavesBlock(Identifier, 6, false, true),
+            430 => new CherryLeavesBlock(Identifier, 6, false, false),
+            431 => new CherryLeavesBlock(Identifier, 7, true, true),
+            432 => new CherryLeavesBlock(Identifier, 7, true, false),
+            433 => new CherryLeavesBlock(Identifier, 7, false, true),
+            434 => new CherryLeavesBlock(Identifier, 7, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

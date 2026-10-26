@@ -3,81 +3,110 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record DragonHeadBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock {
-    public Identifier Category => "minecraft:skull";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:skull";
-    public Identifier? Item => "minecraft:dragon_head";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 0.5, 0.75]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 0.5, 0.75]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 0.5, 0.75]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.dragon_head";
-    public bool CanRespawnIn => true;
+public record DragonHeadBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock, IPowered, IRotated {
+    private static readonly BlockInfo Data = new("block.minecraft.dragon_head", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:dragon_head", BlockInfo.VanillaOnly, "minecraft:blocks/dragon_head");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.Dragon, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S523, BlockShapes.S515, BlockShapes.S1, BlockShapes.S1, BlockShapes.S515, BlockShapes.S515);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
 
 
     public uint StateId {
         get {
             return Powered switch {
                 true => Rotation switch {
-                    0 => 10913,
-                    1 => 10914,
-                    2 => 10915,
-                    3 => 10916,
-                    4 => 10917,
-                    5 => 10918,
-                    6 => 10919,
-                    7 => 10920,
-                    8 => 10921,
-                    9 => 10922,
-                    10 => 10923,
-                    11 => 10924,
-                    12 => 10925,
-                    13 => 10926,
-                    14 => 10927,
-                    15 => 10928,
+                    0 => 12882,
+                    1 => 12883,
+                    2 => 12884,
+                    3 => 12885,
+                    4 => 12886,
+                    5 => 12887,
+                    6 => 12888,
+                    7 => 12889,
+                    8 => 12890,
+                    9 => 12891,
+                    10 => 12892,
+                    11 => 12893,
+                    12 => 12894,
+                    13 => 12895,
+                    14 => 12896,
+                    15 => 12897,
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
-                    0 => 10929,
-                    1 => 10930,
-                    2 => 10931,
-                    3 => 10932,
-                    4 => 10933,
-                    5 => 10934,
-                    6 => 10935,
-                    7 => 10936,
-                    8 => 10937,
-                    9 => 10938,
-                    10 => 10939,
-                    11 => 10940,
-                    12 => 10941,
-                    13 => 10942,
-                    14 => 10943,
-                    15 => 10944,
+                    0 => 12898,
+                    1 => 12899,
+                    2 => 12900,
+                    3 => 12901,
+                    4 => 12902,
+                    5 => 12903,
+                    6 => 12904,
+                    7 => 12905,
+                    8 => 12906,
+                    9 => 12907,
+                    10 => 12908,
+                    11 => 12909,
+                    12 => 12910,
+                    13 => 12911,
+                    14 => 12912,
+                    15 => 12913,
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
             };
@@ -86,38 +115,38 @@ public record DragonHeadBlock(Identifier Identifier, bool Powered, int Rotation)
     
     public IBlock WithState(uint state) {
         return state switch {
-            10913 => new DragonHeadBlock(Identifier, true, 0),
-            10914 => new DragonHeadBlock(Identifier, true, 1),
-            10915 => new DragonHeadBlock(Identifier, true, 2),
-            10916 => new DragonHeadBlock(Identifier, true, 3),
-            10917 => new DragonHeadBlock(Identifier, true, 4),
-            10918 => new DragonHeadBlock(Identifier, true, 5),
-            10919 => new DragonHeadBlock(Identifier, true, 6),
-            10920 => new DragonHeadBlock(Identifier, true, 7),
-            10921 => new DragonHeadBlock(Identifier, true, 8),
-            10922 => new DragonHeadBlock(Identifier, true, 9),
-            10923 => new DragonHeadBlock(Identifier, true, 10),
-            10924 => new DragonHeadBlock(Identifier, true, 11),
-            10925 => new DragonHeadBlock(Identifier, true, 12),
-            10926 => new DragonHeadBlock(Identifier, true, 13),
-            10927 => new DragonHeadBlock(Identifier, true, 14),
-            10928 => new DragonHeadBlock(Identifier, true, 15),
-            10929 => new DragonHeadBlock(Identifier, false, 0),
-            10930 => new DragonHeadBlock(Identifier, false, 1),
-            10931 => new DragonHeadBlock(Identifier, false, 2),
-            10932 => new DragonHeadBlock(Identifier, false, 3),
-            10933 => new DragonHeadBlock(Identifier, false, 4),
-            10934 => new DragonHeadBlock(Identifier, false, 5),
-            10935 => new DragonHeadBlock(Identifier, false, 6),
-            10936 => new DragonHeadBlock(Identifier, false, 7),
-            10937 => new DragonHeadBlock(Identifier, false, 8),
-            10938 => new DragonHeadBlock(Identifier, false, 9),
-            10939 => new DragonHeadBlock(Identifier, false, 10),
-            10940 => new DragonHeadBlock(Identifier, false, 11),
-            10941 => new DragonHeadBlock(Identifier, false, 12),
-            10942 => new DragonHeadBlock(Identifier, false, 13),
-            10943 => new DragonHeadBlock(Identifier, false, 14),
-            10944 => new DragonHeadBlock(Identifier, false, 15),
+            12882 => new DragonHeadBlock(Identifier, true, 0),
+            12883 => new DragonHeadBlock(Identifier, true, 1),
+            12884 => new DragonHeadBlock(Identifier, true, 2),
+            12885 => new DragonHeadBlock(Identifier, true, 3),
+            12886 => new DragonHeadBlock(Identifier, true, 4),
+            12887 => new DragonHeadBlock(Identifier, true, 5),
+            12888 => new DragonHeadBlock(Identifier, true, 6),
+            12889 => new DragonHeadBlock(Identifier, true, 7),
+            12890 => new DragonHeadBlock(Identifier, true, 8),
+            12891 => new DragonHeadBlock(Identifier, true, 9),
+            12892 => new DragonHeadBlock(Identifier, true, 10),
+            12893 => new DragonHeadBlock(Identifier, true, 11),
+            12894 => new DragonHeadBlock(Identifier, true, 12),
+            12895 => new DragonHeadBlock(Identifier, true, 13),
+            12896 => new DragonHeadBlock(Identifier, true, 14),
+            12897 => new DragonHeadBlock(Identifier, true, 15),
+            12898 => new DragonHeadBlock(Identifier, false, 0),
+            12899 => new DragonHeadBlock(Identifier, false, 1),
+            12900 => new DragonHeadBlock(Identifier, false, 2),
+            12901 => new DragonHeadBlock(Identifier, false, 3),
+            12902 => new DragonHeadBlock(Identifier, false, 4),
+            12903 => new DragonHeadBlock(Identifier, false, 5),
+            12904 => new DragonHeadBlock(Identifier, false, 6),
+            12905 => new DragonHeadBlock(Identifier, false, 7),
+            12906 => new DragonHeadBlock(Identifier, false, 8),
+            12907 => new DragonHeadBlock(Identifier, false, 9),
+            12908 => new DragonHeadBlock(Identifier, false, 10),
+            12909 => new DragonHeadBlock(Identifier, false, 11),
+            12910 => new DragonHeadBlock(Identifier, false, 12),
+            12911 => new DragonHeadBlock(Identifier, false, 13),
+            12912 => new DragonHeadBlock(Identifier, false, 14),
+            12913 => new DragonHeadBlock(Identifier, false, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

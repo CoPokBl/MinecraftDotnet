@@ -3,40 +3,83 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CherryFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock {
-    public Identifier Category => "minecraft:fence_gate";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "cherry_wood";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:cherry_fence_gate";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.375] -> [1.0, 1.0, 0.625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.375] -> [1.0, 1.5, 0.625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.3125, 0.4375] -> [0.125, 1.0, 0.5625], AABB[0.875, 0.3125, 0.4375] -> [1.0, 1.0, 0.5625]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.375] -> [1.0, 1.5, 0.625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 36;
-    public string TranslationKey => "block.minecraft.cherry_fence_gate";
-    public bool CanRespawnIn => false;
+public record CherryFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock, IHorizontalFacing, IInWall, IOpenable, IPowered {
+    private static readonly BlockInfo Data = new("block.minecraft.cherry_fence_gate", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cherry_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_fence_gate");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.PushPull, 36, "cherry_wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { PathfindableLand = false, PathfindableAir = false, CollisionShape = BlockShapes.S40, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S39, OcclusionShape = BlockShapes.S71 };
+    private static readonly BlockStateInfo I3 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S71, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S72, OcclusionShape = BlockShapes.S73 };
+    private static readonly BlockStateInfo I5 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S72, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S73, VisualShape = BlockShapes.S49, SupportShape = BlockShapes.S74 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S48, OcclusionShape = BlockShapes.S75 };
+    private static readonly BlockStateInfo I7 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S75, VisualShape = BlockShapes.S49, SupportShape = BlockShapes.S74 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I0, I1, I1, I2, I2, I3, I3, I0, I0, I1, I1, I2, I2, I3, I3, I4, I4, I5, I5, I6, I6, I7, I7, I4, I4, I5, I5, I6, I6, I7, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 15459];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithInWall(bool inWall) => this with { InWall = inWall };
+
+    public IBlock WithOpen(bool open) => this with { Open = open };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
 
     public uint StateId {
@@ -45,88 +88,88 @@ public record CherryFenceGateBlock(Identifier Identifier, Direction Facing, bool
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13410,
-                            false => 13411,
+                            true => 15459,
+                            false => 15460,
                         },
                         false => Powered switch {
-                            true => 13412,
-                            false => 13413,
+                            true => 15461,
+                            false => 15462,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13414,
-                            false => 13415,
+                            true => 15463,
+                            false => 15464,
                         },
                         false => Powered switch {
-                            true => 13416,
-                            false => 13417,
+                            true => 15465,
+                            false => 15466,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13418,
-                            false => 13419,
+                            true => 15467,
+                            false => 15468,
                         },
                         false => Powered switch {
-                            true => 13420,
-                            false => 13421,
+                            true => 15469,
+                            false => 15470,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13422,
-                            false => 13423,
+                            true => 15471,
+                            false => 15472,
                         },
                         false => Powered switch {
-                            true => 13424,
-                            false => 13425,
+                            true => 15473,
+                            false => 15474,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13426,
-                            false => 13427,
+                            true => 15475,
+                            false => 15476,
                         },
                         false => Powered switch {
-                            true => 13428,
-                            false => 13429,
+                            true => 15477,
+                            false => 15478,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13430,
-                            false => 13431,
+                            true => 15479,
+                            false => 15480,
                         },
                         false => Powered switch {
-                            true => 13432,
-                            false => 13433,
+                            true => 15481,
+                            false => 15482,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13434,
-                            false => 13435,
+                            true => 15483,
+                            false => 15484,
                         },
                         false => Powered switch {
-                            true => 13436,
-                            false => 13437,
+                            true => 15485,
+                            false => 15486,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13438,
-                            false => 13439,
+                            true => 15487,
+                            false => 15488,
                         },
                         false => Powered switch {
-                            true => 13440,
-                            false => 13441,
+                            true => 15489,
+                            false => 15490,
                         },
                     },
                 },
@@ -137,38 +180,38 @@ public record CherryFenceGateBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            13410 => new CherryFenceGateBlock(Identifier, Direction.North, true, true, true),
-            13411 => new CherryFenceGateBlock(Identifier, Direction.North, true, true, false),
-            13412 => new CherryFenceGateBlock(Identifier, Direction.North, true, false, true),
-            13413 => new CherryFenceGateBlock(Identifier, Direction.North, true, false, false),
-            13414 => new CherryFenceGateBlock(Identifier, Direction.North, false, true, true),
-            13415 => new CherryFenceGateBlock(Identifier, Direction.North, false, true, false),
-            13416 => new CherryFenceGateBlock(Identifier, Direction.North, false, false, true),
-            13417 => new CherryFenceGateBlock(Identifier, Direction.North, false, false, false),
-            13418 => new CherryFenceGateBlock(Identifier, Direction.South, true, true, true),
-            13419 => new CherryFenceGateBlock(Identifier, Direction.South, true, true, false),
-            13420 => new CherryFenceGateBlock(Identifier, Direction.South, true, false, true),
-            13421 => new CherryFenceGateBlock(Identifier, Direction.South, true, false, false),
-            13422 => new CherryFenceGateBlock(Identifier, Direction.South, false, true, true),
-            13423 => new CherryFenceGateBlock(Identifier, Direction.South, false, true, false),
-            13424 => new CherryFenceGateBlock(Identifier, Direction.South, false, false, true),
-            13425 => new CherryFenceGateBlock(Identifier, Direction.South, false, false, false),
-            13426 => new CherryFenceGateBlock(Identifier, Direction.West, true, true, true),
-            13427 => new CherryFenceGateBlock(Identifier, Direction.West, true, true, false),
-            13428 => new CherryFenceGateBlock(Identifier, Direction.West, true, false, true),
-            13429 => new CherryFenceGateBlock(Identifier, Direction.West, true, false, false),
-            13430 => new CherryFenceGateBlock(Identifier, Direction.West, false, true, true),
-            13431 => new CherryFenceGateBlock(Identifier, Direction.West, false, true, false),
-            13432 => new CherryFenceGateBlock(Identifier, Direction.West, false, false, true),
-            13433 => new CherryFenceGateBlock(Identifier, Direction.West, false, false, false),
-            13434 => new CherryFenceGateBlock(Identifier, Direction.East, true, true, true),
-            13435 => new CherryFenceGateBlock(Identifier, Direction.East, true, true, false),
-            13436 => new CherryFenceGateBlock(Identifier, Direction.East, true, false, true),
-            13437 => new CherryFenceGateBlock(Identifier, Direction.East, true, false, false),
-            13438 => new CherryFenceGateBlock(Identifier, Direction.East, false, true, true),
-            13439 => new CherryFenceGateBlock(Identifier, Direction.East, false, true, false),
-            13440 => new CherryFenceGateBlock(Identifier, Direction.East, false, false, true),
-            13441 => new CherryFenceGateBlock(Identifier, Direction.East, false, false, false),
+            15459 => new CherryFenceGateBlock(Identifier, Direction.North, true, true, true),
+            15460 => new CherryFenceGateBlock(Identifier, Direction.North, true, true, false),
+            15461 => new CherryFenceGateBlock(Identifier, Direction.North, true, false, true),
+            15462 => new CherryFenceGateBlock(Identifier, Direction.North, true, false, false),
+            15463 => new CherryFenceGateBlock(Identifier, Direction.North, false, true, true),
+            15464 => new CherryFenceGateBlock(Identifier, Direction.North, false, true, false),
+            15465 => new CherryFenceGateBlock(Identifier, Direction.North, false, false, true),
+            15466 => new CherryFenceGateBlock(Identifier, Direction.North, false, false, false),
+            15467 => new CherryFenceGateBlock(Identifier, Direction.South, true, true, true),
+            15468 => new CherryFenceGateBlock(Identifier, Direction.South, true, true, false),
+            15469 => new CherryFenceGateBlock(Identifier, Direction.South, true, false, true),
+            15470 => new CherryFenceGateBlock(Identifier, Direction.South, true, false, false),
+            15471 => new CherryFenceGateBlock(Identifier, Direction.South, false, true, true),
+            15472 => new CherryFenceGateBlock(Identifier, Direction.South, false, true, false),
+            15473 => new CherryFenceGateBlock(Identifier, Direction.South, false, false, true),
+            15474 => new CherryFenceGateBlock(Identifier, Direction.South, false, false, false),
+            15475 => new CherryFenceGateBlock(Identifier, Direction.West, true, true, true),
+            15476 => new CherryFenceGateBlock(Identifier, Direction.West, true, true, false),
+            15477 => new CherryFenceGateBlock(Identifier, Direction.West, true, false, true),
+            15478 => new CherryFenceGateBlock(Identifier, Direction.West, true, false, false),
+            15479 => new CherryFenceGateBlock(Identifier, Direction.West, false, true, true),
+            15480 => new CherryFenceGateBlock(Identifier, Direction.West, false, true, false),
+            15481 => new CherryFenceGateBlock(Identifier, Direction.West, false, false, true),
+            15482 => new CherryFenceGateBlock(Identifier, Direction.West, false, false, false),
+            15483 => new CherryFenceGateBlock(Identifier, Direction.East, true, true, true),
+            15484 => new CherryFenceGateBlock(Identifier, Direction.East, true, true, false),
+            15485 => new CherryFenceGateBlock(Identifier, Direction.East, true, false, true),
+            15486 => new CherryFenceGateBlock(Identifier, Direction.East, true, false, false),
+            15487 => new CherryFenceGateBlock(Identifier, Direction.East, false, true, true),
+            15488 => new CherryFenceGateBlock(Identifier, Direction.East, false, true, false),
+            15489 => new CherryFenceGateBlock(Identifier, Direction.East, false, false, true),
+            15490 => new CherryFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

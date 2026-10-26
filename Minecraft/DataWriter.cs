@@ -1,8 +1,10 @@
 using System.Buffers.Binary;
 using System.Collections;
+using System.Runtime.InteropServices;
 using System.Text;
 using Minecraft.Data;
 using Minecraft.Registry;
+using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities.Meta;
 using Minecraft.Schemas.Vec;
@@ -10,76 +12,130 @@ using NBT;
 
 namespace Minecraft;
 
+/// <summary>
+/// The write half of the wire primitives. Either fills a growable buffer of its own or passes
+/// straight through to a <see cref="Stream"/>.
+/// </summary>
+/// <remarks>
+/// A buffer backed writer keeps its bytes in a plain <c>byte[]</c> rather than a <c>List&lt;byte&gt;</c>
+/// so that appending another writer, an array or a span is one <c>memmove</c>. A chunk packet is a
+/// hundred kilobytes assembled out of nested writers, and copying that a byte at a time costs more
+/// than everything that produced it.
+/// <p/>
+/// Not thread safe. A writer is a single packet being built by whoever is building it.
+/// </remarks>
 public class DataWriter : Stream, IWritable {
     public override bool CanRead => false;
     public override bool CanSeek => false;
     public override bool CanWrite => true;
-    public override long Length => _data?.Count ?? _stream!.Length;
+    public override long Length => _stream?.Length ?? _count;
 
     public override long Position {
-        get => _data?.Count ?? _stream!.Position;
+        get => _stream?.Position ?? _count;
         set => throw new NotSupportedException();
     }
 
-    private readonly List<byte>? _data;
+    /// <summary>Null when this writer passes through to <see cref="_stream"/>.</summary>
+    private byte[]? _buffer;
+
+    private int _count;
     private readonly Stream? _stream;
 
-    public byte[] ToArray() => _data?.ToArray()!;
-    
-    public List<byte>? GetRaw() => _data;
+    public byte[] ToArray() => _buffer == null ? null! : _buffer.AsSpan(0, _count).ToArray();
 
+    /// <summary>
+    /// The bytes written so far, without copying them. Empty for a stream backed writer, which has
+    /// nothing to hand back.
+    /// </summary>
+    /// <remarks>
+    /// Valid only until the next write, since that may grow the buffer and leave this pointing at the
+    /// old one.
+    /// </remarks>
+    public ReadOnlySpan<byte> AsSpan() => _buffer == null ? default : _buffer.AsSpan(0, _count);
+
+    [Obsolete("Use AsSpan, which does not copy. This rebuilds the list on every call.")]
+    public List<byte>? GetRaw() => _buffer == null ? null : [.. AsSpan()];
 
     public DataWriter() {
-        _data = [];
+        _buffer = [];
     }
-    
+
+    /// <param name="capacity">
+    /// How many bytes to allocate up front. Worth passing where the size is roughly known, since the
+    /// alternative is a doubling walk from nothing.
+    /// </param>
+    public DataWriter(int capacity) {
+        _buffer = capacity > 0 ? new byte[capacity] : [];
+    }
+
     public DataWriter(Stream stream) {
         _stream = stream;
     }
-    
+
     public DataWriter Write(byte[] value) {
-        if (_data == null) {
+        return Write((ReadOnlySpan<byte>)value);
+    }
+
+    /// <remarks>
+    /// Hides <see cref="Stream.Write(ReadOnlySpan{byte})"/> rather than overriding it, since that one
+    /// returns void and every writer here chains. Reaching this through a <see cref="Stream"/>
+    /// reference still lands in <see cref="Write(byte[], int, int)"/> below, which is the same copy.
+    /// </remarks>
+    public new DataWriter Write(ReadOnlySpan<byte> value) {
+        if (_buffer == null) {
             _stream!.Write(value);
+            return this;
         }
-        else {
-            _data.AddRange(value);
+
+        if (_count + value.Length > _buffer.Length) {
+            Grow(value.Length);
         }
+
+        value.CopyTo(_buffer.AsSpan(_count));
+        _count += value.Length;
         return this;
     }
-    
+
     public DataWriter Write(IEnumerable<byte> value) {
-        if (_data == null) {
-            foreach (byte b in value) {
-                _stream!.WriteByte(b);
-            }
+        if (value is byte[] array) {
+            return Write((ReadOnlySpan<byte>)array);
         }
-        else {
-            _data.AddRange(value);
+
+        if (value is List<byte> list) {
+            return Write(CollectionsMarshal.AsSpan(list));
+        }
+
+        foreach (byte b in value) {
+            Write(b);
         }
         return this;
     }
-    
+
     public DataWriter Write(Stream stream) {
-        if (_data == null) {
+        if (_buffer == null) {
             stream.CopyTo(_stream!);
+            return this;
         }
-        else {
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0) {
-                _data.AddRange(buffer.AsSpan(0, bytesRead).ToArray());
-            }
+
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0) {
+            Write(buffer.AsSpan(0, bytesRead));
         }
         return this;
     }
 
     public DataWriter Write(byte value) {
-        if (_data == null) {
+        if (_buffer == null) {
             _stream!.WriteByte(value);
+            return this;
         }
-        else {
-            _data.Add(value);
+
+        if (_count == _buffer.Length) {
+            Grow(1);
         }
+
+        _buffer[_count++] = value;
         return this;
     }
 
@@ -88,14 +144,38 @@ public class DataWriter : Stream, IWritable {
     /// </summary>
     /// <param name="w"></param>
     public void Write(DataWriter w) {
-        if (_data == null) {
+        if (_buffer == null) {
             w.Write(_stream!);
         }
         else {
-            foreach (byte b in _data) {
-                w.Write(b);
-            }
+            w.Write(AsSpan());
         }
+    }
+
+    /// <summary>
+    /// Makes room for at least <paramref name="needed"/> more bytes, doubling so that filling a
+    /// writer of any size stays linear.
+    /// </summary>
+    private void Grow(int needed) {
+        int required = _count + needed;
+        int capacity = Math.Max(_buffer!.Length * 2, 64);
+        while (capacity < required) {
+            capacity *= 2;
+        }
+
+        Array.Resize(ref _buffer, capacity);
+    }
+
+    /// <summary>How many bytes <see cref="WriteVarInt"/> would write for a value.</summary>
+    public static int VarIntSize(int value) {
+        int size = 1;
+        uint remaining = (uint)value >> 7;
+        while (remaining != 0) {
+            size++;
+            remaining >>= 7;
+        }
+
+        return size;
     }
 
     public DataWriter Write(IWritable writable) {
@@ -186,6 +266,10 @@ public class DataWriter : Stream, IWritable {
             .WriteFloat(value.Z);
     }
     
+    public DataWriter WriteLpVec3(Vec3<double> value) {
+        return LpVec3.Write(this, value);
+    }
+
     public DataWriter WriteQuaternion(Quaternion value) {
         return WriteFloat(value.X)
             .WriteFloat(value.Y)
@@ -195,60 +279,98 @@ public class DataWriter : Stream, IWritable {
     
     // A single-precision 32-bit IEEE 754 floating point number, big endian
     public DataWriter WriteFloat(float value) {
-        byte[] buffer = BitConverter.GetBytes(value);
-        if (BitConverter.IsLittleEndian) {
-            Array.Reverse(buffer); // Convert to big-endian
-        }
+        Span<byte> buffer = stackalloc byte[sizeof(float)];
+        BinaryPrimitives.WriteSingleBigEndian(buffer, value);
         return Write(buffer);
     }
-    
+
     // Signed 32-bit integer, two's complement
     public DataWriter WriteInteger(int value) {
-        byte[] buffer = new byte[4];
-        buffer[0] = (byte)(value >> 24); // High byte first (big-endian)
-        buffer[1] = (byte)(value >> 16);
-        buffer[2] = (byte)(value >> 8);
-        buffer[3] = (byte)(value & 0xFF); // Low byte last
+        Span<byte> buffer = stackalloc byte[sizeof(int)];
+        BinaryPrimitives.WriteInt32BigEndian(buffer, value);
         return Write(buffer);
     }
-    
+
     // A double-precision 64-bit IEEE 754 floating point number, big endian
     public DataWriter WriteDouble(double value) {
-        byte[] buffer = BitConverter.GetBytes(value);
-        if (BitConverter.IsLittleEndian) {
-            Array.Reverse(buffer); // Convert to big-endian
-        }
+        Span<byte> buffer = stackalloc byte[sizeof(double)];
+        BinaryPrimitives.WriteDoubleBigEndian(buffer, value);
         return Write(buffer);
     }
 
     public DataWriter WriteString(string value) {
-        byte[] bs = Encoding.UTF8.GetBytes(value);
-        WriteVarInt(bs.Length);
-        Write(bs);
-        return this;
+        int bytes = Encoding.UTF8.GetByteCount(value);
+        WriteVarInt(bytes);
+
+        if (_buffer != null) {
+            if (_count + bytes > _buffer.Length) {
+                Grow(bytes);
+            }
+
+            Encoding.UTF8.GetBytes(value, _buffer.AsSpan(_count));
+            _count += bytes;
+            return this;
+        }
+
+        return Write(Encoding.UTF8.GetBytes(value));
     }
 
     public DataWriter WriteUShort(ushort value) {
-        byte[] buffer = new byte[2];
-        buffer[0] = (byte)(value >> 8);      // High byte first (big-endian)
-        buffer[1] = (byte)(value & 0xFF);    // Low byte second
+        Span<byte> buffer = stackalloc byte[sizeof(ushort)];
+        BinaryPrimitives.WriteUInt16BigEndian(buffer, value);
         return Write(buffer);
     }
-    
+
     // Signed 16-bit integer, two's complement
     public DataWriter WriteShort(short value) {
-        Span<byte> span = new(new byte[sizeof(short)]);
-        BinaryPrimitives.WriteInt16BigEndian(span, value);
-        return Write(span.ToArray());
+        Span<byte> buffer = stackalloc byte[sizeof(short)];
+        BinaryPrimitives.WriteInt16BigEndian(buffer, value);
+        return Write(buffer);
     }
-    
+
     // writes a signed 64-bit integer (two's complement)
     public DataWriter WriteLong(long value) {
-        byte[] buffer = new byte[8];
-        for (int i = 0; i < 8; i++) {
-            buffer[i] = (byte)((value >> (56 - i * 8)) & 0xFF); // Big-endian
-        }
+        Span<byte> buffer = stackalloc byte[sizeof(long)];
+        BinaryPrimitives.WriteInt64BigEndian(buffer, value);
         return Write(buffer);
+    }
+
+    /// <summary>
+    /// Every long of an array, big endian and without a length prefix.
+    /// </summary>
+    /// <remarks>
+    /// A bulk path rather than <see cref="WriteArray{T}"/> with a delegate, because the callers are
+    /// the packed data arrays a chunk section and a light section are made of, and those are the
+    /// longest arrays on the wire.
+    /// </remarks>
+    public DataWriter WriteArray(ReadOnlySpan<long> values) {
+        if (_buffer == null) {
+            foreach (long value in values) {
+                WriteLong(value);
+            }
+            return this;
+        }
+
+        int bytes = values.Length * sizeof(long);
+        if (_count + bytes > _buffer.Length) {
+            Grow(bytes);
+        }
+
+        Span<byte> destination = _buffer.AsSpan(_count, bytes);
+        for (int i = 0; i < values.Length; i++) {
+            BinaryPrimitives.WriteInt64BigEndian(destination[(i * sizeof(long))..], values[i]);
+        }
+
+        _count += bytes;
+        return this;
+    }
+
+    public DataWriter WritePrefixedArray(ReadOnlySpan<long> values) {
+        return WriteVarInt(values.Length).WriteArray(values);
+    }
+
+    public DataWriter WritePrefixedArray(ReadOnlySpan<byte> values) {
+        return WriteVarInt(values.Length).Write(values);
     }
     
     // To an N-bit integer represented as a BitArray in big-endian order.
@@ -288,15 +410,11 @@ public class DataWriter : Stream, IWritable {
        will be on the last byte of the long on the wire.
      */
     public DataWriter WritePacketDataArray(int bitsPerEntry, ushort[] entries) {
-        long[] packed = PackToLongArray(bitsPerEntry, entries);
-        WriteArray(packed, (l, w) => w.WriteLong(l));
-        return this;
+        return WriteArray((ReadOnlySpan<long>)PackToLongArray(bitsPerEntry, entries));
     }
-    
+
     public DataWriter WritePrefixedPacketDataArray(int bitsPerEntry, ushort[] entries) {
-        long[] packed = PackToLongArray(bitsPerEntry, entries);
-        WritePrefixedArray(packed, (l, w) => w.WriteLong(l));
-        return this;
+        return WritePrefixedArray((ReadOnlySpan<long>)PackToLongArray(bitsPerEntry, entries));
     }
     
     public static long[] PackToLongArray(int bitsPerEntry, ushort[] data) {
@@ -316,7 +434,36 @@ public class DataWriter : Stream, IWritable {
 
         return outp;
     }
-    
+
+    /// <summary>
+    /// <see cref="WritePacketDataArray(int,ushort[])"/> over 32 bit entries.
+    /// </summary>
+    /// <remarks>
+    /// The <see cref="ushort"/> pair cannot carry a direct palette, whose entries are raw block state
+    /// ids and need more than sixteen bits once the registry passes 65536 states. It also cannot take
+    /// a span, so a caller with a staging buffer has to copy first.
+    /// </remarks>
+    public DataWriter WritePacketDataArray(int bitsPerEntry, ReadOnlySpan<uint> entries) {
+        return WriteArray((ReadOnlySpan<long>)PackToLongArray(bitsPerEntry, entries));
+    }
+
+    public DataWriter WritePrefixedPacketDataArray(int bitsPerEntry, ReadOnlySpan<uint> entries) {
+        return WritePrefixedArray((ReadOnlySpan<long>)PackToLongArray(bitsPerEntry, entries));
+    }
+
+    public static long[] PackToLongArray(int bitsPerEntry, ReadOnlySpan<uint> data) {
+        int entriesPerLong = 64 / bitsPerEntry;  // entries never straddle a long
+        int longCount = (data.Length + entriesPerLong - 1) / entriesPerLong;
+        long[] outp = new long[longCount];
+
+        long mask = bitsPerEntry == 64 ? -1L : (1L << bitsPerEntry) - 1L;
+        for (int i = 0; i < data.Length; i++) {
+            outp[i / entriesPerLong] |= (data[i] & mask) << (bitsPerEntry * (i % entriesPerLong));
+        }
+
+        return outp;
+    }
+
     /// <summary>
     /// Deprecated data array writer method that packs data into longs.
     /// Use significantly faster <see cref="WritePacketDataArray"/> instead.
@@ -418,12 +565,7 @@ public class DataWriter : Stream, IWritable {
         long y = value.Y & 0xFFF;     // mask to 12 bits
 
         long packed = (x << 38) | (z << 12) | y;
-
-        // Write 8 bytes, big-endian:
-        for (int shift = 56; shift >= 0; shift -= 8) {
-            Write((byte)((packed >> shift) & 0xFF));
-        }
-        return this;
+        return WriteLong(packed);
     }
 
     public DataWriter WritePrefixedOptional<T>(T? value, Action<T, DataWriter> writer) where T : class {
@@ -520,6 +662,21 @@ public class DataWriter : Stream, IWritable {
         return WriteIdOr(idOr, idResolver, (type, writer) => type.WriteData(writer, reg));
     }
 
+    /// <summary>
+    /// Writes a vanilla <c>Holder</c>: an entry the registry holds as its id plus one, and anything
+    /// else inline behind a zero.
+    /// </summary>
+    public DataWriter WriteHolder<T>(T value, IProtocolTypeRegistry registry, Action<T, DataWriter> inlineWriter)
+        where T : IProtocolType {
+        if (registry.Contains(value.Identifier)) {
+            return WriteVarInt(registry.GetProtocolId(value) + 1);
+        }
+
+        WriteVarInt(0);
+        inlineWriter.Invoke(value, this);
+        return this;
+    }
+
     public DataWriter WritePrefixedArray<T>(T[] values, Action<T, DataWriter> writerAction) {
         return WriteVarInt(values.Length).WriteArray(values, writerAction);
     }
@@ -560,8 +717,6 @@ public class DataWriter : Stream, IWritable {
             throw new ArgumentOutOfRangeException(nameof(count), "Offset and count must be within the bounds of the buffer.");
         }
 
-        for (int i = offset; i < offset + count; i++) {
-            Write(buffer[i]);
-        }
+        Write(buffer.AsSpan(offset, count));
     }
 }

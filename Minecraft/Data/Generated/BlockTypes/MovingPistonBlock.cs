@@ -3,61 +3,88 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record MovingPistonBlock(Identifier Identifier, MovingPistonBlock.Type TypeValue, Cardinal Facing) : IBlock {
-    public Identifier Category => "minecraft:moving_piston";
-    public double Hardness => -1;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:piston";
-    public Identifier? Item => null;
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Block;
-    public int MapColorId => 11;
-    public string TranslationKey => "block.minecraft.moving_piston";
-    public bool CanRespawnIn => false;
+public record MovingPistonBlock(Identifier Identifier, MovingPistonBlock.Type TypeValue, Cardinal Facing) : IBlock, IDirectional {
+    private static readonly BlockInfo Data = new("block.minecraft.moving_piston", 0f, 0.6f, 1f, 1f, 0f, 0f, false, true, BlockOffsetType.None, 0f, 0f, "minecraft:piston", null, BlockInfo.VanillaOnly, null);
+    private static readonly BlockStateInfo I0 = new(-1f, 0, 0, PushReaction.Immoveable, 11, "stone", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Cardinal facing) => this with { Facing = facing };
 
 
     public uint StateId {
         get {
             return TypeValue switch {
                 Type.Normal => Facing switch {
-                    Cardinal.North => 2109,
-                    Cardinal.East => 2111,
-                    Cardinal.South => 2113,
-                    Cardinal.West => 2115,
-                    Cardinal.Up => 2117,
-                    Cardinal.Down => 2119,
+                    Cardinal.North => 3801,
+                    Cardinal.East => 3803,
+                    Cardinal.South => 3805,
+                    Cardinal.West => 3807,
+                    Cardinal.Up => 3809,
+                    Cardinal.Down => 3811,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 Type.Sticky => Facing switch {
-                    Cardinal.North => 2110,
-                    Cardinal.East => 2112,
-                    Cardinal.South => 2114,
-                    Cardinal.West => 2116,
-                    Cardinal.Up => 2118,
-                    Cardinal.Down => 2120,
+                    Cardinal.North => 3802,
+                    Cardinal.East => 3804,
+                    Cardinal.South => 3806,
+                    Cardinal.West => 3808,
+                    Cardinal.Up => 3810,
+                    Cardinal.Down => 3812,
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(TypeValue), TypeValue, "Unknown value for property type.")
@@ -67,18 +94,18 @@ public record MovingPistonBlock(Identifier Identifier, MovingPistonBlock.Type Ty
     
     public IBlock WithState(uint state) {
         return state switch {
-            2109 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.North),
-            2110 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.North),
-            2111 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.East),
-            2112 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.East),
-            2113 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.South),
-            2114 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.South),
-            2115 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.West),
-            2116 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.West),
-            2117 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.Up),
-            2118 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.Up),
-            2119 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.Down),
-            2120 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.Down),
+            3801 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.North),
+            3802 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.North),
+            3803 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.East),
+            3804 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.East),
+            3805 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.South),
+            3806 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.South),
+            3807 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.West),
+            3808 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.West),
+            3809 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.Up),
+            3810 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.Up),
+            3811 => new MovingPistonBlock(Identifier, Type.Normal, Cardinal.Down),
+            3812 => new MovingPistonBlock(Identifier, Type.Sticky, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

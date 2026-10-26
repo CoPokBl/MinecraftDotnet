@@ -41,7 +41,7 @@ public class CommandsFeature : ScopedFeature {
         string[] cmdAndArgs = rawCmd.Split(' ', 2);
         string cmd = cmdAndArgs[0];
         
-        Command? command = Scope.Server.Commands.FirstOrDefault(c => c.CommandName.Equals(cmd, StringComparison.OrdinalIgnoreCase));
+        Command? command = Scope.Server.Commands.FirstOrDefault(c => c.MatchesName(cmd));
         if (command == null || !command.Condition(player)) {
             player.SendMessage(TextComponent.FromLegacyString("&cUnknown command: " + cmd));
             return;
@@ -69,7 +69,7 @@ public class CommandsFeature : ScopedFeature {
         string[] split = argsStr.Split(' ', 2);
         string? subCmdStr = split.Length > 0 ? split[0] : null;
         foreach (Command subCmd in command.Subcommands) {
-            if (!subCmd.CommandName.Equals(subCmdStr, StringComparison.InvariantCultureIgnoreCase)) continue;
+            if (!subCmd.MatchesName(subCmdStr)) continue;
             
             string remainingArgs = split.Length > 1 ? split[1] : string.Empty;
             return HandlePlayerCommand(player, subCmd, remainingArgs, rawCmd);
@@ -122,7 +122,7 @@ public class CommandsFeature : ScopedFeature {
                 continue;
             }
             
-            rootCmdIndexes.Add(BuildCommand(command, player, graph));
+            rootCmdIndexes.AddRange(BuildCommand(command, player, graph));
         }
         
         // Set the root node's children indexes
@@ -136,14 +136,14 @@ public class CommandsFeature : ScopedFeature {
         };
     }
 
-    // returns the index of the comamnd's root node in the graph
-    private int BuildCommand(Command command, Player player, List<ICommandNode> graph) {
+    // returns the indexes the parent should adopt as children: the command's root node,
+    // followed by a redirect node for each of its aliases
+    public static int[] BuildCommand(Command command, Player player, List<ICommandNode> graph) {
         // Add the root literal node for the command
         List<int> childrenIndexes = [];
-        
+
         foreach (Command subCmd in command.Subcommands) {
-            int subCmdIndex = BuildCommand(subCmd, player, graph);
-            childrenIndexes.Add(subCmdIndex);
+            childrenIndexes.AddRange(BuildCommand(subCmd, player, graph));
         }
         
         List<(CommandSyntax syntax, ArgumentNode[] argNodes)> syntaxNodes = [];
@@ -183,10 +183,17 @@ public class CommandsFeature : ScopedFeature {
         }
         graph[rootNodeIndex] = new LiteralNode(flags, childrenIndexes.ToArray(), null, command.CommandName, null);
 
-        return rootNodeIndex;
+        // Aliases are childless literals that redirect to the real node
+        List<int> indexes = [rootNodeIndex];
+        foreach (string alias in command.Aliases) {
+            indexes.Add(graph.Count);
+            graph.Add(new LiteralNode(flags | CommandNodeFlag.HasRedirect, [], rootNodeIndex, alias, null));
+        }
+
+        return indexes.ToArray();
     }
 
-    private (CommandSyntax syntax, ArgumentNode[] argNodes) BuildSyntax(CommandSyntax syntax, Player player) {
+    private static (CommandSyntax syntax, ArgumentNode[] argNodes) BuildSyntax(CommandSyntax syntax, Player player) {
         List<ArgumentNode> argNodes = [];
         for (int i = 0; i < syntax.Arguments.Length; i++) {
             IArgument arg = syntax.Arguments[i];

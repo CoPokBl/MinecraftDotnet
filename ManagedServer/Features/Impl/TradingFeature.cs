@@ -13,15 +13,6 @@ namespace ManagedServer.Features.Impl;
 public class TradingFeature : ScopedFeature {
     private static readonly Tag<int> SelectedTradeTag = new("managedserver:trading_feature:selected_trade");
     
-    // it's reversed slot index order for some reason
-    // I hate minecraft inventories
-    private static readonly int[] BadItemRemoveSlotSearchOrder = 
-        Enumerable.Range(
-            PlayerInventory.RegularInventoryStartIndex, 
-            PlayerInventory.HotbarSlot9 + 1 - PlayerInventory.RegularInventoryStartIndex)
-            .Reverse()
-            .ToArray();
-    
     public override void Register() {
         AddEventHandler<PlayerPacketHandleEvent>(e => {
             if (e.Packet is not ServerBoundSelectTradePacket packet) {
@@ -47,8 +38,9 @@ public class TradingFeature : ScopedFeature {
                     continue;
                 }
                 
+                // Backwards, as everything a window hands back arrives.
                 bool foundSpot = e.Player.Inventory.AddItem(
-                    tradeInv[i], true, BadItemRemoveSlotSearchOrder) == null;
+                    tradeInv[i], true, PlayerInventory.BackwardsQuickMoveSlots) == null;
 
                 if (!foundSpot) {
                     // Couldn't find a spot, just stop everything here

@@ -3,60 +3,96 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facing FacingValue) : IBlock {
-    public Identifier Category => "minecraft:hopper";
-    public double Hardness => 3;
-    public double ExplosionResistance => 4.8;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "metal";
-    public Identifier? BlockEntity => "minecraft:hopper";
-    public Identifier? Item => "minecraft:hopper";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 0.6875, 0.625], AABB[0.25, 0.25, 0.25] -> [0.375, 0.6875, 0.75], AABB[0.375, 0.25, 0.25] -> [0.75, 0.6875, 0.375], AABB[0.375, 0.25, 0.625] -> [0.75, 0.6875, 0.75], AABB[0.625, 0.25, 0.375] -> [0.75, 0.6875, 0.625], AABB[0.0, 0.625, 0.0] -> [0.25, 0.6875, 1.0], AABB[0.25, 0.625, 0.0] -> [1.0, 0.6875, 0.25], AABB[0.25, 0.625, 0.75] -> [1.0, 0.6875, 1.0], AABB[0.75, 0.625, 0.25] -> [1.0, 0.6875, 0.75], AABB[0.0, 0.6875, 0.0] -> [0.125, 1.0, 1.0], AABB[0.125, 0.6875, 0.0] -> [1.0, 1.0, 0.125], AABB[0.125, 0.6875, 0.875] -> [1.0, 1.0, 1.0], AABB[0.875, 0.6875, 0.125] -> [1.0, 1.0, 0.875]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 0.6875, 0.625], AABB[0.25, 0.25, 0.25] -> [0.375, 0.6875, 0.75], AABB[0.375, 0.25, 0.25] -> [0.75, 0.6875, 0.375], AABB[0.375, 0.25, 0.625] -> [0.75, 0.6875, 0.75], AABB[0.625, 0.25, 0.375] -> [0.75, 0.6875, 0.625], AABB[0.0, 0.625, 0.0] -> [0.25, 0.6875, 1.0], AABB[0.25, 0.625, 0.0] -> [1.0, 0.6875, 0.25], AABB[0.25, 0.625, 0.75] -> [1.0, 0.6875, 1.0], AABB[0.75, 0.625, 0.25] -> [1.0, 0.6875, 0.75], AABB[0.0, 0.6875, 0.0] -> [0.125, 1.0, 1.0], AABB[0.125, 0.6875, 0.0] -> [1.0, 1.0, 0.125], AABB[0.125, 0.6875, 0.875] -> [1.0, 1.0, 1.0], AABB[0.875, 0.6875, 0.125] -> [1.0, 1.0, 0.875]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.125, 0.6875, 0.125] -> [0.875, 1.0, 0.875]]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 0.6875, 0.625], AABB[0.25, 0.25, 0.25] -> [0.375, 0.6875, 0.75], AABB[0.375, 0.25, 0.25] -> [0.75, 0.6875, 0.375], AABB[0.375, 0.25, 0.625] -> [0.75, 0.6875, 0.75], AABB[0.625, 0.25, 0.375] -> [0.75, 0.6875, 0.625], AABB[0.0, 0.625, 0.0] -> [0.25, 0.6875, 1.0], AABB[0.25, 0.625, 0.0] -> [1.0, 0.6875, 0.25], AABB[0.25, 0.625, 0.75] -> [1.0, 0.6875, 1.0], AABB[0.75, 0.625, 0.25] -> [1.0, 0.6875, 0.75], AABB[0.0, 0.6875, 0.0] -> [0.125, 1.0, 1.0], AABB[0.125, 0.6875, 0.0] -> [1.0, 1.0, 0.125], AABB[0.125, 0.6875, 0.875] -> [1.0, 1.0, 1.0], AABB[0.875, 0.6875, 0.125] -> [1.0, 1.0, 0.875]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 11;
-    public string TranslationKey => "block.minecraft.hopper";
-    public bool CanRespawnIn => false;
+public record HopperBlock(Identifier Identifier, bool Enabled, HopperDirection Facing) : IBlock, IEnabled, IHopperFacing {
+    private static readonly BlockInfo Data = new("block.minecraft.hopper", 4.8f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hopper", "minecraft:hopper", BlockInfo.VanillaOnly, "minecraft:blocks/hopper");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 0, PushReaction.PushPull, 11, "metal", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S602, BlockShapes.S602, BlockShapes.S603, BlockShapes.S1, BlockShapes.S602, BlockShapes.S602);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S604, CollisionShape = BlockShapes.S604, InteractionShape = BlockShapes.S605, VisualShape = BlockShapes.S604, SupportShape = BlockShapes.S604 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S606, CollisionShape = BlockShapes.S606, InteractionShape = BlockShapes.S607, VisualShape = BlockShapes.S606, SupportShape = BlockShapes.S606 };
+    private static readonly BlockStateInfo I3 = I0 with { BlockShape = BlockShapes.S608, CollisionShape = BlockShapes.S608, InteractionShape = BlockShapes.S609, VisualShape = BlockShapes.S608, SupportShape = BlockShapes.S608 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S610, CollisionShape = BlockShapes.S610, InteractionShape = BlockShapes.S611, VisualShape = BlockShapes.S610, SupportShape = BlockShapes.S610 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I0, I1, I2, I3, I4
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 13080];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithEnabled(bool enabled) => this with { Enabled = enabled };
+
+    public IBlock WithFacing(HopperDirection facing) => this with { Facing = facing };
 
 
     public uint StateId {
         get {
             return Enabled switch {
-                true => FacingValue switch {
-                    Facing.Down => 11111,
-                    Facing.North => 11112,
-                    Facing.South => 11113,
-                    Facing.West => 11114,
-                    Facing.East => 11115,
-                    _ => throw new ArgumentOutOfRangeException(nameof(FacingValue), FacingValue, "Unknown value for property facing.")
+                true => Facing switch {
+                    HopperDirection.Down => 13080,
+                    HopperDirection.North => 13081,
+                    HopperDirection.South => 13082,
+                    HopperDirection.West => 13083,
+                    HopperDirection.East => 13084,
+                    _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
-                false => FacingValue switch {
-                    Facing.Down => 11116,
-                    Facing.North => 11117,
-                    Facing.South => 11118,
-                    Facing.West => 11119,
-                    Facing.East => 11120,
-                    _ => throw new ArgumentOutOfRangeException(nameof(FacingValue), FacingValue, "Unknown value for property facing.")
+                false => Facing switch {
+                    HopperDirection.Down => 13085,
+                    HopperDirection.North => 13086,
+                    HopperDirection.South => 13087,
+                    HopperDirection.West => 13088,
+                    HopperDirection.East => 13089,
+                    _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
             };
         }
@@ -64,16 +100,16 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     
     public IBlock WithState(uint state) {
         return state switch {
-            11111 => new HopperBlock(Identifier, true, Facing.Down),
-            11112 => new HopperBlock(Identifier, true, Facing.North),
-            11113 => new HopperBlock(Identifier, true, Facing.South),
-            11114 => new HopperBlock(Identifier, true, Facing.West),
-            11115 => new HopperBlock(Identifier, true, Facing.East),
-            11116 => new HopperBlock(Identifier, false, Facing.Down),
-            11117 => new HopperBlock(Identifier, false, Facing.North),
-            11118 => new HopperBlock(Identifier, false, Facing.South),
-            11119 => new HopperBlock(Identifier, false, Facing.West),
-            11120 => new HopperBlock(Identifier, false, Facing.East),
+            13080 => new HopperBlock(Identifier, true, HopperDirection.Down),
+            13081 => new HopperBlock(Identifier, true, HopperDirection.North),
+            13082 => new HopperBlock(Identifier, true, HopperDirection.South),
+            13083 => new HopperBlock(Identifier, true, HopperDirection.West),
+            13084 => new HopperBlock(Identifier, true, HopperDirection.East),
+            13085 => new HopperBlock(Identifier, false, HopperDirection.Down),
+            13086 => new HopperBlock(Identifier, false, HopperDirection.North),
+            13087 => new HopperBlock(Identifier, false, HopperDirection.South),
+            13088 => new HopperBlock(Identifier, false, HopperDirection.West),
+            13089 => new HopperBlock(Identifier, false, HopperDirection.East),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
@@ -81,44 +117,15 @@ public record HopperBlock(Identifier Identifier, bool Enabled, HopperBlock.Facin
     public IBlock WithState(CompoundTag properties) {
         return this with {
             Enabled = properties.Contains("enabled") ? properties["enabled"].GetString() == "true" : Enabled,
-            FacingValue = properties.Contains("facing") ? FacingFromString(properties["facing"].GetString()) : FacingValue,
+            Facing = properties.Contains("facing") ? HopperDirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
         };
     }
     
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
             ("enabled", new StringTag(Enabled.ToString().ToLower())),
-            ("facing", new StringTag(FacingToName(FacingValue)))
+            ("facing", new StringTag(Facing.ToName()))
         );
     }
     
-    public enum Facing {
-        Down,
-        North,
-        South,
-        West,
-        East,
-    }
-
-    public static Facing FacingFromString(string value) {
-        return value switch {
-            "down" => Facing.Down,
-            "north" => Facing.North,
-            "south" => Facing.South,
-            "west" => Facing.West,
-            "east" => Facing.East,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Facing.")
-        };
-    }
-
-    public static string FacingToName(Facing value) {
-        return value switch {
-            Facing.Down => "down",
-            Facing.North => "north",
-            Facing.South => "south",
-            Facing.West => "west",
-            Facing.East => "east",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Facing value.")
-        };
-    }
 }

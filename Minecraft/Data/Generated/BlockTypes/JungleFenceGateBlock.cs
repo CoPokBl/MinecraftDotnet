@@ -3,40 +3,83 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record JungleFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock {
-    public Identifier Category => "minecraft:fence_gate";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:jungle_fence_gate";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.375] -> [1.0, 1.0, 0.625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.375] -> [1.0, 1.5, 0.625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.3125, 0.4375] -> [0.125, 1.0, 0.5625], AABB[0.875, 0.3125, 0.4375] -> [1.0, 1.0, 0.5625]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.375] -> [1.0, 1.5, 0.625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 10;
-    public string TranslationKey => "block.minecraft.jungle_fence_gate";
-    public bool CanRespawnIn => false;
+public record JungleFenceGateBlock(Identifier Identifier, Direction Facing, bool InWall, bool Open, bool Powered) : IBlock, IHorizontalFacing, IInWall, IOpenable, IPowered {
+    private static readonly BlockInfo Data = new("block.minecraft.jungle_fence_gate", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_fence_gate", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_fence_gate");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.PushPull, 10, "wood", NoteBlockInstrument.Bass, false, true, false, true, false, false, false, true, false, false, false, false, false, false, true, true, false, true, [], null, BlockShapes.S68, BlockShapes.S1, BlockShapes.S1, BlockShapes.S69, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { PathfindableLand = false, PathfindableAir = false, CollisionShape = BlockShapes.S40, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S39, OcclusionShape = BlockShapes.S71 };
+    private static readonly BlockStateInfo I3 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S71, VisualShape = BlockShapes.S40, SupportShape = BlockShapes.S70 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S72, OcclusionShape = BlockShapes.S73 };
+    private static readonly BlockStateInfo I5 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S72, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S73, VisualShape = BlockShapes.S49, SupportShape = BlockShapes.S74 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S48, OcclusionShape = BlockShapes.S75 };
+    private static readonly BlockStateInfo I7 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S75, VisualShape = BlockShapes.S49, SupportShape = BlockShapes.S74 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I0, I1, I1, I2, I2, I3, I3, I0, I0, I1, I1, I2, I2, I3, I3, I4, I4, I5, I5, I6, I6, I7, I7, I4, I4, I5, I5, I6, I6, I7, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 15395];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithInWall(bool inWall) => this with { InWall = inWall };
+
+    public IBlock WithOpen(bool open) => this with { Open = open };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
 
 
     public uint StateId {
@@ -45,88 +88,88 @@ public record JungleFenceGateBlock(Identifier Identifier, Direction Facing, bool
                 Direction.North => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13346,
-                            false => 13347,
+                            true => 15395,
+                            false => 15396,
                         },
                         false => Powered switch {
-                            true => 13348,
-                            false => 13349,
+                            true => 15397,
+                            false => 15398,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13350,
-                            false => 13351,
+                            true => 15399,
+                            false => 15400,
                         },
                         false => Powered switch {
-                            true => 13352,
-                            false => 13353,
+                            true => 15401,
+                            false => 15402,
                         },
                     },
                 },
                 Direction.South => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13354,
-                            false => 13355,
+                            true => 15403,
+                            false => 15404,
                         },
                         false => Powered switch {
-                            true => 13356,
-                            false => 13357,
+                            true => 15405,
+                            false => 15406,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13358,
-                            false => 13359,
+                            true => 15407,
+                            false => 15408,
                         },
                         false => Powered switch {
-                            true => 13360,
-                            false => 13361,
+                            true => 15409,
+                            false => 15410,
                         },
                     },
                 },
                 Direction.West => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13362,
-                            false => 13363,
+                            true => 15411,
+                            false => 15412,
                         },
                         false => Powered switch {
-                            true => 13364,
-                            false => 13365,
+                            true => 15413,
+                            false => 15414,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13366,
-                            false => 13367,
+                            true => 15415,
+                            false => 15416,
                         },
                         false => Powered switch {
-                            true => 13368,
-                            false => 13369,
+                            true => 15417,
+                            false => 15418,
                         },
                     },
                 },
                 Direction.East => InWall switch {
                     true => Open switch {
                         true => Powered switch {
-                            true => 13370,
-                            false => 13371,
+                            true => 15419,
+                            false => 15420,
                         },
                         false => Powered switch {
-                            true => 13372,
-                            false => 13373,
+                            true => 15421,
+                            false => 15422,
                         },
                     },
                     false => Open switch {
                         true => Powered switch {
-                            true => 13374,
-                            false => 13375,
+                            true => 15423,
+                            false => 15424,
                         },
                         false => Powered switch {
-                            true => 13376,
-                            false => 13377,
+                            true => 15425,
+                            false => 15426,
                         },
                     },
                 },
@@ -137,38 +180,38 @@ public record JungleFenceGateBlock(Identifier Identifier, Direction Facing, bool
     
     public IBlock WithState(uint state) {
         return state switch {
-            13346 => new JungleFenceGateBlock(Identifier, Direction.North, true, true, true),
-            13347 => new JungleFenceGateBlock(Identifier, Direction.North, true, true, false),
-            13348 => new JungleFenceGateBlock(Identifier, Direction.North, true, false, true),
-            13349 => new JungleFenceGateBlock(Identifier, Direction.North, true, false, false),
-            13350 => new JungleFenceGateBlock(Identifier, Direction.North, false, true, true),
-            13351 => new JungleFenceGateBlock(Identifier, Direction.North, false, true, false),
-            13352 => new JungleFenceGateBlock(Identifier, Direction.North, false, false, true),
-            13353 => new JungleFenceGateBlock(Identifier, Direction.North, false, false, false),
-            13354 => new JungleFenceGateBlock(Identifier, Direction.South, true, true, true),
-            13355 => new JungleFenceGateBlock(Identifier, Direction.South, true, true, false),
-            13356 => new JungleFenceGateBlock(Identifier, Direction.South, true, false, true),
-            13357 => new JungleFenceGateBlock(Identifier, Direction.South, true, false, false),
-            13358 => new JungleFenceGateBlock(Identifier, Direction.South, false, true, true),
-            13359 => new JungleFenceGateBlock(Identifier, Direction.South, false, true, false),
-            13360 => new JungleFenceGateBlock(Identifier, Direction.South, false, false, true),
-            13361 => new JungleFenceGateBlock(Identifier, Direction.South, false, false, false),
-            13362 => new JungleFenceGateBlock(Identifier, Direction.West, true, true, true),
-            13363 => new JungleFenceGateBlock(Identifier, Direction.West, true, true, false),
-            13364 => new JungleFenceGateBlock(Identifier, Direction.West, true, false, true),
-            13365 => new JungleFenceGateBlock(Identifier, Direction.West, true, false, false),
-            13366 => new JungleFenceGateBlock(Identifier, Direction.West, false, true, true),
-            13367 => new JungleFenceGateBlock(Identifier, Direction.West, false, true, false),
-            13368 => new JungleFenceGateBlock(Identifier, Direction.West, false, false, true),
-            13369 => new JungleFenceGateBlock(Identifier, Direction.West, false, false, false),
-            13370 => new JungleFenceGateBlock(Identifier, Direction.East, true, true, true),
-            13371 => new JungleFenceGateBlock(Identifier, Direction.East, true, true, false),
-            13372 => new JungleFenceGateBlock(Identifier, Direction.East, true, false, true),
-            13373 => new JungleFenceGateBlock(Identifier, Direction.East, true, false, false),
-            13374 => new JungleFenceGateBlock(Identifier, Direction.East, false, true, true),
-            13375 => new JungleFenceGateBlock(Identifier, Direction.East, false, true, false),
-            13376 => new JungleFenceGateBlock(Identifier, Direction.East, false, false, true),
-            13377 => new JungleFenceGateBlock(Identifier, Direction.East, false, false, false),
+            15395 => new JungleFenceGateBlock(Identifier, Direction.North, true, true, true),
+            15396 => new JungleFenceGateBlock(Identifier, Direction.North, true, true, false),
+            15397 => new JungleFenceGateBlock(Identifier, Direction.North, true, false, true),
+            15398 => new JungleFenceGateBlock(Identifier, Direction.North, true, false, false),
+            15399 => new JungleFenceGateBlock(Identifier, Direction.North, false, true, true),
+            15400 => new JungleFenceGateBlock(Identifier, Direction.North, false, true, false),
+            15401 => new JungleFenceGateBlock(Identifier, Direction.North, false, false, true),
+            15402 => new JungleFenceGateBlock(Identifier, Direction.North, false, false, false),
+            15403 => new JungleFenceGateBlock(Identifier, Direction.South, true, true, true),
+            15404 => new JungleFenceGateBlock(Identifier, Direction.South, true, true, false),
+            15405 => new JungleFenceGateBlock(Identifier, Direction.South, true, false, true),
+            15406 => new JungleFenceGateBlock(Identifier, Direction.South, true, false, false),
+            15407 => new JungleFenceGateBlock(Identifier, Direction.South, false, true, true),
+            15408 => new JungleFenceGateBlock(Identifier, Direction.South, false, true, false),
+            15409 => new JungleFenceGateBlock(Identifier, Direction.South, false, false, true),
+            15410 => new JungleFenceGateBlock(Identifier, Direction.South, false, false, false),
+            15411 => new JungleFenceGateBlock(Identifier, Direction.West, true, true, true),
+            15412 => new JungleFenceGateBlock(Identifier, Direction.West, true, true, false),
+            15413 => new JungleFenceGateBlock(Identifier, Direction.West, true, false, true),
+            15414 => new JungleFenceGateBlock(Identifier, Direction.West, true, false, false),
+            15415 => new JungleFenceGateBlock(Identifier, Direction.West, false, true, true),
+            15416 => new JungleFenceGateBlock(Identifier, Direction.West, false, true, false),
+            15417 => new JungleFenceGateBlock(Identifier, Direction.West, false, false, true),
+            15418 => new JungleFenceGateBlock(Identifier, Direction.West, false, false, false),
+            15419 => new JungleFenceGateBlock(Identifier, Direction.East, true, true, true),
+            15420 => new JungleFenceGateBlock(Identifier, Direction.East, true, true, false),
+            15421 => new JungleFenceGateBlock(Identifier, Direction.East, true, false, true),
+            15422 => new JungleFenceGateBlock(Identifier, Direction.East, true, false, false),
+            15423 => new JungleFenceGateBlock(Identifier, Direction.East, false, true, true),
+            15424 => new JungleFenceGateBlock(Identifier, Direction.East, false, true, false),
+            15425 => new JungleFenceGateBlock(Identifier, Direction.East, false, false, true),
+            15426 => new JungleFenceGateBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

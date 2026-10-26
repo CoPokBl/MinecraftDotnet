@@ -58,7 +58,7 @@ public static class AudienceExtensions {
             Particle = particle,
             Position = position,
             ParticleCount = count,
-            MaxSpeed = maxSpeed,
+            MaxSpeed = new Vec3<float>(maxSpeed, maxSpeed, maxSpeed),
             LongDistance = longDistance,
             AlwaysVisible = alwaysVisible,
             Offset = offset

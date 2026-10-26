@@ -3,40 +3,79 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BirchHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:ceiling_hanging_sign";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "hanging_sign";
-    public Identifier? BlockEntity => "minecraft:hanging_sign";
-    public Identifier? Item => "minecraft:birch_hanging_sign";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.4375] -> [0.9375, 0.625, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 2;
-    public string TranslationKey => "block.minecraft.birch_hanging_sign";
-    public bool CanRespawnIn => true;
+public record BirchHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock, IAttached, IRotated, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.birch_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:birch_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/birch_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 2, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 7631];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAttached(bool attached) => this with { Attached = attached };
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,135 +83,135 @@ public record BirchHangingSignBlock(Identifier Identifier, bool Attached, int Ro
             return Attached switch {
                 true => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 5834,
-                        false => 5835,
+                        true => 7631,
+                        false => 7632,
                     },
                     1 => Waterlogged switch {
-                        true => 5836,
-                        false => 5837,
+                        true => 7633,
+                        false => 7634,
                     },
                     2 => Waterlogged switch {
-                        true => 5838,
-                        false => 5839,
+                        true => 7635,
+                        false => 7636,
                     },
                     3 => Waterlogged switch {
-                        true => 5840,
-                        false => 5841,
+                        true => 7637,
+                        false => 7638,
                     },
                     4 => Waterlogged switch {
-                        true => 5842,
-                        false => 5843,
+                        true => 7639,
+                        false => 7640,
                     },
                     5 => Waterlogged switch {
-                        true => 5844,
-                        false => 5845,
+                        true => 7641,
+                        false => 7642,
                     },
                     6 => Waterlogged switch {
-                        true => 5846,
-                        false => 5847,
+                        true => 7643,
+                        false => 7644,
                     },
                     7 => Waterlogged switch {
-                        true => 5848,
-                        false => 5849,
+                        true => 7645,
+                        false => 7646,
                     },
                     8 => Waterlogged switch {
-                        true => 5850,
-                        false => 5851,
+                        true => 7647,
+                        false => 7648,
                     },
                     9 => Waterlogged switch {
-                        true => 5852,
-                        false => 5853,
+                        true => 7649,
+                        false => 7650,
                     },
                     10 => Waterlogged switch {
-                        true => 5854,
-                        false => 5855,
+                        true => 7651,
+                        false => 7652,
                     },
                     11 => Waterlogged switch {
-                        true => 5856,
-                        false => 5857,
+                        true => 7653,
+                        false => 7654,
                     },
                     12 => Waterlogged switch {
-                        true => 5858,
-                        false => 5859,
+                        true => 7655,
+                        false => 7656,
                     },
                     13 => Waterlogged switch {
-                        true => 5860,
-                        false => 5861,
+                        true => 7657,
+                        false => 7658,
                     },
                     14 => Waterlogged switch {
-                        true => 5862,
-                        false => 5863,
+                        true => 7659,
+                        false => 7660,
                     },
                     15 => Waterlogged switch {
-                        true => 5864,
-                        false => 5865,
+                        true => 7661,
+                        false => 7662,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 5866,
-                        false => 5867,
+                        true => 7663,
+                        false => 7664,
                     },
                     1 => Waterlogged switch {
-                        true => 5868,
-                        false => 5869,
+                        true => 7665,
+                        false => 7666,
                     },
                     2 => Waterlogged switch {
-                        true => 5870,
-                        false => 5871,
+                        true => 7667,
+                        false => 7668,
                     },
                     3 => Waterlogged switch {
-                        true => 5872,
-                        false => 5873,
+                        true => 7669,
+                        false => 7670,
                     },
                     4 => Waterlogged switch {
-                        true => 5874,
-                        false => 5875,
+                        true => 7671,
+                        false => 7672,
                     },
                     5 => Waterlogged switch {
-                        true => 5876,
-                        false => 5877,
+                        true => 7673,
+                        false => 7674,
                     },
                     6 => Waterlogged switch {
-                        true => 5878,
-                        false => 5879,
+                        true => 7675,
+                        false => 7676,
                     },
                     7 => Waterlogged switch {
-                        true => 5880,
-                        false => 5881,
+                        true => 7677,
+                        false => 7678,
                     },
                     8 => Waterlogged switch {
-                        true => 5882,
-                        false => 5883,
+                        true => 7679,
+                        false => 7680,
                     },
                     9 => Waterlogged switch {
-                        true => 5884,
-                        false => 5885,
+                        true => 7681,
+                        false => 7682,
                     },
                     10 => Waterlogged switch {
-                        true => 5886,
-                        false => 5887,
+                        true => 7683,
+                        false => 7684,
                     },
                     11 => Waterlogged switch {
-                        true => 5888,
-                        false => 5889,
+                        true => 7685,
+                        false => 7686,
                     },
                     12 => Waterlogged switch {
-                        true => 5890,
-                        false => 5891,
+                        true => 7687,
+                        false => 7688,
                     },
                     13 => Waterlogged switch {
-                        true => 5892,
-                        false => 5893,
+                        true => 7689,
+                        false => 7690,
                     },
                     14 => Waterlogged switch {
-                        true => 5894,
-                        false => 5895,
+                        true => 7691,
+                        false => 7692,
                     },
                     15 => Waterlogged switch {
-                        true => 5896,
-                        false => 5897,
+                        true => 7693,
+                        false => 7694,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
@@ -182,70 +221,70 @@ public record BirchHangingSignBlock(Identifier Identifier, bool Attached, int Ro
     
     public IBlock WithState(uint state) {
         return state switch {
-            5834 => new BirchHangingSignBlock(Identifier, true, 0, true),
-            5835 => new BirchHangingSignBlock(Identifier, true, 0, false),
-            5836 => new BirchHangingSignBlock(Identifier, true, 1, true),
-            5837 => new BirchHangingSignBlock(Identifier, true, 1, false),
-            5838 => new BirchHangingSignBlock(Identifier, true, 2, true),
-            5839 => new BirchHangingSignBlock(Identifier, true, 2, false),
-            5840 => new BirchHangingSignBlock(Identifier, true, 3, true),
-            5841 => new BirchHangingSignBlock(Identifier, true, 3, false),
-            5842 => new BirchHangingSignBlock(Identifier, true, 4, true),
-            5843 => new BirchHangingSignBlock(Identifier, true, 4, false),
-            5844 => new BirchHangingSignBlock(Identifier, true, 5, true),
-            5845 => new BirchHangingSignBlock(Identifier, true, 5, false),
-            5846 => new BirchHangingSignBlock(Identifier, true, 6, true),
-            5847 => new BirchHangingSignBlock(Identifier, true, 6, false),
-            5848 => new BirchHangingSignBlock(Identifier, true, 7, true),
-            5849 => new BirchHangingSignBlock(Identifier, true, 7, false),
-            5850 => new BirchHangingSignBlock(Identifier, true, 8, true),
-            5851 => new BirchHangingSignBlock(Identifier, true, 8, false),
-            5852 => new BirchHangingSignBlock(Identifier, true, 9, true),
-            5853 => new BirchHangingSignBlock(Identifier, true, 9, false),
-            5854 => new BirchHangingSignBlock(Identifier, true, 10, true),
-            5855 => new BirchHangingSignBlock(Identifier, true, 10, false),
-            5856 => new BirchHangingSignBlock(Identifier, true, 11, true),
-            5857 => new BirchHangingSignBlock(Identifier, true, 11, false),
-            5858 => new BirchHangingSignBlock(Identifier, true, 12, true),
-            5859 => new BirchHangingSignBlock(Identifier, true, 12, false),
-            5860 => new BirchHangingSignBlock(Identifier, true, 13, true),
-            5861 => new BirchHangingSignBlock(Identifier, true, 13, false),
-            5862 => new BirchHangingSignBlock(Identifier, true, 14, true),
-            5863 => new BirchHangingSignBlock(Identifier, true, 14, false),
-            5864 => new BirchHangingSignBlock(Identifier, true, 15, true),
-            5865 => new BirchHangingSignBlock(Identifier, true, 15, false),
-            5866 => new BirchHangingSignBlock(Identifier, false, 0, true),
-            5867 => new BirchHangingSignBlock(Identifier, false, 0, false),
-            5868 => new BirchHangingSignBlock(Identifier, false, 1, true),
-            5869 => new BirchHangingSignBlock(Identifier, false, 1, false),
-            5870 => new BirchHangingSignBlock(Identifier, false, 2, true),
-            5871 => new BirchHangingSignBlock(Identifier, false, 2, false),
-            5872 => new BirchHangingSignBlock(Identifier, false, 3, true),
-            5873 => new BirchHangingSignBlock(Identifier, false, 3, false),
-            5874 => new BirchHangingSignBlock(Identifier, false, 4, true),
-            5875 => new BirchHangingSignBlock(Identifier, false, 4, false),
-            5876 => new BirchHangingSignBlock(Identifier, false, 5, true),
-            5877 => new BirchHangingSignBlock(Identifier, false, 5, false),
-            5878 => new BirchHangingSignBlock(Identifier, false, 6, true),
-            5879 => new BirchHangingSignBlock(Identifier, false, 6, false),
-            5880 => new BirchHangingSignBlock(Identifier, false, 7, true),
-            5881 => new BirchHangingSignBlock(Identifier, false, 7, false),
-            5882 => new BirchHangingSignBlock(Identifier, false, 8, true),
-            5883 => new BirchHangingSignBlock(Identifier, false, 8, false),
-            5884 => new BirchHangingSignBlock(Identifier, false, 9, true),
-            5885 => new BirchHangingSignBlock(Identifier, false, 9, false),
-            5886 => new BirchHangingSignBlock(Identifier, false, 10, true),
-            5887 => new BirchHangingSignBlock(Identifier, false, 10, false),
-            5888 => new BirchHangingSignBlock(Identifier, false, 11, true),
-            5889 => new BirchHangingSignBlock(Identifier, false, 11, false),
-            5890 => new BirchHangingSignBlock(Identifier, false, 12, true),
-            5891 => new BirchHangingSignBlock(Identifier, false, 12, false),
-            5892 => new BirchHangingSignBlock(Identifier, false, 13, true),
-            5893 => new BirchHangingSignBlock(Identifier, false, 13, false),
-            5894 => new BirchHangingSignBlock(Identifier, false, 14, true),
-            5895 => new BirchHangingSignBlock(Identifier, false, 14, false),
-            5896 => new BirchHangingSignBlock(Identifier, false, 15, true),
-            5897 => new BirchHangingSignBlock(Identifier, false, 15, false),
+            7631 => new BirchHangingSignBlock(Identifier, true, 0, true),
+            7632 => new BirchHangingSignBlock(Identifier, true, 0, false),
+            7633 => new BirchHangingSignBlock(Identifier, true, 1, true),
+            7634 => new BirchHangingSignBlock(Identifier, true, 1, false),
+            7635 => new BirchHangingSignBlock(Identifier, true, 2, true),
+            7636 => new BirchHangingSignBlock(Identifier, true, 2, false),
+            7637 => new BirchHangingSignBlock(Identifier, true, 3, true),
+            7638 => new BirchHangingSignBlock(Identifier, true, 3, false),
+            7639 => new BirchHangingSignBlock(Identifier, true, 4, true),
+            7640 => new BirchHangingSignBlock(Identifier, true, 4, false),
+            7641 => new BirchHangingSignBlock(Identifier, true, 5, true),
+            7642 => new BirchHangingSignBlock(Identifier, true, 5, false),
+            7643 => new BirchHangingSignBlock(Identifier, true, 6, true),
+            7644 => new BirchHangingSignBlock(Identifier, true, 6, false),
+            7645 => new BirchHangingSignBlock(Identifier, true, 7, true),
+            7646 => new BirchHangingSignBlock(Identifier, true, 7, false),
+            7647 => new BirchHangingSignBlock(Identifier, true, 8, true),
+            7648 => new BirchHangingSignBlock(Identifier, true, 8, false),
+            7649 => new BirchHangingSignBlock(Identifier, true, 9, true),
+            7650 => new BirchHangingSignBlock(Identifier, true, 9, false),
+            7651 => new BirchHangingSignBlock(Identifier, true, 10, true),
+            7652 => new BirchHangingSignBlock(Identifier, true, 10, false),
+            7653 => new BirchHangingSignBlock(Identifier, true, 11, true),
+            7654 => new BirchHangingSignBlock(Identifier, true, 11, false),
+            7655 => new BirchHangingSignBlock(Identifier, true, 12, true),
+            7656 => new BirchHangingSignBlock(Identifier, true, 12, false),
+            7657 => new BirchHangingSignBlock(Identifier, true, 13, true),
+            7658 => new BirchHangingSignBlock(Identifier, true, 13, false),
+            7659 => new BirchHangingSignBlock(Identifier, true, 14, true),
+            7660 => new BirchHangingSignBlock(Identifier, true, 14, false),
+            7661 => new BirchHangingSignBlock(Identifier, true, 15, true),
+            7662 => new BirchHangingSignBlock(Identifier, true, 15, false),
+            7663 => new BirchHangingSignBlock(Identifier, false, 0, true),
+            7664 => new BirchHangingSignBlock(Identifier, false, 0, false),
+            7665 => new BirchHangingSignBlock(Identifier, false, 1, true),
+            7666 => new BirchHangingSignBlock(Identifier, false, 1, false),
+            7667 => new BirchHangingSignBlock(Identifier, false, 2, true),
+            7668 => new BirchHangingSignBlock(Identifier, false, 2, false),
+            7669 => new BirchHangingSignBlock(Identifier, false, 3, true),
+            7670 => new BirchHangingSignBlock(Identifier, false, 3, false),
+            7671 => new BirchHangingSignBlock(Identifier, false, 4, true),
+            7672 => new BirchHangingSignBlock(Identifier, false, 4, false),
+            7673 => new BirchHangingSignBlock(Identifier, false, 5, true),
+            7674 => new BirchHangingSignBlock(Identifier, false, 5, false),
+            7675 => new BirchHangingSignBlock(Identifier, false, 6, true),
+            7676 => new BirchHangingSignBlock(Identifier, false, 6, false),
+            7677 => new BirchHangingSignBlock(Identifier, false, 7, true),
+            7678 => new BirchHangingSignBlock(Identifier, false, 7, false),
+            7679 => new BirchHangingSignBlock(Identifier, false, 8, true),
+            7680 => new BirchHangingSignBlock(Identifier, false, 8, false),
+            7681 => new BirchHangingSignBlock(Identifier, false, 9, true),
+            7682 => new BirchHangingSignBlock(Identifier, false, 9, false),
+            7683 => new BirchHangingSignBlock(Identifier, false, 10, true),
+            7684 => new BirchHangingSignBlock(Identifier, false, 10, false),
+            7685 => new BirchHangingSignBlock(Identifier, false, 11, true),
+            7686 => new BirchHangingSignBlock(Identifier, false, 11, false),
+            7687 => new BirchHangingSignBlock(Identifier, false, 12, true),
+            7688 => new BirchHangingSignBlock(Identifier, false, 12, false),
+            7689 => new BirchHangingSignBlock(Identifier, false, 13, true),
+            7690 => new BirchHangingSignBlock(Identifier, false, 13, false),
+            7691 => new BirchHangingSignBlock(Identifier, false, 14, true),
+            7692 => new BirchHangingSignBlock(Identifier, false, 14, false),
+            7693 => new BirchHangingSignBlock(Identifier, false, 15, true),
+            7694 => new BirchHangingSignBlock(Identifier, false, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

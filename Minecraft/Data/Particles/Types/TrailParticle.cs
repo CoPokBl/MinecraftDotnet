@@ -14,10 +14,11 @@ public record TrailParticle(Identifier Identifier,  Vec3<double> Target = defaul
             .WriteVarInt(Duration);
     }
 
+    // The colour arrives with an opaque alpha above the RGB, which nothing reads.
     public IParticle ReadData(DataReader reader, MinecraftRegistry _) {
         return this with {
             Target = reader.ReadVec3(),
-            Color = TextColor.FromDecimal(reader.ReadInteger()),
+            Color = TextColor.FromDecimal(reader.ReadInteger() & 0xFFFFFF),
             Duration = reader.ReadVarInt()
         };
     }

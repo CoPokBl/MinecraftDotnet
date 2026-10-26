@@ -41,10 +41,9 @@ public static class DataComponentCodeGen {
                 Console.WriteLine($"Warning: IDataComponent type not found in {fileName}");
                 continue;
             }
-            StringBuilder typeBuilder = new();
-            typeBuilder.Append(content, typeIndex + ComponentTypeSearch.Length, content.IndexOf('>', typeIndex) - (typeIndex + ComponentTypeSearch.Length));
-            string type = typeBuilder.ToString();
-            
+            int typeStart = typeIndex + ComponentTypeSearch.Length;
+            string type = content[typeStart..MatchingAngleBracket(content, typeStart)];
+
             string? ident = CodeGenUtils.GetIdentifier(content);
             if (ident == null) {
                 Console.WriteLine($"Warning: Identifier not found in {fileName}");
@@ -62,7 +61,9 @@ public static class DataComponentCodeGen {
                 continue;
             }
             
-            string varName = CodeGenUtils.NamespacedIdToPascalName(key);
+            // The entity variant components are named "wolf/variant" and the like, and a slash is not
+            // a member name.
+            string varName = CodeGenUtils.NamespacedIdToPascalName(key.Replace('/', '_'));
             
             registryAdditions.Append($"{CodeGenUtils.GetIndentation(2)}Data.DataComponents.Add({protocolId}, DataComponent.{varName});\n");
             fileContent.AppendLine($"{CodeGenUtils.GetIndentation(1)}public static readonly {ComponentClasses[key]} {varName} = new();");
@@ -72,5 +73,29 @@ public static class DataComponentCodeGen {
         File.WriteAllText("DataComponent.cs", fileContent.ToString().Replace("{date}", DateTime.Now.ToString("yyyy-MM-dd")));
         
         return registryAdditions.ToString();
+    }
+
+    /// <summary>
+    /// Index of the <c>&gt;</c> closing the <c>&lt;</c> just before <paramref name="start"/>. Nested
+    /// generics are counted rather than stopping at the first one, so a component over a
+    /// <c>Dictionary&lt;string, string&gt;</c> does not come out truncated and then miss its
+    /// deserialiser.
+    /// </summary>
+    private static int MatchingAngleBracket(string content, int start) {
+        int depth = 0;
+        for (int i = start; i < content.Length; i++) {
+            switch (content[i]) {
+                case '<':
+                    depth++;
+                    break;
+                case '>' when depth == 0:
+                    return i;
+                case '>':
+                    depth--;
+                    break;
+            }
+        }
+
+        throw new FormatException("Unterminated component type at index " + start);
     }
 }

@@ -3,40 +3,71 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shrieking, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:sculk_shrieker";
-    public double Hardness => 3;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "sculk_shrieker";
-    public Identifier? BlockEntity => "minecraft:sculk_shrieker";
-    public Identifier? Item => "minecraft:sculk_shrieker";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.5, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 29;
-    public string TranslationKey => "block.minecraft.sculk_shrieker";
-    public bool CanRespawnIn => false;
+public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shrieking, bool Waterlogged) : IBlock, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.sculk_shrieker", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sculk_shrieker", "minecraft:sculk_shrieker", BlockInfo.VanillaOnly, "minecraft:blocks/sculk_shrieker");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 29, "sculk_shrieker", NoteBlockInstrument.Harp, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S79, BlockShapes.S89, BlockShapes.S1, BlockShapes.S89, BlockShapes.S89, BlockShapes.S89);
+    private static readonly BlockStateInfo I1 = I0 with { PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 31131];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,22 +75,22 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
             return CanSummon switch {
                 true => Shrieking switch {
                     true => Waterlogged switch {
-                        true => 25099,
-                        false => 25100,
+                        true => 31131,
+                        false => 31132,
                     },
                     false => Waterlogged switch {
-                        true => 25101,
-                        false => 25102,
+                        true => 31133,
+                        false => 31134,
                     },
                 },
                 false => Shrieking switch {
                     true => Waterlogged switch {
-                        true => 25103,
-                        false => 25104,
+                        true => 31135,
+                        false => 31136,
                     },
                     false => Waterlogged switch {
-                        true => 25105,
-                        false => 25106,
+                        true => 31137,
+                        false => 31138,
                     },
                 },
             };
@@ -68,14 +99,14 @@ public record SculkShriekerBlock(Identifier Identifier, bool CanSummon, bool Shr
     
     public IBlock WithState(uint state) {
         return state switch {
-            25099 => new SculkShriekerBlock(Identifier, true, true, true),
-            25100 => new SculkShriekerBlock(Identifier, true, true, false),
-            25101 => new SculkShriekerBlock(Identifier, true, false, true),
-            25102 => new SculkShriekerBlock(Identifier, true, false, false),
-            25103 => new SculkShriekerBlock(Identifier, false, true, true),
-            25104 => new SculkShriekerBlock(Identifier, false, true, false),
-            25105 => new SculkShriekerBlock(Identifier, false, false, true),
-            25106 => new SculkShriekerBlock(Identifier, false, false, false),
+            31131 => new SculkShriekerBlock(Identifier, true, true, true),
+            31132 => new SculkShriekerBlock(Identifier, true, true, false),
+            31133 => new SculkShriekerBlock(Identifier, true, false, true),
+            31134 => new SculkShriekerBlock(Identifier, true, false, false),
+            31135 => new SculkShriekerBlock(Identifier, false, true, true),
+            31136 => new SculkShriekerBlock(Identifier, false, true, false),
+            31137 => new SculkShriekerBlock(Identifier, false, false, true),
+            31138 => new SculkShriekerBlock(Identifier, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

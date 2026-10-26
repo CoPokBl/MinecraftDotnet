@@ -3,40 +3,79 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record OakHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:ceiling_hanging_sign";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "hanging_sign";
-    public Identifier? BlockEntity => "minecraft:hanging_sign";
-    public Identifier? Item => "minecraft:oak_hanging_sign";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.4375] -> [0.9375, 0.625, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
-    public string TranslationKey => "block.minecraft.oak_hanging_sign";
-    public bool CanRespawnIn => true;
+public record OakHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock, IAttached, IRotated, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.oak_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:oak_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/oak_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 13, "hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 7503];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAttached(bool attached) => this with { Attached = attached };
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,135 +83,135 @@ public record OakHangingSignBlock(Identifier Identifier, bool Attached, int Rota
             return Attached switch {
                 true => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 5706,
-                        false => 5707,
+                        true => 7503,
+                        false => 7504,
                     },
                     1 => Waterlogged switch {
-                        true => 5708,
-                        false => 5709,
+                        true => 7505,
+                        false => 7506,
                     },
                     2 => Waterlogged switch {
-                        true => 5710,
-                        false => 5711,
+                        true => 7507,
+                        false => 7508,
                     },
                     3 => Waterlogged switch {
-                        true => 5712,
-                        false => 5713,
+                        true => 7509,
+                        false => 7510,
                     },
                     4 => Waterlogged switch {
-                        true => 5714,
-                        false => 5715,
+                        true => 7511,
+                        false => 7512,
                     },
                     5 => Waterlogged switch {
-                        true => 5716,
-                        false => 5717,
+                        true => 7513,
+                        false => 7514,
                     },
                     6 => Waterlogged switch {
-                        true => 5718,
-                        false => 5719,
+                        true => 7515,
+                        false => 7516,
                     },
                     7 => Waterlogged switch {
-                        true => 5720,
-                        false => 5721,
+                        true => 7517,
+                        false => 7518,
                     },
                     8 => Waterlogged switch {
-                        true => 5722,
-                        false => 5723,
+                        true => 7519,
+                        false => 7520,
                     },
                     9 => Waterlogged switch {
-                        true => 5724,
-                        false => 5725,
+                        true => 7521,
+                        false => 7522,
                     },
                     10 => Waterlogged switch {
-                        true => 5726,
-                        false => 5727,
+                        true => 7523,
+                        false => 7524,
                     },
                     11 => Waterlogged switch {
-                        true => 5728,
-                        false => 5729,
+                        true => 7525,
+                        false => 7526,
                     },
                     12 => Waterlogged switch {
-                        true => 5730,
-                        false => 5731,
+                        true => 7527,
+                        false => 7528,
                     },
                     13 => Waterlogged switch {
-                        true => 5732,
-                        false => 5733,
+                        true => 7529,
+                        false => 7530,
                     },
                     14 => Waterlogged switch {
-                        true => 5734,
-                        false => 5735,
+                        true => 7531,
+                        false => 7532,
                     },
                     15 => Waterlogged switch {
-                        true => 5736,
-                        false => 5737,
+                        true => 7533,
+                        false => 7534,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 5738,
-                        false => 5739,
+                        true => 7535,
+                        false => 7536,
                     },
                     1 => Waterlogged switch {
-                        true => 5740,
-                        false => 5741,
+                        true => 7537,
+                        false => 7538,
                     },
                     2 => Waterlogged switch {
-                        true => 5742,
-                        false => 5743,
+                        true => 7539,
+                        false => 7540,
                     },
                     3 => Waterlogged switch {
-                        true => 5744,
-                        false => 5745,
+                        true => 7541,
+                        false => 7542,
                     },
                     4 => Waterlogged switch {
-                        true => 5746,
-                        false => 5747,
+                        true => 7543,
+                        false => 7544,
                     },
                     5 => Waterlogged switch {
-                        true => 5748,
-                        false => 5749,
+                        true => 7545,
+                        false => 7546,
                     },
                     6 => Waterlogged switch {
-                        true => 5750,
-                        false => 5751,
+                        true => 7547,
+                        false => 7548,
                     },
                     7 => Waterlogged switch {
-                        true => 5752,
-                        false => 5753,
+                        true => 7549,
+                        false => 7550,
                     },
                     8 => Waterlogged switch {
-                        true => 5754,
-                        false => 5755,
+                        true => 7551,
+                        false => 7552,
                     },
                     9 => Waterlogged switch {
-                        true => 5756,
-                        false => 5757,
+                        true => 7553,
+                        false => 7554,
                     },
                     10 => Waterlogged switch {
-                        true => 5758,
-                        false => 5759,
+                        true => 7555,
+                        false => 7556,
                     },
                     11 => Waterlogged switch {
-                        true => 5760,
-                        false => 5761,
+                        true => 7557,
+                        false => 7558,
                     },
                     12 => Waterlogged switch {
-                        true => 5762,
-                        false => 5763,
+                        true => 7559,
+                        false => 7560,
                     },
                     13 => Waterlogged switch {
-                        true => 5764,
-                        false => 5765,
+                        true => 7561,
+                        false => 7562,
                     },
                     14 => Waterlogged switch {
-                        true => 5766,
-                        false => 5767,
+                        true => 7563,
+                        false => 7564,
                     },
                     15 => Waterlogged switch {
-                        true => 5768,
-                        false => 5769,
+                        true => 7565,
+                        false => 7566,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
@@ -182,70 +221,70 @@ public record OakHangingSignBlock(Identifier Identifier, bool Attached, int Rota
     
     public IBlock WithState(uint state) {
         return state switch {
-            5706 => new OakHangingSignBlock(Identifier, true, 0, true),
-            5707 => new OakHangingSignBlock(Identifier, true, 0, false),
-            5708 => new OakHangingSignBlock(Identifier, true, 1, true),
-            5709 => new OakHangingSignBlock(Identifier, true, 1, false),
-            5710 => new OakHangingSignBlock(Identifier, true, 2, true),
-            5711 => new OakHangingSignBlock(Identifier, true, 2, false),
-            5712 => new OakHangingSignBlock(Identifier, true, 3, true),
-            5713 => new OakHangingSignBlock(Identifier, true, 3, false),
-            5714 => new OakHangingSignBlock(Identifier, true, 4, true),
-            5715 => new OakHangingSignBlock(Identifier, true, 4, false),
-            5716 => new OakHangingSignBlock(Identifier, true, 5, true),
-            5717 => new OakHangingSignBlock(Identifier, true, 5, false),
-            5718 => new OakHangingSignBlock(Identifier, true, 6, true),
-            5719 => new OakHangingSignBlock(Identifier, true, 6, false),
-            5720 => new OakHangingSignBlock(Identifier, true, 7, true),
-            5721 => new OakHangingSignBlock(Identifier, true, 7, false),
-            5722 => new OakHangingSignBlock(Identifier, true, 8, true),
-            5723 => new OakHangingSignBlock(Identifier, true, 8, false),
-            5724 => new OakHangingSignBlock(Identifier, true, 9, true),
-            5725 => new OakHangingSignBlock(Identifier, true, 9, false),
-            5726 => new OakHangingSignBlock(Identifier, true, 10, true),
-            5727 => new OakHangingSignBlock(Identifier, true, 10, false),
-            5728 => new OakHangingSignBlock(Identifier, true, 11, true),
-            5729 => new OakHangingSignBlock(Identifier, true, 11, false),
-            5730 => new OakHangingSignBlock(Identifier, true, 12, true),
-            5731 => new OakHangingSignBlock(Identifier, true, 12, false),
-            5732 => new OakHangingSignBlock(Identifier, true, 13, true),
-            5733 => new OakHangingSignBlock(Identifier, true, 13, false),
-            5734 => new OakHangingSignBlock(Identifier, true, 14, true),
-            5735 => new OakHangingSignBlock(Identifier, true, 14, false),
-            5736 => new OakHangingSignBlock(Identifier, true, 15, true),
-            5737 => new OakHangingSignBlock(Identifier, true, 15, false),
-            5738 => new OakHangingSignBlock(Identifier, false, 0, true),
-            5739 => new OakHangingSignBlock(Identifier, false, 0, false),
-            5740 => new OakHangingSignBlock(Identifier, false, 1, true),
-            5741 => new OakHangingSignBlock(Identifier, false, 1, false),
-            5742 => new OakHangingSignBlock(Identifier, false, 2, true),
-            5743 => new OakHangingSignBlock(Identifier, false, 2, false),
-            5744 => new OakHangingSignBlock(Identifier, false, 3, true),
-            5745 => new OakHangingSignBlock(Identifier, false, 3, false),
-            5746 => new OakHangingSignBlock(Identifier, false, 4, true),
-            5747 => new OakHangingSignBlock(Identifier, false, 4, false),
-            5748 => new OakHangingSignBlock(Identifier, false, 5, true),
-            5749 => new OakHangingSignBlock(Identifier, false, 5, false),
-            5750 => new OakHangingSignBlock(Identifier, false, 6, true),
-            5751 => new OakHangingSignBlock(Identifier, false, 6, false),
-            5752 => new OakHangingSignBlock(Identifier, false, 7, true),
-            5753 => new OakHangingSignBlock(Identifier, false, 7, false),
-            5754 => new OakHangingSignBlock(Identifier, false, 8, true),
-            5755 => new OakHangingSignBlock(Identifier, false, 8, false),
-            5756 => new OakHangingSignBlock(Identifier, false, 9, true),
-            5757 => new OakHangingSignBlock(Identifier, false, 9, false),
-            5758 => new OakHangingSignBlock(Identifier, false, 10, true),
-            5759 => new OakHangingSignBlock(Identifier, false, 10, false),
-            5760 => new OakHangingSignBlock(Identifier, false, 11, true),
-            5761 => new OakHangingSignBlock(Identifier, false, 11, false),
-            5762 => new OakHangingSignBlock(Identifier, false, 12, true),
-            5763 => new OakHangingSignBlock(Identifier, false, 12, false),
-            5764 => new OakHangingSignBlock(Identifier, false, 13, true),
-            5765 => new OakHangingSignBlock(Identifier, false, 13, false),
-            5766 => new OakHangingSignBlock(Identifier, false, 14, true),
-            5767 => new OakHangingSignBlock(Identifier, false, 14, false),
-            5768 => new OakHangingSignBlock(Identifier, false, 15, true),
-            5769 => new OakHangingSignBlock(Identifier, false, 15, false),
+            7503 => new OakHangingSignBlock(Identifier, true, 0, true),
+            7504 => new OakHangingSignBlock(Identifier, true, 0, false),
+            7505 => new OakHangingSignBlock(Identifier, true, 1, true),
+            7506 => new OakHangingSignBlock(Identifier, true, 1, false),
+            7507 => new OakHangingSignBlock(Identifier, true, 2, true),
+            7508 => new OakHangingSignBlock(Identifier, true, 2, false),
+            7509 => new OakHangingSignBlock(Identifier, true, 3, true),
+            7510 => new OakHangingSignBlock(Identifier, true, 3, false),
+            7511 => new OakHangingSignBlock(Identifier, true, 4, true),
+            7512 => new OakHangingSignBlock(Identifier, true, 4, false),
+            7513 => new OakHangingSignBlock(Identifier, true, 5, true),
+            7514 => new OakHangingSignBlock(Identifier, true, 5, false),
+            7515 => new OakHangingSignBlock(Identifier, true, 6, true),
+            7516 => new OakHangingSignBlock(Identifier, true, 6, false),
+            7517 => new OakHangingSignBlock(Identifier, true, 7, true),
+            7518 => new OakHangingSignBlock(Identifier, true, 7, false),
+            7519 => new OakHangingSignBlock(Identifier, true, 8, true),
+            7520 => new OakHangingSignBlock(Identifier, true, 8, false),
+            7521 => new OakHangingSignBlock(Identifier, true, 9, true),
+            7522 => new OakHangingSignBlock(Identifier, true, 9, false),
+            7523 => new OakHangingSignBlock(Identifier, true, 10, true),
+            7524 => new OakHangingSignBlock(Identifier, true, 10, false),
+            7525 => new OakHangingSignBlock(Identifier, true, 11, true),
+            7526 => new OakHangingSignBlock(Identifier, true, 11, false),
+            7527 => new OakHangingSignBlock(Identifier, true, 12, true),
+            7528 => new OakHangingSignBlock(Identifier, true, 12, false),
+            7529 => new OakHangingSignBlock(Identifier, true, 13, true),
+            7530 => new OakHangingSignBlock(Identifier, true, 13, false),
+            7531 => new OakHangingSignBlock(Identifier, true, 14, true),
+            7532 => new OakHangingSignBlock(Identifier, true, 14, false),
+            7533 => new OakHangingSignBlock(Identifier, true, 15, true),
+            7534 => new OakHangingSignBlock(Identifier, true, 15, false),
+            7535 => new OakHangingSignBlock(Identifier, false, 0, true),
+            7536 => new OakHangingSignBlock(Identifier, false, 0, false),
+            7537 => new OakHangingSignBlock(Identifier, false, 1, true),
+            7538 => new OakHangingSignBlock(Identifier, false, 1, false),
+            7539 => new OakHangingSignBlock(Identifier, false, 2, true),
+            7540 => new OakHangingSignBlock(Identifier, false, 2, false),
+            7541 => new OakHangingSignBlock(Identifier, false, 3, true),
+            7542 => new OakHangingSignBlock(Identifier, false, 3, false),
+            7543 => new OakHangingSignBlock(Identifier, false, 4, true),
+            7544 => new OakHangingSignBlock(Identifier, false, 4, false),
+            7545 => new OakHangingSignBlock(Identifier, false, 5, true),
+            7546 => new OakHangingSignBlock(Identifier, false, 5, false),
+            7547 => new OakHangingSignBlock(Identifier, false, 6, true),
+            7548 => new OakHangingSignBlock(Identifier, false, 6, false),
+            7549 => new OakHangingSignBlock(Identifier, false, 7, true),
+            7550 => new OakHangingSignBlock(Identifier, false, 7, false),
+            7551 => new OakHangingSignBlock(Identifier, false, 8, true),
+            7552 => new OakHangingSignBlock(Identifier, false, 8, false),
+            7553 => new OakHangingSignBlock(Identifier, false, 9, true),
+            7554 => new OakHangingSignBlock(Identifier, false, 9, false),
+            7555 => new OakHangingSignBlock(Identifier, false, 10, true),
+            7556 => new OakHangingSignBlock(Identifier, false, 10, false),
+            7557 => new OakHangingSignBlock(Identifier, false, 11, true),
+            7558 => new OakHangingSignBlock(Identifier, false, 11, false),
+            7559 => new OakHangingSignBlock(Identifier, false, 12, true),
+            7560 => new OakHangingSignBlock(Identifier, false, 12, false),
+            7561 => new OakHangingSignBlock(Identifier, false, 13, true),
+            7562 => new OakHangingSignBlock(Identifier, false, 13, false),
+            7563 => new OakHangingSignBlock(Identifier, false, 14, true),
+            7564 => new OakHangingSignBlock(Identifier, false, 14, false),
+            7565 => new OakHangingSignBlock(Identifier, false, 15, true),
+            7566 => new OakHangingSignBlock(Identifier, false, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

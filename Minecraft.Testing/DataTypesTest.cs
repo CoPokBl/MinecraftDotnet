@@ -19,6 +19,17 @@ public class DataTypesTest {
     }
 
     [Test]
+    public void AbsentOptionalValueReadsAsAbsent() {
+        byte[] data = new DataWriter().WritePrefixedOptional((float?)null, (f, w) => w.WriteFloat(f))
+            .WritePrefixedOptional((float?)0.0F, (f, w) => w.WriteFloat(f)).ToArray();
+        DataReader reader = new(data);
+        Assert.Multiple(() => {
+            Assert.That(reader.ReadPrefixedOptionalValue(r => r.ReadFloat()), Is.Null);
+            Assert.That(reader.ReadPrefixedOptionalValue(r => r.ReadFloat()), Is.EqualTo(0.0F));
+        });
+    }
+
+    [Test]
     public void TestInt() {
         byte[] norInt = new DataWriter().WriteInteger(5).ToArray();
         int backInt = new DataReader(norInt).ReadInteger();

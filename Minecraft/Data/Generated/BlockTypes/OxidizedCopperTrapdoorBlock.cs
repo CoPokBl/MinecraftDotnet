@@ -3,232 +3,281 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record OxidizedCopperTrapdoorBlock(Identifier Identifier, Direction Facing, OxidizedCopperTrapdoorBlock.Half HalfValue, bool Open, bool Powered, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:weathering_copper_trap_door";
-    public double Hardness => 3;
-    public double ExplosionResistance => 6;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "copper";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:oxidized_copper_trapdoor";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.1875, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.1875, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.1875, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 55;
-    public string TranslationKey => "block.minecraft.oxidized_copper_trapdoor";
-    public bool CanRespawnIn => false;
+public record OxidizedCopperTrapdoorBlock(Identifier Identifier, Direction Facing, TopBottom Half, bool Open, bool Powered, bool Waterlogged) : IBlock, IHorizontalFacing, IHalved, IOpenable, IPowered, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.oxidized_copper_trapdoor", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:oxidized_copper_trapdoor", BlockInfo.VanillaOnly, "minecraft:blocks/oxidized_copper_trapdoor");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.PushPull, 55, "copper", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S18, BlockShapes.S18, BlockShapes.S1, BlockShapes.S1, BlockShapes.S18, BlockShapes.S18);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S114, CollisionShape = BlockShapes.S114, VisualShape = BlockShapes.S114, SupportShape = BlockShapes.S114 };
+    private static readonly BlockStateInfo I4 = I0 with { PathfindableLand = false, PathfindableAir = false, BlockShape = BlockShapes.S115, CollisionShape = BlockShapes.S115, VisualShape = BlockShapes.S115, SupportShape = BlockShapes.S115 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableLand = false, PathfindableWater = false, PathfindableAir = false, Fluid = null, BlockShape = BlockShapes.S115, CollisionShape = BlockShapes.S115, VisualShape = BlockShapes.S115, SupportShape = BlockShapes.S115 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20, SupportShape = BlockShapes.S20 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S20, CollisionShape = BlockShapes.S20, VisualShape = BlockShapes.S20, SupportShape = BlockShapes.S20 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19, SupportShape = BlockShapes.S19 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S19, CollisionShape = BlockShapes.S19, VisualShape = BlockShapes.S19, SupportShape = BlockShapes.S19 };
+    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S17, CollisionShape = BlockShapes.S17, VisualShape = BlockShapes.S17, SupportShape = BlockShapes.S17 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S17, CollisionShape = BlockShapes.S17, VisualShape = BlockShapes.S17, SupportShape = BlockShapes.S17 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I4, I5, I4, I5, I6, I7, I6, I7, I2, I3, I2, I3, I6, I7, I6, I7, I4, I5, I4, I5, I8, I9, I8, I9, I2, I3, I2, I3, I8, I9, I8, I9, I4, I5, I4, I5, I10, I11, I10, I11, I2, I3, I2, I3, I10, I11, I10, I11, I4, I5, I4, I5
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 32557];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithHalf(TopBottom half) => this with { Half = half };
+
+    public IBlock WithOpen(bool open) => this with { Open = open };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Facing switch {
-                Direction.North => HalfValue switch {
-                    Half.Top => Open switch {
+                Direction.North => Half switch {
+                    TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 26461,
-                                false => 26462,
+                                true => 32557,
+                                false => 32558,
                             },
                             false => Waterlogged switch {
-                                true => 26463,
-                                false => 26464,
+                                true => 32559,
+                                false => 32560,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 26465,
-                                false => 26466,
+                                true => 32561,
+                                false => 32562,
                             },
                             false => Waterlogged switch {
-                                true => 26467,
-                                false => 26468,
+                                true => 32563,
+                                false => 32564,
                             },
                         },
                     },
-                    Half.Bottom => Open switch {
+                    TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 26469,
-                                false => 26470,
+                                true => 32565,
+                                false => 32566,
                             },
                             false => Waterlogged switch {
-                                true => 26471,
-                                false => 26472,
+                                true => 32567,
+                                false => 32568,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 26473,
-                                false => 26474,
+                                true => 32569,
+                                false => 32570,
                             },
                             false => Waterlogged switch {
-                                true => 26475,
-                                false => 26476,
+                                true => 32571,
+                                false => 32572,
                             },
                         },
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
-                Direction.South => HalfValue switch {
-                    Half.Top => Open switch {
+                Direction.South => Half switch {
+                    TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 26477,
-                                false => 26478,
+                                true => 32573,
+                                false => 32574,
                             },
                             false => Waterlogged switch {
-                                true => 26479,
-                                false => 26480,
+                                true => 32575,
+                                false => 32576,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 26481,
-                                false => 26482,
+                                true => 32577,
+                                false => 32578,
                             },
                             false => Waterlogged switch {
-                                true => 26483,
-                                false => 26484,
+                                true => 32579,
+                                false => 32580,
                             },
                         },
                     },
-                    Half.Bottom => Open switch {
+                    TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 26485,
-                                false => 26486,
+                                true => 32581,
+                                false => 32582,
                             },
                             false => Waterlogged switch {
-                                true => 26487,
-                                false => 26488,
+                                true => 32583,
+                                false => 32584,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 26489,
-                                false => 26490,
+                                true => 32585,
+                                false => 32586,
                             },
                             false => Waterlogged switch {
-                                true => 26491,
-                                false => 26492,
+                                true => 32587,
+                                false => 32588,
                             },
                         },
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
-                Direction.West => HalfValue switch {
-                    Half.Top => Open switch {
+                Direction.West => Half switch {
+                    TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 26493,
-                                false => 26494,
+                                true => 32589,
+                                false => 32590,
                             },
                             false => Waterlogged switch {
-                                true => 26495,
-                                false => 26496,
+                                true => 32591,
+                                false => 32592,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 26497,
-                                false => 26498,
+                                true => 32593,
+                                false => 32594,
                             },
                             false => Waterlogged switch {
-                                true => 26499,
-                                false => 26500,
+                                true => 32595,
+                                false => 32596,
                             },
                         },
                     },
-                    Half.Bottom => Open switch {
+                    TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 26501,
-                                false => 26502,
+                                true => 32597,
+                                false => 32598,
                             },
                             false => Waterlogged switch {
-                                true => 26503,
-                                false => 26504,
+                                true => 32599,
+                                false => 32600,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 26505,
-                                false => 26506,
+                                true => 32601,
+                                false => 32602,
                             },
                             false => Waterlogged switch {
-                                true => 26507,
-                                false => 26508,
+                                true => 32603,
+                                false => 32604,
                             },
                         },
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
-                Direction.East => HalfValue switch {
-                    Half.Top => Open switch {
+                Direction.East => Half switch {
+                    TopBottom.Top => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 26509,
-                                false => 26510,
+                                true => 32605,
+                                false => 32606,
                             },
                             false => Waterlogged switch {
-                                true => 26511,
-                                false => 26512,
+                                true => 32607,
+                                false => 32608,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 26513,
-                                false => 26514,
+                                true => 32609,
+                                false => 32610,
                             },
                             false => Waterlogged switch {
-                                true => 26515,
-                                false => 26516,
+                                true => 32611,
+                                false => 32612,
                             },
                         },
                     },
-                    Half.Bottom => Open switch {
+                    TopBottom.Bottom => Open switch {
                         true => Powered switch {
                             true => Waterlogged switch {
-                                true => 26517,
-                                false => 26518,
+                                true => 32613,
+                                false => 32614,
                             },
                             false => Waterlogged switch {
-                                true => 26519,
-                                false => 26520,
+                                true => 32615,
+                                false => 32616,
                             },
                         },
                         false => Powered switch {
                             true => Waterlogged switch {
-                                true => 26521,
-                                false => 26522,
+                                true => 32617,
+                                false => 32618,
                             },
                             false => Waterlogged switch {
-                                true => 26523,
-                                false => 26524,
+                                true => 32619,
+                                false => 32620,
                             },
                         },
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(HalfValue), HalfValue, "Unknown value for property half.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(Half), Half, "Unknown value for property half.")
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -237,70 +286,70 @@ public record OxidizedCopperTrapdoorBlock(Identifier Identifier, Direction Facin
     
     public IBlock WithState(uint state) {
         return state switch {
-            26461 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, true),
-            26462 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Top, true, true, false),
-            26463 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, true),
-            26464 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Top, true, false, false),
-            26465 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, true),
-            26466 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Top, false, true, false),
-            26467 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, true),
-            26468 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Top, false, false, false),
-            26469 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, true),
-            26470 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, true, false),
-            26471 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, true),
-            26472 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Bottom, true, false, false),
-            26473 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, true),
-            26474 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, true, false),
-            26475 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, true),
-            26476 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, Half.Bottom, false, false, false),
-            26477 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, true),
-            26478 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Top, true, true, false),
-            26479 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, true),
-            26480 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Top, true, false, false),
-            26481 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, true),
-            26482 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Top, false, true, false),
-            26483 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, true),
-            26484 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Top, false, false, false),
-            26485 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, true),
-            26486 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, true, false),
-            26487 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, true),
-            26488 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Bottom, true, false, false),
-            26489 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, true),
-            26490 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, true, false),
-            26491 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, true),
-            26492 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, Half.Bottom, false, false, false),
-            26493 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, true),
-            26494 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Top, true, true, false),
-            26495 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, true),
-            26496 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Top, true, false, false),
-            26497 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, true),
-            26498 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Top, false, true, false),
-            26499 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, true),
-            26500 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Top, false, false, false),
-            26501 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, true),
-            26502 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, true, false),
-            26503 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, true),
-            26504 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Bottom, true, false, false),
-            26505 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, true),
-            26506 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, true, false),
-            26507 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, true),
-            26508 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, Half.Bottom, false, false, false),
-            26509 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, true),
-            26510 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Top, true, true, false),
-            26511 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, true),
-            26512 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Top, true, false, false),
-            26513 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, true),
-            26514 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Top, false, true, false),
-            26515 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, true),
-            26516 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Top, false, false, false),
-            26517 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, true),
-            26518 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, true, false),
-            26519 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, true),
-            26520 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Bottom, true, false, false),
-            26521 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, true),
-            26522 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, true, false),
-            26523 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, true),
-            26524 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, Half.Bottom, false, false, false),
+            32557 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, true),
+            32558 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, true, false),
+            32559 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, true),
+            32560 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, true, false, false),
+            32561 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, true),
+            32562 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, true, false),
+            32563 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, true),
+            32564 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Top, false, false, false),
+            32565 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, true),
+            32566 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, true, false),
+            32567 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, true),
+            32568 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, true, false, false),
+            32569 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, true),
+            32570 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, true, false),
+            32571 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, true),
+            32572 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.North, TopBottom.Bottom, false, false, false),
+            32573 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, true),
+            32574 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, true, false),
+            32575 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, true),
+            32576 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, true, false, false),
+            32577 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, true),
+            32578 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, true, false),
+            32579 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, true),
+            32580 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Top, false, false, false),
+            32581 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, true),
+            32582 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, true, false),
+            32583 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, true),
+            32584 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, true, false, false),
+            32585 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, true),
+            32586 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, true, false),
+            32587 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, true),
+            32588 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.South, TopBottom.Bottom, false, false, false),
+            32589 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, true),
+            32590 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, true, false),
+            32591 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, true),
+            32592 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, true, false, false),
+            32593 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, true),
+            32594 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, true, false),
+            32595 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, true),
+            32596 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Top, false, false, false),
+            32597 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, true),
+            32598 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, true, false),
+            32599 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, true),
+            32600 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, true, false, false),
+            32601 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, true),
+            32602 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, true, false),
+            32603 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, true),
+            32604 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.West, TopBottom.Bottom, false, false, false),
+            32605 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, true),
+            32606 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, true, false),
+            32607 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, true),
+            32608 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, true, false, false),
+            32609 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, true),
+            32610 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, true, false),
+            32611 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, true),
+            32612 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Top, false, false, false),
+            32613 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, true),
+            32614 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, true, false),
+            32615 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, true),
+            32616 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, true, false, false),
+            32617 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, true),
+            32618 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, true, false),
+            32619 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, true),
+            32620 => new OxidizedCopperTrapdoorBlock(Identifier, Direction.East, TopBottom.Bottom, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }
@@ -308,7 +357,7 @@ public record OxidizedCopperTrapdoorBlock(Identifier Identifier, Direction Facin
     public IBlock WithState(CompoundTag properties) {
         return this with {
             Facing = properties.Contains("facing") ? DirectionExtensions.FromString(properties["facing"].GetString()) : Facing,
-            HalfValue = properties.Contains("half") ? HalfFromString(properties["half"].GetString()) : HalfValue,
+            Half = properties.Contains("half") ? TopBottomExtensions.FromString(properties["half"].GetString()) : Half,
             Open = properties.Contains("open") ? properties["open"].GetString() == "true" : Open,
             Powered = properties.Contains("powered") ? properties["powered"].GetString() == "true" : Powered,
             Waterlogged = properties.Contains("waterlogged") ? properties["waterlogged"].GetString() == "true" : Waterlogged,
@@ -318,31 +367,11 @@ public record OxidizedCopperTrapdoorBlock(Identifier Identifier, Direction Facin
     public CompoundTag ToStateNbt() {
         return new CompoundTag(
             ("facing", new StringTag(Facing.ToName())),
-            ("half", new StringTag(HalfToName(HalfValue))),
+            ("half", new StringTag(Half.ToName())),
             ("open", new StringTag(Open.ToString().ToLower())),
             ("powered", new StringTag(Powered.ToString().ToLower())),
             ("waterlogged", new StringTag(Waterlogged.ToString().ToLower()))
         );
     }
     
-    public enum Half {
-        Top,
-        Bottom,
-    }
-
-    public static Half HalfFromString(string value) {
-        return value switch {
-            "top" => Half.Top,
-            "bottom" => Half.Bottom,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown value for Half.")
-        };
-    }
-
-    public static string HalfToName(Half value) {
-        return value switch {
-            Half.Top => "top",
-            Half.Bottom => "bottom",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Unknown Half value.")
-        };
-    }
 }

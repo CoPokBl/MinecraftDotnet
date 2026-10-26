@@ -5,87 +5,47 @@ namespace Minecraft.Packets.Play.ServerBound;
 
 public class ServerBoundInteractPacket : ServerBoundPacket {
     public override Identifier Identifier => "minecraft:interact";
-    
+
     public required int EntityId { get; init; }
-    public required InteractType Type { get; init; }
-    public Vec3<float>? Target;
-    public Hand? UsedHand;
+    public required Hand UsedHand { get; init; }
+
+    /// <summary>
+    /// Where on the target the player interacted, relative to the target's position.
+    /// This is sent in a low precision format, so it won't match the client's value exactly.
+    /// </summary>
+    public required Vec3<double> Target { get; init; }
     public required bool SneakPressed { get; init; }
 
-    public static ServerBoundInteractPacket Attack(int entityId, bool sneakPressed) {
-        return new ServerBoundInteractPacket {
-            EntityId = entityId,
-            SneakPressed = sneakPressed,
-            Type = InteractType.Attack,
-            Target = null,
-            UsedHand = null
-        };
-    }
-    
     public static ServerBoundInteractPacket Interact(int entityId, Hand hand, bool sneakPressed) {
         return new ServerBoundInteractPacket {
             EntityId = entityId,
-            Type = InteractType.Interact,
-            Target = null,
             UsedHand = hand,
-            SneakPressed = sneakPressed
-        };
-    }
-    
-    public static ServerBoundInteractPacket InteractAt(int entityId, Vec3<float> target, Hand hand, bool sneakPressed) {
-        return new ServerBoundInteractPacket {
-            EntityId = entityId,
-            Type = InteractType.InteractAt,
-            Target = target,
-            UsedHand = hand,
+            Target = new Vec3<double>(0, 0, 0),
             SneakPressed = sneakPressed
         };
     }
 
-    public enum InteractType {
-        Interact = 0,
-        Attack = 1,
-        InteractAt = 2
+    public static ServerBoundInteractPacket InteractAt(int entityId, Vec3<double> target, Hand hand, bool sneakPressed) {
+        return new ServerBoundInteractPacket {
+            EntityId = entityId,
+            UsedHand = hand,
+            Target = target,
+            SneakPressed = sneakPressed
+        };
     }
 
     protected override DataWriter WriteData(DataWriter w) {
-        w.WriteVarInt(EntityId)
-            .WriteVarInt((int)Type);
-
-        switch (Type) {
-            case InteractType.Interact:
-                w.WriteVarInt((int)UsedHand.ThrowIfNull());
-                break;
-            
-            case InteractType.InteractAt:
-                w.WriteVec3(Target.ThrowIfNull());
-                w.WriteVarInt((int)UsedHand.ThrowIfNull());
-                break;
-        }
-        
         return w
+            .WriteVarInt(EntityId)
+            .WriteVarInt((int)UsedHand)
+            .WriteLpVec3(Target)
             .WriteBoolean(SneakPressed);
     }
-    
-    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => {
-        int entityId = r.ReadVarInt();
-        InteractType type = (InteractType)r.ReadVarInt();
-        Vec3<float>? target = null;
-        Hand? usedHand = null;
-        if (type == InteractType.InteractAt) {
-            target = r.ReadFVec3();
-        }
-        if (type is InteractType.Interact or InteractType.InteractAt) {
-            usedHand = (Hand)r.ReadVarInt();
-        }
-        bool sneakPressed = r.ReadBoolean();
-        
-        return new ServerBoundInteractPacket {
-            EntityId = entityId,
-            Type = type,
-            Target = target,
-            UsedHand = usedHand,
-            SneakPressed = sneakPressed
-        };
+
+    public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundInteractPacket {
+        EntityId = r.ReadVarInt(),
+        UsedHand = (Hand)r.ReadVarInt(),
+        Target = r.ReadLpVec3(),
+        SneakPressed = r.ReadBoolean()
     };
 }

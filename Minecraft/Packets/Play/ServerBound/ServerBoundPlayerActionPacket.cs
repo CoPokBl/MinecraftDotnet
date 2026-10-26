@@ -13,12 +13,16 @@ public class ServerBoundPlayerActionPacket : ServerBoundPacket {
 
     public enum Status {
         StartedDigging,
+
+        /// <summary>The face being dug changed, which turns the cracking particles. Sent with sequence 0.</summary>
+        ChangeDestroyDirection,
         CancelledDigging,
         FinishedDigging,
         DropItemStack,
         DropItem,
         UpdateHeldItem,  // used for after eating or pulling back a bow or using a bucket (anything that should change item state)
-        SwapItem
+        SwapItem,
+        Stab
     }
 
     protected override DataWriter WriteData(DataWriter w) {

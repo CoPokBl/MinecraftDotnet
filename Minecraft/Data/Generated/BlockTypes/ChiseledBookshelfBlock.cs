@@ -3,40 +3,67 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bool Slot0Occupied, bool Slot1Occupied, bool Slot2Occupied, bool Slot3Occupied, bool Slot4Occupied, bool Slot5Occupied) : IBlock {
-    public Identifier Category => "minecraft:chiseled_book_shelf";
-    public double Hardness => 1.5;
-    public double ExplosionResistance => 1.5;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "chiseled_bookshelf";
-    public Identifier? BlockEntity => "minecraft:chiseled_bookshelf";
-    public Identifier? Item => "minecraft:chiseled_bookshelf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => true;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
-    public string TranslationKey => "block.minecraft.chiseled_bookshelf";
-    public bool CanRespawnIn => false;
+public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bool Slot0Occupied, bool Slot1Occupied, bool Slot2Occupied, bool Slot3Occupied, bool Slot4Occupied, bool Slot5Occupied) : IBlock, IHorizontalFacing {
+    private static readonly BlockInfo Data = new("block.minecraft.chiseled_bookshelf", 1.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:chiseled_bookshelf", "minecraft:chiseled_bookshelf", BlockInfo.VanillaOnly, "minecraft:blocks/chiseled_bookshelf");
+    private static readonly BlockStateInfo I0 = new(1.5f, 0, 15, PushReaction.PushPull, 13, "chiseled_bookshelf", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
 
 
     public uint StateId {
@@ -48,44 +75,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2143,
-                                        false => 2144,
+                                        true => 3836,
+                                        false => 3837,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2145,
-                                        false => 2146,
+                                        true => 3838,
+                                        false => 3839,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2147,
-                                        false => 2148,
+                                        true => 3840,
+                                        false => 3841,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2149,
-                                        false => 2150,
+                                        true => 3842,
+                                        false => 3843,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2151,
-                                        false => 2152,
+                                        true => 3844,
+                                        false => 3845,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2153,
-                                        false => 2154,
+                                        true => 3846,
+                                        false => 3847,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2155,
-                                        false => 2156,
+                                        true => 3848,
+                                        false => 3849,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2157,
-                                        false => 2158,
+                                        true => 3850,
+                                        false => 3851,
                                     },
                                 },
                             },
@@ -94,44 +121,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2159,
-                                        false => 2160,
+                                        true => 3852,
+                                        false => 3853,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2161,
-                                        false => 2162,
+                                        true => 3854,
+                                        false => 3855,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2163,
-                                        false => 2164,
+                                        true => 3856,
+                                        false => 3857,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2165,
-                                        false => 2166,
+                                        true => 3858,
+                                        false => 3859,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2167,
-                                        false => 2168,
+                                        true => 3860,
+                                        false => 3861,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2169,
-                                        false => 2170,
+                                        true => 3862,
+                                        false => 3863,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2171,
-                                        false => 2172,
+                                        true => 3864,
+                                        false => 3865,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2173,
-                                        false => 2174,
+                                        true => 3866,
+                                        false => 3867,
                                     },
                                 },
                             },
@@ -142,44 +169,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2175,
-                                        false => 2176,
+                                        true => 3868,
+                                        false => 3869,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2177,
-                                        false => 2178,
+                                        true => 3870,
+                                        false => 3871,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2179,
-                                        false => 2180,
+                                        true => 3872,
+                                        false => 3873,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2181,
-                                        false => 2182,
+                                        true => 3874,
+                                        false => 3875,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2183,
-                                        false => 2184,
+                                        true => 3876,
+                                        false => 3877,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2185,
-                                        false => 2186,
+                                        true => 3878,
+                                        false => 3879,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2187,
-                                        false => 2188,
+                                        true => 3880,
+                                        false => 3881,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2189,
-                                        false => 2190,
+                                        true => 3882,
+                                        false => 3883,
                                     },
                                 },
                             },
@@ -188,44 +215,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2191,
-                                        false => 2192,
+                                        true => 3884,
+                                        false => 3885,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2193,
-                                        false => 2194,
+                                        true => 3886,
+                                        false => 3887,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2195,
-                                        false => 2196,
+                                        true => 3888,
+                                        false => 3889,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2197,
-                                        false => 2198,
+                                        true => 3890,
+                                        false => 3891,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2199,
-                                        false => 2200,
+                                        true => 3892,
+                                        false => 3893,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2201,
-                                        false => 2202,
+                                        true => 3894,
+                                        false => 3895,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2203,
-                                        false => 2204,
+                                        true => 3896,
+                                        false => 3897,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2205,
-                                        false => 2206,
+                                        true => 3898,
+                                        false => 3899,
                                     },
                                 },
                             },
@@ -238,44 +265,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2207,
-                                        false => 2208,
+                                        true => 3900,
+                                        false => 3901,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2209,
-                                        false => 2210,
+                                        true => 3902,
+                                        false => 3903,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2211,
-                                        false => 2212,
+                                        true => 3904,
+                                        false => 3905,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2213,
-                                        false => 2214,
+                                        true => 3906,
+                                        false => 3907,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2215,
-                                        false => 2216,
+                                        true => 3908,
+                                        false => 3909,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2217,
-                                        false => 2218,
+                                        true => 3910,
+                                        false => 3911,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2219,
-                                        false => 2220,
+                                        true => 3912,
+                                        false => 3913,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2221,
-                                        false => 2222,
+                                        true => 3914,
+                                        false => 3915,
                                     },
                                 },
                             },
@@ -284,44 +311,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2223,
-                                        false => 2224,
+                                        true => 3916,
+                                        false => 3917,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2225,
-                                        false => 2226,
+                                        true => 3918,
+                                        false => 3919,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2227,
-                                        false => 2228,
+                                        true => 3920,
+                                        false => 3921,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2229,
-                                        false => 2230,
+                                        true => 3922,
+                                        false => 3923,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2231,
-                                        false => 2232,
+                                        true => 3924,
+                                        false => 3925,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2233,
-                                        false => 2234,
+                                        true => 3926,
+                                        false => 3927,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2235,
-                                        false => 2236,
+                                        true => 3928,
+                                        false => 3929,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2237,
-                                        false => 2238,
+                                        true => 3930,
+                                        false => 3931,
                                     },
                                 },
                             },
@@ -332,44 +359,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2239,
-                                        false => 2240,
+                                        true => 3932,
+                                        false => 3933,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2241,
-                                        false => 2242,
+                                        true => 3934,
+                                        false => 3935,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2243,
-                                        false => 2244,
+                                        true => 3936,
+                                        false => 3937,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2245,
-                                        false => 2246,
+                                        true => 3938,
+                                        false => 3939,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2247,
-                                        false => 2248,
+                                        true => 3940,
+                                        false => 3941,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2249,
-                                        false => 2250,
+                                        true => 3942,
+                                        false => 3943,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2251,
-                                        false => 2252,
+                                        true => 3944,
+                                        false => 3945,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2253,
-                                        false => 2254,
+                                        true => 3946,
+                                        false => 3947,
                                     },
                                 },
                             },
@@ -378,44 +405,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2255,
-                                        false => 2256,
+                                        true => 3948,
+                                        false => 3949,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2257,
-                                        false => 2258,
+                                        true => 3950,
+                                        false => 3951,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2259,
-                                        false => 2260,
+                                        true => 3952,
+                                        false => 3953,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2261,
-                                        false => 2262,
+                                        true => 3954,
+                                        false => 3955,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2263,
-                                        false => 2264,
+                                        true => 3956,
+                                        false => 3957,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2265,
-                                        false => 2266,
+                                        true => 3958,
+                                        false => 3959,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2267,
-                                        false => 2268,
+                                        true => 3960,
+                                        false => 3961,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2269,
-                                        false => 2270,
+                                        true => 3962,
+                                        false => 3963,
                                     },
                                 },
                             },
@@ -428,44 +455,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2271,
-                                        false => 2272,
+                                        true => 3964,
+                                        false => 3965,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2273,
-                                        false => 2274,
+                                        true => 3966,
+                                        false => 3967,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2275,
-                                        false => 2276,
+                                        true => 3968,
+                                        false => 3969,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2277,
-                                        false => 2278,
+                                        true => 3970,
+                                        false => 3971,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2279,
-                                        false => 2280,
+                                        true => 3972,
+                                        false => 3973,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2281,
-                                        false => 2282,
+                                        true => 3974,
+                                        false => 3975,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2283,
-                                        false => 2284,
+                                        true => 3976,
+                                        false => 3977,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2285,
-                                        false => 2286,
+                                        true => 3978,
+                                        false => 3979,
                                     },
                                 },
                             },
@@ -474,44 +501,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2287,
-                                        false => 2288,
+                                        true => 3980,
+                                        false => 3981,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2289,
-                                        false => 2290,
+                                        true => 3982,
+                                        false => 3983,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2291,
-                                        false => 2292,
+                                        true => 3984,
+                                        false => 3985,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2293,
-                                        false => 2294,
+                                        true => 3986,
+                                        false => 3987,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2295,
-                                        false => 2296,
+                                        true => 3988,
+                                        false => 3989,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2297,
-                                        false => 2298,
+                                        true => 3990,
+                                        false => 3991,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2299,
-                                        false => 2300,
+                                        true => 3992,
+                                        false => 3993,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2301,
-                                        false => 2302,
+                                        true => 3994,
+                                        false => 3995,
                                     },
                                 },
                             },
@@ -522,44 +549,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2303,
-                                        false => 2304,
+                                        true => 3996,
+                                        false => 3997,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2305,
-                                        false => 2306,
+                                        true => 3998,
+                                        false => 3999,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2307,
-                                        false => 2308,
+                                        true => 4000,
+                                        false => 4001,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2309,
-                                        false => 2310,
+                                        true => 4002,
+                                        false => 4003,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2311,
-                                        false => 2312,
+                                        true => 4004,
+                                        false => 4005,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2313,
-                                        false => 2314,
+                                        true => 4006,
+                                        false => 4007,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2315,
-                                        false => 2316,
+                                        true => 4008,
+                                        false => 4009,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2317,
-                                        false => 2318,
+                                        true => 4010,
+                                        false => 4011,
                                     },
                                 },
                             },
@@ -568,44 +595,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2319,
-                                        false => 2320,
+                                        true => 4012,
+                                        false => 4013,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2321,
-                                        false => 2322,
+                                        true => 4014,
+                                        false => 4015,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2323,
-                                        false => 2324,
+                                        true => 4016,
+                                        false => 4017,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2325,
-                                        false => 2326,
+                                        true => 4018,
+                                        false => 4019,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2327,
-                                        false => 2328,
+                                        true => 4020,
+                                        false => 4021,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2329,
-                                        false => 2330,
+                                        true => 4022,
+                                        false => 4023,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2331,
-                                        false => 2332,
+                                        true => 4024,
+                                        false => 4025,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2333,
-                                        false => 2334,
+                                        true => 4026,
+                                        false => 4027,
                                     },
                                 },
                             },
@@ -618,44 +645,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2335,
-                                        false => 2336,
+                                        true => 4028,
+                                        false => 4029,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2337,
-                                        false => 2338,
+                                        true => 4030,
+                                        false => 4031,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2339,
-                                        false => 2340,
+                                        true => 4032,
+                                        false => 4033,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2341,
-                                        false => 2342,
+                                        true => 4034,
+                                        false => 4035,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2343,
-                                        false => 2344,
+                                        true => 4036,
+                                        false => 4037,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2345,
-                                        false => 2346,
+                                        true => 4038,
+                                        false => 4039,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2347,
-                                        false => 2348,
+                                        true => 4040,
+                                        false => 4041,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2349,
-                                        false => 2350,
+                                        true => 4042,
+                                        false => 4043,
                                     },
                                 },
                             },
@@ -664,44 +691,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2351,
-                                        false => 2352,
+                                        true => 4044,
+                                        false => 4045,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2353,
-                                        false => 2354,
+                                        true => 4046,
+                                        false => 4047,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2355,
-                                        false => 2356,
+                                        true => 4048,
+                                        false => 4049,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2357,
-                                        false => 2358,
+                                        true => 4050,
+                                        false => 4051,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2359,
-                                        false => 2360,
+                                        true => 4052,
+                                        false => 4053,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2361,
-                                        false => 2362,
+                                        true => 4054,
+                                        false => 4055,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2363,
-                                        false => 2364,
+                                        true => 4056,
+                                        false => 4057,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2365,
-                                        false => 2366,
+                                        true => 4058,
+                                        false => 4059,
                                     },
                                 },
                             },
@@ -712,44 +739,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2367,
-                                        false => 2368,
+                                        true => 4060,
+                                        false => 4061,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2369,
-                                        false => 2370,
+                                        true => 4062,
+                                        false => 4063,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2371,
-                                        false => 2372,
+                                        true => 4064,
+                                        false => 4065,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2373,
-                                        false => 2374,
+                                        true => 4066,
+                                        false => 4067,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2375,
-                                        false => 2376,
+                                        true => 4068,
+                                        false => 4069,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2377,
-                                        false => 2378,
+                                        true => 4070,
+                                        false => 4071,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2379,
-                                        false => 2380,
+                                        true => 4072,
+                                        false => 4073,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2381,
-                                        false => 2382,
+                                        true => 4074,
+                                        false => 4075,
                                     },
                                 },
                             },
@@ -758,44 +785,44 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
                             true => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2383,
-                                        false => 2384,
+                                        true => 4076,
+                                        false => 4077,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2385,
-                                        false => 2386,
+                                        true => 4078,
+                                        false => 4079,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2387,
-                                        false => 2388,
+                                        true => 4080,
+                                        false => 4081,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2389,
-                                        false => 2390,
+                                        true => 4082,
+                                        false => 4083,
                                     },
                                 },
                             },
                             false => Slot3Occupied switch {
                                 true => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2391,
-                                        false => 2392,
+                                        true => 4084,
+                                        false => 4085,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2393,
-                                        false => 2394,
+                                        true => 4086,
+                                        false => 4087,
                                     },
                                 },
                                 false => Slot4Occupied switch {
                                     true => Slot5Occupied switch {
-                                        true => 2395,
-                                        false => 2396,
+                                        true => 4088,
+                                        false => 4089,
                                     },
                                     false => Slot5Occupied switch {
-                                        true => 2397,
-                                        false => 2398,
+                                        true => 4090,
+                                        false => 4091,
                                     },
                                 },
                             },
@@ -809,262 +836,262 @@ public record ChiseledBookshelfBlock(Identifier Identifier, Direction Facing, bo
     
     public IBlock WithState(uint state) {
         return state switch {
-            2143 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, true, true),
-            2144 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, true, false),
-            2145 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, false, true),
-            2146 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, false, false),
-            2147 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, false, true, true),
-            2148 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, false, true, false),
-            2149 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, false, false, true),
-            2150 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, false, false, false),
-            2151 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, true, true, true),
-            2152 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, true, true, false),
-            2153 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, true, false, true),
-            2154 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, true, false, false),
-            2155 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, false, true, true),
-            2156 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, false, true, false),
-            2157 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, false, false, true),
-            2158 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, false, false, false),
-            2159 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, true, true, true),
-            2160 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, true, true, false),
-            2161 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, true, false, true),
-            2162 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, true, false, false),
-            2163 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, false, true, true),
-            2164 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, false, true, false),
-            2165 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, false, false, true),
-            2166 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, false, false, false),
-            2167 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, true, true, true),
-            2168 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, true, true, false),
-            2169 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, true, false, true),
-            2170 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, true, false, false),
-            2171 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, false, true, true),
-            2172 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, false, true, false),
-            2173 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, false, false, true),
-            2174 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, false, false, false),
-            2175 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, true, true, true),
-            2176 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, true, true, false),
-            2177 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, true, false, true),
-            2178 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, true, false, false),
-            2179 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, false, true, true),
-            2180 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, false, true, false),
-            2181 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, false, false, true),
-            2182 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, false, false, false),
-            2183 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, true, true, true),
-            2184 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, true, true, false),
-            2185 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, true, false, true),
-            2186 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, true, false, false),
-            2187 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, false, true, true),
-            2188 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, false, true, false),
-            2189 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, false, false, true),
-            2190 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, false, false, false),
-            2191 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, true, true, true),
-            2192 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, true, true, false),
-            2193 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, true, false, true),
-            2194 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, true, false, false),
-            2195 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, false, true, true),
-            2196 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, false, true, false),
-            2197 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, false, false, true),
-            2198 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, false, false, false),
-            2199 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, true, true, true),
-            2200 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, true, true, false),
-            2201 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, true, false, true),
-            2202 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, true, false, false),
-            2203 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, false, true, true),
-            2204 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, false, true, false),
-            2205 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, false, false, true),
-            2206 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, false, false, false),
-            2207 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, true, true, true),
-            2208 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, true, true, false),
-            2209 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, true, false, true),
-            2210 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, true, false, false),
-            2211 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, false, true, true),
-            2212 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, false, true, false),
-            2213 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, false, false, true),
-            2214 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, false, false, false),
-            2215 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, true, true, true),
-            2216 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, true, true, false),
-            2217 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, true, false, true),
-            2218 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, true, false, false),
-            2219 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, false, true, true),
-            2220 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, false, true, false),
-            2221 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, false, false, true),
-            2222 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, false, false, false),
-            2223 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, true, true, true),
-            2224 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, true, true, false),
-            2225 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, true, false, true),
-            2226 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, true, false, false),
-            2227 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, false, true, true),
-            2228 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, false, true, false),
-            2229 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, false, false, true),
-            2230 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, false, false, false),
-            2231 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, true, true, true),
-            2232 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, true, true, false),
-            2233 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, true, false, true),
-            2234 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, true, false, false),
-            2235 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, false, true, true),
-            2236 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, false, true, false),
-            2237 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, false, false, true),
-            2238 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, false, false, false),
-            2239 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, true, true, true),
-            2240 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, true, true, false),
-            2241 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, true, false, true),
-            2242 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, true, false, false),
-            2243 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, false, true, true),
-            2244 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, false, true, false),
-            2245 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, false, false, true),
-            2246 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, false, false, false),
-            2247 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, true, true, true),
-            2248 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, true, true, false),
-            2249 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, true, false, true),
-            2250 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, true, false, false),
-            2251 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, false, true, true),
-            2252 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, false, true, false),
-            2253 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, false, false, true),
-            2254 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, false, false, false),
-            2255 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, true, true, true),
-            2256 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, true, true, false),
-            2257 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, true, false, true),
-            2258 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, true, false, false),
-            2259 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, false, true, true),
-            2260 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, false, true, false),
-            2261 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, false, false, true),
-            2262 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, false, false, false),
-            2263 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, true, true, true),
-            2264 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, true, true, false),
-            2265 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, true, false, true),
-            2266 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, true, false, false),
-            2267 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, false, true, true),
-            2268 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, false, true, false),
-            2269 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, false, false, true),
-            2270 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, false, false, false),
-            2271 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, true, true, true),
-            2272 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, true, true, false),
-            2273 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, true, false, true),
-            2274 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, true, false, false),
-            2275 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, false, true, true),
-            2276 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, false, true, false),
-            2277 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, false, false, true),
-            2278 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, false, false, false),
-            2279 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, true, true, true),
-            2280 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, true, true, false),
-            2281 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, true, false, true),
-            2282 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, true, false, false),
-            2283 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, false, true, true),
-            2284 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, false, true, false),
-            2285 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, false, false, true),
-            2286 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, false, false, false),
-            2287 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, true, true, true),
-            2288 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, true, true, false),
-            2289 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, true, false, true),
-            2290 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, true, false, false),
-            2291 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, false, true, true),
-            2292 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, false, true, false),
-            2293 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, false, false, true),
-            2294 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, false, false, false),
-            2295 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, true, true, true),
-            2296 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, true, true, false),
-            2297 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, true, false, true),
-            2298 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, true, false, false),
-            2299 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, false, true, true),
-            2300 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, false, true, false),
-            2301 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, false, false, true),
-            2302 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, false, false, false),
-            2303 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, true, true, true),
-            2304 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, true, true, false),
-            2305 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, true, false, true),
-            2306 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, true, false, false),
-            2307 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, false, true, true),
-            2308 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, false, true, false),
-            2309 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, false, false, true),
-            2310 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, false, false, false),
-            2311 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, true, true, true),
-            2312 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, true, true, false),
-            2313 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, true, false, true),
-            2314 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, true, false, false),
-            2315 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, false, true, true),
-            2316 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, false, true, false),
-            2317 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, false, false, true),
-            2318 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, false, false, false),
-            2319 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, true, true, true),
-            2320 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, true, true, false),
-            2321 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, true, false, true),
-            2322 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, true, false, false),
-            2323 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, false, true, true),
-            2324 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, false, true, false),
-            2325 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, false, false, true),
-            2326 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, false, false, false),
-            2327 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, true, true, true),
-            2328 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, true, true, false),
-            2329 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, true, false, true),
-            2330 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, true, false, false),
-            2331 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, false, true, true),
-            2332 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, false, true, false),
-            2333 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, false, false, true),
-            2334 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, false, false, false),
-            2335 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, true, true, true),
-            2336 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, true, true, false),
-            2337 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, true, false, true),
-            2338 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, true, false, false),
-            2339 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, false, true, true),
-            2340 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, false, true, false),
-            2341 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, false, false, true),
-            2342 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, false, false, false),
-            2343 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, true, true, true),
-            2344 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, true, true, false),
-            2345 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, true, false, true),
-            2346 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, true, false, false),
-            2347 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, false, true, true),
-            2348 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, false, true, false),
-            2349 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, false, false, true),
-            2350 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, false, false, false),
-            2351 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, true, true, true),
-            2352 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, true, true, false),
-            2353 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, true, false, true),
-            2354 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, true, false, false),
-            2355 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, false, true, true),
-            2356 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, false, true, false),
-            2357 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, false, false, true),
-            2358 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, false, false, false),
-            2359 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, true, true, true),
-            2360 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, true, true, false),
-            2361 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, true, false, true),
-            2362 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, true, false, false),
-            2363 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, false, true, true),
-            2364 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, false, true, false),
-            2365 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, false, false, true),
-            2366 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, false, false, false),
-            2367 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, true, true, true),
-            2368 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, true, true, false),
-            2369 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, true, false, true),
-            2370 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, true, false, false),
-            2371 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, false, true, true),
-            2372 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, false, true, false),
-            2373 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, false, false, true),
-            2374 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, false, false, false),
-            2375 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, true, true, true),
-            2376 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, true, true, false),
-            2377 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, true, false, true),
-            2378 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, true, false, false),
-            2379 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, false, true, true),
-            2380 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, false, true, false),
-            2381 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, false, false, true),
-            2382 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, false, false, false),
-            2383 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, true, true, true),
-            2384 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, true, true, false),
-            2385 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, true, false, true),
-            2386 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, true, false, false),
-            2387 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, false, true, true),
-            2388 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, false, true, false),
-            2389 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, false, false, true),
-            2390 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, false, false, false),
-            2391 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, true, true, true),
-            2392 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, true, true, false),
-            2393 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, true, false, true),
-            2394 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, true, false, false),
-            2395 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, true, true),
-            2396 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, true, false),
-            2397 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, false, true),
-            2398 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, false, false),
+            3836 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, true, true),
+            3837 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, true, false),
+            3838 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, false, true),
+            3839 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, true, false, false),
+            3840 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, false, true, true),
+            3841 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, false, true, false),
+            3842 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, false, false, true),
+            3843 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, true, false, false, false),
+            3844 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, true, true, true),
+            3845 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, true, true, false),
+            3846 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, true, false, true),
+            3847 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, true, false, false),
+            3848 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, false, true, true),
+            3849 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, false, true, false),
+            3850 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, false, false, true),
+            3851 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, true, false, false, false, false),
+            3852 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, true, true, true),
+            3853 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, true, true, false),
+            3854 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, true, false, true),
+            3855 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, true, false, false),
+            3856 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, false, true, true),
+            3857 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, false, true, false),
+            3858 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, false, false, true),
+            3859 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, true, false, false, false),
+            3860 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, true, true, true),
+            3861 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, true, true, false),
+            3862 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, true, false, true),
+            3863 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, true, false, false),
+            3864 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, false, true, true),
+            3865 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, false, true, false),
+            3866 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, false, false, true),
+            3867 => new ChiseledBookshelfBlock(Identifier, Direction.North, true, false, false, false, false, false),
+            3868 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, true, true, true),
+            3869 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, true, true, false),
+            3870 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, true, false, true),
+            3871 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, true, false, false),
+            3872 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, false, true, true),
+            3873 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, false, true, false),
+            3874 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, false, false, true),
+            3875 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, true, false, false, false),
+            3876 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, true, true, true),
+            3877 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, true, true, false),
+            3878 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, true, false, true),
+            3879 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, true, false, false),
+            3880 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, false, true, true),
+            3881 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, false, true, false),
+            3882 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, false, false, true),
+            3883 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, true, false, false, false, false),
+            3884 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, true, true, true),
+            3885 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, true, true, false),
+            3886 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, true, false, true),
+            3887 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, true, false, false),
+            3888 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, false, true, true),
+            3889 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, false, true, false),
+            3890 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, false, false, true),
+            3891 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, true, false, false, false),
+            3892 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, true, true, true),
+            3893 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, true, true, false),
+            3894 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, true, false, true),
+            3895 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, true, false, false),
+            3896 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, false, true, true),
+            3897 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, false, true, false),
+            3898 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, false, false, true),
+            3899 => new ChiseledBookshelfBlock(Identifier, Direction.North, false, false, false, false, false, false),
+            3900 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, true, true, true),
+            3901 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, true, true, false),
+            3902 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, true, false, true),
+            3903 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, true, false, false),
+            3904 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, false, true, true),
+            3905 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, false, true, false),
+            3906 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, false, false, true),
+            3907 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, true, false, false, false),
+            3908 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, true, true, true),
+            3909 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, true, true, false),
+            3910 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, true, false, true),
+            3911 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, true, false, false),
+            3912 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, false, true, true),
+            3913 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, false, true, false),
+            3914 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, false, false, true),
+            3915 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, true, false, false, false, false),
+            3916 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, true, true, true),
+            3917 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, true, true, false),
+            3918 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, true, false, true),
+            3919 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, true, false, false),
+            3920 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, false, true, true),
+            3921 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, false, true, false),
+            3922 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, false, false, true),
+            3923 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, true, false, false, false),
+            3924 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, true, true, true),
+            3925 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, true, true, false),
+            3926 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, true, false, true),
+            3927 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, true, false, false),
+            3928 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, false, true, true),
+            3929 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, false, true, false),
+            3930 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, false, false, true),
+            3931 => new ChiseledBookshelfBlock(Identifier, Direction.South, true, false, false, false, false, false),
+            3932 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, true, true, true),
+            3933 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, true, true, false),
+            3934 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, true, false, true),
+            3935 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, true, false, false),
+            3936 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, false, true, true),
+            3937 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, false, true, false),
+            3938 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, false, false, true),
+            3939 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, true, false, false, false),
+            3940 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, true, true, true),
+            3941 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, true, true, false),
+            3942 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, true, false, true),
+            3943 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, true, false, false),
+            3944 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, false, true, true),
+            3945 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, false, true, false),
+            3946 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, false, false, true),
+            3947 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, true, false, false, false, false),
+            3948 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, true, true, true),
+            3949 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, true, true, false),
+            3950 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, true, false, true),
+            3951 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, true, false, false),
+            3952 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, false, true, true),
+            3953 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, false, true, false),
+            3954 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, false, false, true),
+            3955 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, true, false, false, false),
+            3956 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, true, true, true),
+            3957 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, true, true, false),
+            3958 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, true, false, true),
+            3959 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, true, false, false),
+            3960 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, false, true, true),
+            3961 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, false, true, false),
+            3962 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, false, false, true),
+            3963 => new ChiseledBookshelfBlock(Identifier, Direction.South, false, false, false, false, false, false),
+            3964 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, true, true, true),
+            3965 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, true, true, false),
+            3966 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, true, false, true),
+            3967 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, true, false, false),
+            3968 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, false, true, true),
+            3969 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, false, true, false),
+            3970 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, false, false, true),
+            3971 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, true, false, false, false),
+            3972 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, true, true, true),
+            3973 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, true, true, false),
+            3974 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, true, false, true),
+            3975 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, true, false, false),
+            3976 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, false, true, true),
+            3977 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, false, true, false),
+            3978 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, false, false, true),
+            3979 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, true, false, false, false, false),
+            3980 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, true, true, true),
+            3981 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, true, true, false),
+            3982 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, true, false, true),
+            3983 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, true, false, false),
+            3984 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, false, true, true),
+            3985 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, false, true, false),
+            3986 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, false, false, true),
+            3987 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, true, false, false, false),
+            3988 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, true, true, true),
+            3989 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, true, true, false),
+            3990 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, true, false, true),
+            3991 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, true, false, false),
+            3992 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, false, true, true),
+            3993 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, false, true, false),
+            3994 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, false, false, true),
+            3995 => new ChiseledBookshelfBlock(Identifier, Direction.West, true, false, false, false, false, false),
+            3996 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, true, true, true),
+            3997 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, true, true, false),
+            3998 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, true, false, true),
+            3999 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, true, false, false),
+            4000 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, false, true, true),
+            4001 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, false, true, false),
+            4002 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, false, false, true),
+            4003 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, true, false, false, false),
+            4004 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, true, true, true),
+            4005 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, true, true, false),
+            4006 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, true, false, true),
+            4007 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, true, false, false),
+            4008 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, false, true, true),
+            4009 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, false, true, false),
+            4010 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, false, false, true),
+            4011 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, true, false, false, false, false),
+            4012 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, true, true, true),
+            4013 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, true, true, false),
+            4014 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, true, false, true),
+            4015 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, true, false, false),
+            4016 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, false, true, true),
+            4017 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, false, true, false),
+            4018 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, false, false, true),
+            4019 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, true, false, false, false),
+            4020 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, true, true, true),
+            4021 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, true, true, false),
+            4022 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, true, false, true),
+            4023 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, true, false, false),
+            4024 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, false, true, true),
+            4025 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, false, true, false),
+            4026 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, false, false, true),
+            4027 => new ChiseledBookshelfBlock(Identifier, Direction.West, false, false, false, false, false, false),
+            4028 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, true, true, true),
+            4029 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, true, true, false),
+            4030 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, true, false, true),
+            4031 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, true, false, false),
+            4032 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, false, true, true),
+            4033 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, false, true, false),
+            4034 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, false, false, true),
+            4035 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, true, false, false, false),
+            4036 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, true, true, true),
+            4037 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, true, true, false),
+            4038 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, true, false, true),
+            4039 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, true, false, false),
+            4040 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, false, true, true),
+            4041 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, false, true, false),
+            4042 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, false, false, true),
+            4043 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, true, false, false, false, false),
+            4044 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, true, true, true),
+            4045 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, true, true, false),
+            4046 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, true, false, true),
+            4047 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, true, false, false),
+            4048 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, false, true, true),
+            4049 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, false, true, false),
+            4050 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, false, false, true),
+            4051 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, true, false, false, false),
+            4052 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, true, true, true),
+            4053 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, true, true, false),
+            4054 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, true, false, true),
+            4055 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, true, false, false),
+            4056 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, false, true, true),
+            4057 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, false, true, false),
+            4058 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, false, false, true),
+            4059 => new ChiseledBookshelfBlock(Identifier, Direction.East, true, false, false, false, false, false),
+            4060 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, true, true, true),
+            4061 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, true, true, false),
+            4062 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, true, false, true),
+            4063 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, true, false, false),
+            4064 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, false, true, true),
+            4065 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, false, true, false),
+            4066 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, false, false, true),
+            4067 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, true, false, false, false),
+            4068 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, true, true, true),
+            4069 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, true, true, false),
+            4070 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, true, false, true),
+            4071 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, true, false, false),
+            4072 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, false, true, true),
+            4073 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, false, true, false),
+            4074 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, false, false, true),
+            4075 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, true, false, false, false, false),
+            4076 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, true, true, true),
+            4077 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, true, true, false),
+            4078 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, true, false, true),
+            4079 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, true, false, false),
+            4080 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, false, true, true),
+            4081 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, false, true, false),
+            4082 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, false, false, true),
+            4083 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, true, false, false, false),
+            4084 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, true, true, true),
+            4085 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, true, true, false),
+            4086 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, true, false, true),
+            4087 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, true, false, false),
+            4088 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, true, true),
+            4089 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, true, false),
+            4090 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, false, true),
+            4091 => new ChiseledBookshelfBlock(Identifier, Direction.East, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

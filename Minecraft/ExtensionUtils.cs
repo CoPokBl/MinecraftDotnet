@@ -31,6 +31,44 @@ public static class ExtensionUtils {
         return result;
     }
 
+    /// <summary>The inverse of <see cref="ToLongArray"/>, for reading a Java BitSet back.</summary>
+    public static BitArray ToBitArray(this long[] longs) {
+        BitArray bits = new(longs.Length * 64);
+        for (int i = 0; i < bits.Length; i++) {
+            bits[i] = (longs[i / 64] & (1L << (i % 64))) != 0;
+        }
+        return bits;
+    }
+
+    /// <summary>
+    /// A Java <c>BitSet</c> as <c>toByteArray</c> spells it, which is what <c>ByteBufCodecs.BIT_SET</c>
+    /// sends: little endian bits, with the trailing zero bytes left off.
+    /// </summary>
+    public static byte[] ToJavaByteArray(this BitArray bits) {
+        int last = bits.Length - 1;
+        while (last >= 0 && !bits[last]) {
+            last--;
+        }
+
+        byte[] result = new byte[last / 8 + 1];
+        for (int i = 0; i <= last; i++) {
+            if (bits[i]) {
+                result[i / 8] |= (byte)(1 << (i % 8));
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>The inverse of <see cref="ToJavaByteArray"/>.</summary>
+    public static BitArray FromJavaByteArray(this byte[] bytes) {
+        BitArray bits = new(bytes.Length * 8);
+        for (int i = 0; i < bits.Length; i++) {
+            bits[i] = (bytes[i / 8] & (1 << (i % 8))) != 0;
+        }
+        return bits;
+    }
+
     public static T LogVal<T>(this T val, Func<T, Object> thing) {
         Console.WriteLine(thing.Invoke(val));
         return val;

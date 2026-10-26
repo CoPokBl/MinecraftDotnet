@@ -3,40 +3,81 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record LightGrayBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock {
-    public Identifier Category => "minecraft:bed";
-    public double Hardness => 0.2;
-    public double ExplosionResistance => 0.2;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => "minecraft:bed";
-    public Identifier? Item => "minecraft:light_gray_bed";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.8125] -> [0.1875, 0.5625, 1.0], AABB[0.8125, 0.0, 0.8125] -> [1.0, 0.5625, 1.0], AABB[0.0, 0.1875, 0.0] -> [1.0, 0.5625, 0.8125], AABB[0.1875, 0.1875, 0.8125] -> [0.8125, 0.5625, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.8125] -> [0.1875, 0.5625, 1.0], AABB[0.8125, 0.0, 0.8125] -> [1.0, 0.5625, 1.0], AABB[0.0, 0.1875, 0.0] -> [1.0, 0.5625, 0.8125], AABB[0.1875, 0.1875, 0.8125] -> [0.8125, 0.5625, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.8125] -> [0.1875, 0.5625, 1.0], AABB[0.8125, 0.0, 0.8125] -> [1.0, 0.5625, 1.0], AABB[0.0, 0.1875, 0.0] -> [1.0, 0.5625, 0.8125], AABB[0.1875, 0.1875, 0.8125] -> [0.8125, 0.5625, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 22;
-    public string TranslationKey => "block.minecraft.light_gray_bed";
-    public bool CanRespawnIn => false;
+public record LightGrayBedBlock(Identifier Identifier, Direction Facing, bool Occupied, BedPart Part) : IBlock, IHorizontalFacing, IOccupied, IBedParted {
+    private static readonly BlockInfo Data = new("block.minecraft.light_gray_bed", 0.2f, 0.6f, 1f, 1f, 0.75f, 0.5f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:light_gray_bed", BlockInfo.VanillaOnly, "minecraft:blocks/light_gray_bed");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 0, PushReaction.Popped, 3, "wood", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S362, BlockShapes.S362, BlockShapes.S1, BlockShapes.S1, BlockShapes.S362, BlockShapes.S362);
+    private static readonly BlockStateInfo I1 = I0 with { MapColorId = 22, BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S363, CollisionShape = BlockShapes.S363, VisualShape = BlockShapes.S363, SupportShape = BlockShapes.S363 };
+    private static readonly BlockStateInfo I3 = I0 with { MapColorId = 22 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S364, CollisionShape = BlockShapes.S364, VisualShape = BlockShapes.S364, SupportShape = BlockShapes.S364 };
+    private static readonly BlockStateInfo I5 = I0 with { MapColorId = 22, BlockShape = BlockShapes.S365, CollisionShape = BlockShapes.S365, VisualShape = BlockShapes.S365, SupportShape = BlockShapes.S365 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S365, CollisionShape = BlockShapes.S365, VisualShape = BlockShapes.S365, SupportShape = BlockShapes.S365 };
+    private static readonly BlockStateInfo I7 = I0 with { MapColorId = 22, BlockShape = BlockShapes.S364, CollisionShape = BlockShapes.S364, VisualShape = BlockShapes.S364, SupportShape = BlockShapes.S364 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I2, I3, I4, I5, I4, I5, I6, I7, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 2158];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithOccupied(bool occupied) => this with { Occupied = occupied };
+
+    public IBlock WithPart(BedPart part) => this with { Part = part };
 
 
     public uint StateId {
@@ -44,49 +85,49 @@ public record LightGrayBedBlock(Identifier Identifier, Direction Facing, bool Oc
             return Facing switch {
                 Direction.North => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 1859,
-                        BedPart.Foot => 1860,
+                        BedPart.Head => 2158,
+                        BedPart.Foot => 2159,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 1861,
-                        BedPart.Foot => 1862,
+                        BedPart.Head => 2160,
+                        BedPart.Foot => 2161,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
                 Direction.South => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 1863,
-                        BedPart.Foot => 1864,
+                        BedPart.Head => 2162,
+                        BedPart.Foot => 2163,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 1865,
-                        BedPart.Foot => 1866,
+                        BedPart.Head => 2164,
+                        BedPart.Foot => 2165,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
                 Direction.West => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 1867,
-                        BedPart.Foot => 1868,
+                        BedPart.Head => 2166,
+                        BedPart.Foot => 2167,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 1869,
-                        BedPart.Foot => 1870,
+                        BedPart.Head => 2168,
+                        BedPart.Foot => 2169,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
                 Direction.East => Occupied switch {
                     true => Part switch {
-                        BedPart.Head => 1871,
-                        BedPart.Foot => 1872,
+                        BedPart.Head => 2170,
+                        BedPart.Foot => 2171,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                     false => Part switch {
-                        BedPart.Head => 1873,
-                        BedPart.Foot => 1874,
+                        BedPart.Head => 2172,
+                        BedPart.Foot => 2173,
                         _ => throw new ArgumentOutOfRangeException(nameof(Part), Part, "Unknown value for property part.")
                     },
                 },
@@ -97,22 +138,22 @@ public record LightGrayBedBlock(Identifier Identifier, Direction Facing, bool Oc
     
     public IBlock WithState(uint state) {
         return state switch {
-            1859 => new LightGrayBedBlock(Identifier, Direction.North, true, BedPart.Head),
-            1860 => new LightGrayBedBlock(Identifier, Direction.North, true, BedPart.Foot),
-            1861 => new LightGrayBedBlock(Identifier, Direction.North, false, BedPart.Head),
-            1862 => new LightGrayBedBlock(Identifier, Direction.North, false, BedPart.Foot),
-            1863 => new LightGrayBedBlock(Identifier, Direction.South, true, BedPart.Head),
-            1864 => new LightGrayBedBlock(Identifier, Direction.South, true, BedPart.Foot),
-            1865 => new LightGrayBedBlock(Identifier, Direction.South, false, BedPart.Head),
-            1866 => new LightGrayBedBlock(Identifier, Direction.South, false, BedPart.Foot),
-            1867 => new LightGrayBedBlock(Identifier, Direction.West, true, BedPart.Head),
-            1868 => new LightGrayBedBlock(Identifier, Direction.West, true, BedPart.Foot),
-            1869 => new LightGrayBedBlock(Identifier, Direction.West, false, BedPart.Head),
-            1870 => new LightGrayBedBlock(Identifier, Direction.West, false, BedPart.Foot),
-            1871 => new LightGrayBedBlock(Identifier, Direction.East, true, BedPart.Head),
-            1872 => new LightGrayBedBlock(Identifier, Direction.East, true, BedPart.Foot),
-            1873 => new LightGrayBedBlock(Identifier, Direction.East, false, BedPart.Head),
-            1874 => new LightGrayBedBlock(Identifier, Direction.East, false, BedPart.Foot),
+            2158 => new LightGrayBedBlock(Identifier, Direction.North, true, BedPart.Head),
+            2159 => new LightGrayBedBlock(Identifier, Direction.North, true, BedPart.Foot),
+            2160 => new LightGrayBedBlock(Identifier, Direction.North, false, BedPart.Head),
+            2161 => new LightGrayBedBlock(Identifier, Direction.North, false, BedPart.Foot),
+            2162 => new LightGrayBedBlock(Identifier, Direction.South, true, BedPart.Head),
+            2163 => new LightGrayBedBlock(Identifier, Direction.South, true, BedPart.Foot),
+            2164 => new LightGrayBedBlock(Identifier, Direction.South, false, BedPart.Head),
+            2165 => new LightGrayBedBlock(Identifier, Direction.South, false, BedPart.Foot),
+            2166 => new LightGrayBedBlock(Identifier, Direction.West, true, BedPart.Head),
+            2167 => new LightGrayBedBlock(Identifier, Direction.West, true, BedPart.Foot),
+            2168 => new LightGrayBedBlock(Identifier, Direction.West, false, BedPart.Head),
+            2169 => new LightGrayBedBlock(Identifier, Direction.West, false, BedPart.Foot),
+            2170 => new LightGrayBedBlock(Identifier, Direction.East, true, BedPart.Head),
+            2171 => new LightGrayBedBlock(Identifier, Direction.East, true, BedPart.Foot),
+            2172 => new LightGrayBedBlock(Identifier, Direction.East, false, BedPart.Head),
+            2173 => new LightGrayBedBlock(Identifier, Direction.East, false, BedPart.Foot),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

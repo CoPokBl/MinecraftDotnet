@@ -3,40 +3,79 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CherryHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:ceiling_hanging_sign";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "cherry_wood_hanging_sign";
-    public Identifier? BlockEntity => "minecraft:hanging_sign";
-    public Identifier? Item => "minecraft:cherry_hanging_sign";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.4375] -> [0.9375, 0.625, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 42;
-    public string TranslationKey => "block.minecraft.cherry_hanging_sign";
-    public bool CanRespawnIn => true;
+public record CherryHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock, IAttached, IRotated, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.cherry_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:cherry_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/cherry_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 42, "cherry_wood_hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 7759];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAttached(bool attached) => this with { Attached = attached };
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,135 +83,135 @@ public record CherryHangingSignBlock(Identifier Identifier, bool Attached, int R
             return Attached switch {
                 true => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 5962,
-                        false => 5963,
+                        true => 7759,
+                        false => 7760,
                     },
                     1 => Waterlogged switch {
-                        true => 5964,
-                        false => 5965,
+                        true => 7761,
+                        false => 7762,
                     },
                     2 => Waterlogged switch {
-                        true => 5966,
-                        false => 5967,
+                        true => 7763,
+                        false => 7764,
                     },
                     3 => Waterlogged switch {
-                        true => 5968,
-                        false => 5969,
+                        true => 7765,
+                        false => 7766,
                     },
                     4 => Waterlogged switch {
-                        true => 5970,
-                        false => 5971,
+                        true => 7767,
+                        false => 7768,
                     },
                     5 => Waterlogged switch {
-                        true => 5972,
-                        false => 5973,
+                        true => 7769,
+                        false => 7770,
                     },
                     6 => Waterlogged switch {
-                        true => 5974,
-                        false => 5975,
+                        true => 7771,
+                        false => 7772,
                     },
                     7 => Waterlogged switch {
-                        true => 5976,
-                        false => 5977,
+                        true => 7773,
+                        false => 7774,
                     },
                     8 => Waterlogged switch {
-                        true => 5978,
-                        false => 5979,
+                        true => 7775,
+                        false => 7776,
                     },
                     9 => Waterlogged switch {
-                        true => 5980,
-                        false => 5981,
+                        true => 7777,
+                        false => 7778,
                     },
                     10 => Waterlogged switch {
-                        true => 5982,
-                        false => 5983,
+                        true => 7779,
+                        false => 7780,
                     },
                     11 => Waterlogged switch {
-                        true => 5984,
-                        false => 5985,
+                        true => 7781,
+                        false => 7782,
                     },
                     12 => Waterlogged switch {
-                        true => 5986,
-                        false => 5987,
+                        true => 7783,
+                        false => 7784,
                     },
                     13 => Waterlogged switch {
-                        true => 5988,
-                        false => 5989,
+                        true => 7785,
+                        false => 7786,
                     },
                     14 => Waterlogged switch {
-                        true => 5990,
-                        false => 5991,
+                        true => 7787,
+                        false => 7788,
                     },
                     15 => Waterlogged switch {
-                        true => 5992,
-                        false => 5993,
+                        true => 7789,
+                        false => 7790,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 5994,
-                        false => 5995,
+                        true => 7791,
+                        false => 7792,
                     },
                     1 => Waterlogged switch {
-                        true => 5996,
-                        false => 5997,
+                        true => 7793,
+                        false => 7794,
                     },
                     2 => Waterlogged switch {
-                        true => 5998,
-                        false => 5999,
+                        true => 7795,
+                        false => 7796,
                     },
                     3 => Waterlogged switch {
-                        true => 6000,
-                        false => 6001,
+                        true => 7797,
+                        false => 7798,
                     },
                     4 => Waterlogged switch {
-                        true => 6002,
-                        false => 6003,
+                        true => 7799,
+                        false => 7800,
                     },
                     5 => Waterlogged switch {
-                        true => 6004,
-                        false => 6005,
+                        true => 7801,
+                        false => 7802,
                     },
                     6 => Waterlogged switch {
-                        true => 6006,
-                        false => 6007,
+                        true => 7803,
+                        false => 7804,
                     },
                     7 => Waterlogged switch {
-                        true => 6008,
-                        false => 6009,
+                        true => 7805,
+                        false => 7806,
                     },
                     8 => Waterlogged switch {
-                        true => 6010,
-                        false => 6011,
+                        true => 7807,
+                        false => 7808,
                     },
                     9 => Waterlogged switch {
-                        true => 6012,
-                        false => 6013,
+                        true => 7809,
+                        false => 7810,
                     },
                     10 => Waterlogged switch {
-                        true => 6014,
-                        false => 6015,
+                        true => 7811,
+                        false => 7812,
                     },
                     11 => Waterlogged switch {
-                        true => 6016,
-                        false => 6017,
+                        true => 7813,
+                        false => 7814,
                     },
                     12 => Waterlogged switch {
-                        true => 6018,
-                        false => 6019,
+                        true => 7815,
+                        false => 7816,
                     },
                     13 => Waterlogged switch {
-                        true => 6020,
-                        false => 6021,
+                        true => 7817,
+                        false => 7818,
                     },
                     14 => Waterlogged switch {
-                        true => 6022,
-                        false => 6023,
+                        true => 7819,
+                        false => 7820,
                     },
                     15 => Waterlogged switch {
-                        true => 6024,
-                        false => 6025,
+                        true => 7821,
+                        false => 7822,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
@@ -182,70 +221,70 @@ public record CherryHangingSignBlock(Identifier Identifier, bool Attached, int R
     
     public IBlock WithState(uint state) {
         return state switch {
-            5962 => new CherryHangingSignBlock(Identifier, true, 0, true),
-            5963 => new CherryHangingSignBlock(Identifier, true, 0, false),
-            5964 => new CherryHangingSignBlock(Identifier, true, 1, true),
-            5965 => new CherryHangingSignBlock(Identifier, true, 1, false),
-            5966 => new CherryHangingSignBlock(Identifier, true, 2, true),
-            5967 => new CherryHangingSignBlock(Identifier, true, 2, false),
-            5968 => new CherryHangingSignBlock(Identifier, true, 3, true),
-            5969 => new CherryHangingSignBlock(Identifier, true, 3, false),
-            5970 => new CherryHangingSignBlock(Identifier, true, 4, true),
-            5971 => new CherryHangingSignBlock(Identifier, true, 4, false),
-            5972 => new CherryHangingSignBlock(Identifier, true, 5, true),
-            5973 => new CherryHangingSignBlock(Identifier, true, 5, false),
-            5974 => new CherryHangingSignBlock(Identifier, true, 6, true),
-            5975 => new CherryHangingSignBlock(Identifier, true, 6, false),
-            5976 => new CherryHangingSignBlock(Identifier, true, 7, true),
-            5977 => new CherryHangingSignBlock(Identifier, true, 7, false),
-            5978 => new CherryHangingSignBlock(Identifier, true, 8, true),
-            5979 => new CherryHangingSignBlock(Identifier, true, 8, false),
-            5980 => new CherryHangingSignBlock(Identifier, true, 9, true),
-            5981 => new CherryHangingSignBlock(Identifier, true, 9, false),
-            5982 => new CherryHangingSignBlock(Identifier, true, 10, true),
-            5983 => new CherryHangingSignBlock(Identifier, true, 10, false),
-            5984 => new CherryHangingSignBlock(Identifier, true, 11, true),
-            5985 => new CherryHangingSignBlock(Identifier, true, 11, false),
-            5986 => new CherryHangingSignBlock(Identifier, true, 12, true),
-            5987 => new CherryHangingSignBlock(Identifier, true, 12, false),
-            5988 => new CherryHangingSignBlock(Identifier, true, 13, true),
-            5989 => new CherryHangingSignBlock(Identifier, true, 13, false),
-            5990 => new CherryHangingSignBlock(Identifier, true, 14, true),
-            5991 => new CherryHangingSignBlock(Identifier, true, 14, false),
-            5992 => new CherryHangingSignBlock(Identifier, true, 15, true),
-            5993 => new CherryHangingSignBlock(Identifier, true, 15, false),
-            5994 => new CherryHangingSignBlock(Identifier, false, 0, true),
-            5995 => new CherryHangingSignBlock(Identifier, false, 0, false),
-            5996 => new CherryHangingSignBlock(Identifier, false, 1, true),
-            5997 => new CherryHangingSignBlock(Identifier, false, 1, false),
-            5998 => new CherryHangingSignBlock(Identifier, false, 2, true),
-            5999 => new CherryHangingSignBlock(Identifier, false, 2, false),
-            6000 => new CherryHangingSignBlock(Identifier, false, 3, true),
-            6001 => new CherryHangingSignBlock(Identifier, false, 3, false),
-            6002 => new CherryHangingSignBlock(Identifier, false, 4, true),
-            6003 => new CherryHangingSignBlock(Identifier, false, 4, false),
-            6004 => new CherryHangingSignBlock(Identifier, false, 5, true),
-            6005 => new CherryHangingSignBlock(Identifier, false, 5, false),
-            6006 => new CherryHangingSignBlock(Identifier, false, 6, true),
-            6007 => new CherryHangingSignBlock(Identifier, false, 6, false),
-            6008 => new CherryHangingSignBlock(Identifier, false, 7, true),
-            6009 => new CherryHangingSignBlock(Identifier, false, 7, false),
-            6010 => new CherryHangingSignBlock(Identifier, false, 8, true),
-            6011 => new CherryHangingSignBlock(Identifier, false, 8, false),
-            6012 => new CherryHangingSignBlock(Identifier, false, 9, true),
-            6013 => new CherryHangingSignBlock(Identifier, false, 9, false),
-            6014 => new CherryHangingSignBlock(Identifier, false, 10, true),
-            6015 => new CherryHangingSignBlock(Identifier, false, 10, false),
-            6016 => new CherryHangingSignBlock(Identifier, false, 11, true),
-            6017 => new CherryHangingSignBlock(Identifier, false, 11, false),
-            6018 => new CherryHangingSignBlock(Identifier, false, 12, true),
-            6019 => new CherryHangingSignBlock(Identifier, false, 12, false),
-            6020 => new CherryHangingSignBlock(Identifier, false, 13, true),
-            6021 => new CherryHangingSignBlock(Identifier, false, 13, false),
-            6022 => new CherryHangingSignBlock(Identifier, false, 14, true),
-            6023 => new CherryHangingSignBlock(Identifier, false, 14, false),
-            6024 => new CherryHangingSignBlock(Identifier, false, 15, true),
-            6025 => new CherryHangingSignBlock(Identifier, false, 15, false),
+            7759 => new CherryHangingSignBlock(Identifier, true, 0, true),
+            7760 => new CherryHangingSignBlock(Identifier, true, 0, false),
+            7761 => new CherryHangingSignBlock(Identifier, true, 1, true),
+            7762 => new CherryHangingSignBlock(Identifier, true, 1, false),
+            7763 => new CherryHangingSignBlock(Identifier, true, 2, true),
+            7764 => new CherryHangingSignBlock(Identifier, true, 2, false),
+            7765 => new CherryHangingSignBlock(Identifier, true, 3, true),
+            7766 => new CherryHangingSignBlock(Identifier, true, 3, false),
+            7767 => new CherryHangingSignBlock(Identifier, true, 4, true),
+            7768 => new CherryHangingSignBlock(Identifier, true, 4, false),
+            7769 => new CherryHangingSignBlock(Identifier, true, 5, true),
+            7770 => new CherryHangingSignBlock(Identifier, true, 5, false),
+            7771 => new CherryHangingSignBlock(Identifier, true, 6, true),
+            7772 => new CherryHangingSignBlock(Identifier, true, 6, false),
+            7773 => new CherryHangingSignBlock(Identifier, true, 7, true),
+            7774 => new CherryHangingSignBlock(Identifier, true, 7, false),
+            7775 => new CherryHangingSignBlock(Identifier, true, 8, true),
+            7776 => new CherryHangingSignBlock(Identifier, true, 8, false),
+            7777 => new CherryHangingSignBlock(Identifier, true, 9, true),
+            7778 => new CherryHangingSignBlock(Identifier, true, 9, false),
+            7779 => new CherryHangingSignBlock(Identifier, true, 10, true),
+            7780 => new CherryHangingSignBlock(Identifier, true, 10, false),
+            7781 => new CherryHangingSignBlock(Identifier, true, 11, true),
+            7782 => new CherryHangingSignBlock(Identifier, true, 11, false),
+            7783 => new CherryHangingSignBlock(Identifier, true, 12, true),
+            7784 => new CherryHangingSignBlock(Identifier, true, 12, false),
+            7785 => new CherryHangingSignBlock(Identifier, true, 13, true),
+            7786 => new CherryHangingSignBlock(Identifier, true, 13, false),
+            7787 => new CherryHangingSignBlock(Identifier, true, 14, true),
+            7788 => new CherryHangingSignBlock(Identifier, true, 14, false),
+            7789 => new CherryHangingSignBlock(Identifier, true, 15, true),
+            7790 => new CherryHangingSignBlock(Identifier, true, 15, false),
+            7791 => new CherryHangingSignBlock(Identifier, false, 0, true),
+            7792 => new CherryHangingSignBlock(Identifier, false, 0, false),
+            7793 => new CherryHangingSignBlock(Identifier, false, 1, true),
+            7794 => new CherryHangingSignBlock(Identifier, false, 1, false),
+            7795 => new CherryHangingSignBlock(Identifier, false, 2, true),
+            7796 => new CherryHangingSignBlock(Identifier, false, 2, false),
+            7797 => new CherryHangingSignBlock(Identifier, false, 3, true),
+            7798 => new CherryHangingSignBlock(Identifier, false, 3, false),
+            7799 => new CherryHangingSignBlock(Identifier, false, 4, true),
+            7800 => new CherryHangingSignBlock(Identifier, false, 4, false),
+            7801 => new CherryHangingSignBlock(Identifier, false, 5, true),
+            7802 => new CherryHangingSignBlock(Identifier, false, 5, false),
+            7803 => new CherryHangingSignBlock(Identifier, false, 6, true),
+            7804 => new CherryHangingSignBlock(Identifier, false, 6, false),
+            7805 => new CherryHangingSignBlock(Identifier, false, 7, true),
+            7806 => new CherryHangingSignBlock(Identifier, false, 7, false),
+            7807 => new CherryHangingSignBlock(Identifier, false, 8, true),
+            7808 => new CherryHangingSignBlock(Identifier, false, 8, false),
+            7809 => new CherryHangingSignBlock(Identifier, false, 9, true),
+            7810 => new CherryHangingSignBlock(Identifier, false, 9, false),
+            7811 => new CherryHangingSignBlock(Identifier, false, 10, true),
+            7812 => new CherryHangingSignBlock(Identifier, false, 10, false),
+            7813 => new CherryHangingSignBlock(Identifier, false, 11, true),
+            7814 => new CherryHangingSignBlock(Identifier, false, 11, false),
+            7815 => new CherryHangingSignBlock(Identifier, false, 12, true),
+            7816 => new CherryHangingSignBlock(Identifier, false, 12, false),
+            7817 => new CherryHangingSignBlock(Identifier, false, 13, true),
+            7818 => new CherryHangingSignBlock(Identifier, false, 13, false),
+            7819 => new CherryHangingSignBlock(Identifier, false, 14, true),
+            7820 => new CherryHangingSignBlock(Identifier, false, 14, false),
+            7821 => new CherryHangingSignBlock(Identifier, false, 15, true),
+            7822 => new CherryHangingSignBlock(Identifier, false, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

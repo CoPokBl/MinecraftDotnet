@@ -3,40 +3,75 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction Facing, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:decorated_pot";
-    public double Hardness => 0;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "decorated_pot";
-    public Identifier? BlockEntity => "minecraft:decorated_pot";
-    public Identifier? Item => "minecraft:decorated_pot";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.0625] -> [0.9375, 1.0, 0.9375]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.0625] -> [0.9375, 1.0, 0.9375]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.0625] -> [0.9375, 1.0, 0.9375]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 50;
-    public string TranslationKey => "block.minecraft.decorated_pot";
-    public bool CanRespawnIn => false;
+public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.decorated_pot", 0f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:decorated_pot", "minecraft:decorated_pot", BlockInfo.VanillaOnly, "minecraft:blocks/decorated_pot");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Popped, 50, "decorated_pot_cracked", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S401, BlockShapes.S401, BlockShapes.S1, BlockShapes.S1, BlockShapes.S401, BlockShapes.S401);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { SoundType = "decorated_pot" };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, SoundType = "decorated_pot", Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 35443];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,39 +79,39 @@ public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction F
             return Cracked switch {
                 true => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 29391,
-                        false => 29392,
+                        true => 35443,
+                        false => 35444,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 29393,
-                        false => 29394,
+                        true => 35445,
+                        false => 35446,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 29395,
-                        false => 29396,
+                        true => 35447,
+                        false => 35448,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 29397,
-                        false => 29398,
+                        true => 35449,
+                        false => 35450,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 false => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 29399,
-                        false => 29400,
+                        true => 35451,
+                        false => 35452,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 29401,
-                        false => 29402,
+                        true => 35453,
+                        false => 35454,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 29403,
-                        false => 29404,
+                        true => 35455,
+                        false => 35456,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 29405,
-                        false => 29406,
+                        true => 35457,
+                        false => 35458,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -86,22 +121,22 @@ public record DecoratedPotBlock(Identifier Identifier, bool Cracked, Direction F
     
     public IBlock WithState(uint state) {
         return state switch {
-            29391 => new DecoratedPotBlock(Identifier, true, Direction.North, true),
-            29392 => new DecoratedPotBlock(Identifier, true, Direction.North, false),
-            29393 => new DecoratedPotBlock(Identifier, true, Direction.South, true),
-            29394 => new DecoratedPotBlock(Identifier, true, Direction.South, false),
-            29395 => new DecoratedPotBlock(Identifier, true, Direction.West, true),
-            29396 => new DecoratedPotBlock(Identifier, true, Direction.West, false),
-            29397 => new DecoratedPotBlock(Identifier, true, Direction.East, true),
-            29398 => new DecoratedPotBlock(Identifier, true, Direction.East, false),
-            29399 => new DecoratedPotBlock(Identifier, false, Direction.North, true),
-            29400 => new DecoratedPotBlock(Identifier, false, Direction.North, false),
-            29401 => new DecoratedPotBlock(Identifier, false, Direction.South, true),
-            29402 => new DecoratedPotBlock(Identifier, false, Direction.South, false),
-            29403 => new DecoratedPotBlock(Identifier, false, Direction.West, true),
-            29404 => new DecoratedPotBlock(Identifier, false, Direction.West, false),
-            29405 => new DecoratedPotBlock(Identifier, false, Direction.East, true),
-            29406 => new DecoratedPotBlock(Identifier, false, Direction.East, false),
+            35443 => new DecoratedPotBlock(Identifier, true, Direction.North, true),
+            35444 => new DecoratedPotBlock(Identifier, true, Direction.North, false),
+            35445 => new DecoratedPotBlock(Identifier, true, Direction.South, true),
+            35446 => new DecoratedPotBlock(Identifier, true, Direction.South, false),
+            35447 => new DecoratedPotBlock(Identifier, true, Direction.West, true),
+            35448 => new DecoratedPotBlock(Identifier, true, Direction.West, false),
+            35449 => new DecoratedPotBlock(Identifier, true, Direction.East, true),
+            35450 => new DecoratedPotBlock(Identifier, true, Direction.East, false),
+            35451 => new DecoratedPotBlock(Identifier, false, Direction.North, true),
+            35452 => new DecoratedPotBlock(Identifier, false, Direction.North, false),
+            35453 => new DecoratedPotBlock(Identifier, false, Direction.South, true),
+            35454 => new DecoratedPotBlock(Identifier, false, Direction.South, false),
+            35455 => new DecoratedPotBlock(Identifier, false, Direction.West, true),
+            35456 => new DecoratedPotBlock(Identifier, false, Direction.West, false),
+            35457 => new DecoratedPotBlock(Identifier, false, Direction.East, true),
+            35458 => new DecoratedPotBlock(Identifier, false, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

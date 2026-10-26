@@ -3,40 +3,77 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:scaffolding";
-    public double Hardness => 0;
-    public double ExplosionResistance => 0;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "scaffolding";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:scaffolding";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [0.125, 1.0, 0.125], AABB[0.0, 0.0, 0.875] -> [0.125, 1.0, 1.0], AABB[0.875, 0.0, 0.0] -> [1.0, 1.0, 0.125], AABB[0.875, 0.0, 0.875] -> [1.0, 1.0, 1.0], AABB[0.0, 0.875, 0.125] -> [1.0, 1.0, 0.875], AABB[0.125, 0.875, 0.0] -> [0.875, 1.0, 0.125], AABB[0.125, 0.875, 0.875] -> [0.875, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [0.125, 1.0, 0.125], AABB[0.0, 0.0, 0.875] -> [0.125, 1.0, 1.0], AABB[0.875, 0.0, 0.0] -> [1.0, 1.0, 0.125], AABB[0.875, 0.0, 0.875] -> [1.0, 1.0, 1.0], AABB[0.0, 0.875, 0.125] -> [1.0, 1.0, 0.875], AABB[0.125, 0.875, 0.0] -> [0.875, 1.0, 0.125], AABB[0.125, 0.875, 0.875] -> [0.875, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [0.125, 1.0, 0.125], AABB[0.0, 0.0, 0.875] -> [0.125, 1.0, 1.0], AABB[0.875, 0.0, 0.0] -> [1.0, 1.0, 0.125], AABB[0.875, 0.0, 0.875] -> [1.0, 1.0, 1.0], AABB[0.0, 0.875, 0.125] -> [1.0, 1.0, 0.875], AABB[0.125, 0.875, 0.0] -> [0.875, 1.0, 0.125], AABB[0.125, 0.875, 0.875] -> [0.875, 1.0, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 2;
-    public string TranslationKey => "block.minecraft.scaffolding";
-    public bool CanRespawnIn => true;
+public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance, bool Waterlogged) : IBlock, IBottomed, IDistanced, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.scaffolding", 0f, 0.6f, 1f, 1f, 0f, 0f, false, true, BlockOffsetType.None, 0f, 0f, null, "minecraft:scaffolding", BlockInfo.VanillaOnly, "minecraft:blocks/scaffolding");
+    private static readonly BlockStateInfo I0 = new(0f, 0, 1, PushReaction.Popped, 2, "scaffolding", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S910, BlockShapes.S911, BlockShapes.S79, BlockShapes.S1, BlockShapes.S911, BlockShapes.S911);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S911 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S911 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 24063];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithBottom(bool bottom) => this with { Bottom = bottom };
+
+    public IBlock WithDistance(int distance) => this with { Distance = distance };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,71 +81,71 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
             return Bottom switch {
                 true => Distance switch {
                     0 => Waterlogged switch {
-                        true => 20504,
-                        false => 20505,
+                        true => 24063,
+                        false => 24064,
                     },
                     1 => Waterlogged switch {
-                        true => 20506,
-                        false => 20507,
+                        true => 24065,
+                        false => 24066,
                     },
                     2 => Waterlogged switch {
-                        true => 20508,
-                        false => 20509,
+                        true => 24067,
+                        false => 24068,
                     },
                     3 => Waterlogged switch {
-                        true => 20510,
-                        false => 20511,
+                        true => 24069,
+                        false => 24070,
                     },
                     4 => Waterlogged switch {
-                        true => 20512,
-                        false => 20513,
+                        true => 24071,
+                        false => 24072,
                     },
                     5 => Waterlogged switch {
-                        true => 20514,
-                        false => 20515,
+                        true => 24073,
+                        false => 24074,
                     },
                     6 => Waterlogged switch {
-                        true => 20516,
-                        false => 20517,
+                        true => 24075,
+                        false => 24076,
                     },
                     7 => Waterlogged switch {
-                        true => 20518,
-                        false => 20519,
+                        true => 24077,
+                        false => 24078,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
                 },
                 false => Distance switch {
                     0 => Waterlogged switch {
-                        true => 20520,
-                        false => 20521,
+                        true => 24079,
+                        false => 24080,
                     },
                     1 => Waterlogged switch {
-                        true => 20522,
-                        false => 20523,
+                        true => 24081,
+                        false => 24082,
                     },
                     2 => Waterlogged switch {
-                        true => 20524,
-                        false => 20525,
+                        true => 24083,
+                        false => 24084,
                     },
                     3 => Waterlogged switch {
-                        true => 20526,
-                        false => 20527,
+                        true => 24085,
+                        false => 24086,
                     },
                     4 => Waterlogged switch {
-                        true => 20528,
-                        false => 20529,
+                        true => 24087,
+                        false => 24088,
                     },
                     5 => Waterlogged switch {
-                        true => 20530,
-                        false => 20531,
+                        true => 24089,
+                        false => 24090,
                     },
                     6 => Waterlogged switch {
-                        true => 20532,
-                        false => 20533,
+                        true => 24091,
+                        false => 24092,
                     },
                     7 => Waterlogged switch {
-                        true => 20534,
-                        false => 20535,
+                        true => 24093,
+                        false => 24094,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Distance), Distance, "Unknown value for property distance.")
                 },
@@ -118,38 +155,38 @@ public record ScaffoldingBlock(Identifier Identifier, bool Bottom, int Distance,
     
     public IBlock WithState(uint state) {
         return state switch {
-            20504 => new ScaffoldingBlock(Identifier, true, 0, true),
-            20505 => new ScaffoldingBlock(Identifier, true, 0, false),
-            20506 => new ScaffoldingBlock(Identifier, true, 1, true),
-            20507 => new ScaffoldingBlock(Identifier, true, 1, false),
-            20508 => new ScaffoldingBlock(Identifier, true, 2, true),
-            20509 => new ScaffoldingBlock(Identifier, true, 2, false),
-            20510 => new ScaffoldingBlock(Identifier, true, 3, true),
-            20511 => new ScaffoldingBlock(Identifier, true, 3, false),
-            20512 => new ScaffoldingBlock(Identifier, true, 4, true),
-            20513 => new ScaffoldingBlock(Identifier, true, 4, false),
-            20514 => new ScaffoldingBlock(Identifier, true, 5, true),
-            20515 => new ScaffoldingBlock(Identifier, true, 5, false),
-            20516 => new ScaffoldingBlock(Identifier, true, 6, true),
-            20517 => new ScaffoldingBlock(Identifier, true, 6, false),
-            20518 => new ScaffoldingBlock(Identifier, true, 7, true),
-            20519 => new ScaffoldingBlock(Identifier, true, 7, false),
-            20520 => new ScaffoldingBlock(Identifier, false, 0, true),
-            20521 => new ScaffoldingBlock(Identifier, false, 0, false),
-            20522 => new ScaffoldingBlock(Identifier, false, 1, true),
-            20523 => new ScaffoldingBlock(Identifier, false, 1, false),
-            20524 => new ScaffoldingBlock(Identifier, false, 2, true),
-            20525 => new ScaffoldingBlock(Identifier, false, 2, false),
-            20526 => new ScaffoldingBlock(Identifier, false, 3, true),
-            20527 => new ScaffoldingBlock(Identifier, false, 3, false),
-            20528 => new ScaffoldingBlock(Identifier, false, 4, true),
-            20529 => new ScaffoldingBlock(Identifier, false, 4, false),
-            20530 => new ScaffoldingBlock(Identifier, false, 5, true),
-            20531 => new ScaffoldingBlock(Identifier, false, 5, false),
-            20532 => new ScaffoldingBlock(Identifier, false, 6, true),
-            20533 => new ScaffoldingBlock(Identifier, false, 6, false),
-            20534 => new ScaffoldingBlock(Identifier, false, 7, true),
-            20535 => new ScaffoldingBlock(Identifier, false, 7, false),
+            24063 => new ScaffoldingBlock(Identifier, true, 0, true),
+            24064 => new ScaffoldingBlock(Identifier, true, 0, false),
+            24065 => new ScaffoldingBlock(Identifier, true, 1, true),
+            24066 => new ScaffoldingBlock(Identifier, true, 1, false),
+            24067 => new ScaffoldingBlock(Identifier, true, 2, true),
+            24068 => new ScaffoldingBlock(Identifier, true, 2, false),
+            24069 => new ScaffoldingBlock(Identifier, true, 3, true),
+            24070 => new ScaffoldingBlock(Identifier, true, 3, false),
+            24071 => new ScaffoldingBlock(Identifier, true, 4, true),
+            24072 => new ScaffoldingBlock(Identifier, true, 4, false),
+            24073 => new ScaffoldingBlock(Identifier, true, 5, true),
+            24074 => new ScaffoldingBlock(Identifier, true, 5, false),
+            24075 => new ScaffoldingBlock(Identifier, true, 6, true),
+            24076 => new ScaffoldingBlock(Identifier, true, 6, false),
+            24077 => new ScaffoldingBlock(Identifier, true, 7, true),
+            24078 => new ScaffoldingBlock(Identifier, true, 7, false),
+            24079 => new ScaffoldingBlock(Identifier, false, 0, true),
+            24080 => new ScaffoldingBlock(Identifier, false, 0, false),
+            24081 => new ScaffoldingBlock(Identifier, false, 1, true),
+            24082 => new ScaffoldingBlock(Identifier, false, 1, false),
+            24083 => new ScaffoldingBlock(Identifier, false, 2, true),
+            24084 => new ScaffoldingBlock(Identifier, false, 2, false),
+            24085 => new ScaffoldingBlock(Identifier, false, 3, true),
+            24086 => new ScaffoldingBlock(Identifier, false, 3, false),
+            24087 => new ScaffoldingBlock(Identifier, false, 4, true),
+            24088 => new ScaffoldingBlock(Identifier, false, 4, false),
+            24089 => new ScaffoldingBlock(Identifier, false, 5, true),
+            24090 => new ScaffoldingBlock(Identifier, false, 5, false),
+            24091 => new ScaffoldingBlock(Identifier, false, 6, true),
+            24092 => new ScaffoldingBlock(Identifier, false, 6, false),
+            24093 => new ScaffoldingBlock(Identifier, false, 7, true),
+            24094 => new ScaffoldingBlock(Identifier, false, 7, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

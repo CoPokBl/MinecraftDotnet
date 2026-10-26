@@ -3,56 +3,93 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record ExposedCopperChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:weathering_copper_chain";
-    public double Hardness => 5;
-    public double ExplosionResistance => 6;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "chain";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:exposed_copper_chain";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.40625, 0.0, 0.40625] -> [0.59375, 1.0, 0.59375]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.40625, 0.0, 0.40625] -> [0.59375, 1.0, 0.59375]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.40625, 0.0, 0.40625] -> [0.59375, 1.0, 0.59375]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.exposed_copper_chain";
-    public bool CanRespawnIn => false;
+public record ExposedCopperChainBlock(Identifier Identifier, Axis Axis, bool Waterlogged) : IBlock, IAxisAligned, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.exposed_copper_chain", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:exposed_copper_chain", BlockInfo.VanillaOnly, "minecraft:blocks/exposed_copper_chain");
+    private static readonly BlockStateInfo I0 = new(5f, 0, 1, PushReaction.PushPull, 0, "chain", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, true, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S505, BlockShapes.S505, BlockShapes.S1, BlockShapes.S1, BlockShapes.S505, BlockShapes.S505);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S331, CollisionShape = BlockShapes.S331, VisualShape = BlockShapes.S331, SupportShape = BlockShapes.S331 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S331, CollisionShape = BlockShapes.S331, VisualShape = BlockShapes.S331, SupportShape = BlockShapes.S331 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S506, CollisionShape = BlockShapes.S506, VisualShape = BlockShapes.S506, SupportShape = BlockShapes.S506 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S506, CollisionShape = BlockShapes.S506, VisualShape = BlockShapes.S506, SupportShape = BlockShapes.S506 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 9992];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAxis(Axis axis) => this with { Axis = axis };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Axis switch {
                 Axis.X => Waterlogged switch {
-                    true => 8057,
-                    false => 8058,
+                    true => 9992,
+                    false => 9993,
                 },
                 Axis.Y => Waterlogged switch {
-                    true => 8059,
-                    false => 8060,
+                    true => 9994,
+                    false => 9995,
                 },
                 Axis.Z => Waterlogged switch {
-                    true => 8061,
-                    false => 8062,
+                    true => 9996,
+                    false => 9997,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Axis), Axis, "Unknown value for property axis.")
             };
@@ -61,12 +98,12 @@ public record ExposedCopperChainBlock(Identifier Identifier, Axis Axis, bool Wat
     
     public IBlock WithState(uint state) {
         return state switch {
-            8057 => new ExposedCopperChainBlock(Identifier, Axis.X, true),
-            8058 => new ExposedCopperChainBlock(Identifier, Axis.X, false),
-            8059 => new ExposedCopperChainBlock(Identifier, Axis.Y, true),
-            8060 => new ExposedCopperChainBlock(Identifier, Axis.Y, false),
-            8061 => new ExposedCopperChainBlock(Identifier, Axis.Z, true),
-            8062 => new ExposedCopperChainBlock(Identifier, Axis.Z, false),
+            9992 => new ExposedCopperChainBlock(Identifier, Axis.X, true),
+            9993 => new ExposedCopperChainBlock(Identifier, Axis.X, false),
+            9994 => new ExposedCopperChainBlock(Identifier, Axis.Y, true),
+            9995 => new ExposedCopperChainBlock(Identifier, Axis.Y, false),
+            9996 => new ExposedCopperChainBlock(Identifier, Axis.Z, true),
+            9997 => new ExposedCopperChainBlock(Identifier, Axis.Z, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

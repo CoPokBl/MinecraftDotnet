@@ -3,40 +3,73 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves LeavesValue, int Stage) : IBlock {
-    public Identifier Category => "minecraft:bamboo_stalk";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "bamboo";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:bamboo";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.0625] -> [0.4375, 1.0, 0.4375]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.15625, 0.0, 0.15625] -> [0.34375, 1.0, 0.34375]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.15625, 0.0, 0.15625] -> [0.34375, 1.0, 0.34375]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 7;
-    public string TranslationKey => "block.minecraft.bamboo";
-    public bool CanRespawnIn => false;
+public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves LeavesValue, int Stage) : IBlock, IAged {
+    private static readonly BlockInfo Data = new("block.minecraft.bamboo", 1f, 0.6f, 1f, 1f, 0f, 0f, false, true, BlockOffsetType.Xz, 0.25f, 0f, null, "minecraft:bamboo", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo") { ShapeOffsets = BlockShapeOffsets.Block | BlockShapeOffsets.Collision | BlockShapeOffsets.Visual };
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Popped, 7, "bamboo", NoteBlockInstrument.Harp, false, false, false, true, false, false, false, true, false, false, true, false, false, false, true, false, false, false, [], null, BlockShapes.S330, BlockShapes.S331, BlockShapes.S1, BlockShapes.S1, BlockShapes.S331, BlockShapes.S331);
+    private static readonly BlockStateInfo I1 = I0 with { RandomlyTicking = false };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I3 = I0 with { RandomlyTicking = false, BlockShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I0, I1, I0, I1, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 18636];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAge(int age) => this with { Age = age };
 
 
     public uint StateId {
@@ -44,36 +77,36 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
             return Age switch {
                 0 => LeavesValue switch {
                     Leaves.None => Stage switch {
-                        0 => 15077,
-                        1 => 15078,
+                        0 => 18636,
+                        1 => 18637,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     Leaves.Small => Stage switch {
-                        0 => 15079,
-                        1 => 15080,
+                        0 => 18638,
+                        1 => 18639,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     Leaves.Large => Stage switch {
-                        0 => 15081,
-                        1 => 15082,
+                        0 => 18640,
+                        1 => 18641,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(LeavesValue), LeavesValue, "Unknown value for property leaves.")
                 },
                 1 => LeavesValue switch {
                     Leaves.None => Stage switch {
-                        0 => 15083,
-                        1 => 15084,
+                        0 => 18642,
+                        1 => 18643,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     Leaves.Small => Stage switch {
-                        0 => 15085,
-                        1 => 15086,
+                        0 => 18644,
+                        1 => 18645,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     Leaves.Large => Stage switch {
-                        0 => 15087,
-                        1 => 15088,
+                        0 => 18646,
+                        1 => 18647,
                         _ => throw new ArgumentOutOfRangeException(nameof(Stage), Stage, "Unknown value for property stage.")
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(LeavesValue), LeavesValue, "Unknown value for property leaves.")
@@ -85,18 +118,18 @@ public record BambooBlock(Identifier Identifier, int Age, BambooBlock.Leaves Lea
     
     public IBlock WithState(uint state) {
         return state switch {
-            15077 => new BambooBlock(Identifier, 0, Leaves.None, 0),
-            15078 => new BambooBlock(Identifier, 0, Leaves.None, 1),
-            15079 => new BambooBlock(Identifier, 0, Leaves.Small, 0),
-            15080 => new BambooBlock(Identifier, 0, Leaves.Small, 1),
-            15081 => new BambooBlock(Identifier, 0, Leaves.Large, 0),
-            15082 => new BambooBlock(Identifier, 0, Leaves.Large, 1),
-            15083 => new BambooBlock(Identifier, 1, Leaves.None, 0),
-            15084 => new BambooBlock(Identifier, 1, Leaves.None, 1),
-            15085 => new BambooBlock(Identifier, 1, Leaves.Small, 0),
-            15086 => new BambooBlock(Identifier, 1, Leaves.Small, 1),
-            15087 => new BambooBlock(Identifier, 1, Leaves.Large, 0),
-            15088 => new BambooBlock(Identifier, 1, Leaves.Large, 1),
+            18636 => new BambooBlock(Identifier, 0, Leaves.None, 0),
+            18637 => new BambooBlock(Identifier, 0, Leaves.None, 1),
+            18638 => new BambooBlock(Identifier, 0, Leaves.Small, 0),
+            18639 => new BambooBlock(Identifier, 0, Leaves.Small, 1),
+            18640 => new BambooBlock(Identifier, 0, Leaves.Large, 0),
+            18641 => new BambooBlock(Identifier, 0, Leaves.Large, 1),
+            18642 => new BambooBlock(Identifier, 1, Leaves.None, 0),
+            18643 => new BambooBlock(Identifier, 1, Leaves.None, 1),
+            18644 => new BambooBlock(Identifier, 1, Leaves.Small, 0),
+            18645 => new BambooBlock(Identifier, 1, Leaves.Small, 1),
+            18646 => new BambooBlock(Identifier, 1, Leaves.Large, 0),
+            18647 => new BambooBlock(Identifier, 1, Leaves.Large, 1),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

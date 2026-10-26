@@ -9,8 +9,7 @@ public interface ILevelBasedValue {
     INbtTag ToNbt();
 
     public static ILevelBasedValue FromNbt(INbtTag tag) {
-        if (tag is FloatTag f) return new Constant(f.Value);
-        if (tag is DoubleTag d) return new Constant((float)d.Value);
+        if (tag.IsNumber()) return new Constant(tag.AsFloat());
 
         if (tag is not CompoundTag compound) {
             throw new ArgumentException("Invalid tag type for ILevelBasedValue: " + tag.GetType().Name);
@@ -19,23 +18,23 @@ public interface ILevelBasedValue {
         Identifier type = compound["type"].GetString();
         return type.Key switch {
             "linear" => new Linear(
-                compound["base"].GetFloat(), 
-                compound["per_level_above_first"].GetFloat()),
+                compound["base"].AsFloat(), 
+                compound["per_level_above_first"].AsFloat()),
             
             "clamped" => new Clamped(
                 FromNbt(compound["value"].ThrowIfNull()), 
-                compound["min"].GetFloat(), 
-                compound["max"].GetFloat()),
+                compound["min"].AsFloat(), 
+                compound["max"].AsFloat()),
             
             "fraction" => new Fraction(
                 FromNbt(compound["numerator"].ThrowIfNull()), 
                 FromNbt(compound["denominator"].ThrowIfNull())),
             
             "levels_squared" => new LevelsSquared(
-                compound["added"].GetFloat()),
+                compound["added"].AsFloat()),
             
             "lookup" => new Lookup(
-                compound["values"].GetList().Tags.ToArray().Select(t => t.GetFloat()).ToArray(),
+                compound["values"].AsList().Select(t => t.AsFloat()).ToArray(),
                 FromNbt(compound["fallback"].ThrowIfNull())),
             
             _ => throw new ArgumentException("Unknown ILevelBasedValue type: " + type)

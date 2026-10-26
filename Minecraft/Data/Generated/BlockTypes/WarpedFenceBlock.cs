@@ -3,40 +3,119 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WarpedFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
-    public Identifier Category => "minecraft:fence";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "nether_wood";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:warped_fence";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.5, 0.625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 56;
-    public string TranslationKey => "block.minecraft.warped_fence";
-    public bool CanRespawnIn => false;
+public record WarpedFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.warped_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:warped_fence", BlockInfo.VanillaOnly, "minecraft:blocks/warped_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 56, "nether_wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
+    private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S27, CollisionShape = BlockShapes.S28, OcclusionShape = BlockShapes.S29, VisualShape = BlockShapes.S27, SupportShape = BlockShapes.S28 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S30, CollisionShape = BlockShapes.S31, OcclusionShape = BlockShapes.S32, VisualShape = BlockShapes.S30, SupportShape = BlockShapes.S31 };
+    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S27, CollisionShape = BlockShapes.S28, OcclusionShape = BlockShapes.S29, VisualShape = BlockShapes.S27, SupportShape = BlockShapes.S28 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S30, CollisionShape = BlockShapes.S31, OcclusionShape = BlockShapes.S32, VisualShape = BlockShapes.S30, SupportShape = BlockShapes.S31 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S33, CollisionShape = BlockShapes.S34, OcclusionShape = BlockShapes.S35, VisualShape = BlockShapes.S33, SupportShape = BlockShapes.S34 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S36, CollisionShape = BlockShapes.S37, OcclusionShape = BlockShapes.S38, VisualShape = BlockShapes.S36, SupportShape = BlockShapes.S37 };
+    private static readonly BlockStateInfo I10 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S33, CollisionShape = BlockShapes.S34, OcclusionShape = BlockShapes.S35, VisualShape = BlockShapes.S33, SupportShape = BlockShapes.S34 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S36, CollisionShape = BlockShapes.S37, OcclusionShape = BlockShapes.S38, VisualShape = BlockShapes.S36, SupportShape = BlockShapes.S37 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S41, VisualShape = BlockShapes.S39, SupportShape = BlockShapes.S40 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S42, CollisionShape = BlockShapes.S43, OcclusionShape = BlockShapes.S44, VisualShape = BlockShapes.S42, SupportShape = BlockShapes.S43 };
+    private static readonly BlockStateInfo I14 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S41, VisualShape = BlockShapes.S39, SupportShape = BlockShapes.S40 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S42, CollisionShape = BlockShapes.S43, OcclusionShape = BlockShapes.S44, VisualShape = BlockShapes.S42, SupportShape = BlockShapes.S43 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S45, CollisionShape = BlockShapes.S46, OcclusionShape = BlockShapes.S47, VisualShape = BlockShapes.S45, SupportShape = BlockShapes.S46 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S50, VisualShape = BlockShapes.S48, SupportShape = BlockShapes.S49 };
+    private static readonly BlockStateInfo I18 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S45, CollisionShape = BlockShapes.S46, OcclusionShape = BlockShapes.S47, VisualShape = BlockShapes.S45, SupportShape = BlockShapes.S46 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S50, VisualShape = BlockShapes.S48, SupportShape = BlockShapes.S49 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S51, CollisionShape = BlockShapes.S52, OcclusionShape = BlockShapes.S53, VisualShape = BlockShapes.S51, SupportShape = BlockShapes.S52 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S54, CollisionShape = BlockShapes.S55, OcclusionShape = BlockShapes.S56, VisualShape = BlockShapes.S54, SupportShape = BlockShapes.S55 };
+    private static readonly BlockStateInfo I22 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S51, CollisionShape = BlockShapes.S52, OcclusionShape = BlockShapes.S53, VisualShape = BlockShapes.S51, SupportShape = BlockShapes.S52 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S54, CollisionShape = BlockShapes.S55, OcclusionShape = BlockShapes.S56, VisualShape = BlockShapes.S54, SupportShape = BlockShapes.S55 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S57, CollisionShape = BlockShapes.S58, OcclusionShape = BlockShapes.S59, VisualShape = BlockShapes.S57, SupportShape = BlockShapes.S58 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S60, CollisionShape = BlockShapes.S61, OcclusionShape = BlockShapes.S62, VisualShape = BlockShapes.S60, SupportShape = BlockShapes.S61 };
+    private static readonly BlockStateInfo I26 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S57, CollisionShape = BlockShapes.S58, OcclusionShape = BlockShapes.S59, VisualShape = BlockShapes.S57, SupportShape = BlockShapes.S58 };
+    private static readonly BlockStateInfo I27 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S60, CollisionShape = BlockShapes.S61, OcclusionShape = BlockShapes.S62, VisualShape = BlockShapes.S60, SupportShape = BlockShapes.S61 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S63, CollisionShape = BlockShapes.S64, OcclusionShape = BlockShapes.S65, VisualShape = BlockShapes.S63, SupportShape = BlockShapes.S64 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S67, OcclusionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S67 };
+    private static readonly BlockStateInfo I30 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S63, CollisionShape = BlockShapes.S64, OcclusionShape = BlockShapes.S65, VisualShape = BlockShapes.S63, SupportShape = BlockShapes.S64 };
+    private static readonly BlockStateInfo I31 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S67, OcclusionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S67 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 24439];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
+
+    public bool HasFace(BlockFace face) => face is BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -46,44 +125,44 @@ public record WarpedFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 20880,
-                                false => 20881,
+                                true => 24439,
+                                false => 24440,
                             },
                             false => West switch {
-                                true => 20882,
-                                false => 20883,
+                                true => 24441,
+                                false => 24442,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 20884,
-                                false => 20885,
+                                true => 24443,
+                                false => 24444,
                             },
                             false => West switch {
-                                true => 20886,
-                                false => 20887,
+                                true => 24445,
+                                false => 24446,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 20888,
-                                false => 20889,
+                                true => 24447,
+                                false => 24448,
                             },
                             false => West switch {
-                                true => 20890,
-                                false => 20891,
+                                true => 24449,
+                                false => 24450,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 20892,
-                                false => 20893,
+                                true => 24451,
+                                false => 24452,
                             },
                             false => West switch {
-                                true => 20894,
-                                false => 20895,
+                                true => 24453,
+                                false => 24454,
                             },
                         },
                     },
@@ -92,44 +171,44 @@ public record WarpedFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 20896,
-                                false => 20897,
+                                true => 24455,
+                                false => 24456,
                             },
                             false => West switch {
-                                true => 20898,
-                                false => 20899,
+                                true => 24457,
+                                false => 24458,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 20900,
-                                false => 20901,
+                                true => 24459,
+                                false => 24460,
                             },
                             false => West switch {
-                                true => 20902,
-                                false => 20903,
+                                true => 24461,
+                                false => 24462,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 20904,
-                                false => 20905,
+                                true => 24463,
+                                false => 24464,
                             },
                             false => West switch {
-                                true => 20906,
-                                false => 20907,
+                                true => 24465,
+                                false => 24466,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 20908,
-                                false => 20909,
+                                true => 24467,
+                                false => 24468,
                             },
                             false => West switch {
-                                true => 20910,
-                                false => 20911,
+                                true => 24469,
+                                false => 24470,
                             },
                         },
                     },
@@ -140,38 +219,38 @@ public record WarpedFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            20880 => new WarpedFenceBlock(Identifier, true, true, true, true, true),
-            20881 => new WarpedFenceBlock(Identifier, true, true, true, true, false),
-            20882 => new WarpedFenceBlock(Identifier, true, true, true, false, true),
-            20883 => new WarpedFenceBlock(Identifier, true, true, true, false, false),
-            20884 => new WarpedFenceBlock(Identifier, true, true, false, true, true),
-            20885 => new WarpedFenceBlock(Identifier, true, true, false, true, false),
-            20886 => new WarpedFenceBlock(Identifier, true, true, false, false, true),
-            20887 => new WarpedFenceBlock(Identifier, true, true, false, false, false),
-            20888 => new WarpedFenceBlock(Identifier, true, false, true, true, true),
-            20889 => new WarpedFenceBlock(Identifier, true, false, true, true, false),
-            20890 => new WarpedFenceBlock(Identifier, true, false, true, false, true),
-            20891 => new WarpedFenceBlock(Identifier, true, false, true, false, false),
-            20892 => new WarpedFenceBlock(Identifier, true, false, false, true, true),
-            20893 => new WarpedFenceBlock(Identifier, true, false, false, true, false),
-            20894 => new WarpedFenceBlock(Identifier, true, false, false, false, true),
-            20895 => new WarpedFenceBlock(Identifier, true, false, false, false, false),
-            20896 => new WarpedFenceBlock(Identifier, false, true, true, true, true),
-            20897 => new WarpedFenceBlock(Identifier, false, true, true, true, false),
-            20898 => new WarpedFenceBlock(Identifier, false, true, true, false, true),
-            20899 => new WarpedFenceBlock(Identifier, false, true, true, false, false),
-            20900 => new WarpedFenceBlock(Identifier, false, true, false, true, true),
-            20901 => new WarpedFenceBlock(Identifier, false, true, false, true, false),
-            20902 => new WarpedFenceBlock(Identifier, false, true, false, false, true),
-            20903 => new WarpedFenceBlock(Identifier, false, true, false, false, false),
-            20904 => new WarpedFenceBlock(Identifier, false, false, true, true, true),
-            20905 => new WarpedFenceBlock(Identifier, false, false, true, true, false),
-            20906 => new WarpedFenceBlock(Identifier, false, false, true, false, true),
-            20907 => new WarpedFenceBlock(Identifier, false, false, true, false, false),
-            20908 => new WarpedFenceBlock(Identifier, false, false, false, true, true),
-            20909 => new WarpedFenceBlock(Identifier, false, false, false, true, false),
-            20910 => new WarpedFenceBlock(Identifier, false, false, false, false, true),
-            20911 => new WarpedFenceBlock(Identifier, false, false, false, false, false),
+            24439 => new WarpedFenceBlock(Identifier, true, true, true, true, true),
+            24440 => new WarpedFenceBlock(Identifier, true, true, true, true, false),
+            24441 => new WarpedFenceBlock(Identifier, true, true, true, false, true),
+            24442 => new WarpedFenceBlock(Identifier, true, true, true, false, false),
+            24443 => new WarpedFenceBlock(Identifier, true, true, false, true, true),
+            24444 => new WarpedFenceBlock(Identifier, true, true, false, true, false),
+            24445 => new WarpedFenceBlock(Identifier, true, true, false, false, true),
+            24446 => new WarpedFenceBlock(Identifier, true, true, false, false, false),
+            24447 => new WarpedFenceBlock(Identifier, true, false, true, true, true),
+            24448 => new WarpedFenceBlock(Identifier, true, false, true, true, false),
+            24449 => new WarpedFenceBlock(Identifier, true, false, true, false, true),
+            24450 => new WarpedFenceBlock(Identifier, true, false, true, false, false),
+            24451 => new WarpedFenceBlock(Identifier, true, false, false, true, true),
+            24452 => new WarpedFenceBlock(Identifier, true, false, false, true, false),
+            24453 => new WarpedFenceBlock(Identifier, true, false, false, false, true),
+            24454 => new WarpedFenceBlock(Identifier, true, false, false, false, false),
+            24455 => new WarpedFenceBlock(Identifier, false, true, true, true, true),
+            24456 => new WarpedFenceBlock(Identifier, false, true, true, true, false),
+            24457 => new WarpedFenceBlock(Identifier, false, true, true, false, true),
+            24458 => new WarpedFenceBlock(Identifier, false, true, true, false, false),
+            24459 => new WarpedFenceBlock(Identifier, false, true, false, true, true),
+            24460 => new WarpedFenceBlock(Identifier, false, true, false, true, false),
+            24461 => new WarpedFenceBlock(Identifier, false, true, false, false, true),
+            24462 => new WarpedFenceBlock(Identifier, false, true, false, false, false),
+            24463 => new WarpedFenceBlock(Identifier, false, false, true, true, true),
+            24464 => new WarpedFenceBlock(Identifier, false, false, true, true, false),
+            24465 => new WarpedFenceBlock(Identifier, false, false, true, false, true),
+            24466 => new WarpedFenceBlock(Identifier, false, false, true, false, false),
+            24467 => new WarpedFenceBlock(Identifier, false, false, false, true, true),
+            24468 => new WarpedFenceBlock(Identifier, false, false, false, true, false),
+            24469 => new WarpedFenceBlock(Identifier, false, false, false, false, true),
+            24470 => new WarpedFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

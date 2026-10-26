@@ -3,52 +3,87 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record WaxedExposedCopperLanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:lantern";
-    public double Hardness => 3.5;
-    public double ExplosionResistance => 3.5;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 15;
-    public bool Replaceable => false;
-    public string SoundType => "lantern";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:waxed_exposed_copper_lantern";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.3125, 0.0, 0.3125] -> [0.6875, 0.4375, 0.6875], AABB[0.375, 0.4375, 0.375] -> [0.625, 0.5625, 0.625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.3125, 0.0, 0.3125] -> [0.6875, 0.4375, 0.6875], AABB[0.375, 0.4375, 0.375] -> [0.625, 0.5625, 0.625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.3125, 0.0, 0.3125] -> [0.6875, 0.4375, 0.6875], AABB[0.375, 0.4375, 0.375] -> [0.625, 0.5625, 0.625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 6;
-    public string TranslationKey => "block.minecraft.waxed_exposed_copper_lantern";
-    public bool CanRespawnIn => false;
+public record WaxedExposedCopperLanternBlock(Identifier Identifier, bool Hanging, bool Waterlogged) : IBlock, IHanging, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.waxed_exposed_copper_lantern", 3.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:waxed_exposed_copper_lantern", BlockInfo.VanillaOnly, "minecraft:blocks/waxed_exposed_copper_lantern");
+    private static readonly BlockStateInfo I0 = new(3.5f, 15, 1, PushReaction.Popped, 6, "lantern", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S508, BlockShapes.S508, BlockShapes.S1, BlockShapes.S1, BlockShapes.S508, BlockShapes.S508);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S509, CollisionShape = BlockShapes.S509, VisualShape = BlockShapes.S509, SupportShape = BlockShapes.S509 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Fluid = null, BlockShape = BlockShapes.S509, CollisionShape = BlockShapes.S509, VisualShape = BlockShapes.S509, SupportShape = BlockShapes.S509 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 24222];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithHanging(bool hanging) => this with { Hanging = hanging };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Hanging switch {
                 true => Waterlogged switch {
-                    true => 20663,
-                    false => 20664,
+                    true => 24222,
+                    false => 24223,
                 },
                 false => Waterlogged switch {
-                    true => 20665,
-                    false => 20666,
+                    true => 24224,
+                    false => 24225,
                 },
             };
         }
@@ -56,10 +91,10 @@ public record WaxedExposedCopperLanternBlock(Identifier Identifier, bool Hanging
     
     public IBlock WithState(uint state) {
         return state switch {
-            20663 => new WaxedExposedCopperLanternBlock(Identifier, true, true),
-            20664 => new WaxedExposedCopperLanternBlock(Identifier, true, false),
-            20665 => new WaxedExposedCopperLanternBlock(Identifier, false, true),
-            20666 => new WaxedExposedCopperLanternBlock(Identifier, false, false),
+            24222 => new WaxedExposedCopperLanternBlock(Identifier, true, true),
+            24223 => new WaxedExposedCopperLanternBlock(Identifier, true, false),
+            24224 => new WaxedExposedCopperLanternBlock(Identifier, false, true),
+            24225 => new WaxedExposedCopperLanternBlock(Identifier, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

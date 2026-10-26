@@ -13,6 +13,6 @@ public class ClientBoundRemoveResourcePackPacket : ClientBoundPacket {
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundRemoveResourcePackPacket {
-        Uuid = r.ReadPrefixedOptional(rdr => rdr.ReadUuid())
+        Uuid = r.ReadPrefixedOptionalValue(rdr => rdr.ReadUuid())
     };
 }

@@ -3,68 +3,97 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : IBlock {
-    public Identifier Category => "minecraft:barrel";
-    public double Hardness => 2.5;
-    public double ExplosionResistance => 2.5;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => "minecraft:barrel";
-    public Identifier? Item => "minecraft:barrel";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => true;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 13;
-    public string TranslationKey => "block.minecraft.barrel";
-    public bool CanRespawnIn => false;
+public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : IBlock, IDirectional, IOpenable {
+    private static readonly BlockInfo Data = new("block.minecraft.barrel", 2.5f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:barrel", "minecraft:barrel", BlockInfo.VanillaOnly, "minecraft:blocks/barrel");
+    private static readonly BlockStateInfo I0 = new(2.5f, 0, 15, PushReaction.PushPull, 13, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Cardinal facing) => this with { Facing = facing };
+
+    public IBlock WithOpen(bool open) => this with { Open = open };
 
 
     public uint StateId {
         get {
             return Facing switch {
                 Cardinal.North => Open switch {
-                    true => 20540,
-                    false => 20541,
+                    true => 24099,
+                    false => 24100,
                 },
                 Cardinal.East => Open switch {
-                    true => 20542,
-                    false => 20543,
+                    true => 24101,
+                    false => 24102,
                 },
                 Cardinal.South => Open switch {
-                    true => 20544,
-                    false => 20545,
+                    true => 24103,
+                    false => 24104,
                 },
                 Cardinal.West => Open switch {
-                    true => 20546,
-                    false => 20547,
+                    true => 24105,
+                    false => 24106,
                 },
                 Cardinal.Up => Open switch {
-                    true => 20548,
-                    false => 20549,
+                    true => 24107,
+                    false => 24108,
                 },
                 Cardinal.Down => Open switch {
-                    true => 20550,
-                    false => 20551,
+                    true => 24109,
+                    false => 24110,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
@@ -73,18 +102,18 @@ public record BarrelBlock(Identifier Identifier, Cardinal Facing, bool Open) : I
     
     public IBlock WithState(uint state) {
         return state switch {
-            20540 => new BarrelBlock(Identifier, Cardinal.North, true),
-            20541 => new BarrelBlock(Identifier, Cardinal.North, false),
-            20542 => new BarrelBlock(Identifier, Cardinal.East, true),
-            20543 => new BarrelBlock(Identifier, Cardinal.East, false),
-            20544 => new BarrelBlock(Identifier, Cardinal.South, true),
-            20545 => new BarrelBlock(Identifier, Cardinal.South, false),
-            20546 => new BarrelBlock(Identifier, Cardinal.West, true),
-            20547 => new BarrelBlock(Identifier, Cardinal.West, false),
-            20548 => new BarrelBlock(Identifier, Cardinal.Up, true),
-            20549 => new BarrelBlock(Identifier, Cardinal.Up, false),
-            20550 => new BarrelBlock(Identifier, Cardinal.Down, true),
-            20551 => new BarrelBlock(Identifier, Cardinal.Down, false),
+            24099 => new BarrelBlock(Identifier, Cardinal.North, true),
+            24100 => new BarrelBlock(Identifier, Cardinal.North, false),
+            24101 => new BarrelBlock(Identifier, Cardinal.East, true),
+            24102 => new BarrelBlock(Identifier, Cardinal.East, false),
+            24103 => new BarrelBlock(Identifier, Cardinal.South, true),
+            24104 => new BarrelBlock(Identifier, Cardinal.South, false),
+            24105 => new BarrelBlock(Identifier, Cardinal.West, true),
+            24106 => new BarrelBlock(Identifier, Cardinal.West, false),
+            24107 => new BarrelBlock(Identifier, Cardinal.Up, true),
+            24108 => new BarrelBlock(Identifier, Cardinal.Up, false),
+            24109 => new BarrelBlock(Identifier, Cardinal.Down, true),
+            24110 => new BarrelBlock(Identifier, Cardinal.Down, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

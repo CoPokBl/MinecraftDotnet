@@ -2,6 +2,7 @@ using Minecraft.Data.EnchantmentEffects;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Entities;
+using Minecraft.Schemas.Tags;
 using Minecraft.Text;
 using NBT;
 using NBT.Tags;
@@ -9,7 +10,7 @@ using NBT.Tags;
 namespace Minecraft.Data.Enchantments;
 
 public interface IEnchantment : IProtocolType {
-    Identifier SupportedItemsTag { get; }
+    HolderSet SupportedItems { get; }
     TextComponent Description { get; }
     int Weight { get; }
     int MaxLevel { get; }
@@ -17,13 +18,13 @@ public interface IEnchantment : IProtocolType {
     EnchantmentCost MaxCost { get; }
     int AnvilCost { get; }
     EquipmentSlotGroup[] Slots { get; }
-    Identifier? ExclusiveSetTag { get; }
-    Identifier? PrimaryItemsTag { get; }
+    HolderSet? ExclusiveSet { get; }
+    HolderSet? PrimaryItems { get; }
     IEnchantmentEffect[] Effects { get; }
 
     public CompoundTag ToNbt() {
         List<(string, INbtTag)> tags = [
-            ("supported_items", new StringTag($"#{SupportedItemsTag}")),
+            ("supported_items", SupportedItems.ToNbt()),
             ("description", Description.SerialiseToTag()),
             ("weight", new IntegerTag(Weight)),
             ("max_level", new IntegerTag(MaxLevel)),
@@ -33,12 +34,12 @@ public interface IEnchantment : IProtocolType {
             ("slots", new ListTag(Slots.Select(s => (INbtTag)new StringTag(s.Name)).ToArray()))
         ];
         
-        if (ExclusiveSetTag != null) {
-            tags.Add(("exclusive_set", new StringTag($"#{ExclusiveSetTag}")));
+        if (ExclusiveSet != null) {
+            tags.Add(("exclusive_set", ExclusiveSet.ToNbt()));
         }
         
-        if (PrimaryItemsTag != null) {
-            tags.Add(("primary_items", new StringTag($"#{PrimaryItemsTag}")));
+        if (PrimaryItems != null) {
+            tags.Add(("primary_items", PrimaryItems.ToNbt()));
         }
 
         if (Effects.Length > 0) {
@@ -50,31 +51,24 @@ public interface IEnchantment : IProtocolType {
     }
 
     public static IEnchantment FromNbt(Identifier ident, CompoundTag tag, MinecraftRegistry reg) {
-        string supportedItemsStr = tag["supported_items"].GetString();
+        HolderSet supportedItems = HolderSet.FromNbt(tag["supported_items"]!);
         TextComponent description = TextComponent.FromTag(tag["description"]!);
-        int weight = tag["weight"].GetInteger();
-        int maxLevel = tag["max_level"].GetInteger();
+        int weight = tag["weight"].AsInt();
+        int maxLevel = tag["max_level"].AsInt();
         EnchantmentCost minCost = EnchantmentCost.FromNbt(tag["min_cost"].GetCompound());
         EnchantmentCost maxCost = EnchantmentCost.FromNbt(tag["max_cost"].GetCompound());
-        int anvilCost = tag["anvil_cost"].GetInteger();
-        ListTag slotsTag = tag["slots"].GetList();
-        EquipmentSlotGroup[] slots = slotsTag.Tags
-            .ToArray()
-            .OfType<StringTag>()
+        int anvilCost = tag["anvil_cost"].AsInt();
+        EquipmentSlotGroup[] slots = tag["slots"]!.AsList()
             .Select(t => EquipmentSlotGroup.FromName(t.GetString()))
             .ToArray();
         
-        Identifier? exclusiveSet = null;
-        if (tag.Contains("exclusive_set")) {
-            string str = tag["exclusive_set"].GetString();
-            exclusiveSet = str[1..];
+        // An empty exclusive set is the default, which vanilla leaves off when it writes one.
+        HolderSet? exclusiveSet = tag["exclusive_set"] is { } exclusive ? HolderSet.FromNbt(exclusive) : null;
+        if (exclusiveSet is HolderSet.Direct { Entries.Length: 0 }) {
+            exclusiveSet = null;
         }
-        
-        Identifier? primaryItems = null;
-        if (tag.Contains("primary_items")) {
-            string str = tag["primary_items"].GetString();
-            primaryItems = str[1..];
-        }
+
+        HolderSet? primaryItems = tag["primary_items"] is { } primary ? HolderSet.FromNbt(primary) : null;
         
         List<IEnchantmentEffect> effectList = [];
         if (tag.Contains("effects")) {
@@ -89,7 +83,7 @@ public interface IEnchantment : IProtocolType {
             }
         }
 
-        return new SimpleEnchantment(ident, supportedItemsStr[1..], description, weight, 
+        return new SimpleEnchantment(ident, supportedItems, description, weight, 
             maxLevel, minCost, maxCost, anvilCost, slots, exclusiveSet, primaryItems, effectList.ToArray());
     }
 }

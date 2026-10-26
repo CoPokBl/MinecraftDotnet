@@ -3,40 +3,95 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripleafBlock.Tilt TiltValue, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:big_dripleaf";
-    public double Hardness => 0.1;
-    public double ExplosionResistance => 0.1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "big_dripleaf";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:big_dripleaf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.3125, 0.0, 0.5625] -> [0.6875, 0.9375, 0.9375], AABB[0.0, 0.6875, 0.0] -> [0.3125, 0.9375, 1.0], AABB[0.3125, 0.6875, 0.0] -> [1.0, 0.9375, 0.5625], AABB[0.3125, 0.6875, 0.9375] -> [1.0, 0.9375, 1.0], AABB[0.6875, 0.6875, 0.5625] -> [1.0, 0.9375, 0.9375]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.6875, 0.0] -> [1.0, 0.9375, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.3125, 0.0, 0.5625] -> [0.6875, 0.9375, 0.9375], AABB[0.0, 0.6875, 0.0] -> [0.3125, 0.9375, 1.0], AABB[0.3125, 0.6875, 0.0] -> [1.0, 0.9375, 0.5625], AABB[0.3125, 0.6875, 0.9375] -> [1.0, 0.9375, 1.0], AABB[0.6875, 0.6875, 0.5625] -> [1.0, 0.9375, 0.9375]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.6875, 0.0] -> [1.0, 0.9375, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 7;
-    public string TranslationKey => "block.minecraft.big_dripleaf";
-    public bool CanRespawnIn => true;
+public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripleafBlock.Tilt TiltValue, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.big_dripleaf", 0.1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:big_dripleaf", BlockInfo.VanillaOnly, "minecraft:blocks/big_dripleaf");
+    private static readonly BlockStateInfo I0 = new(0.1f, 0, 1, PushReaction.Popped, 7, "big_dripleaf", NoteBlockInstrument.Harp, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S344, BlockShapes.S345, BlockShapes.S1, BlockShapes.S344, BlockShapes.S345, BlockShapes.S345);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S346, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S346, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S346, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S346, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S348, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S348, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S348, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S348, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S349, OcclusionShape = BlockShapes.S349 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S349, OcclusionShape = BlockShapes.S349 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S350, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S350, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I9 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S350, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S350, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I10 = I0 with { BlockShape = BlockShapes.S351, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S351, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S351, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S351, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S352, OcclusionShape = BlockShapes.S352 };
+    private static readonly BlockStateInfo I13 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S352, OcclusionShape = BlockShapes.S352 };
+    private static readonly BlockStateInfo I14 = I0 with { BlockShape = BlockShapes.S353, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S353, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S353, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S353, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S354, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S354, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I17 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S354, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S354, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I18 = I0 with { BlockShape = BlockShapes.S355, OcclusionShape = BlockShapes.S355 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S355, OcclusionShape = BlockShapes.S355 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S356, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S356, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I21 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S356, CollisionShape = BlockShapes.S347, OcclusionShape = BlockShapes.S356, VisualShape = BlockShapes.S347, SupportShape = BlockShapes.S347 };
+    private static readonly BlockStateInfo I22 = I0 with { BlockShape = BlockShapes.S357, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S357, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S357, CollisionShape = BlockShapes.S1, OcclusionShape = BlockShapes.S357, VisualShape = BlockShapes.S1, SupportShape = BlockShapes.S1 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I4, I5, I6, I7, I6, I7, I8, I9, I10, I11, I12, I13, I12, I13, I14, I15, I16, I17, I18, I19, I18, I19, I20, I21, I22, I23
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 33713];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,77 +99,77 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
             return Facing switch {
                 Direction.North => TiltValue switch {
                     Tilt.None => Waterlogged switch {
-                        true => 27661,
-                        false => 27662,
+                        true => 33713,
+                        false => 33714,
                     },
                     Tilt.Unstable => Waterlogged switch {
-                        true => 27663,
-                        false => 27664,
+                        true => 33715,
+                        false => 33716,
                     },
                     Tilt.Partial => Waterlogged switch {
-                        true => 27665,
-                        false => 27666,
+                        true => 33717,
+                        false => 33718,
                     },
                     Tilt.Full => Waterlogged switch {
-                        true => 27667,
-                        false => 27668,
+                        true => 33719,
+                        false => 33720,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(TiltValue), TiltValue, "Unknown value for property tilt.")
                 },
                 Direction.South => TiltValue switch {
                     Tilt.None => Waterlogged switch {
-                        true => 27669,
-                        false => 27670,
+                        true => 33721,
+                        false => 33722,
                     },
                     Tilt.Unstable => Waterlogged switch {
-                        true => 27671,
-                        false => 27672,
+                        true => 33723,
+                        false => 33724,
                     },
                     Tilt.Partial => Waterlogged switch {
-                        true => 27673,
-                        false => 27674,
+                        true => 33725,
+                        false => 33726,
                     },
                     Tilt.Full => Waterlogged switch {
-                        true => 27675,
-                        false => 27676,
+                        true => 33727,
+                        false => 33728,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(TiltValue), TiltValue, "Unknown value for property tilt.")
                 },
                 Direction.West => TiltValue switch {
                     Tilt.None => Waterlogged switch {
-                        true => 27677,
-                        false => 27678,
+                        true => 33729,
+                        false => 33730,
                     },
                     Tilt.Unstable => Waterlogged switch {
-                        true => 27679,
-                        false => 27680,
+                        true => 33731,
+                        false => 33732,
                     },
                     Tilt.Partial => Waterlogged switch {
-                        true => 27681,
-                        false => 27682,
+                        true => 33733,
+                        false => 33734,
                     },
                     Tilt.Full => Waterlogged switch {
-                        true => 27683,
-                        false => 27684,
+                        true => 33735,
+                        false => 33736,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(TiltValue), TiltValue, "Unknown value for property tilt.")
                 },
                 Direction.East => TiltValue switch {
                     Tilt.None => Waterlogged switch {
-                        true => 27685,
-                        false => 27686,
+                        true => 33737,
+                        false => 33738,
                     },
                     Tilt.Unstable => Waterlogged switch {
-                        true => 27687,
-                        false => 27688,
+                        true => 33739,
+                        false => 33740,
                     },
                     Tilt.Partial => Waterlogged switch {
-                        true => 27689,
-                        false => 27690,
+                        true => 33741,
+                        false => 33742,
                     },
                     Tilt.Full => Waterlogged switch {
-                        true => 27691,
-                        false => 27692,
+                        true => 33743,
+                        false => 33744,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(TiltValue), TiltValue, "Unknown value for property tilt.")
                 },
@@ -125,38 +180,38 @@ public record BigDripleafBlock(Identifier Identifier, Direction Facing, BigDripl
     
     public IBlock WithState(uint state) {
         return state switch {
-            27661 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, true),
-            27662 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, false),
-            27663 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Unstable, true),
-            27664 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Unstable, false),
-            27665 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Partial, true),
-            27666 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Partial, false),
-            27667 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Full, true),
-            27668 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Full, false),
-            27669 => new BigDripleafBlock(Identifier, Direction.South, Tilt.None, true),
-            27670 => new BigDripleafBlock(Identifier, Direction.South, Tilt.None, false),
-            27671 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Unstable, true),
-            27672 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Unstable, false),
-            27673 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Partial, true),
-            27674 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Partial, false),
-            27675 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Full, true),
-            27676 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Full, false),
-            27677 => new BigDripleafBlock(Identifier, Direction.West, Tilt.None, true),
-            27678 => new BigDripleafBlock(Identifier, Direction.West, Tilt.None, false),
-            27679 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Unstable, true),
-            27680 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Unstable, false),
-            27681 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Partial, true),
-            27682 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Partial, false),
-            27683 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Full, true),
-            27684 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Full, false),
-            27685 => new BigDripleafBlock(Identifier, Direction.East, Tilt.None, true),
-            27686 => new BigDripleafBlock(Identifier, Direction.East, Tilt.None, false),
-            27687 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Unstable, true),
-            27688 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Unstable, false),
-            27689 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Partial, true),
-            27690 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Partial, false),
-            27691 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Full, true),
-            27692 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Full, false),
+            33713 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, true),
+            33714 => new BigDripleafBlock(Identifier, Direction.North, Tilt.None, false),
+            33715 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Unstable, true),
+            33716 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Unstable, false),
+            33717 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Partial, true),
+            33718 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Partial, false),
+            33719 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Full, true),
+            33720 => new BigDripleafBlock(Identifier, Direction.North, Tilt.Full, false),
+            33721 => new BigDripleafBlock(Identifier, Direction.South, Tilt.None, true),
+            33722 => new BigDripleafBlock(Identifier, Direction.South, Tilt.None, false),
+            33723 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Unstable, true),
+            33724 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Unstable, false),
+            33725 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Partial, true),
+            33726 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Partial, false),
+            33727 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Full, true),
+            33728 => new BigDripleafBlock(Identifier, Direction.South, Tilt.Full, false),
+            33729 => new BigDripleafBlock(Identifier, Direction.West, Tilt.None, true),
+            33730 => new BigDripleafBlock(Identifier, Direction.West, Tilt.None, false),
+            33731 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Unstable, true),
+            33732 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Unstable, false),
+            33733 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Partial, true),
+            33734 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Partial, false),
+            33735 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Full, true),
+            33736 => new BigDripleafBlock(Identifier, Direction.West, Tilt.Full, false),
+            33737 => new BigDripleafBlock(Identifier, Direction.East, Tilt.None, true),
+            33738 => new BigDripleafBlock(Identifier, Direction.East, Tilt.None, false),
+            33739 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Unstable, true),
+            33740 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Unstable, false),
+            33741 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Partial, true),
+            33742 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Partial, false),
+            33743 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Full, true),
+            33744 => new BigDripleafBlock(Identifier, Direction.East, Tilt.Full, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

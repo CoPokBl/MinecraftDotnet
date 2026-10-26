@@ -13,6 +13,13 @@ namespace Minecraft.Schemas.Chunks;
 /// <p/>
 /// https://minecraft.wiki/w/Java_Edition_protocol/Chunk_format#Data_structure
 /// </summary>
+/// <remarks>
+/// Not thread-safe, and the failure mode is silent. Blocks live either in a packed
+/// <see cref="Palettes.Palette"/> or an unpacked array, and touching one form converts from the
+/// other in place; two threads converting at once each build their own copy and the loser's
+/// writes vanish with it. A threaded terrain provider must therefore give each thread whole
+/// sections — never a slice of one.
+/// </remarks>
 public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     public const int Size = 16;  // the dimension of the cubic section (16x16x16)
     public const int BiomeDimension = 4;  // the dimension of the biomes (4x4x4)
@@ -82,6 +89,17 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         }
     }
 
+    /// <summary>
+    /// The one state every position in this section holds, or null when it holds more than one.
+    /// </summary>
+    /// <remarks>
+    /// Deliberately does not go through <see cref="Palette"/>: that getter packs, and packing is a
+    /// mutation, so a reader asking a cheap question would convert the section under whoever is
+    /// writing it. A section that is currently unpacked answers null even if its contents happen to
+    /// be uniform, which costs the caller its fast path and never costs it a wrong answer.
+    /// </remarks>
+    public uint? UniformState => _palette is SingleValuePalette svp ? svp.Value : null;
+
     public uint[,,] Biomes {
         get {
             if (_biomes != null) {
@@ -112,10 +130,23 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         }
     }
     
+    /// <summary>
+    /// A copy that later writes to this section cannot reach. Both halves are carried: a section
+    /// that only ever held biomes still has to survive a clone, and dropping them silently resets
+    /// the section to biome zero rather than failing.
+    /// <p/>
+    /// The unpacked arrays are copied and the palettes are shared, which is safe because a
+    /// <see cref="Minecraft.Schemas.Chunks.Palettes.Palette"/> is never mutated in place once built:
+    /// <see cref="Palettes.Palette.CreateOptimisedPalette"/> fills it in its constructor and
+    /// <see cref="UnpackData"/> allocates a fresh array rather than writing through it. So a packed
+    /// section clones in constant time, which is what makes snapshotting a chunk per send affordable.
+    /// </summary>
     public ChunkSection Clone() {
         ChunkSection clone = new() {
             _blocks = _blocks?.Clone() as uint[,,],
-            _palette = _palette
+            _palette = _palette,
+            _biomes = _biomes?.Clone() as uint[,,],
+            _biomesPalette = _biomesPalette
         };
         return clone;
     }
@@ -127,11 +158,12 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     /// <p/>
     /// This method is very expensive.
     /// </summary>
-    public void PackData() {
+    public void PackData(MinecraftRegistry? registry = null) {
         if (_blocks == null) {
             return;  // already packed
         }
-        _palette = Palette.CreateOptimisedPalette(Blocks, Size, BlocksMaxBpe, BlocksMinBpe);
+        _palette = Palette.CreateOptimisedPalette(Blocks, Size, BlocksMaxBpe, BlocksMinBpe,
+            (registry ?? VanillaRegistry.Data).Blocks.StatesCount);
         _blocks = null;  // clear the blocks, we are now using the palette
     }
 
@@ -143,11 +175,12 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
         _palette = null;  // clear the palette, we are now using the blocks directly
     }
     
-    public void PackBiomes() {
+    public void PackBiomes(MinecraftRegistry? registry = null) {
         if (_biomes == null) {
             return;  // already packed
         }
-        _biomesPalette = Palette.CreateOptimisedPalette(Biomes, BiomeDimension, BiomesMaxBpe, BiomesMinBpe);
+        _biomesPalette = Palette.CreateOptimisedPalette(Biomes, BiomeDimension, BiomesMaxBpe, BiomesMinBpe,
+            (registry ?? VanillaRegistry.Data).Biomes.Count);
         _biomes = null;  // clear the biomes, we are now using the palette
     }
     
@@ -282,21 +315,59 @@ public class ChunkSection : IWritable, IDataReadable<ChunkSection> {
     }
     
     public void Write(DataWriter w) {
+        Write(w, VanillaRegistry.Data);
+    }
+
+    /// <param name="reg">Used to tell which block states hold a fluid.</param>
+    public void Write(DataWriter w, MinecraftRegistry reg) {
         // BLOCK COUNT
         w.WriteShort((short)Palette.BlockCount());  // Number of non-air blocks in chunk section
-        
+
+        // FLUID COUNT
+        // The client takes this straight off the wire rather than recounting, and uses it to
+        // decide whether the section has fluid in it at all. Keyed on the registry, which is what
+        // decides the answer, so a chunk sent to a second player counts nothing again.
+        w.WriteShort((short)Palette.Count(reg, state => IsFluid(reg, state)));
+
         // BLOCK STATES
         w.Write(Palette.Serialise());
-        
+
         // BIOMES
         w.Write(BiomesPalette.Serialise());
     }
 
+    /// <summary>
+    /// Whether a block state carries a fluid, either by being one or by being waterlogged. This is
+    /// vanilla's <c>!state.getFluidState().isEmpty()</c>, which is what its own count comes from.
+    /// </summary>
+    private static bool IsFluid(MinecraftRegistry reg, uint state) {
+        // Chunks can carry state ids we don't know, and a section that won't serialise is worse
+        // than one whose fluid count is a little off
+        if (!reg.Blocks.StatesByStateId.ContainsKey(state)) {
+            return false;
+        }
+
+        // Fluid is a per state answer, and waterlogging is a property, so this has to be the block
+        // at this state rather than the block's default.
+        return reg.Blocks.GetByStateId(state).Fluid is not null;
+    }
+
     public ChunkSection Read(DataReader r) {
+        return Read(r, VanillaRegistry.Data);
+    }
+
+    /// <param name="reg">
+    /// Needed for the same reason vanilla's reader takes a registry: a direct palette's stride is
+    /// <c>Mth.ceillog2</c> of the registry's size rather than anything on the wire.
+    /// </param>
+    public ChunkSection Read(DataReader r, MinecraftRegistry reg) {
         r.ReadShort();  // This is the number of non-air blocks in the chunk section, we don't need it
-        _palette = Palette.Deserialise(Size, 8, 4, 8, r);
-        _biomesPalette = Palette.Deserialise(4, 3, 1, 3, r);  // not yet implemented
-        
+        r.ReadShort();  // Fluid count, likewise
+        _palette = Palette.Deserialise(Size, BlocksMaxBpe, BlocksMinBpe, BlocksMaxBpe, r,
+            reg.Blocks.StatesCount);
+        _biomesPalette = Palette.Deserialise(BiomeDimension, BiomesMaxBpe, BiomesMinBpe, BiomesMaxBpe, r,
+            reg.Biomes.Count);
+
         if (!_palette.HasData) {
             throw new Exception("Empty chunk section");
         }

@@ -7,6 +7,10 @@ namespace Minecraft.Implementations.Client;
 public class TcpServerConnection(TcpClient client) : ServerConnection {
     private readonly CancellationTokenSource _cts = new();
     private readonly object _sendLock = new();
+
+    /// <summary>Set by whichever thread gets to tear the connection down, so only one does.</summary>
+    private int _disconnecting;
+
     private NetworkStream NetStream {
         get {
             try {
@@ -65,10 +69,12 @@ public class TcpServerConnection(TcpClient client) : ServerConnection {
     }
 
     public override void Disconnect() {
-        if (_cts.IsCancellationRequested) {
+        // Interlocked rather than a read of the token, for the reason given on
+        // TcpPlayerConnection.Disconnect: two threads can reach here at once.
+        if (Interlocked.Exchange(ref _disconnecting, 1) == 1) {
             return;
         }
-        
+
         // disconnect from the server
         _cts.Cancel();
         try {

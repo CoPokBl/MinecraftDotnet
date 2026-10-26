@@ -3,40 +3,87 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BrownMushroomBlockBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock {
-    public Identifier Category => "minecraft:huge_mushroom";
-    public double Hardness => 0.2;
-    public double ExplosionResistance => 0.2;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:brown_mushroom_block";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => true;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 10;
-    public string TranslationKey => "block.minecraft.brown_mushroom_block";
-    public bool CanRespawnIn => false;
+public record BrownMushroomBlockBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool West) : IBlock, IFaceConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.brown_mushroom_block", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:brown_mushroom_block", BlockInfo.VanillaOnly, "minecraft:blocks/brown_mushroom_block");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 15, PushReaction.PushPull, 10, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79, BlockShapes.S79);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public bool HasFace(BlockFace face) => face is BlockFace.NegY or BlockFace.PosY or BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.NegY => Down,
+        BlockFace.PosY => Up,
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.NegY => this with { Down = connected },
+        BlockFace.PosY => this with { Up = connected },
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -47,44 +94,44 @@ public record BrownMushroomBlockBlock(Identifier Identifier, bool Down, bool Eas
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7565,
-                                    false => 7566,
+                                    true => 9500,
+                                    false => 9501,
                                 },
                                 false => West switch {
-                                    true => 7567,
-                                    false => 7568,
+                                    true => 9502,
+                                    false => 9503,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7569,
-                                    false => 7570,
+                                    true => 9504,
+                                    false => 9505,
                                 },
                                 false => West switch {
-                                    true => 7571,
-                                    false => 7572,
+                                    true => 9506,
+                                    false => 9507,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7573,
-                                    false => 7574,
+                                    true => 9508,
+                                    false => 9509,
                                 },
                                 false => West switch {
-                                    true => 7575,
-                                    false => 7576,
+                                    true => 9510,
+                                    false => 9511,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7577,
-                                    false => 7578,
+                                    true => 9512,
+                                    false => 9513,
                                 },
                                 false => West switch {
-                                    true => 7579,
-                                    false => 7580,
+                                    true => 9514,
+                                    false => 9515,
                                 },
                             },
                         },
@@ -93,44 +140,44 @@ public record BrownMushroomBlockBlock(Identifier Identifier, bool Down, bool Eas
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7581,
-                                    false => 7582,
+                                    true => 9516,
+                                    false => 9517,
                                 },
                                 false => West switch {
-                                    true => 7583,
-                                    false => 7584,
+                                    true => 9518,
+                                    false => 9519,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7585,
-                                    false => 7586,
+                                    true => 9520,
+                                    false => 9521,
                                 },
                                 false => West switch {
-                                    true => 7587,
-                                    false => 7588,
+                                    true => 9522,
+                                    false => 9523,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7589,
-                                    false => 7590,
+                                    true => 9524,
+                                    false => 9525,
                                 },
                                 false => West switch {
-                                    true => 7591,
-                                    false => 7592,
+                                    true => 9526,
+                                    false => 9527,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7593,
-                                    false => 7594,
+                                    true => 9528,
+                                    false => 9529,
                                 },
                                 false => West switch {
-                                    true => 7595,
-                                    false => 7596,
+                                    true => 9530,
+                                    false => 9531,
                                 },
                             },
                         },
@@ -141,44 +188,44 @@ public record BrownMushroomBlockBlock(Identifier Identifier, bool Down, bool Eas
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7597,
-                                    false => 7598,
+                                    true => 9532,
+                                    false => 9533,
                                 },
                                 false => West switch {
-                                    true => 7599,
-                                    false => 7600,
+                                    true => 9534,
+                                    false => 9535,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7601,
-                                    false => 7602,
+                                    true => 9536,
+                                    false => 9537,
                                 },
                                 false => West switch {
-                                    true => 7603,
-                                    false => 7604,
+                                    true => 9538,
+                                    false => 9539,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7605,
-                                    false => 7606,
+                                    true => 9540,
+                                    false => 9541,
                                 },
                                 false => West switch {
-                                    true => 7607,
-                                    false => 7608,
+                                    true => 9542,
+                                    false => 9543,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7609,
-                                    false => 7610,
+                                    true => 9544,
+                                    false => 9545,
                                 },
                                 false => West switch {
-                                    true => 7611,
-                                    false => 7612,
+                                    true => 9546,
+                                    false => 9547,
                                 },
                             },
                         },
@@ -187,44 +234,44 @@ public record BrownMushroomBlockBlock(Identifier Identifier, bool Down, bool Eas
                         true => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7613,
-                                    false => 7614,
+                                    true => 9548,
+                                    false => 9549,
                                 },
                                 false => West switch {
-                                    true => 7615,
-                                    false => 7616,
+                                    true => 9550,
+                                    false => 9551,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7617,
-                                    false => 7618,
+                                    true => 9552,
+                                    false => 9553,
                                 },
                                 false => West switch {
-                                    true => 7619,
-                                    false => 7620,
+                                    true => 9554,
+                                    false => 9555,
                                 },
                             },
                         },
                         false => South switch {
                             true => Up switch {
                                 true => West switch {
-                                    true => 7621,
-                                    false => 7622,
+                                    true => 9556,
+                                    false => 9557,
                                 },
                                 false => West switch {
-                                    true => 7623,
-                                    false => 7624,
+                                    true => 9558,
+                                    false => 9559,
                                 },
                             },
                             false => Up switch {
                                 true => West switch {
-                                    true => 7625,
-                                    false => 7626,
+                                    true => 9560,
+                                    false => 9561,
                                 },
                                 false => West switch {
-                                    true => 7627,
-                                    false => 7628,
+                                    true => 9562,
+                                    false => 9563,
                                 },
                             },
                         },
@@ -236,70 +283,70 @@ public record BrownMushroomBlockBlock(Identifier Identifier, bool Down, bool Eas
     
     public IBlock WithState(uint state) {
         return state switch {
-            7565 => new BrownMushroomBlockBlock(Identifier, true, true, true, true, true, true),
-            7566 => new BrownMushroomBlockBlock(Identifier, true, true, true, true, true, false),
-            7567 => new BrownMushroomBlockBlock(Identifier, true, true, true, true, false, true),
-            7568 => new BrownMushroomBlockBlock(Identifier, true, true, true, true, false, false),
-            7569 => new BrownMushroomBlockBlock(Identifier, true, true, true, false, true, true),
-            7570 => new BrownMushroomBlockBlock(Identifier, true, true, true, false, true, false),
-            7571 => new BrownMushroomBlockBlock(Identifier, true, true, true, false, false, true),
-            7572 => new BrownMushroomBlockBlock(Identifier, true, true, true, false, false, false),
-            7573 => new BrownMushroomBlockBlock(Identifier, true, true, false, true, true, true),
-            7574 => new BrownMushroomBlockBlock(Identifier, true, true, false, true, true, false),
-            7575 => new BrownMushroomBlockBlock(Identifier, true, true, false, true, false, true),
-            7576 => new BrownMushroomBlockBlock(Identifier, true, true, false, true, false, false),
-            7577 => new BrownMushroomBlockBlock(Identifier, true, true, false, false, true, true),
-            7578 => new BrownMushroomBlockBlock(Identifier, true, true, false, false, true, false),
-            7579 => new BrownMushroomBlockBlock(Identifier, true, true, false, false, false, true),
-            7580 => new BrownMushroomBlockBlock(Identifier, true, true, false, false, false, false),
-            7581 => new BrownMushroomBlockBlock(Identifier, true, false, true, true, true, true),
-            7582 => new BrownMushroomBlockBlock(Identifier, true, false, true, true, true, false),
-            7583 => new BrownMushroomBlockBlock(Identifier, true, false, true, true, false, true),
-            7584 => new BrownMushroomBlockBlock(Identifier, true, false, true, true, false, false),
-            7585 => new BrownMushroomBlockBlock(Identifier, true, false, true, false, true, true),
-            7586 => new BrownMushroomBlockBlock(Identifier, true, false, true, false, true, false),
-            7587 => new BrownMushroomBlockBlock(Identifier, true, false, true, false, false, true),
-            7588 => new BrownMushroomBlockBlock(Identifier, true, false, true, false, false, false),
-            7589 => new BrownMushroomBlockBlock(Identifier, true, false, false, true, true, true),
-            7590 => new BrownMushroomBlockBlock(Identifier, true, false, false, true, true, false),
-            7591 => new BrownMushroomBlockBlock(Identifier, true, false, false, true, false, true),
-            7592 => new BrownMushroomBlockBlock(Identifier, true, false, false, true, false, false),
-            7593 => new BrownMushroomBlockBlock(Identifier, true, false, false, false, true, true),
-            7594 => new BrownMushroomBlockBlock(Identifier, true, false, false, false, true, false),
-            7595 => new BrownMushroomBlockBlock(Identifier, true, false, false, false, false, true),
-            7596 => new BrownMushroomBlockBlock(Identifier, true, false, false, false, false, false),
-            7597 => new BrownMushroomBlockBlock(Identifier, false, true, true, true, true, true),
-            7598 => new BrownMushroomBlockBlock(Identifier, false, true, true, true, true, false),
-            7599 => new BrownMushroomBlockBlock(Identifier, false, true, true, true, false, true),
-            7600 => new BrownMushroomBlockBlock(Identifier, false, true, true, true, false, false),
-            7601 => new BrownMushroomBlockBlock(Identifier, false, true, true, false, true, true),
-            7602 => new BrownMushroomBlockBlock(Identifier, false, true, true, false, true, false),
-            7603 => new BrownMushroomBlockBlock(Identifier, false, true, true, false, false, true),
-            7604 => new BrownMushroomBlockBlock(Identifier, false, true, true, false, false, false),
-            7605 => new BrownMushroomBlockBlock(Identifier, false, true, false, true, true, true),
-            7606 => new BrownMushroomBlockBlock(Identifier, false, true, false, true, true, false),
-            7607 => new BrownMushroomBlockBlock(Identifier, false, true, false, true, false, true),
-            7608 => new BrownMushroomBlockBlock(Identifier, false, true, false, true, false, false),
-            7609 => new BrownMushroomBlockBlock(Identifier, false, true, false, false, true, true),
-            7610 => new BrownMushroomBlockBlock(Identifier, false, true, false, false, true, false),
-            7611 => new BrownMushroomBlockBlock(Identifier, false, true, false, false, false, true),
-            7612 => new BrownMushroomBlockBlock(Identifier, false, true, false, false, false, false),
-            7613 => new BrownMushroomBlockBlock(Identifier, false, false, true, true, true, true),
-            7614 => new BrownMushroomBlockBlock(Identifier, false, false, true, true, true, false),
-            7615 => new BrownMushroomBlockBlock(Identifier, false, false, true, true, false, true),
-            7616 => new BrownMushroomBlockBlock(Identifier, false, false, true, true, false, false),
-            7617 => new BrownMushroomBlockBlock(Identifier, false, false, true, false, true, true),
-            7618 => new BrownMushroomBlockBlock(Identifier, false, false, true, false, true, false),
-            7619 => new BrownMushroomBlockBlock(Identifier, false, false, true, false, false, true),
-            7620 => new BrownMushroomBlockBlock(Identifier, false, false, true, false, false, false),
-            7621 => new BrownMushroomBlockBlock(Identifier, false, false, false, true, true, true),
-            7622 => new BrownMushroomBlockBlock(Identifier, false, false, false, true, true, false),
-            7623 => new BrownMushroomBlockBlock(Identifier, false, false, false, true, false, true),
-            7624 => new BrownMushroomBlockBlock(Identifier, false, false, false, true, false, false),
-            7625 => new BrownMushroomBlockBlock(Identifier, false, false, false, false, true, true),
-            7626 => new BrownMushroomBlockBlock(Identifier, false, false, false, false, true, false),
-            7627 => new BrownMushroomBlockBlock(Identifier, false, false, false, false, false, true),
-            7628 => new BrownMushroomBlockBlock(Identifier, false, false, false, false, false, false),
+            9500 => new BrownMushroomBlockBlock(Identifier, true, true, true, true, true, true),
+            9501 => new BrownMushroomBlockBlock(Identifier, true, true, true, true, true, false),
+            9502 => new BrownMushroomBlockBlock(Identifier, true, true, true, true, false, true),
+            9503 => new BrownMushroomBlockBlock(Identifier, true, true, true, true, false, false),
+            9504 => new BrownMushroomBlockBlock(Identifier, true, true, true, false, true, true),
+            9505 => new BrownMushroomBlockBlock(Identifier, true, true, true, false, true, false),
+            9506 => new BrownMushroomBlockBlock(Identifier, true, true, true, false, false, true),
+            9507 => new BrownMushroomBlockBlock(Identifier, true, true, true, false, false, false),
+            9508 => new BrownMushroomBlockBlock(Identifier, true, true, false, true, true, true),
+            9509 => new BrownMushroomBlockBlock(Identifier, true, true, false, true, true, false),
+            9510 => new BrownMushroomBlockBlock(Identifier, true, true, false, true, false, true),
+            9511 => new BrownMushroomBlockBlock(Identifier, true, true, false, true, false, false),
+            9512 => new BrownMushroomBlockBlock(Identifier, true, true, false, false, true, true),
+            9513 => new BrownMushroomBlockBlock(Identifier, true, true, false, false, true, false),
+            9514 => new BrownMushroomBlockBlock(Identifier, true, true, false, false, false, true),
+            9515 => new BrownMushroomBlockBlock(Identifier, true, true, false, false, false, false),
+            9516 => new BrownMushroomBlockBlock(Identifier, true, false, true, true, true, true),
+            9517 => new BrownMushroomBlockBlock(Identifier, true, false, true, true, true, false),
+            9518 => new BrownMushroomBlockBlock(Identifier, true, false, true, true, false, true),
+            9519 => new BrownMushroomBlockBlock(Identifier, true, false, true, true, false, false),
+            9520 => new BrownMushroomBlockBlock(Identifier, true, false, true, false, true, true),
+            9521 => new BrownMushroomBlockBlock(Identifier, true, false, true, false, true, false),
+            9522 => new BrownMushroomBlockBlock(Identifier, true, false, true, false, false, true),
+            9523 => new BrownMushroomBlockBlock(Identifier, true, false, true, false, false, false),
+            9524 => new BrownMushroomBlockBlock(Identifier, true, false, false, true, true, true),
+            9525 => new BrownMushroomBlockBlock(Identifier, true, false, false, true, true, false),
+            9526 => new BrownMushroomBlockBlock(Identifier, true, false, false, true, false, true),
+            9527 => new BrownMushroomBlockBlock(Identifier, true, false, false, true, false, false),
+            9528 => new BrownMushroomBlockBlock(Identifier, true, false, false, false, true, true),
+            9529 => new BrownMushroomBlockBlock(Identifier, true, false, false, false, true, false),
+            9530 => new BrownMushroomBlockBlock(Identifier, true, false, false, false, false, true),
+            9531 => new BrownMushroomBlockBlock(Identifier, true, false, false, false, false, false),
+            9532 => new BrownMushroomBlockBlock(Identifier, false, true, true, true, true, true),
+            9533 => new BrownMushroomBlockBlock(Identifier, false, true, true, true, true, false),
+            9534 => new BrownMushroomBlockBlock(Identifier, false, true, true, true, false, true),
+            9535 => new BrownMushroomBlockBlock(Identifier, false, true, true, true, false, false),
+            9536 => new BrownMushroomBlockBlock(Identifier, false, true, true, false, true, true),
+            9537 => new BrownMushroomBlockBlock(Identifier, false, true, true, false, true, false),
+            9538 => new BrownMushroomBlockBlock(Identifier, false, true, true, false, false, true),
+            9539 => new BrownMushroomBlockBlock(Identifier, false, true, true, false, false, false),
+            9540 => new BrownMushroomBlockBlock(Identifier, false, true, false, true, true, true),
+            9541 => new BrownMushroomBlockBlock(Identifier, false, true, false, true, true, false),
+            9542 => new BrownMushroomBlockBlock(Identifier, false, true, false, true, false, true),
+            9543 => new BrownMushroomBlockBlock(Identifier, false, true, false, true, false, false),
+            9544 => new BrownMushroomBlockBlock(Identifier, false, true, false, false, true, true),
+            9545 => new BrownMushroomBlockBlock(Identifier, false, true, false, false, true, false),
+            9546 => new BrownMushroomBlockBlock(Identifier, false, true, false, false, false, true),
+            9547 => new BrownMushroomBlockBlock(Identifier, false, true, false, false, false, false),
+            9548 => new BrownMushroomBlockBlock(Identifier, false, false, true, true, true, true),
+            9549 => new BrownMushroomBlockBlock(Identifier, false, false, true, true, true, false),
+            9550 => new BrownMushroomBlockBlock(Identifier, false, false, true, true, false, true),
+            9551 => new BrownMushroomBlockBlock(Identifier, false, false, true, true, false, false),
+            9552 => new BrownMushroomBlockBlock(Identifier, false, false, true, false, true, true),
+            9553 => new BrownMushroomBlockBlock(Identifier, false, false, true, false, true, false),
+            9554 => new BrownMushroomBlockBlock(Identifier, false, false, true, false, false, true),
+            9555 => new BrownMushroomBlockBlock(Identifier, false, false, true, false, false, false),
+            9556 => new BrownMushroomBlockBlock(Identifier, false, false, false, true, true, true),
+            9557 => new BrownMushroomBlockBlock(Identifier, false, false, false, true, true, false),
+            9558 => new BrownMushroomBlockBlock(Identifier, false, false, false, true, false, true),
+            9559 => new BrownMushroomBlockBlock(Identifier, false, false, false, true, false, false),
+            9560 => new BrownMushroomBlockBlock(Identifier, false, false, false, false, true, true),
+            9561 => new BrownMushroomBlockBlock(Identifier, false, false, false, false, true, false),
+            9562 => new BrownMushroomBlockBlock(Identifier, false, false, false, false, false, true),
+            9563 => new BrownMushroomBlockBlock(Identifier, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

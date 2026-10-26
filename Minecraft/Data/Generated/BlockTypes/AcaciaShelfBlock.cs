@@ -3,40 +3,81 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record AcaciaShelfBlock(Identifier Identifier, Direction Facing, bool Powered, AcaciaShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:shelf";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "shelf";
-    public Identifier? BlockEntity => "minecraft:shelf";
-    public Identifier? Item => "minecraft:acacia_shelf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 15;
-    public string TranslationKey => "block.minecraft.acacia_shelf";
-    public bool CanRespawnIn => false;
+public record AcaciaShelfBlock(Identifier Identifier, Direction Facing, bool Powered, AcaciaShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock, IHorizontalFacing, IPowered, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_shelf", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:shelf", "minecraft:acacia_shelf", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_shelf");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 15, "shelf", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, [], "minecraft:water", BlockShapes.S83, BlockShapes.S83, BlockShapes.S1, BlockShapes.S83, BlockShapes.S83, BlockShapes.S83);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 4092];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -45,39 +86,39 @@ public record AcaciaShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.North => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2399,
-                            false => 2400,
+                            true => 4092,
+                            false => 4093,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2401,
-                            false => 2402,
+                            true => 4094,
+                            false => 4095,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2403,
-                            false => 2404,
+                            true => 4096,
+                            false => 4097,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2405,
-                            false => 2406,
+                            true => 4098,
+                            false => 4099,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2407,
-                            false => 2408,
+                            true => 4100,
+                            false => 4101,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2409,
-                            false => 2410,
+                            true => 4102,
+                            false => 4103,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2411,
-                            false => 2412,
+                            true => 4104,
+                            false => 4105,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2413,
-                            false => 2414,
+                            true => 4106,
+                            false => 4107,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -85,39 +126,39 @@ public record AcaciaShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.South => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2415,
-                            false => 2416,
+                            true => 4108,
+                            false => 4109,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2417,
-                            false => 2418,
+                            true => 4110,
+                            false => 4111,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2419,
-                            false => 2420,
+                            true => 4112,
+                            false => 4113,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2421,
-                            false => 2422,
+                            true => 4114,
+                            false => 4115,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2423,
-                            false => 2424,
+                            true => 4116,
+                            false => 4117,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2425,
-                            false => 2426,
+                            true => 4118,
+                            false => 4119,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2427,
-                            false => 2428,
+                            true => 4120,
+                            false => 4121,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2429,
-                            false => 2430,
+                            true => 4122,
+                            false => 4123,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -125,39 +166,39 @@ public record AcaciaShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.West => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2431,
-                            false => 2432,
+                            true => 4124,
+                            false => 4125,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2433,
-                            false => 2434,
+                            true => 4126,
+                            false => 4127,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2435,
-                            false => 2436,
+                            true => 4128,
+                            false => 4129,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2437,
-                            false => 2438,
+                            true => 4130,
+                            false => 4131,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2439,
-                            false => 2440,
+                            true => 4132,
+                            false => 4133,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2441,
-                            false => 2442,
+                            true => 4134,
+                            false => 4135,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2443,
-                            false => 2444,
+                            true => 4136,
+                            false => 4137,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2445,
-                            false => 2446,
+                            true => 4138,
+                            false => 4139,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -165,39 +206,39 @@ public record AcaciaShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.East => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2447,
-                            false => 2448,
+                            true => 4140,
+                            false => 4141,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2449,
-                            false => 2450,
+                            true => 4142,
+                            false => 4143,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2451,
-                            false => 2452,
+                            true => 4144,
+                            false => 4145,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2453,
-                            false => 2454,
+                            true => 4146,
+                            false => 4147,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2455,
-                            false => 2456,
+                            true => 4148,
+                            false => 4149,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2457,
-                            false => 2458,
+                            true => 4150,
+                            false => 4151,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2459,
-                            false => 2460,
+                            true => 4152,
+                            false => 4153,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2461,
-                            false => 2462,
+                            true => 4154,
+                            false => 4155,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -209,70 +250,70 @@ public record AcaciaShelfBlock(Identifier Identifier, Direction Facing, bool Pow
     
     public IBlock WithState(uint state) {
         return state switch {
-            2399 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
-            2400 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
-            2401 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
-            2402 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
-            2403 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
-            2404 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
-            2405 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
-            2406 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
-            2407 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
-            2408 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
-            2409 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
-            2410 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
-            2411 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
-            2412 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
-            2413 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
-            2414 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
-            2415 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
-            2416 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
-            2417 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
-            2418 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
-            2419 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
-            2420 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
-            2421 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
-            2422 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
-            2423 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
-            2424 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
-            2425 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
-            2426 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
-            2427 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
-            2428 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
-            2429 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
-            2430 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
-            2431 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
-            2432 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
-            2433 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
-            2434 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
-            2435 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
-            2436 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
-            2437 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
-            2438 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
-            2439 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
-            2440 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
-            2441 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
-            2442 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
-            2443 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
-            2444 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
-            2445 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
-            2446 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
-            2447 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
-            2448 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
-            2449 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
-            2450 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
-            2451 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
-            2452 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
-            2453 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
-            2454 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
-            2455 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
-            2456 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
-            2457 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
-            2458 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
-            2459 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
-            2460 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
-            2461 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
-            2462 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
+            4092 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
+            4093 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
+            4094 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
+            4095 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
+            4096 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
+            4097 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
+            4098 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
+            4099 => new AcaciaShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
+            4100 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
+            4101 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
+            4102 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
+            4103 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
+            4104 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
+            4105 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
+            4106 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
+            4107 => new AcaciaShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
+            4108 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
+            4109 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
+            4110 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
+            4111 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
+            4112 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
+            4113 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
+            4114 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
+            4115 => new AcaciaShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
+            4116 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
+            4117 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
+            4118 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
+            4119 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
+            4120 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
+            4121 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
+            4122 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
+            4123 => new AcaciaShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
+            4124 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
+            4125 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
+            4126 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
+            4127 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
+            4128 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
+            4129 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
+            4130 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
+            4131 => new AcaciaShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
+            4132 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
+            4133 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
+            4134 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
+            4135 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
+            4136 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
+            4137 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
+            4138 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
+            4139 => new AcaciaShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
+            4140 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
+            4141 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
+            4142 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
+            4143 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
+            4144 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
+            4145 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
+            4146 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
+            4147 => new AcaciaShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
+            4148 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
+            4149 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
+            4150 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
+            4151 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
+            4152 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
+            4153 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
+            4154 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
+            4155 => new AcaciaShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

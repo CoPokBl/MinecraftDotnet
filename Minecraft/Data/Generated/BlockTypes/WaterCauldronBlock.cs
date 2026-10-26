@@ -3,6 +3,7 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
@@ -10,41 +11,65 @@ namespace Minecraft.Data.Generated.BlockTypes;
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
 public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
-    public Identifier Category => "minecraft:layered_cauldron";
-    public double Hardness => 2;
-    public double ExplosionResistance => 2;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => true;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:cauldron";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [0.125, 1.0, 0.25], AABB[0.0, 0.0, 0.75] -> [0.125, 1.0, 1.0], AABB[0.125, 0.0, 0.0] -> [0.25, 1.0, 0.125], AABB[0.125, 0.0, 0.875] -> [0.25, 1.0, 1.0], AABB[0.75, 0.0, 0.0] -> [1.0, 1.0, 0.125], AABB[0.75, 0.0, 0.875] -> [1.0, 1.0, 1.0], AABB[0.875, 0.0, 0.125] -> [1.0, 1.0, 0.25], AABB[0.875, 0.0, 0.75] -> [1.0, 1.0, 0.875], AABB[0.0, 0.1875, 0.25] -> [1.0, 0.25, 0.75], AABB[0.125, 0.1875, 0.125] -> [0.875, 0.25, 0.25], AABB[0.125, 0.1875, 0.75] -> [0.875, 0.25, 0.875], AABB[0.25, 0.1875, 0.0] -> [0.75, 1.0, 0.125], AABB[0.25, 0.1875, 0.875] -> [0.75, 1.0, 1.0], AABB[0.0, 0.25, 0.25] -> [0.125, 1.0, 0.75], AABB[0.875, 0.25, 0.25] -> [1.0, 1.0, 0.75]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [0.125, 1.0, 0.25], AABB[0.0, 0.0, 0.75] -> [0.125, 1.0, 1.0], AABB[0.125, 0.0, 0.0] -> [0.25, 1.0, 0.125], AABB[0.125, 0.0, 0.875] -> [0.25, 1.0, 1.0], AABB[0.75, 0.0, 0.0] -> [1.0, 1.0, 0.125], AABB[0.75, 0.0, 0.875] -> [1.0, 1.0, 1.0], AABB[0.875, 0.0, 0.125] -> [1.0, 1.0, 0.25], AABB[0.875, 0.0, 0.75] -> [1.0, 1.0, 0.875], AABB[0.0, 0.1875, 0.25] -> [1.0, 0.25, 0.75], AABB[0.125, 0.1875, 0.125] -> [0.875, 0.25, 0.25], AABB[0.125, 0.1875, 0.75] -> [0.875, 0.25, 0.875], AABB[0.25, 0.1875, 0.0] -> [0.75, 1.0, 0.125], AABB[0.25, 0.1875, 0.875] -> [0.75, 1.0, 1.0], AABB[0.0, 0.25, 0.25] -> [0.125, 1.0, 0.75], AABB[0.875, 0.25, 0.25] -> [1.0, 1.0, 0.75]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.125, 0.25, 0.125] -> [0.875, 1.0, 0.875]]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [0.125, 1.0, 0.25], AABB[0.0, 0.0, 0.75] -> [0.125, 1.0, 1.0], AABB[0.125, 0.0, 0.0] -> [0.25, 1.0, 0.125], AABB[0.125, 0.0, 0.875] -> [0.25, 1.0, 1.0], AABB[0.75, 0.0, 0.0] -> [1.0, 1.0, 0.125], AABB[0.75, 0.0, 0.875] -> [1.0, 1.0, 1.0], AABB[0.875, 0.0, 0.125] -> [1.0, 1.0, 0.25], AABB[0.875, 0.0, 0.75] -> [1.0, 1.0, 0.875], AABB[0.0, 0.1875, 0.25] -> [1.0, 0.25, 0.75], AABB[0.125, 0.1875, 0.125] -> [0.875, 0.25, 0.25], AABB[0.125, 0.1875, 0.75] -> [0.875, 0.25, 0.875], AABB[0.25, 0.1875, 0.0] -> [0.75, 1.0, 0.125], AABB[0.25, 0.1875, 0.875] -> [0.75, 1.0, 1.0], AABB[0.0, 0.25, 0.25] -> [0.125, 1.0, 0.75], AABB[0.875, 0.25, 0.25] -> [1.0, 1.0, 0.75]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 11;
-    public string TranslationKey => "block.minecraft.water_cauldron";
-    public bool CanRespawnIn => false;
+    private static readonly BlockInfo Data = new("block.minecraft.water_cauldron", 2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:cauldron", BlockInfo.VanillaOnly, "minecraft:blocks/water_cauldron");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 0, PushReaction.PushPull, 11, "stone", NoteBlockInstrument.Harp, false, false, true, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S414, BlockShapes.S414, BlockShapes.S415, BlockShapes.S1, BlockShapes.S414, BlockShapes.S414);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
 
 
     public uint StateId {
         get {
             return Level switch {
-                1 => 9260,
-                2 => 9261,
-                3 => 9262,
+                1 => 11195,
+                2 => 11196,
+                3 => 11197,
                 _ => throw new ArgumentOutOfRangeException(nameof(Level), Level, "Unknown value for property level.")
             };
         }
@@ -52,9 +77,9 @@ public record WaterCauldronBlock(Identifier Identifier, int Level) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            9260 => new WaterCauldronBlock(Identifier, 1),
-            9261 => new WaterCauldronBlock(Identifier, 2),
-            9262 => new WaterCauldronBlock(Identifier, 3),
+            11195 => new WaterCauldronBlock(Identifier, 1),
+            11196 => new WaterCauldronBlock(Identifier, 2),
+            11197 => new WaterCauldronBlock(Identifier, 3),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

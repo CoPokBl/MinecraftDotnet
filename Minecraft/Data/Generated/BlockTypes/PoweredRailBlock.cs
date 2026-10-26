@@ -3,40 +3,77 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PoweredRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:powered_rail";
-    public double Hardness => 0.7;
-    public double ExplosionResistance => 0.7;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "metal";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:powered_rail";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.125, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.powered_rail";
-    public bool CanRespawnIn => true;
+public record PoweredRailBlock(Identifier Identifier, bool Powered, RailDirection Shape, bool Waterlogged) : IBlock, IPowered, IRailDirected, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.powered_rail", 0.7f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:powered_rail", BlockInfo.VanillaOnly, "minecraft:blocks/powered_rail");
+    private static readonly BlockStateInfo I0 = new(0.7f, 0, 1, PushReaction.PushPull, 0, "metal", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S124, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S89 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S89 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 2302];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithShape(RailDirection shape) => this with { Shape = shape };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,55 +81,55 @@ public record PoweredRailBlock(Identifier Identifier, bool Powered, RailDirectio
             return Powered switch {
                 true => Shape switch {
                     RailDirection.NorthSouth => Waterlogged switch {
-                        true => 1987,
-                        false => 1988,
+                        true => 2302,
+                        false => 2303,
                     },
                     RailDirection.EastWest => Waterlogged switch {
-                        true => 1989,
-                        false => 1990,
+                        true => 2304,
+                        false => 2305,
                     },
                     RailDirection.AscendingEast => Waterlogged switch {
-                        true => 1991,
-                        false => 1992,
+                        true => 2306,
+                        false => 2307,
                     },
                     RailDirection.AscendingWest => Waterlogged switch {
-                        true => 1993,
-                        false => 1994,
+                        true => 2308,
+                        false => 2309,
                     },
                     RailDirection.AscendingNorth => Waterlogged switch {
-                        true => 1995,
-                        false => 1996,
+                        true => 2310,
+                        false => 2311,
                     },
                     RailDirection.AscendingSouth => Waterlogged switch {
-                        true => 1997,
-                        false => 1998,
+                        true => 2312,
+                        false => 2313,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                 },
                 false => Shape switch {
                     RailDirection.NorthSouth => Waterlogged switch {
-                        true => 1999,
-                        false => 2000,
+                        true => 2314,
+                        false => 2315,
                     },
                     RailDirection.EastWest => Waterlogged switch {
-                        true => 2001,
-                        false => 2002,
+                        true => 2316,
+                        false => 2317,
                     },
                     RailDirection.AscendingEast => Waterlogged switch {
-                        true => 2003,
-                        false => 2004,
+                        true => 2318,
+                        false => 2319,
                     },
                     RailDirection.AscendingWest => Waterlogged switch {
-                        true => 2005,
-                        false => 2006,
+                        true => 2320,
+                        false => 2321,
                     },
                     RailDirection.AscendingNorth => Waterlogged switch {
-                        true => 2007,
-                        false => 2008,
+                        true => 2322,
+                        false => 2323,
                     },
                     RailDirection.AscendingSouth => Waterlogged switch {
-                        true => 2009,
-                        false => 2010,
+                        true => 2324,
+                        false => 2325,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Shape), Shape, "Unknown value for property shape.")
                 },
@@ -102,30 +139,30 @@ public record PoweredRailBlock(Identifier Identifier, bool Powered, RailDirectio
     
     public IBlock WithState(uint state) {
         return state switch {
-            1987 => new PoweredRailBlock(Identifier, true, RailDirection.NorthSouth, true),
-            1988 => new PoweredRailBlock(Identifier, true, RailDirection.NorthSouth, false),
-            1989 => new PoweredRailBlock(Identifier, true, RailDirection.EastWest, true),
-            1990 => new PoweredRailBlock(Identifier, true, RailDirection.EastWest, false),
-            1991 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingEast, true),
-            1992 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingEast, false),
-            1993 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingWest, true),
-            1994 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingWest, false),
-            1995 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingNorth, true),
-            1996 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingNorth, false),
-            1997 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingSouth, true),
-            1998 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingSouth, false),
-            1999 => new PoweredRailBlock(Identifier, false, RailDirection.NorthSouth, true),
-            2000 => new PoweredRailBlock(Identifier, false, RailDirection.NorthSouth, false),
-            2001 => new PoweredRailBlock(Identifier, false, RailDirection.EastWest, true),
-            2002 => new PoweredRailBlock(Identifier, false, RailDirection.EastWest, false),
-            2003 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingEast, true),
-            2004 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingEast, false),
-            2005 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingWest, true),
-            2006 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingWest, false),
-            2007 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingNorth, true),
-            2008 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingNorth, false),
-            2009 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingSouth, true),
-            2010 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingSouth, false),
+            2302 => new PoweredRailBlock(Identifier, true, RailDirection.NorthSouth, true),
+            2303 => new PoweredRailBlock(Identifier, true, RailDirection.NorthSouth, false),
+            2304 => new PoweredRailBlock(Identifier, true, RailDirection.EastWest, true),
+            2305 => new PoweredRailBlock(Identifier, true, RailDirection.EastWest, false),
+            2306 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingEast, true),
+            2307 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingEast, false),
+            2308 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingWest, true),
+            2309 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingWest, false),
+            2310 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingNorth, true),
+            2311 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingNorth, false),
+            2312 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingSouth, true),
+            2313 => new PoweredRailBlock(Identifier, true, RailDirection.AscendingSouth, false),
+            2314 => new PoweredRailBlock(Identifier, false, RailDirection.NorthSouth, true),
+            2315 => new PoweredRailBlock(Identifier, false, RailDirection.NorthSouth, false),
+            2316 => new PoweredRailBlock(Identifier, false, RailDirection.EastWest, true),
+            2317 => new PoweredRailBlock(Identifier, false, RailDirection.EastWest, false),
+            2318 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingEast, true),
+            2319 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingEast, false),
+            2320 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingWest, true),
+            2321 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingWest, false),
+            2322 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingNorth, true),
+            2323 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingNorth, false),
+            2324 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingSouth, true),
+            2325 => new PoweredRailBlock(Identifier, false, RailDirection.AscendingSouth, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

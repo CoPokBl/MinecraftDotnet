@@ -3,40 +3,79 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BambooHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:ceiling_hanging_sign";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "bamboo_wood_hanging_sign";
-    public Identifier? BlockEntity => "minecraft:hanging_sign";
-    public Identifier? Item => "minecraft:bamboo_hanging_sign";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0625, 0.0, 0.4375] -> [0.9375, 0.625, 0.5625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 18;
-    public string TranslationKey => "block.minecraft.bamboo_hanging_sign";
-    public bool CanRespawnIn => true;
+public record BambooHangingSignBlock(Identifier Identifier, bool Attached, int Rotation, bool Waterlogged) : IBlock, IAttached, IRotated, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.bamboo_hanging_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:hanging_sign", "minecraft:bamboo_hanging_sign", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo_hanging_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 18, "bamboo_wood_hanging_sign", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S76, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S76);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S77, SupportShape = BlockShapes.S77 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S78, SupportShape = BlockShapes.S78 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3, I0, I1, I2, I3, I2, I3, I2, I3, I4, I5, I2, I3, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 8271];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithAttached(bool attached) => this with { Attached = attached };
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,135 +83,135 @@ public record BambooHangingSignBlock(Identifier Identifier, bool Attached, int R
             return Attached switch {
                 true => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6410,
-                        false => 6411,
+                        true => 8271,
+                        false => 8272,
                     },
                     1 => Waterlogged switch {
-                        true => 6412,
-                        false => 6413,
+                        true => 8273,
+                        false => 8274,
                     },
                     2 => Waterlogged switch {
-                        true => 6414,
-                        false => 6415,
+                        true => 8275,
+                        false => 8276,
                     },
                     3 => Waterlogged switch {
-                        true => 6416,
-                        false => 6417,
+                        true => 8277,
+                        false => 8278,
                     },
                     4 => Waterlogged switch {
-                        true => 6418,
-                        false => 6419,
+                        true => 8279,
+                        false => 8280,
                     },
                     5 => Waterlogged switch {
-                        true => 6420,
-                        false => 6421,
+                        true => 8281,
+                        false => 8282,
                     },
                     6 => Waterlogged switch {
-                        true => 6422,
-                        false => 6423,
+                        true => 8283,
+                        false => 8284,
                     },
                     7 => Waterlogged switch {
-                        true => 6424,
-                        false => 6425,
+                        true => 8285,
+                        false => 8286,
                     },
                     8 => Waterlogged switch {
-                        true => 6426,
-                        false => 6427,
+                        true => 8287,
+                        false => 8288,
                     },
                     9 => Waterlogged switch {
-                        true => 6428,
-                        false => 6429,
+                        true => 8289,
+                        false => 8290,
                     },
                     10 => Waterlogged switch {
-                        true => 6430,
-                        false => 6431,
+                        true => 8291,
+                        false => 8292,
                     },
                     11 => Waterlogged switch {
-                        true => 6432,
-                        false => 6433,
+                        true => 8293,
+                        false => 8294,
                     },
                     12 => Waterlogged switch {
-                        true => 6434,
-                        false => 6435,
+                        true => 8295,
+                        false => 8296,
                     },
                     13 => Waterlogged switch {
-                        true => 6436,
-                        false => 6437,
+                        true => 8297,
+                        false => 8298,
                     },
                     14 => Waterlogged switch {
-                        true => 6438,
-                        false => 6439,
+                        true => 8299,
+                        false => 8300,
                     },
                     15 => Waterlogged switch {
-                        true => 6440,
-                        false => 6441,
+                        true => 8301,
+                        false => 8302,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
                     0 => Waterlogged switch {
-                        true => 6442,
-                        false => 6443,
+                        true => 8303,
+                        false => 8304,
                     },
                     1 => Waterlogged switch {
-                        true => 6444,
-                        false => 6445,
+                        true => 8305,
+                        false => 8306,
                     },
                     2 => Waterlogged switch {
-                        true => 6446,
-                        false => 6447,
+                        true => 8307,
+                        false => 8308,
                     },
                     3 => Waterlogged switch {
-                        true => 6448,
-                        false => 6449,
+                        true => 8309,
+                        false => 8310,
                     },
                     4 => Waterlogged switch {
-                        true => 6450,
-                        false => 6451,
+                        true => 8311,
+                        false => 8312,
                     },
                     5 => Waterlogged switch {
-                        true => 6452,
-                        false => 6453,
+                        true => 8313,
+                        false => 8314,
                     },
                     6 => Waterlogged switch {
-                        true => 6454,
-                        false => 6455,
+                        true => 8315,
+                        false => 8316,
                     },
                     7 => Waterlogged switch {
-                        true => 6456,
-                        false => 6457,
+                        true => 8317,
+                        false => 8318,
                     },
                     8 => Waterlogged switch {
-                        true => 6458,
-                        false => 6459,
+                        true => 8319,
+                        false => 8320,
                     },
                     9 => Waterlogged switch {
-                        true => 6460,
-                        false => 6461,
+                        true => 8321,
+                        false => 8322,
                     },
                     10 => Waterlogged switch {
-                        true => 6462,
-                        false => 6463,
+                        true => 8323,
+                        false => 8324,
                     },
                     11 => Waterlogged switch {
-                        true => 6464,
-                        false => 6465,
+                        true => 8325,
+                        false => 8326,
                     },
                     12 => Waterlogged switch {
-                        true => 6466,
-                        false => 6467,
+                        true => 8327,
+                        false => 8328,
                     },
                     13 => Waterlogged switch {
-                        true => 6468,
-                        false => 6469,
+                        true => 8329,
+                        false => 8330,
                     },
                     14 => Waterlogged switch {
-                        true => 6470,
-                        false => 6471,
+                        true => 8331,
+                        false => 8332,
                     },
                     15 => Waterlogged switch {
-                        true => 6472,
-                        false => 6473,
+                        true => 8333,
+                        false => 8334,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
@@ -182,70 +221,70 @@ public record BambooHangingSignBlock(Identifier Identifier, bool Attached, int R
     
     public IBlock WithState(uint state) {
         return state switch {
-            6410 => new BambooHangingSignBlock(Identifier, true, 0, true),
-            6411 => new BambooHangingSignBlock(Identifier, true, 0, false),
-            6412 => new BambooHangingSignBlock(Identifier, true, 1, true),
-            6413 => new BambooHangingSignBlock(Identifier, true, 1, false),
-            6414 => new BambooHangingSignBlock(Identifier, true, 2, true),
-            6415 => new BambooHangingSignBlock(Identifier, true, 2, false),
-            6416 => new BambooHangingSignBlock(Identifier, true, 3, true),
-            6417 => new BambooHangingSignBlock(Identifier, true, 3, false),
-            6418 => new BambooHangingSignBlock(Identifier, true, 4, true),
-            6419 => new BambooHangingSignBlock(Identifier, true, 4, false),
-            6420 => new BambooHangingSignBlock(Identifier, true, 5, true),
-            6421 => new BambooHangingSignBlock(Identifier, true, 5, false),
-            6422 => new BambooHangingSignBlock(Identifier, true, 6, true),
-            6423 => new BambooHangingSignBlock(Identifier, true, 6, false),
-            6424 => new BambooHangingSignBlock(Identifier, true, 7, true),
-            6425 => new BambooHangingSignBlock(Identifier, true, 7, false),
-            6426 => new BambooHangingSignBlock(Identifier, true, 8, true),
-            6427 => new BambooHangingSignBlock(Identifier, true, 8, false),
-            6428 => new BambooHangingSignBlock(Identifier, true, 9, true),
-            6429 => new BambooHangingSignBlock(Identifier, true, 9, false),
-            6430 => new BambooHangingSignBlock(Identifier, true, 10, true),
-            6431 => new BambooHangingSignBlock(Identifier, true, 10, false),
-            6432 => new BambooHangingSignBlock(Identifier, true, 11, true),
-            6433 => new BambooHangingSignBlock(Identifier, true, 11, false),
-            6434 => new BambooHangingSignBlock(Identifier, true, 12, true),
-            6435 => new BambooHangingSignBlock(Identifier, true, 12, false),
-            6436 => new BambooHangingSignBlock(Identifier, true, 13, true),
-            6437 => new BambooHangingSignBlock(Identifier, true, 13, false),
-            6438 => new BambooHangingSignBlock(Identifier, true, 14, true),
-            6439 => new BambooHangingSignBlock(Identifier, true, 14, false),
-            6440 => new BambooHangingSignBlock(Identifier, true, 15, true),
-            6441 => new BambooHangingSignBlock(Identifier, true, 15, false),
-            6442 => new BambooHangingSignBlock(Identifier, false, 0, true),
-            6443 => new BambooHangingSignBlock(Identifier, false, 0, false),
-            6444 => new BambooHangingSignBlock(Identifier, false, 1, true),
-            6445 => new BambooHangingSignBlock(Identifier, false, 1, false),
-            6446 => new BambooHangingSignBlock(Identifier, false, 2, true),
-            6447 => new BambooHangingSignBlock(Identifier, false, 2, false),
-            6448 => new BambooHangingSignBlock(Identifier, false, 3, true),
-            6449 => new BambooHangingSignBlock(Identifier, false, 3, false),
-            6450 => new BambooHangingSignBlock(Identifier, false, 4, true),
-            6451 => new BambooHangingSignBlock(Identifier, false, 4, false),
-            6452 => new BambooHangingSignBlock(Identifier, false, 5, true),
-            6453 => new BambooHangingSignBlock(Identifier, false, 5, false),
-            6454 => new BambooHangingSignBlock(Identifier, false, 6, true),
-            6455 => new BambooHangingSignBlock(Identifier, false, 6, false),
-            6456 => new BambooHangingSignBlock(Identifier, false, 7, true),
-            6457 => new BambooHangingSignBlock(Identifier, false, 7, false),
-            6458 => new BambooHangingSignBlock(Identifier, false, 8, true),
-            6459 => new BambooHangingSignBlock(Identifier, false, 8, false),
-            6460 => new BambooHangingSignBlock(Identifier, false, 9, true),
-            6461 => new BambooHangingSignBlock(Identifier, false, 9, false),
-            6462 => new BambooHangingSignBlock(Identifier, false, 10, true),
-            6463 => new BambooHangingSignBlock(Identifier, false, 10, false),
-            6464 => new BambooHangingSignBlock(Identifier, false, 11, true),
-            6465 => new BambooHangingSignBlock(Identifier, false, 11, false),
-            6466 => new BambooHangingSignBlock(Identifier, false, 12, true),
-            6467 => new BambooHangingSignBlock(Identifier, false, 12, false),
-            6468 => new BambooHangingSignBlock(Identifier, false, 13, true),
-            6469 => new BambooHangingSignBlock(Identifier, false, 13, false),
-            6470 => new BambooHangingSignBlock(Identifier, false, 14, true),
-            6471 => new BambooHangingSignBlock(Identifier, false, 14, false),
-            6472 => new BambooHangingSignBlock(Identifier, false, 15, true),
-            6473 => new BambooHangingSignBlock(Identifier, false, 15, false),
+            8271 => new BambooHangingSignBlock(Identifier, true, 0, true),
+            8272 => new BambooHangingSignBlock(Identifier, true, 0, false),
+            8273 => new BambooHangingSignBlock(Identifier, true, 1, true),
+            8274 => new BambooHangingSignBlock(Identifier, true, 1, false),
+            8275 => new BambooHangingSignBlock(Identifier, true, 2, true),
+            8276 => new BambooHangingSignBlock(Identifier, true, 2, false),
+            8277 => new BambooHangingSignBlock(Identifier, true, 3, true),
+            8278 => new BambooHangingSignBlock(Identifier, true, 3, false),
+            8279 => new BambooHangingSignBlock(Identifier, true, 4, true),
+            8280 => new BambooHangingSignBlock(Identifier, true, 4, false),
+            8281 => new BambooHangingSignBlock(Identifier, true, 5, true),
+            8282 => new BambooHangingSignBlock(Identifier, true, 5, false),
+            8283 => new BambooHangingSignBlock(Identifier, true, 6, true),
+            8284 => new BambooHangingSignBlock(Identifier, true, 6, false),
+            8285 => new BambooHangingSignBlock(Identifier, true, 7, true),
+            8286 => new BambooHangingSignBlock(Identifier, true, 7, false),
+            8287 => new BambooHangingSignBlock(Identifier, true, 8, true),
+            8288 => new BambooHangingSignBlock(Identifier, true, 8, false),
+            8289 => new BambooHangingSignBlock(Identifier, true, 9, true),
+            8290 => new BambooHangingSignBlock(Identifier, true, 9, false),
+            8291 => new BambooHangingSignBlock(Identifier, true, 10, true),
+            8292 => new BambooHangingSignBlock(Identifier, true, 10, false),
+            8293 => new BambooHangingSignBlock(Identifier, true, 11, true),
+            8294 => new BambooHangingSignBlock(Identifier, true, 11, false),
+            8295 => new BambooHangingSignBlock(Identifier, true, 12, true),
+            8296 => new BambooHangingSignBlock(Identifier, true, 12, false),
+            8297 => new BambooHangingSignBlock(Identifier, true, 13, true),
+            8298 => new BambooHangingSignBlock(Identifier, true, 13, false),
+            8299 => new BambooHangingSignBlock(Identifier, true, 14, true),
+            8300 => new BambooHangingSignBlock(Identifier, true, 14, false),
+            8301 => new BambooHangingSignBlock(Identifier, true, 15, true),
+            8302 => new BambooHangingSignBlock(Identifier, true, 15, false),
+            8303 => new BambooHangingSignBlock(Identifier, false, 0, true),
+            8304 => new BambooHangingSignBlock(Identifier, false, 0, false),
+            8305 => new BambooHangingSignBlock(Identifier, false, 1, true),
+            8306 => new BambooHangingSignBlock(Identifier, false, 1, false),
+            8307 => new BambooHangingSignBlock(Identifier, false, 2, true),
+            8308 => new BambooHangingSignBlock(Identifier, false, 2, false),
+            8309 => new BambooHangingSignBlock(Identifier, false, 3, true),
+            8310 => new BambooHangingSignBlock(Identifier, false, 3, false),
+            8311 => new BambooHangingSignBlock(Identifier, false, 4, true),
+            8312 => new BambooHangingSignBlock(Identifier, false, 4, false),
+            8313 => new BambooHangingSignBlock(Identifier, false, 5, true),
+            8314 => new BambooHangingSignBlock(Identifier, false, 5, false),
+            8315 => new BambooHangingSignBlock(Identifier, false, 6, true),
+            8316 => new BambooHangingSignBlock(Identifier, false, 6, false),
+            8317 => new BambooHangingSignBlock(Identifier, false, 7, true),
+            8318 => new BambooHangingSignBlock(Identifier, false, 7, false),
+            8319 => new BambooHangingSignBlock(Identifier, false, 8, true),
+            8320 => new BambooHangingSignBlock(Identifier, false, 8, false),
+            8321 => new BambooHangingSignBlock(Identifier, false, 9, true),
+            8322 => new BambooHangingSignBlock(Identifier, false, 9, false),
+            8323 => new BambooHangingSignBlock(Identifier, false, 10, true),
+            8324 => new BambooHangingSignBlock(Identifier, false, 10, false),
+            8325 => new BambooHangingSignBlock(Identifier, false, 11, true),
+            8326 => new BambooHangingSignBlock(Identifier, false, 11, false),
+            8327 => new BambooHangingSignBlock(Identifier, false, 12, true),
+            8328 => new BambooHangingSignBlock(Identifier, false, 12, false),
+            8329 => new BambooHangingSignBlock(Identifier, false, 13, true),
+            8330 => new BambooHangingSignBlock(Identifier, false, 13, false),
+            8331 => new BambooHangingSignBlock(Identifier, false, 14, true),
+            8332 => new BambooHangingSignBlock(Identifier, false, 14, false),
+            8333 => new BambooHangingSignBlock(Identifier, false, 15, true),
+            8334 => new BambooHangingSignBlock(Identifier, false, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

@@ -22,7 +22,11 @@ public abstract class PlayerConnection : MinecraftConnection {
     public ServerBoundHandshakePacket? Handshake;
     public EventNode<IServerEvent> Events = new();  // its parent should be the server's
 
-    public static readonly Type[] DontLog = [
+    /// <summary>
+    /// The packets that arrive every tick and would drown the log. A set rather than an array: this
+    /// is tested for every packet received, and the linear scan allocated a closure each time.
+    /// </summary>
+    public static readonly HashSet<Type> DontLog = [
         typeof(ServerBoundClientTickEndPacket),
         typeof(ServerBoundKeepAlivePacket),
         typeof(ServerBoundSetPlayerPositionPacket),
@@ -31,7 +35,7 @@ public abstract class PlayerConnection : MinecraftConnection {
     ];
 
     public void HandlePacket(MinecraftPacket packet) {
-        if (DontLog.All(p => p != packet.GetType())) {
+        if (LoggingEnabled && !DontLog.Contains(packet.GetType())) {
             Log($"Got full packet: {Registry.Packets.GetPacketId(State, packet)}, {packet.GetType().FullName}");
         }
         
@@ -175,6 +179,13 @@ public abstract class PlayerConnection : MinecraftConnection {
     }
 
     public override void SendPacket(MinecraftPacket packet) {
+        // Nothing after the disconnect can reach the client, so it is dropped before the event and the
+        // serialisation rather than after. A player who leaves is still owed a whole flight of chunks
+        // and a despawn from every entity around them, and all of it used to be built and dispatched.
+        if (IsDisconnected) {
+            return;
+        }
+
         PacketSendingEvent e = new() {
             Connection = this,
             Packet = packet
@@ -184,9 +195,14 @@ public abstract class PlayerConnection : MinecraftConnection {
         if (e.Cancelled) {
             return;
         }
-        
-        Log("Sending packet " + packet.GetType().Name);
-        
+
+        // Guarded: this runs for every packet, and chunk streaming makes that a lot of them. The
+        // concatenation and the reflection behind GetType().Name both used to happen whether or not
+        // anything was listening.
+        if (LoggingEnabled) {
+            Log("Sending packet " + packet.GetType().Name);
+        }
+
         // Send it
         SendPacketInternal(packet);
     }

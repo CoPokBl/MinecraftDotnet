@@ -1,10 +1,30 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
+using NBT;
+using NBT.Tags;
 
 namespace Minecraft.Data.Components.Types;
 
 public record TooltipDisplayComponent() : IDataComponent<TooltipDisplayComponent.Info> {
     public override Identifier Identifier => "minecraft:tooltip_display";
+
+    public override NbtCodec<Info>? Codec => Persistent;
+    private static readonly NbtCodec<Info> Persistent = new(
+        (val, _) => new CompoundBuilder()
+            .Bool("hide_tooltip", val.HideTooltip, false)
+            .ListOrOmit("hidden_components", val.Hidden,
+                component => new StringTag(component.Identifier.ToString()))
+            .Build(),
+        (tag, registry) => {
+            NbtNode node = NbtNode.Of(tag, "minecraft:tooltip_display");
+            Info info = new(
+                node.Bool("hide_tooltip", false),
+                node.List("hidden_components",
+                    component => registry.DataComponents[(Identifier)component.GetString()]));
+            node.AssertRead();
+            return info;
+        });
     
     public override DataWriter WriteData(Info val, DataWriter writer, MinecraftRegistry registry) {
         writer.WriteBoolean(val.HideTooltip);

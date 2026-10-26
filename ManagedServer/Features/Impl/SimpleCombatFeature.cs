@@ -1,13 +1,11 @@
+using ManagedServer.Damage;
 using ManagedServer.Entities.Types;
 using ManagedServer.Events;
 using ManagedServer.Viewables;
 using Minecraft;
 using Minecraft.Data.Generated;
 using Minecraft.Implementations.Tags;
-using Minecraft.Packets;
-using Minecraft.Packets.Play.ClientBound;
 using Minecraft.Packets.Play.ServerBound;
-using Minecraft.Schemas.Sound;
 
 namespace ManagedServer.Features.Impl;
 
@@ -16,11 +14,7 @@ public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : Sc
     
     public override void Register() {
         AddEventHandler<PlayerPacketHandleEvent>(e => {
-            if (e.Packet is not ServerBoundInteractPacket packet) {
-                return;
-            }
-
-            if (packet.Type != ServerBoundInteractPacket.InteractType.Attack) {
+            if (e.Packet is not ServerBoundAttackPacket packet) {
                 return;
             }
 
@@ -53,33 +47,25 @@ public class SimpleCombatFeature(int attackCooldown = -1, float damage = 0) : Sc
                 entity.SetTag(_lastHitTag, time);
             }
 
-            MinecraftPacket soundPacket = new ClientBoundEntitySoundEffectPacket {
-                Category = SoundCategory.Players,
-                EntityId = entity.NetId,
-                Type = SoundType.PlayerHurt, // sound id for "player.attack"
-                Volume = 1f,
-                Pitch = 1f,
-                Seed = 0L
-            };
-
+            // The hurt sound and the red flash both ride on the damage event packet Damage sends, so
+            // there is nothing to play here beyond the swing itself.
             if (entity is LivingEntity le) {
-                le.Damage(damage);
+                le.Damage(new DamageSource(DamageType.PlayerAttack) {
+                    Attacker = attacker,
+                    Direct = attacker,
+                    // What the hit was dealt with, which is what ShieldFeature reads to decide whether
+                    // it takes the shield away and what ArmourFeature reads for the enchantments on it.
+                    Weapon = attacker.HeldItem
+                }, damage);
             }
-            
+
             if (entity is Player p) {
                 // p.SetVelocity(attacker.Direction.Multiply(0.5) with { Y = 0.5 });  // Original
                 p.SetVelocity(attacker.Direction.Multiply(0.60).WithY(0.5));  // Original 2.0 GOOD
                 p.SetVelocity(attacker.Direction.Multiply(0.90).WithY(0.4));  // Original 2.0 GOOD
                 // p.SetVelocity(attacker.Direction.Multiply(0.8) with { Y = 0.35 });  // adam tweak
                 // p.SetVelocity(attacker.Direction.Multiply(1) with { Y = 1 });  // dumb
-                p.Connection.SendPacket(soundPacket);
             }
-            else {
-                e.Player.SendMessage("Entity is not player");
-            }
-            
-            e.World.Entities.SendPacketsToViewers(entity, soundPacket);
-            entity.Hurt();
         });
     }
 }

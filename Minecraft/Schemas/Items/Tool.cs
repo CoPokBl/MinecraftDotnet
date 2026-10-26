@@ -21,13 +21,9 @@ public record Tool(ToolRule[] Rules, float DefaultMiningSpeed, int DamagePerBloc
         return new Tool(rules, defaultMiningSpeed, damagePerBlock, canMineInCreative);
     }
 
-    public float GetMiningSpeed(IBlock block) {
+    public float GetMiningSpeed(IBlock block, MinecraftRegistry reg) {
         foreach (ToolRule rule in Rules) {
-            if (!rule.ValidFor(block)) {
-                continue;
-            }
-            
-            if (rule.Speed != null) {
+            if (rule.Speed != null && rule.ValidFor(block, reg)) {
                 return rule.Speed.Value;
             }
         }
@@ -35,9 +31,9 @@ public record Tool(ToolRule[] Rules, float DefaultMiningSpeed, int DamagePerBloc
         return DefaultMiningSpeed;
     }
 
-    public bool IsCorrectForDrops(IBlock block) {
+    public bool IsCorrectForDrops(IBlock block, MinecraftRegistry reg) {
         foreach (ToolRule rule in Rules) {
-            if (rule.CorrectDropForBlocks != null && rule.ValidFor(block)) {
+            if (rule.CorrectDropForBlocks != null && rule.ValidFor(block, reg)) {
                 return rule.CorrectDropForBlocks.Value;
             }
         }

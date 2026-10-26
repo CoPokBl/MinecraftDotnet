@@ -3,40 +3,81 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record BambooShelfBlock(Identifier Identifier, Direction Facing, bool Powered, BambooShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:shelf";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "shelf";
-    public Identifier? BlockEntity => "minecraft:shelf";
-    public Identifier? Item => "minecraft:bamboo_shelf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 18;
-    public string TranslationKey => "block.minecraft.bamboo_shelf";
-    public bool CanRespawnIn => false;
+public record BambooShelfBlock(Identifier Identifier, Direction Facing, bool Powered, BambooShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock, IHorizontalFacing, IPowered, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.bamboo_shelf", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:shelf", "minecraft:bamboo_shelf", BlockInfo.VanillaOnly, "minecraft:blocks/bamboo_shelf");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 18, "shelf", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, [], "minecraft:water", BlockShapes.S83, BlockShapes.S83, BlockShapes.S1, BlockShapes.S83, BlockShapes.S83, BlockShapes.S83);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 4156];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -45,39 +86,39 @@ public record BambooShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.North => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2463,
-                            false => 2464,
+                            true => 4156,
+                            false => 4157,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2465,
-                            false => 2466,
+                            true => 4158,
+                            false => 4159,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2467,
-                            false => 2468,
+                            true => 4160,
+                            false => 4161,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2469,
-                            false => 2470,
+                            true => 4162,
+                            false => 4163,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2471,
-                            false => 2472,
+                            true => 4164,
+                            false => 4165,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2473,
-                            false => 2474,
+                            true => 4166,
+                            false => 4167,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2475,
-                            false => 2476,
+                            true => 4168,
+                            false => 4169,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2477,
-                            false => 2478,
+                            true => 4170,
+                            false => 4171,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -85,39 +126,39 @@ public record BambooShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.South => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2479,
-                            false => 2480,
+                            true => 4172,
+                            false => 4173,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2481,
-                            false => 2482,
+                            true => 4174,
+                            false => 4175,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2483,
-                            false => 2484,
+                            true => 4176,
+                            false => 4177,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2485,
-                            false => 2486,
+                            true => 4178,
+                            false => 4179,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2487,
-                            false => 2488,
+                            true => 4180,
+                            false => 4181,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2489,
-                            false => 2490,
+                            true => 4182,
+                            false => 4183,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2491,
-                            false => 2492,
+                            true => 4184,
+                            false => 4185,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2493,
-                            false => 2494,
+                            true => 4186,
+                            false => 4187,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -125,39 +166,39 @@ public record BambooShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.West => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2495,
-                            false => 2496,
+                            true => 4188,
+                            false => 4189,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2497,
-                            false => 2498,
+                            true => 4190,
+                            false => 4191,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2499,
-                            false => 2500,
+                            true => 4192,
+                            false => 4193,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2501,
-                            false => 2502,
+                            true => 4194,
+                            false => 4195,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2503,
-                            false => 2504,
+                            true => 4196,
+                            false => 4197,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2505,
-                            false => 2506,
+                            true => 4198,
+                            false => 4199,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2507,
-                            false => 2508,
+                            true => 4200,
+                            false => 4201,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2509,
-                            false => 2510,
+                            true => 4202,
+                            false => 4203,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -165,39 +206,39 @@ public record BambooShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.East => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2511,
-                            false => 2512,
+                            true => 4204,
+                            false => 4205,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2513,
-                            false => 2514,
+                            true => 4206,
+                            false => 4207,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2515,
-                            false => 2516,
+                            true => 4208,
+                            false => 4209,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2517,
-                            false => 2518,
+                            true => 4210,
+                            false => 4211,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2519,
-                            false => 2520,
+                            true => 4212,
+                            false => 4213,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2521,
-                            false => 2522,
+                            true => 4214,
+                            false => 4215,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2523,
-                            false => 2524,
+                            true => 4216,
+                            false => 4217,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2525,
-                            false => 2526,
+                            true => 4218,
+                            false => 4219,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -209,70 +250,70 @@ public record BambooShelfBlock(Identifier Identifier, Direction Facing, bool Pow
     
     public IBlock WithState(uint state) {
         return state switch {
-            2463 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
-            2464 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
-            2465 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
-            2466 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
-            2467 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
-            2468 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
-            2469 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
-            2470 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
-            2471 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
-            2472 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
-            2473 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
-            2474 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
-            2475 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
-            2476 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
-            2477 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
-            2478 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
-            2479 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
-            2480 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
-            2481 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
-            2482 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
-            2483 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
-            2484 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
-            2485 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
-            2486 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
-            2487 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
-            2488 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
-            2489 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
-            2490 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
-            2491 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
-            2492 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
-            2493 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
-            2494 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
-            2495 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
-            2496 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
-            2497 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
-            2498 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
-            2499 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
-            2500 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
-            2501 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
-            2502 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
-            2503 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
-            2504 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
-            2505 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
-            2506 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
-            2507 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
-            2508 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
-            2509 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
-            2510 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
-            2511 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
-            2512 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
-            2513 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
-            2514 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
-            2515 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
-            2516 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
-            2517 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
-            2518 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
-            2519 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
-            2520 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
-            2521 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
-            2522 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
-            2523 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
-            2524 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
-            2525 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
-            2526 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
+            4156 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
+            4157 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
+            4158 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
+            4159 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
+            4160 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
+            4161 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
+            4162 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
+            4163 => new BambooShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
+            4164 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
+            4165 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
+            4166 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
+            4167 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
+            4168 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
+            4169 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
+            4170 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
+            4171 => new BambooShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
+            4172 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
+            4173 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
+            4174 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
+            4175 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
+            4176 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
+            4177 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
+            4178 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
+            4179 => new BambooShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
+            4180 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
+            4181 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
+            4182 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
+            4183 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
+            4184 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
+            4185 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
+            4186 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
+            4187 => new BambooShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
+            4188 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
+            4189 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
+            4190 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
+            4191 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
+            4192 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
+            4193 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
+            4194 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
+            4195 => new BambooShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
+            4196 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
+            4197 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
+            4198 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
+            4199 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
+            4200 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
+            4201 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
+            4202 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
+            4203 => new BambooShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
+            4204 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
+            4205 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
+            4206 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
+            4207 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
+            4208 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
+            4209 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
+            4210 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
+            4211 => new BambooShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
+            4212 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
+            4213 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
+            4214 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
+            4215 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
+            4216 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
+            4217 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
+            4218 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
+            4219 => new BambooShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

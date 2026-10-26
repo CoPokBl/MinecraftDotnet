@@ -3,108 +3,141 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record CrimsonSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:standing_sign";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "nether_wood";
-    public Identifier? BlockEntity => "minecraft:sign";
-    public Identifier? Item => "minecraft:crimson_sign";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.25, 0.0, 0.25] -> [0.75, 1.0, 0.75]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 53;
-    public string TranslationKey => "block.minecraft.crimson_sign";
-    public bool CanRespawnIn => true;
+public record CrimsonSignBlock(Identifier Identifier, int Rotation, bool Waterlogged) : IBlock, IRotated, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.crimson_sign", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:sign", "minecraft:crimson_sign", BlockInfo.VanillaOnly, "minecraft:blocks/crimson_sign");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 1, PushReaction.PushPull, 53, "nether_wood", NoteBlockInstrument.Bass, true, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S87, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 24999];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
         get {
             return Rotation switch {
                 0 => Waterlogged switch {
-                    true => 21440,
-                    false => 21441,
+                    true => 24999,
+                    false => 25000,
                 },
                 1 => Waterlogged switch {
-                    true => 21442,
-                    false => 21443,
+                    true => 25001,
+                    false => 25002,
                 },
                 2 => Waterlogged switch {
-                    true => 21444,
-                    false => 21445,
+                    true => 25003,
+                    false => 25004,
                 },
                 3 => Waterlogged switch {
-                    true => 21446,
-                    false => 21447,
+                    true => 25005,
+                    false => 25006,
                 },
                 4 => Waterlogged switch {
-                    true => 21448,
-                    false => 21449,
+                    true => 25007,
+                    false => 25008,
                 },
                 5 => Waterlogged switch {
-                    true => 21450,
-                    false => 21451,
+                    true => 25009,
+                    false => 25010,
                 },
                 6 => Waterlogged switch {
-                    true => 21452,
-                    false => 21453,
+                    true => 25011,
+                    false => 25012,
                 },
                 7 => Waterlogged switch {
-                    true => 21454,
-                    false => 21455,
+                    true => 25013,
+                    false => 25014,
                 },
                 8 => Waterlogged switch {
-                    true => 21456,
-                    false => 21457,
+                    true => 25015,
+                    false => 25016,
                 },
                 9 => Waterlogged switch {
-                    true => 21458,
-                    false => 21459,
+                    true => 25017,
+                    false => 25018,
                 },
                 10 => Waterlogged switch {
-                    true => 21460,
-                    false => 21461,
+                    true => 25019,
+                    false => 25020,
                 },
                 11 => Waterlogged switch {
-                    true => 21462,
-                    false => 21463,
+                    true => 25021,
+                    false => 25022,
                 },
                 12 => Waterlogged switch {
-                    true => 21464,
-                    false => 21465,
+                    true => 25023,
+                    false => 25024,
                 },
                 13 => Waterlogged switch {
-                    true => 21466,
-                    false => 21467,
+                    true => 25025,
+                    false => 25026,
                 },
                 14 => Waterlogged switch {
-                    true => 21468,
-                    false => 21469,
+                    true => 25027,
+                    false => 25028,
                 },
                 15 => Waterlogged switch {
-                    true => 21470,
-                    false => 21471,
+                    true => 25029,
+                    false => 25030,
                 },
                 _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
             };
@@ -113,38 +146,38 @@ public record CrimsonSignBlock(Identifier Identifier, int Rotation, bool Waterlo
     
     public IBlock WithState(uint state) {
         return state switch {
-            21440 => new CrimsonSignBlock(Identifier, 0, true),
-            21441 => new CrimsonSignBlock(Identifier, 0, false),
-            21442 => new CrimsonSignBlock(Identifier, 1, true),
-            21443 => new CrimsonSignBlock(Identifier, 1, false),
-            21444 => new CrimsonSignBlock(Identifier, 2, true),
-            21445 => new CrimsonSignBlock(Identifier, 2, false),
-            21446 => new CrimsonSignBlock(Identifier, 3, true),
-            21447 => new CrimsonSignBlock(Identifier, 3, false),
-            21448 => new CrimsonSignBlock(Identifier, 4, true),
-            21449 => new CrimsonSignBlock(Identifier, 4, false),
-            21450 => new CrimsonSignBlock(Identifier, 5, true),
-            21451 => new CrimsonSignBlock(Identifier, 5, false),
-            21452 => new CrimsonSignBlock(Identifier, 6, true),
-            21453 => new CrimsonSignBlock(Identifier, 6, false),
-            21454 => new CrimsonSignBlock(Identifier, 7, true),
-            21455 => new CrimsonSignBlock(Identifier, 7, false),
-            21456 => new CrimsonSignBlock(Identifier, 8, true),
-            21457 => new CrimsonSignBlock(Identifier, 8, false),
-            21458 => new CrimsonSignBlock(Identifier, 9, true),
-            21459 => new CrimsonSignBlock(Identifier, 9, false),
-            21460 => new CrimsonSignBlock(Identifier, 10, true),
-            21461 => new CrimsonSignBlock(Identifier, 10, false),
-            21462 => new CrimsonSignBlock(Identifier, 11, true),
-            21463 => new CrimsonSignBlock(Identifier, 11, false),
-            21464 => new CrimsonSignBlock(Identifier, 12, true),
-            21465 => new CrimsonSignBlock(Identifier, 12, false),
-            21466 => new CrimsonSignBlock(Identifier, 13, true),
-            21467 => new CrimsonSignBlock(Identifier, 13, false),
-            21468 => new CrimsonSignBlock(Identifier, 14, true),
-            21469 => new CrimsonSignBlock(Identifier, 14, false),
-            21470 => new CrimsonSignBlock(Identifier, 15, true),
-            21471 => new CrimsonSignBlock(Identifier, 15, false),
+            24999 => new CrimsonSignBlock(Identifier, 0, true),
+            25000 => new CrimsonSignBlock(Identifier, 0, false),
+            25001 => new CrimsonSignBlock(Identifier, 1, true),
+            25002 => new CrimsonSignBlock(Identifier, 1, false),
+            25003 => new CrimsonSignBlock(Identifier, 2, true),
+            25004 => new CrimsonSignBlock(Identifier, 2, false),
+            25005 => new CrimsonSignBlock(Identifier, 3, true),
+            25006 => new CrimsonSignBlock(Identifier, 3, false),
+            25007 => new CrimsonSignBlock(Identifier, 4, true),
+            25008 => new CrimsonSignBlock(Identifier, 4, false),
+            25009 => new CrimsonSignBlock(Identifier, 5, true),
+            25010 => new CrimsonSignBlock(Identifier, 5, false),
+            25011 => new CrimsonSignBlock(Identifier, 6, true),
+            25012 => new CrimsonSignBlock(Identifier, 6, false),
+            25013 => new CrimsonSignBlock(Identifier, 7, true),
+            25014 => new CrimsonSignBlock(Identifier, 7, false),
+            25015 => new CrimsonSignBlock(Identifier, 8, true),
+            25016 => new CrimsonSignBlock(Identifier, 8, false),
+            25017 => new CrimsonSignBlock(Identifier, 9, true),
+            25018 => new CrimsonSignBlock(Identifier, 9, false),
+            25019 => new CrimsonSignBlock(Identifier, 10, true),
+            25020 => new CrimsonSignBlock(Identifier, 10, false),
+            25021 => new CrimsonSignBlock(Identifier, 11, true),
+            25022 => new CrimsonSignBlock(Identifier, 11, false),
+            25023 => new CrimsonSignBlock(Identifier, 12, true),
+            25024 => new CrimsonSignBlock(Identifier, 12, false),
+            25025 => new CrimsonSignBlock(Identifier, 13, true),
+            25026 => new CrimsonSignBlock(Identifier, 13, false),
+            25027 => new CrimsonSignBlock(Identifier, 14, true),
+            25028 => new CrimsonSignBlock(Identifier, 14, false),
+            25029 => new CrimsonSignBlock(Identifier, 15, true),
+            25030 => new CrimsonSignBlock(Identifier, 15, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

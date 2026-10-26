@@ -3,81 +3,110 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record PiglinHeadBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock {
-    public Identifier Category => "minecraft:skull";
-    public double Hardness => 1;
-    public double ExplosionResistance => 1;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:skull";
-    public Identifier? Item => "minecraft:piglin_head";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.8125, 0.5, 0.8125]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.8125, 0.5, 0.8125]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.8125, 0.5, 0.8125]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 0;
-    public string TranslationKey => "block.minecraft.piglin_head";
-    public bool CanRespawnIn => true;
+public record PiglinHeadBlock(Identifier Identifier, bool Powered, int Rotation) : IBlock, IPowered, IRotated {
+    private static readonly BlockInfo Data = new("block.minecraft.piglin_head", 1f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:skull", "minecraft:piglin_head", BlockInfo.VanillaOnly, "minecraft:blocks/piglin_head");
+    private static readonly BlockStateInfo I0 = new(1f, 0, 0, PushReaction.Popped, 0, "stone", NoteBlockInstrument.Piglin, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, [], null, BlockShapes.S790, BlockShapes.S790, BlockShapes.S1, BlockShapes.S1, BlockShapes.S790, BlockShapes.S790);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithRotation(int rotation) => this with { Rotation = rotation };
 
 
     public uint StateId {
         get {
             return Powered switch {
                 true => Rotation switch {
-                    0 => 10953,
-                    1 => 10954,
-                    2 => 10955,
-                    3 => 10956,
-                    4 => 10957,
-                    5 => 10958,
-                    6 => 10959,
-                    7 => 10960,
-                    8 => 10961,
-                    9 => 10962,
-                    10 => 10963,
-                    11 => 10964,
-                    12 => 10965,
-                    13 => 10966,
-                    14 => 10967,
-                    15 => 10968,
+                    0 => 12922,
+                    1 => 12923,
+                    2 => 12924,
+                    3 => 12925,
+                    4 => 12926,
+                    5 => 12927,
+                    6 => 12928,
+                    7 => 12929,
+                    8 => 12930,
+                    9 => 12931,
+                    10 => 12932,
+                    11 => 12933,
+                    12 => 12934,
+                    13 => 12935,
+                    14 => 12936,
+                    15 => 12937,
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
                 false => Rotation switch {
-                    0 => 10969,
-                    1 => 10970,
-                    2 => 10971,
-                    3 => 10972,
-                    4 => 10973,
-                    5 => 10974,
-                    6 => 10975,
-                    7 => 10976,
-                    8 => 10977,
-                    9 => 10978,
-                    10 => 10979,
-                    11 => 10980,
-                    12 => 10981,
-                    13 => 10982,
-                    14 => 10983,
-                    15 => 10984,
+                    0 => 12938,
+                    1 => 12939,
+                    2 => 12940,
+                    3 => 12941,
+                    4 => 12942,
+                    5 => 12943,
+                    6 => 12944,
+                    7 => 12945,
+                    8 => 12946,
+                    9 => 12947,
+                    10 => 12948,
+                    11 => 12949,
+                    12 => 12950,
+                    13 => 12951,
+                    14 => 12952,
+                    15 => 12953,
                     _ => throw new ArgumentOutOfRangeException(nameof(Rotation), Rotation, "Unknown value for property rotation.")
                 },
             };
@@ -86,38 +115,38 @@ public record PiglinHeadBlock(Identifier Identifier, bool Powered, int Rotation)
     
     public IBlock WithState(uint state) {
         return state switch {
-            10953 => new PiglinHeadBlock(Identifier, true, 0),
-            10954 => new PiglinHeadBlock(Identifier, true, 1),
-            10955 => new PiglinHeadBlock(Identifier, true, 2),
-            10956 => new PiglinHeadBlock(Identifier, true, 3),
-            10957 => new PiglinHeadBlock(Identifier, true, 4),
-            10958 => new PiglinHeadBlock(Identifier, true, 5),
-            10959 => new PiglinHeadBlock(Identifier, true, 6),
-            10960 => new PiglinHeadBlock(Identifier, true, 7),
-            10961 => new PiglinHeadBlock(Identifier, true, 8),
-            10962 => new PiglinHeadBlock(Identifier, true, 9),
-            10963 => new PiglinHeadBlock(Identifier, true, 10),
-            10964 => new PiglinHeadBlock(Identifier, true, 11),
-            10965 => new PiglinHeadBlock(Identifier, true, 12),
-            10966 => new PiglinHeadBlock(Identifier, true, 13),
-            10967 => new PiglinHeadBlock(Identifier, true, 14),
-            10968 => new PiglinHeadBlock(Identifier, true, 15),
-            10969 => new PiglinHeadBlock(Identifier, false, 0),
-            10970 => new PiglinHeadBlock(Identifier, false, 1),
-            10971 => new PiglinHeadBlock(Identifier, false, 2),
-            10972 => new PiglinHeadBlock(Identifier, false, 3),
-            10973 => new PiglinHeadBlock(Identifier, false, 4),
-            10974 => new PiglinHeadBlock(Identifier, false, 5),
-            10975 => new PiglinHeadBlock(Identifier, false, 6),
-            10976 => new PiglinHeadBlock(Identifier, false, 7),
-            10977 => new PiglinHeadBlock(Identifier, false, 8),
-            10978 => new PiglinHeadBlock(Identifier, false, 9),
-            10979 => new PiglinHeadBlock(Identifier, false, 10),
-            10980 => new PiglinHeadBlock(Identifier, false, 11),
-            10981 => new PiglinHeadBlock(Identifier, false, 12),
-            10982 => new PiglinHeadBlock(Identifier, false, 13),
-            10983 => new PiglinHeadBlock(Identifier, false, 14),
-            10984 => new PiglinHeadBlock(Identifier, false, 15),
+            12922 => new PiglinHeadBlock(Identifier, true, 0),
+            12923 => new PiglinHeadBlock(Identifier, true, 1),
+            12924 => new PiglinHeadBlock(Identifier, true, 2),
+            12925 => new PiglinHeadBlock(Identifier, true, 3),
+            12926 => new PiglinHeadBlock(Identifier, true, 4),
+            12927 => new PiglinHeadBlock(Identifier, true, 5),
+            12928 => new PiglinHeadBlock(Identifier, true, 6),
+            12929 => new PiglinHeadBlock(Identifier, true, 7),
+            12930 => new PiglinHeadBlock(Identifier, true, 8),
+            12931 => new PiglinHeadBlock(Identifier, true, 9),
+            12932 => new PiglinHeadBlock(Identifier, true, 10),
+            12933 => new PiglinHeadBlock(Identifier, true, 11),
+            12934 => new PiglinHeadBlock(Identifier, true, 12),
+            12935 => new PiglinHeadBlock(Identifier, true, 13),
+            12936 => new PiglinHeadBlock(Identifier, true, 14),
+            12937 => new PiglinHeadBlock(Identifier, true, 15),
+            12938 => new PiglinHeadBlock(Identifier, false, 0),
+            12939 => new PiglinHeadBlock(Identifier, false, 1),
+            12940 => new PiglinHeadBlock(Identifier, false, 2),
+            12941 => new PiglinHeadBlock(Identifier, false, 3),
+            12942 => new PiglinHeadBlock(Identifier, false, 4),
+            12943 => new PiglinHeadBlock(Identifier, false, 5),
+            12944 => new PiglinHeadBlock(Identifier, false, 6),
+            12945 => new PiglinHeadBlock(Identifier, false, 7),
+            12946 => new PiglinHeadBlock(Identifier, false, 8),
+            12947 => new PiglinHeadBlock(Identifier, false, 9),
+            12948 => new PiglinHeadBlock(Identifier, false, 10),
+            12949 => new PiglinHeadBlock(Identifier, false, 11),
+            12950 => new PiglinHeadBlock(Identifier, false, 12),
+            12951 => new PiglinHeadBlock(Identifier, false, 13),
+            12952 => new PiglinHeadBlock(Identifier, false, 14),
+            12953 => new PiglinHeadBlock(Identifier, false, 15),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

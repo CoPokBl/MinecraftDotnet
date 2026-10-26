@@ -3,40 +3,219 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool Waterlogged, bool West) : IBlock {
-    public Identifier Category => "minecraft:sculk_vein";
-    public double Hardness => 0.2;
-    public double ExplosionResistance => 0.2;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "sculk_vein";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:sculk_vein";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 29;
-    public string TranslationKey => "block.minecraft.sculk_vein";
-    public bool CanRespawnIn => false;
+public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool North, bool South, bool Up, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.sculk_vein", 0.2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:sculk_vein", BlockInfo.VanillaOnly, "minecraft:blocks/sculk_vein");
+    private static readonly BlockStateInfo I0 = new(0.2f, 0, 1, PushReaction.Popped, 29, "sculk_vein", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, true, true, true, [], "minecraft:water", BlockShapes.S562, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1, BlockShapes.S1);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S563 };
+    private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S563 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S564 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S565 };
+    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S564 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S565 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S566 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S567 };
+    private static readonly BlockStateInfo I10 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S566 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S567 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S568 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S569 };
+    private static readonly BlockStateInfo I14 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S568 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S569 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S570 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S571 };
+    private static readonly BlockStateInfo I18 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S570 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S571 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S572 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S573 };
+    private static readonly BlockStateInfo I22 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S572 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S573 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S574 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S575 };
+    private static readonly BlockStateInfo I26 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S574 };
+    private static readonly BlockStateInfo I27 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S575 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S576 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S577 };
+    private static readonly BlockStateInfo I30 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S576 };
+    private static readonly BlockStateInfo I31 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S577 };
+    private static readonly BlockStateInfo I32 = I0 with { BlockShape = BlockShapes.S578 };
+    private static readonly BlockStateInfo I33 = I0 with { BlockShape = BlockShapes.S579 };
+    private static readonly BlockStateInfo I34 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S578 };
+    private static readonly BlockStateInfo I35 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S579 };
+    private static readonly BlockStateInfo I36 = I0 with { BlockShape = BlockShapes.S580 };
+    private static readonly BlockStateInfo I37 = I0 with { BlockShape = BlockShapes.S581 };
+    private static readonly BlockStateInfo I38 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S580 };
+    private static readonly BlockStateInfo I39 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S581 };
+    private static readonly BlockStateInfo I40 = I0 with { BlockShape = BlockShapes.S582 };
+    private static readonly BlockStateInfo I41 = I0 with { BlockShape = BlockShapes.S583 };
+    private static readonly BlockStateInfo I42 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S582 };
+    private static readonly BlockStateInfo I43 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S583 };
+    private static readonly BlockStateInfo I44 = I0 with { BlockShape = BlockShapes.S584 };
+    private static readonly BlockStateInfo I45 = I0 with { BlockShape = BlockShapes.S585 };
+    private static readonly BlockStateInfo I46 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S584 };
+    private static readonly BlockStateInfo I47 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S585 };
+    private static readonly BlockStateInfo I48 = I0 with { BlockShape = BlockShapes.S586 };
+    private static readonly BlockStateInfo I49 = I0 with { BlockShape = BlockShapes.S587 };
+    private static readonly BlockStateInfo I50 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S586 };
+    private static readonly BlockStateInfo I51 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S587 };
+    private static readonly BlockStateInfo I52 = I0 with { BlockShape = BlockShapes.S588 };
+    private static readonly BlockStateInfo I53 = I0 with { BlockShape = BlockShapes.S589 };
+    private static readonly BlockStateInfo I54 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S588 };
+    private static readonly BlockStateInfo I55 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S589 };
+    private static readonly BlockStateInfo I56 = I0 with { BlockShape = BlockShapes.S590 };
+    private static readonly BlockStateInfo I57 = I0 with { BlockShape = BlockShapes.S591 };
+    private static readonly BlockStateInfo I58 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S590 };
+    private static readonly BlockStateInfo I59 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S591 };
+    private static readonly BlockStateInfo I60 = I0 with { BlockShape = BlockShapes.S592 };
+    private static readonly BlockStateInfo I61 = I0 with { BlockShape = BlockShapes.S371 };
+    private static readonly BlockStateInfo I62 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S592 };
+    private static readonly BlockStateInfo I63 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S371 };
+    private static readonly BlockStateInfo I64 = I0 with { BlockShape = BlockShapes.S530 };
+    private static readonly BlockStateInfo I65 = I0 with { BlockShape = BlockShapes.S531 };
+    private static readonly BlockStateInfo I66 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S530 };
+    private static readonly BlockStateInfo I67 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S531 };
+    private static readonly BlockStateInfo I68 = I0 with { BlockShape = BlockShapes.S532 };
+    private static readonly BlockStateInfo I69 = I0 with { BlockShape = BlockShapes.S533 };
+    private static readonly BlockStateInfo I70 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S532 };
+    private static readonly BlockStateInfo I71 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S533 };
+    private static readonly BlockStateInfo I72 = I0 with { BlockShape = BlockShapes.S534 };
+    private static readonly BlockStateInfo I73 = I0 with { BlockShape = BlockShapes.S535 };
+    private static readonly BlockStateInfo I74 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S534 };
+    private static readonly BlockStateInfo I75 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S535 };
+    private static readonly BlockStateInfo I76 = I0 with { BlockShape = BlockShapes.S536 };
+    private static readonly BlockStateInfo I77 = I0 with { BlockShape = BlockShapes.S537 };
+    private static readonly BlockStateInfo I78 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S536 };
+    private static readonly BlockStateInfo I79 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S537 };
+    private static readonly BlockStateInfo I80 = I0 with { BlockShape = BlockShapes.S538 };
+    private static readonly BlockStateInfo I81 = I0 with { BlockShape = BlockShapes.S539 };
+    private static readonly BlockStateInfo I82 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S538 };
+    private static readonly BlockStateInfo I83 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S539 };
+    private static readonly BlockStateInfo I84 = I0 with { BlockShape = BlockShapes.S540 };
+    private static readonly BlockStateInfo I85 = I0 with { BlockShape = BlockShapes.S541 };
+    private static readonly BlockStateInfo I86 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S540 };
+    private static readonly BlockStateInfo I87 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S541 };
+    private static readonly BlockStateInfo I88 = I0 with { BlockShape = BlockShapes.S542 };
+    private static readonly BlockStateInfo I89 = I0 with { BlockShape = BlockShapes.S543 };
+    private static readonly BlockStateInfo I90 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S542 };
+    private static readonly BlockStateInfo I91 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S543 };
+    private static readonly BlockStateInfo I92 = I0 with { BlockShape = BlockShapes.S544 };
+    private static readonly BlockStateInfo I93 = I0 with { BlockShape = BlockShapes.S545 };
+    private static readonly BlockStateInfo I94 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S544 };
+    private static readonly BlockStateInfo I95 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S545 };
+    private static readonly BlockStateInfo I96 = I0 with { BlockShape = BlockShapes.S546 };
+    private static readonly BlockStateInfo I97 = I0 with { BlockShape = BlockShapes.S547 };
+    private static readonly BlockStateInfo I98 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S546 };
+    private static readonly BlockStateInfo I99 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S547 };
+    private static readonly BlockStateInfo I100 = I0 with { BlockShape = BlockShapes.S548 };
+    private static readonly BlockStateInfo I101 = I0 with { BlockShape = BlockShapes.S549 };
+    private static readonly BlockStateInfo I102 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S548 };
+    private static readonly BlockStateInfo I103 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S549 };
+    private static readonly BlockStateInfo I104 = I0 with { BlockShape = BlockShapes.S550 };
+    private static readonly BlockStateInfo I105 = I0 with { BlockShape = BlockShapes.S551 };
+    private static readonly BlockStateInfo I106 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S550 };
+    private static readonly BlockStateInfo I107 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S551 };
+    private static readonly BlockStateInfo I108 = I0 with { BlockShape = BlockShapes.S552 };
+    private static readonly BlockStateInfo I109 = I0 with { BlockShape = BlockShapes.S553 };
+    private static readonly BlockStateInfo I110 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S552 };
+    private static readonly BlockStateInfo I111 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S553 };
+    private static readonly BlockStateInfo I112 = I0 with { BlockShape = BlockShapes.S554 };
+    private static readonly BlockStateInfo I113 = I0 with { BlockShape = BlockShapes.S555 };
+    private static readonly BlockStateInfo I114 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S554 };
+    private static readonly BlockStateInfo I115 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S555 };
+    private static readonly BlockStateInfo I116 = I0 with { BlockShape = BlockShapes.S556 };
+    private static readonly BlockStateInfo I117 = I0 with { BlockShape = BlockShapes.S557 };
+    private static readonly BlockStateInfo I118 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S556 };
+    private static readonly BlockStateInfo I119 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S557 };
+    private static readonly BlockStateInfo I120 = I0 with { BlockShape = BlockShapes.S558 };
+    private static readonly BlockStateInfo I121 = I0 with { BlockShape = BlockShapes.S559 };
+    private static readonly BlockStateInfo I122 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S558 };
+    private static readonly BlockStateInfo I123 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S559 };
+    private static readonly BlockStateInfo I124 = I0 with { BlockShape = BlockShapes.S560 };
+    private static readonly BlockStateInfo I125 = I0 with { BlockShape = BlockShapes.S79 };
+    private static readonly BlockStateInfo I126 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S560 };
+    private static readonly BlockStateInfo I127 = I0 with { PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S79 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31, I32, I33, I34, I35, I36, I37, I38, I39, I40, I41, I42, I43, I44, I45, I46, I47, I48, I49, I50, I51, I52, I53, I54, I55, I56, I57, I58, I59, I60, I61, I62, I63, I64, I65, I66, I67, I68, I69, I70, I71, I72, I73, I74, I75, I76, I77, I78, I79, I80, I81, I82, I83, I84, I85, I86, I87, I88, I89, I90, I91, I92, I93, I94, I95, I96, I97, I98, I99, I100, I101, I102, I103, I104, I105, I106, I107, I108, I109, I110, I111, I112, I113, I114, I115, I116, I117, I118, I119, I120, I121, I122, I123, I124, I125, I126, I127
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 31001];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
+
+    public bool HasFace(BlockFace face) => face is BlockFace.NegY or BlockFace.PosY or BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.NegY => Down,
+        BlockFace.PosY => Up,
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.NegY => this with { Down = connected },
+        BlockFace.PosY => this with { Up = connected },
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -48,44 +227,44 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
                             true => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 24969,
-                                        false => 24970,
+                                        true => 31001,
+                                        false => 31002,
                                     },
                                     false => West switch {
-                                        true => 24971,
-                                        false => 24972,
+                                        true => 31003,
+                                        false => 31004,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 24973,
-                                        false => 24974,
+                                        true => 31005,
+                                        false => 31006,
                                     },
                                     false => West switch {
-                                        true => 24975,
-                                        false => 24976,
+                                        true => 31007,
+                                        false => 31008,
                                     },
                                 },
                             },
                             false => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 24977,
-                                        false => 24978,
+                                        true => 31009,
+                                        false => 31010,
                                     },
                                     false => West switch {
-                                        true => 24979,
-                                        false => 24980,
+                                        true => 31011,
+                                        false => 31012,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 24981,
-                                        false => 24982,
+                                        true => 31013,
+                                        false => 31014,
                                     },
                                     false => West switch {
-                                        true => 24983,
-                                        false => 24984,
+                                        true => 31015,
+                                        false => 31016,
                                     },
                                 },
                             },
@@ -94,44 +273,44 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
                             true => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 24985,
-                                        false => 24986,
+                                        true => 31017,
+                                        false => 31018,
                                     },
                                     false => West switch {
-                                        true => 24987,
-                                        false => 24988,
+                                        true => 31019,
+                                        false => 31020,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 24989,
-                                        false => 24990,
+                                        true => 31021,
+                                        false => 31022,
                                     },
                                     false => West switch {
-                                        true => 24991,
-                                        false => 24992,
+                                        true => 31023,
+                                        false => 31024,
                                     },
                                 },
                             },
                             false => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 24993,
-                                        false => 24994,
+                                        true => 31025,
+                                        false => 31026,
                                     },
                                     false => West switch {
-                                        true => 24995,
-                                        false => 24996,
+                                        true => 31027,
+                                        false => 31028,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 24997,
-                                        false => 24998,
+                                        true => 31029,
+                                        false => 31030,
                                     },
                                     false => West switch {
-                                        true => 24999,
-                                        false => 25000,
+                                        true => 31031,
+                                        false => 31032,
                                     },
                                 },
                             },
@@ -142,44 +321,44 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
                             true => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25001,
-                                        false => 25002,
+                                        true => 31033,
+                                        false => 31034,
                                     },
                                     false => West switch {
-                                        true => 25003,
-                                        false => 25004,
+                                        true => 31035,
+                                        false => 31036,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25005,
-                                        false => 25006,
+                                        true => 31037,
+                                        false => 31038,
                                     },
                                     false => West switch {
-                                        true => 25007,
-                                        false => 25008,
+                                        true => 31039,
+                                        false => 31040,
                                     },
                                 },
                             },
                             false => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25009,
-                                        false => 25010,
+                                        true => 31041,
+                                        false => 31042,
                                     },
                                     false => West switch {
-                                        true => 25011,
-                                        false => 25012,
+                                        true => 31043,
+                                        false => 31044,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25013,
-                                        false => 25014,
+                                        true => 31045,
+                                        false => 31046,
                                     },
                                     false => West switch {
-                                        true => 25015,
-                                        false => 25016,
+                                        true => 31047,
+                                        false => 31048,
                                     },
                                 },
                             },
@@ -188,44 +367,44 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
                             true => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25017,
-                                        false => 25018,
+                                        true => 31049,
+                                        false => 31050,
                                     },
                                     false => West switch {
-                                        true => 25019,
-                                        false => 25020,
+                                        true => 31051,
+                                        false => 31052,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25021,
-                                        false => 25022,
+                                        true => 31053,
+                                        false => 31054,
                                     },
                                     false => West switch {
-                                        true => 25023,
-                                        false => 25024,
+                                        true => 31055,
+                                        false => 31056,
                                     },
                                 },
                             },
                             false => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25025,
-                                        false => 25026,
+                                        true => 31057,
+                                        false => 31058,
                                     },
                                     false => West switch {
-                                        true => 25027,
-                                        false => 25028,
+                                        true => 31059,
+                                        false => 31060,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25029,
-                                        false => 25030,
+                                        true => 31061,
+                                        false => 31062,
                                     },
                                     false => West switch {
-                                        true => 25031,
-                                        false => 25032,
+                                        true => 31063,
+                                        false => 31064,
                                     },
                                 },
                             },
@@ -238,44 +417,44 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
                             true => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25033,
-                                        false => 25034,
+                                        true => 31065,
+                                        false => 31066,
                                     },
                                     false => West switch {
-                                        true => 25035,
-                                        false => 25036,
+                                        true => 31067,
+                                        false => 31068,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25037,
-                                        false => 25038,
+                                        true => 31069,
+                                        false => 31070,
                                     },
                                     false => West switch {
-                                        true => 25039,
-                                        false => 25040,
+                                        true => 31071,
+                                        false => 31072,
                                     },
                                 },
                             },
                             false => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25041,
-                                        false => 25042,
+                                        true => 31073,
+                                        false => 31074,
                                     },
                                     false => West switch {
-                                        true => 25043,
-                                        false => 25044,
+                                        true => 31075,
+                                        false => 31076,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25045,
-                                        false => 25046,
+                                        true => 31077,
+                                        false => 31078,
                                     },
                                     false => West switch {
-                                        true => 25047,
-                                        false => 25048,
+                                        true => 31079,
+                                        false => 31080,
                                     },
                                 },
                             },
@@ -284,44 +463,44 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
                             true => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25049,
-                                        false => 25050,
+                                        true => 31081,
+                                        false => 31082,
                                     },
                                     false => West switch {
-                                        true => 25051,
-                                        false => 25052,
+                                        true => 31083,
+                                        false => 31084,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25053,
-                                        false => 25054,
+                                        true => 31085,
+                                        false => 31086,
                                     },
                                     false => West switch {
-                                        true => 25055,
-                                        false => 25056,
+                                        true => 31087,
+                                        false => 31088,
                                     },
                                 },
                             },
                             false => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25057,
-                                        false => 25058,
+                                        true => 31089,
+                                        false => 31090,
                                     },
                                     false => West switch {
-                                        true => 25059,
-                                        false => 25060,
+                                        true => 31091,
+                                        false => 31092,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25061,
-                                        false => 25062,
+                                        true => 31093,
+                                        false => 31094,
                                     },
                                     false => West switch {
-                                        true => 25063,
-                                        false => 25064,
+                                        true => 31095,
+                                        false => 31096,
                                     },
                                 },
                             },
@@ -332,44 +511,44 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
                             true => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25065,
-                                        false => 25066,
+                                        true => 31097,
+                                        false => 31098,
                                     },
                                     false => West switch {
-                                        true => 25067,
-                                        false => 25068,
+                                        true => 31099,
+                                        false => 31100,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25069,
-                                        false => 25070,
+                                        true => 31101,
+                                        false => 31102,
                                     },
                                     false => West switch {
-                                        true => 25071,
-                                        false => 25072,
+                                        true => 31103,
+                                        false => 31104,
                                     },
                                 },
                             },
                             false => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25073,
-                                        false => 25074,
+                                        true => 31105,
+                                        false => 31106,
                                     },
                                     false => West switch {
-                                        true => 25075,
-                                        false => 25076,
+                                        true => 31107,
+                                        false => 31108,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25077,
-                                        false => 25078,
+                                        true => 31109,
+                                        false => 31110,
                                     },
                                     false => West switch {
-                                        true => 25079,
-                                        false => 25080,
+                                        true => 31111,
+                                        false => 31112,
                                     },
                                 },
                             },
@@ -378,44 +557,44 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
                             true => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25081,
-                                        false => 25082,
+                                        true => 31113,
+                                        false => 31114,
                                     },
                                     false => West switch {
-                                        true => 25083,
-                                        false => 25084,
+                                        true => 31115,
+                                        false => 31116,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25085,
-                                        false => 25086,
+                                        true => 31117,
+                                        false => 31118,
                                     },
                                     false => West switch {
-                                        true => 25087,
-                                        false => 25088,
+                                        true => 31119,
+                                        false => 31120,
                                     },
                                 },
                             },
                             false => Up switch {
                                 true => Waterlogged switch {
                                     true => West switch {
-                                        true => 25089,
-                                        false => 25090,
+                                        true => 31121,
+                                        false => 31122,
                                     },
                                     false => West switch {
-                                        true => 25091,
-                                        false => 25092,
+                                        true => 31123,
+                                        false => 31124,
                                     },
                                 },
                                 false => Waterlogged switch {
                                     true => West switch {
-                                        true => 25093,
-                                        false => 25094,
+                                        true => 31125,
+                                        false => 31126,
                                     },
                                     false => West switch {
-                                        true => 25095,
-                                        false => 25096,
+                                        true => 31127,
+                                        false => 31128,
                                     },
                                 },
                             },
@@ -428,134 +607,134 @@ public record SculkVeinBlock(Identifier Identifier, bool Down, bool East, bool N
     
     public IBlock WithState(uint state) {
         return state switch {
-            24969 => new SculkVeinBlock(Identifier, true, true, true, true, true, true, true),
-            24970 => new SculkVeinBlock(Identifier, true, true, true, true, true, true, false),
-            24971 => new SculkVeinBlock(Identifier, true, true, true, true, true, false, true),
-            24972 => new SculkVeinBlock(Identifier, true, true, true, true, true, false, false),
-            24973 => new SculkVeinBlock(Identifier, true, true, true, true, false, true, true),
-            24974 => new SculkVeinBlock(Identifier, true, true, true, true, false, true, false),
-            24975 => new SculkVeinBlock(Identifier, true, true, true, true, false, false, true),
-            24976 => new SculkVeinBlock(Identifier, true, true, true, true, false, false, false),
-            24977 => new SculkVeinBlock(Identifier, true, true, true, false, true, true, true),
-            24978 => new SculkVeinBlock(Identifier, true, true, true, false, true, true, false),
-            24979 => new SculkVeinBlock(Identifier, true, true, true, false, true, false, true),
-            24980 => new SculkVeinBlock(Identifier, true, true, true, false, true, false, false),
-            24981 => new SculkVeinBlock(Identifier, true, true, true, false, false, true, true),
-            24982 => new SculkVeinBlock(Identifier, true, true, true, false, false, true, false),
-            24983 => new SculkVeinBlock(Identifier, true, true, true, false, false, false, true),
-            24984 => new SculkVeinBlock(Identifier, true, true, true, false, false, false, false),
-            24985 => new SculkVeinBlock(Identifier, true, true, false, true, true, true, true),
-            24986 => new SculkVeinBlock(Identifier, true, true, false, true, true, true, false),
-            24987 => new SculkVeinBlock(Identifier, true, true, false, true, true, false, true),
-            24988 => new SculkVeinBlock(Identifier, true, true, false, true, true, false, false),
-            24989 => new SculkVeinBlock(Identifier, true, true, false, true, false, true, true),
-            24990 => new SculkVeinBlock(Identifier, true, true, false, true, false, true, false),
-            24991 => new SculkVeinBlock(Identifier, true, true, false, true, false, false, true),
-            24992 => new SculkVeinBlock(Identifier, true, true, false, true, false, false, false),
-            24993 => new SculkVeinBlock(Identifier, true, true, false, false, true, true, true),
-            24994 => new SculkVeinBlock(Identifier, true, true, false, false, true, true, false),
-            24995 => new SculkVeinBlock(Identifier, true, true, false, false, true, false, true),
-            24996 => new SculkVeinBlock(Identifier, true, true, false, false, true, false, false),
-            24997 => new SculkVeinBlock(Identifier, true, true, false, false, false, true, true),
-            24998 => new SculkVeinBlock(Identifier, true, true, false, false, false, true, false),
-            24999 => new SculkVeinBlock(Identifier, true, true, false, false, false, false, true),
-            25000 => new SculkVeinBlock(Identifier, true, true, false, false, false, false, false),
-            25001 => new SculkVeinBlock(Identifier, true, false, true, true, true, true, true),
-            25002 => new SculkVeinBlock(Identifier, true, false, true, true, true, true, false),
-            25003 => new SculkVeinBlock(Identifier, true, false, true, true, true, false, true),
-            25004 => new SculkVeinBlock(Identifier, true, false, true, true, true, false, false),
-            25005 => new SculkVeinBlock(Identifier, true, false, true, true, false, true, true),
-            25006 => new SculkVeinBlock(Identifier, true, false, true, true, false, true, false),
-            25007 => new SculkVeinBlock(Identifier, true, false, true, true, false, false, true),
-            25008 => new SculkVeinBlock(Identifier, true, false, true, true, false, false, false),
-            25009 => new SculkVeinBlock(Identifier, true, false, true, false, true, true, true),
-            25010 => new SculkVeinBlock(Identifier, true, false, true, false, true, true, false),
-            25011 => new SculkVeinBlock(Identifier, true, false, true, false, true, false, true),
-            25012 => new SculkVeinBlock(Identifier, true, false, true, false, true, false, false),
-            25013 => new SculkVeinBlock(Identifier, true, false, true, false, false, true, true),
-            25014 => new SculkVeinBlock(Identifier, true, false, true, false, false, true, false),
-            25015 => new SculkVeinBlock(Identifier, true, false, true, false, false, false, true),
-            25016 => new SculkVeinBlock(Identifier, true, false, true, false, false, false, false),
-            25017 => new SculkVeinBlock(Identifier, true, false, false, true, true, true, true),
-            25018 => new SculkVeinBlock(Identifier, true, false, false, true, true, true, false),
-            25019 => new SculkVeinBlock(Identifier, true, false, false, true, true, false, true),
-            25020 => new SculkVeinBlock(Identifier, true, false, false, true, true, false, false),
-            25021 => new SculkVeinBlock(Identifier, true, false, false, true, false, true, true),
-            25022 => new SculkVeinBlock(Identifier, true, false, false, true, false, true, false),
-            25023 => new SculkVeinBlock(Identifier, true, false, false, true, false, false, true),
-            25024 => new SculkVeinBlock(Identifier, true, false, false, true, false, false, false),
-            25025 => new SculkVeinBlock(Identifier, true, false, false, false, true, true, true),
-            25026 => new SculkVeinBlock(Identifier, true, false, false, false, true, true, false),
-            25027 => new SculkVeinBlock(Identifier, true, false, false, false, true, false, true),
-            25028 => new SculkVeinBlock(Identifier, true, false, false, false, true, false, false),
-            25029 => new SculkVeinBlock(Identifier, true, false, false, false, false, true, true),
-            25030 => new SculkVeinBlock(Identifier, true, false, false, false, false, true, false),
-            25031 => new SculkVeinBlock(Identifier, true, false, false, false, false, false, true),
-            25032 => new SculkVeinBlock(Identifier, true, false, false, false, false, false, false),
-            25033 => new SculkVeinBlock(Identifier, false, true, true, true, true, true, true),
-            25034 => new SculkVeinBlock(Identifier, false, true, true, true, true, true, false),
-            25035 => new SculkVeinBlock(Identifier, false, true, true, true, true, false, true),
-            25036 => new SculkVeinBlock(Identifier, false, true, true, true, true, false, false),
-            25037 => new SculkVeinBlock(Identifier, false, true, true, true, false, true, true),
-            25038 => new SculkVeinBlock(Identifier, false, true, true, true, false, true, false),
-            25039 => new SculkVeinBlock(Identifier, false, true, true, true, false, false, true),
-            25040 => new SculkVeinBlock(Identifier, false, true, true, true, false, false, false),
-            25041 => new SculkVeinBlock(Identifier, false, true, true, false, true, true, true),
-            25042 => new SculkVeinBlock(Identifier, false, true, true, false, true, true, false),
-            25043 => new SculkVeinBlock(Identifier, false, true, true, false, true, false, true),
-            25044 => new SculkVeinBlock(Identifier, false, true, true, false, true, false, false),
-            25045 => new SculkVeinBlock(Identifier, false, true, true, false, false, true, true),
-            25046 => new SculkVeinBlock(Identifier, false, true, true, false, false, true, false),
-            25047 => new SculkVeinBlock(Identifier, false, true, true, false, false, false, true),
-            25048 => new SculkVeinBlock(Identifier, false, true, true, false, false, false, false),
-            25049 => new SculkVeinBlock(Identifier, false, true, false, true, true, true, true),
-            25050 => new SculkVeinBlock(Identifier, false, true, false, true, true, true, false),
-            25051 => new SculkVeinBlock(Identifier, false, true, false, true, true, false, true),
-            25052 => new SculkVeinBlock(Identifier, false, true, false, true, true, false, false),
-            25053 => new SculkVeinBlock(Identifier, false, true, false, true, false, true, true),
-            25054 => new SculkVeinBlock(Identifier, false, true, false, true, false, true, false),
-            25055 => new SculkVeinBlock(Identifier, false, true, false, true, false, false, true),
-            25056 => new SculkVeinBlock(Identifier, false, true, false, true, false, false, false),
-            25057 => new SculkVeinBlock(Identifier, false, true, false, false, true, true, true),
-            25058 => new SculkVeinBlock(Identifier, false, true, false, false, true, true, false),
-            25059 => new SculkVeinBlock(Identifier, false, true, false, false, true, false, true),
-            25060 => new SculkVeinBlock(Identifier, false, true, false, false, true, false, false),
-            25061 => new SculkVeinBlock(Identifier, false, true, false, false, false, true, true),
-            25062 => new SculkVeinBlock(Identifier, false, true, false, false, false, true, false),
-            25063 => new SculkVeinBlock(Identifier, false, true, false, false, false, false, true),
-            25064 => new SculkVeinBlock(Identifier, false, true, false, false, false, false, false),
-            25065 => new SculkVeinBlock(Identifier, false, false, true, true, true, true, true),
-            25066 => new SculkVeinBlock(Identifier, false, false, true, true, true, true, false),
-            25067 => new SculkVeinBlock(Identifier, false, false, true, true, true, false, true),
-            25068 => new SculkVeinBlock(Identifier, false, false, true, true, true, false, false),
-            25069 => new SculkVeinBlock(Identifier, false, false, true, true, false, true, true),
-            25070 => new SculkVeinBlock(Identifier, false, false, true, true, false, true, false),
-            25071 => new SculkVeinBlock(Identifier, false, false, true, true, false, false, true),
-            25072 => new SculkVeinBlock(Identifier, false, false, true, true, false, false, false),
-            25073 => new SculkVeinBlock(Identifier, false, false, true, false, true, true, true),
-            25074 => new SculkVeinBlock(Identifier, false, false, true, false, true, true, false),
-            25075 => new SculkVeinBlock(Identifier, false, false, true, false, true, false, true),
-            25076 => new SculkVeinBlock(Identifier, false, false, true, false, true, false, false),
-            25077 => new SculkVeinBlock(Identifier, false, false, true, false, false, true, true),
-            25078 => new SculkVeinBlock(Identifier, false, false, true, false, false, true, false),
-            25079 => new SculkVeinBlock(Identifier, false, false, true, false, false, false, true),
-            25080 => new SculkVeinBlock(Identifier, false, false, true, false, false, false, false),
-            25081 => new SculkVeinBlock(Identifier, false, false, false, true, true, true, true),
-            25082 => new SculkVeinBlock(Identifier, false, false, false, true, true, true, false),
-            25083 => new SculkVeinBlock(Identifier, false, false, false, true, true, false, true),
-            25084 => new SculkVeinBlock(Identifier, false, false, false, true, true, false, false),
-            25085 => new SculkVeinBlock(Identifier, false, false, false, true, false, true, true),
-            25086 => new SculkVeinBlock(Identifier, false, false, false, true, false, true, false),
-            25087 => new SculkVeinBlock(Identifier, false, false, false, true, false, false, true),
-            25088 => new SculkVeinBlock(Identifier, false, false, false, true, false, false, false),
-            25089 => new SculkVeinBlock(Identifier, false, false, false, false, true, true, true),
-            25090 => new SculkVeinBlock(Identifier, false, false, false, false, true, true, false),
-            25091 => new SculkVeinBlock(Identifier, false, false, false, false, true, false, true),
-            25092 => new SculkVeinBlock(Identifier, false, false, false, false, true, false, false),
-            25093 => new SculkVeinBlock(Identifier, false, false, false, false, false, true, true),
-            25094 => new SculkVeinBlock(Identifier, false, false, false, false, false, true, false),
-            25095 => new SculkVeinBlock(Identifier, false, false, false, false, false, false, true),
-            25096 => new SculkVeinBlock(Identifier, false, false, false, false, false, false, false),
+            31001 => new SculkVeinBlock(Identifier, true, true, true, true, true, true, true),
+            31002 => new SculkVeinBlock(Identifier, true, true, true, true, true, true, false),
+            31003 => new SculkVeinBlock(Identifier, true, true, true, true, true, false, true),
+            31004 => new SculkVeinBlock(Identifier, true, true, true, true, true, false, false),
+            31005 => new SculkVeinBlock(Identifier, true, true, true, true, false, true, true),
+            31006 => new SculkVeinBlock(Identifier, true, true, true, true, false, true, false),
+            31007 => new SculkVeinBlock(Identifier, true, true, true, true, false, false, true),
+            31008 => new SculkVeinBlock(Identifier, true, true, true, true, false, false, false),
+            31009 => new SculkVeinBlock(Identifier, true, true, true, false, true, true, true),
+            31010 => new SculkVeinBlock(Identifier, true, true, true, false, true, true, false),
+            31011 => new SculkVeinBlock(Identifier, true, true, true, false, true, false, true),
+            31012 => new SculkVeinBlock(Identifier, true, true, true, false, true, false, false),
+            31013 => new SculkVeinBlock(Identifier, true, true, true, false, false, true, true),
+            31014 => new SculkVeinBlock(Identifier, true, true, true, false, false, true, false),
+            31015 => new SculkVeinBlock(Identifier, true, true, true, false, false, false, true),
+            31016 => new SculkVeinBlock(Identifier, true, true, true, false, false, false, false),
+            31017 => new SculkVeinBlock(Identifier, true, true, false, true, true, true, true),
+            31018 => new SculkVeinBlock(Identifier, true, true, false, true, true, true, false),
+            31019 => new SculkVeinBlock(Identifier, true, true, false, true, true, false, true),
+            31020 => new SculkVeinBlock(Identifier, true, true, false, true, true, false, false),
+            31021 => new SculkVeinBlock(Identifier, true, true, false, true, false, true, true),
+            31022 => new SculkVeinBlock(Identifier, true, true, false, true, false, true, false),
+            31023 => new SculkVeinBlock(Identifier, true, true, false, true, false, false, true),
+            31024 => new SculkVeinBlock(Identifier, true, true, false, true, false, false, false),
+            31025 => new SculkVeinBlock(Identifier, true, true, false, false, true, true, true),
+            31026 => new SculkVeinBlock(Identifier, true, true, false, false, true, true, false),
+            31027 => new SculkVeinBlock(Identifier, true, true, false, false, true, false, true),
+            31028 => new SculkVeinBlock(Identifier, true, true, false, false, true, false, false),
+            31029 => new SculkVeinBlock(Identifier, true, true, false, false, false, true, true),
+            31030 => new SculkVeinBlock(Identifier, true, true, false, false, false, true, false),
+            31031 => new SculkVeinBlock(Identifier, true, true, false, false, false, false, true),
+            31032 => new SculkVeinBlock(Identifier, true, true, false, false, false, false, false),
+            31033 => new SculkVeinBlock(Identifier, true, false, true, true, true, true, true),
+            31034 => new SculkVeinBlock(Identifier, true, false, true, true, true, true, false),
+            31035 => new SculkVeinBlock(Identifier, true, false, true, true, true, false, true),
+            31036 => new SculkVeinBlock(Identifier, true, false, true, true, true, false, false),
+            31037 => new SculkVeinBlock(Identifier, true, false, true, true, false, true, true),
+            31038 => new SculkVeinBlock(Identifier, true, false, true, true, false, true, false),
+            31039 => new SculkVeinBlock(Identifier, true, false, true, true, false, false, true),
+            31040 => new SculkVeinBlock(Identifier, true, false, true, true, false, false, false),
+            31041 => new SculkVeinBlock(Identifier, true, false, true, false, true, true, true),
+            31042 => new SculkVeinBlock(Identifier, true, false, true, false, true, true, false),
+            31043 => new SculkVeinBlock(Identifier, true, false, true, false, true, false, true),
+            31044 => new SculkVeinBlock(Identifier, true, false, true, false, true, false, false),
+            31045 => new SculkVeinBlock(Identifier, true, false, true, false, false, true, true),
+            31046 => new SculkVeinBlock(Identifier, true, false, true, false, false, true, false),
+            31047 => new SculkVeinBlock(Identifier, true, false, true, false, false, false, true),
+            31048 => new SculkVeinBlock(Identifier, true, false, true, false, false, false, false),
+            31049 => new SculkVeinBlock(Identifier, true, false, false, true, true, true, true),
+            31050 => new SculkVeinBlock(Identifier, true, false, false, true, true, true, false),
+            31051 => new SculkVeinBlock(Identifier, true, false, false, true, true, false, true),
+            31052 => new SculkVeinBlock(Identifier, true, false, false, true, true, false, false),
+            31053 => new SculkVeinBlock(Identifier, true, false, false, true, false, true, true),
+            31054 => new SculkVeinBlock(Identifier, true, false, false, true, false, true, false),
+            31055 => new SculkVeinBlock(Identifier, true, false, false, true, false, false, true),
+            31056 => new SculkVeinBlock(Identifier, true, false, false, true, false, false, false),
+            31057 => new SculkVeinBlock(Identifier, true, false, false, false, true, true, true),
+            31058 => new SculkVeinBlock(Identifier, true, false, false, false, true, true, false),
+            31059 => new SculkVeinBlock(Identifier, true, false, false, false, true, false, true),
+            31060 => new SculkVeinBlock(Identifier, true, false, false, false, true, false, false),
+            31061 => new SculkVeinBlock(Identifier, true, false, false, false, false, true, true),
+            31062 => new SculkVeinBlock(Identifier, true, false, false, false, false, true, false),
+            31063 => new SculkVeinBlock(Identifier, true, false, false, false, false, false, true),
+            31064 => new SculkVeinBlock(Identifier, true, false, false, false, false, false, false),
+            31065 => new SculkVeinBlock(Identifier, false, true, true, true, true, true, true),
+            31066 => new SculkVeinBlock(Identifier, false, true, true, true, true, true, false),
+            31067 => new SculkVeinBlock(Identifier, false, true, true, true, true, false, true),
+            31068 => new SculkVeinBlock(Identifier, false, true, true, true, true, false, false),
+            31069 => new SculkVeinBlock(Identifier, false, true, true, true, false, true, true),
+            31070 => new SculkVeinBlock(Identifier, false, true, true, true, false, true, false),
+            31071 => new SculkVeinBlock(Identifier, false, true, true, true, false, false, true),
+            31072 => new SculkVeinBlock(Identifier, false, true, true, true, false, false, false),
+            31073 => new SculkVeinBlock(Identifier, false, true, true, false, true, true, true),
+            31074 => new SculkVeinBlock(Identifier, false, true, true, false, true, true, false),
+            31075 => new SculkVeinBlock(Identifier, false, true, true, false, true, false, true),
+            31076 => new SculkVeinBlock(Identifier, false, true, true, false, true, false, false),
+            31077 => new SculkVeinBlock(Identifier, false, true, true, false, false, true, true),
+            31078 => new SculkVeinBlock(Identifier, false, true, true, false, false, true, false),
+            31079 => new SculkVeinBlock(Identifier, false, true, true, false, false, false, true),
+            31080 => new SculkVeinBlock(Identifier, false, true, true, false, false, false, false),
+            31081 => new SculkVeinBlock(Identifier, false, true, false, true, true, true, true),
+            31082 => new SculkVeinBlock(Identifier, false, true, false, true, true, true, false),
+            31083 => new SculkVeinBlock(Identifier, false, true, false, true, true, false, true),
+            31084 => new SculkVeinBlock(Identifier, false, true, false, true, true, false, false),
+            31085 => new SculkVeinBlock(Identifier, false, true, false, true, false, true, true),
+            31086 => new SculkVeinBlock(Identifier, false, true, false, true, false, true, false),
+            31087 => new SculkVeinBlock(Identifier, false, true, false, true, false, false, true),
+            31088 => new SculkVeinBlock(Identifier, false, true, false, true, false, false, false),
+            31089 => new SculkVeinBlock(Identifier, false, true, false, false, true, true, true),
+            31090 => new SculkVeinBlock(Identifier, false, true, false, false, true, true, false),
+            31091 => new SculkVeinBlock(Identifier, false, true, false, false, true, false, true),
+            31092 => new SculkVeinBlock(Identifier, false, true, false, false, true, false, false),
+            31093 => new SculkVeinBlock(Identifier, false, true, false, false, false, true, true),
+            31094 => new SculkVeinBlock(Identifier, false, true, false, false, false, true, false),
+            31095 => new SculkVeinBlock(Identifier, false, true, false, false, false, false, true),
+            31096 => new SculkVeinBlock(Identifier, false, true, false, false, false, false, false),
+            31097 => new SculkVeinBlock(Identifier, false, false, true, true, true, true, true),
+            31098 => new SculkVeinBlock(Identifier, false, false, true, true, true, true, false),
+            31099 => new SculkVeinBlock(Identifier, false, false, true, true, true, false, true),
+            31100 => new SculkVeinBlock(Identifier, false, false, true, true, true, false, false),
+            31101 => new SculkVeinBlock(Identifier, false, false, true, true, false, true, true),
+            31102 => new SculkVeinBlock(Identifier, false, false, true, true, false, true, false),
+            31103 => new SculkVeinBlock(Identifier, false, false, true, true, false, false, true),
+            31104 => new SculkVeinBlock(Identifier, false, false, true, true, false, false, false),
+            31105 => new SculkVeinBlock(Identifier, false, false, true, false, true, true, true),
+            31106 => new SculkVeinBlock(Identifier, false, false, true, false, true, true, false),
+            31107 => new SculkVeinBlock(Identifier, false, false, true, false, true, false, true),
+            31108 => new SculkVeinBlock(Identifier, false, false, true, false, true, false, false),
+            31109 => new SculkVeinBlock(Identifier, false, false, true, false, false, true, true),
+            31110 => new SculkVeinBlock(Identifier, false, false, true, false, false, true, false),
+            31111 => new SculkVeinBlock(Identifier, false, false, true, false, false, false, true),
+            31112 => new SculkVeinBlock(Identifier, false, false, true, false, false, false, false),
+            31113 => new SculkVeinBlock(Identifier, false, false, false, true, true, true, true),
+            31114 => new SculkVeinBlock(Identifier, false, false, false, true, true, true, false),
+            31115 => new SculkVeinBlock(Identifier, false, false, false, true, true, false, true),
+            31116 => new SculkVeinBlock(Identifier, false, false, false, true, true, false, false),
+            31117 => new SculkVeinBlock(Identifier, false, false, false, true, false, true, true),
+            31118 => new SculkVeinBlock(Identifier, false, false, false, true, false, true, false),
+            31119 => new SculkVeinBlock(Identifier, false, false, false, true, false, false, true),
+            31120 => new SculkVeinBlock(Identifier, false, false, false, true, false, false, false),
+            31121 => new SculkVeinBlock(Identifier, false, false, false, false, true, true, true),
+            31122 => new SculkVeinBlock(Identifier, false, false, false, false, true, true, false),
+            31123 => new SculkVeinBlock(Identifier, false, false, false, false, true, false, true),
+            31124 => new SculkVeinBlock(Identifier, false, false, false, false, true, false, false),
+            31125 => new SculkVeinBlock(Identifier, false, false, false, false, false, true, true),
+            31126 => new SculkVeinBlock(Identifier, false, false, false, false, false, true, false),
+            31127 => new SculkVeinBlock(Identifier, false, false, false, false, false, false, true),
+            31128 => new SculkVeinBlock(Identifier, false, false, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

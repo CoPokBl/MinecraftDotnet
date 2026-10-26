@@ -16,17 +16,18 @@ public class ClientBoundBossBarPacket : ClientBoundPacket {
             .Write(Action);
     }
 
+    // The id comes before the action on the wire, and the initialiser reads in written order.
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ClientBoundBossBarPacket {
+        Uuid = r.ReadUuid(),
         Action = r.ReadVarInt() switch {
-            1 => new Add(r.ReadString(), r.ReadFloat(), (Color)r.ReadVarInt(), (Division)r.ReadVarInt(), (Flags)r.ReadByte()),
-            2 => new Remove(),
-            3 => new UpdateHealth(r.ReadFloat()),
-            4 => new UpdateTitle(r.ReadString()),
-            5 => new UpdateStyle((Color)r.ReadVarInt(), (Division)r.ReadVarInt()),
-            6 => new UpdateFlags((Flags)r.ReadByte()),
+            0 => new Add(r.ReadText(), r.ReadFloat(), (Color)r.ReadVarInt(), (Division)r.ReadVarInt(), (Flags)r.ReadByte()),
+            1 => new Remove(),
+            2 => new UpdateHealth(r.ReadFloat()),
+            3 => new UpdateTitle(r.ReadText()),
+            4 => new UpdateStyle((Color)r.ReadVarInt(), (Division)r.ReadVarInt()),
+            5 => new UpdateFlags((Flags)r.ReadByte()),
             _ => throw new Exception("Invalid boss bar action")
-        },
-        Uuid = r.ReadUuid()
+        }
     };
     
     public interface IActionData : IWritable {

@@ -3,40 +3,73 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record OxidizedCopperGolemStatueBlock(Identifier Identifier, OxidizedCopperGolemStatueBlock.CopperGolemPose CopperGolemPoseValue, Direction Facing, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:weathering_copper_golem_statue";
-    public double Hardness => 3;
-    public double ExplosionResistance => 6;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => false;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "copper_golem_statue";
-    public Identifier? BlockEntity => "minecraft:copper_golem_statue";
-    public Identifier? Item => "minecraft:oxidized_copper_golem_statue";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.8125, 0.875, 0.8125]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.8125, 0.875, 0.8125]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.1875, 0.0, 0.1875] -> [0.8125, 0.875, 0.8125]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 55;
-    public string TranslationKey => "block.minecraft.oxidized_copper_golem_statue";
-    public bool CanRespawnIn => true;
+public record OxidizedCopperGolemStatueBlock(Identifier Identifier, OxidizedCopperGolemStatueBlock.CopperGolemPose CopperGolemPoseValue, Direction Facing, bool Waterlogged) : IBlock, IHorizontalFacing, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.oxidized_copper_golem_statue", 6f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:copper_golem_statue", "minecraft:oxidized_copper_golem_statue", BlockInfo.VanillaOnly, "minecraft:blocks/oxidized_copper_golem_statue");
+    private static readonly BlockStateInfo I0 = new(3f, 0, 1, PushReaction.Popped, 55, "copper_golem_statue", NoteBlockInstrument.Harp, true, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, true, false, [], "minecraft:water", BlockShapes.S507, BlockShapes.S507, BlockShapes.S1, BlockShapes.S1, BlockShapes.S507, BlockShapes.S507);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 33213];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -44,77 +77,77 @@ public record OxidizedCopperGolemStatueBlock(Identifier Identifier, OxidizedCopp
             return CopperGolemPoseValue switch {
                 CopperGolemPose.Standing => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27181,
-                        false => 27182,
+                        true => 33213,
+                        false => 33214,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27183,
-                        false => 27184,
+                        true => 33215,
+                        false => 33216,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27185,
-                        false => 27186,
+                        true => 33217,
+                        false => 33218,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27187,
-                        false => 27188,
+                        true => 33219,
+                        false => 33220,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 CopperGolemPose.Sitting => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27189,
-                        false => 27190,
+                        true => 33221,
+                        false => 33222,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27191,
-                        false => 27192,
+                        true => 33223,
+                        false => 33224,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27193,
-                        false => 27194,
+                        true => 33225,
+                        false => 33226,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27195,
-                        false => 27196,
+                        true => 33227,
+                        false => 33228,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 CopperGolemPose.Running => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27197,
-                        false => 27198,
+                        true => 33229,
+                        false => 33230,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27199,
-                        false => 27200,
+                        true => 33231,
+                        false => 33232,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27201,
-                        false => 27202,
+                        true => 33233,
+                        false => 33234,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27203,
-                        false => 27204,
+                        true => 33235,
+                        false => 33236,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
                 CopperGolemPose.Star => Facing switch {
                     Direction.North => Waterlogged switch {
-                        true => 27205,
-                        false => 27206,
+                        true => 33237,
+                        false => 33238,
                     },
                     Direction.South => Waterlogged switch {
-                        true => 27207,
-                        false => 27208,
+                        true => 33239,
+                        false => 33240,
                     },
                     Direction.West => Waterlogged switch {
-                        true => 27209,
-                        false => 27210,
+                        true => 33241,
+                        false => 33242,
                     },
                     Direction.East => Waterlogged switch {
-                        true => 27211,
-                        false => 27212,
+                        true => 33243,
+                        false => 33244,
                     },
                     _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
                 },
@@ -125,38 +158,38 @@ public record OxidizedCopperGolemStatueBlock(Identifier Identifier, OxidizedCopp
     
     public IBlock WithState(uint state) {
         return state switch {
-            27181 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.North, true),
-            27182 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.North, false),
-            27183 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.South, true),
-            27184 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.South, false),
-            27185 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.West, true),
-            27186 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.West, false),
-            27187 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.East, true),
-            27188 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.East, false),
-            27189 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.North, true),
-            27190 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.North, false),
-            27191 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.South, true),
-            27192 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.South, false),
-            27193 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.West, true),
-            27194 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.West, false),
-            27195 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.East, true),
-            27196 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.East, false),
-            27197 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.North, true),
-            27198 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.North, false),
-            27199 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.South, true),
-            27200 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.South, false),
-            27201 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.West, true),
-            27202 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.West, false),
-            27203 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.East, true),
-            27204 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.East, false),
-            27205 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.North, true),
-            27206 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.North, false),
-            27207 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.South, true),
-            27208 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.South, false),
-            27209 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.West, true),
-            27210 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.West, false),
-            27211 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.East, true),
-            27212 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.East, false),
+            33213 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.North, true),
+            33214 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.North, false),
+            33215 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.South, true),
+            33216 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.South, false),
+            33217 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.West, true),
+            33218 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.West, false),
+            33219 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.East, true),
+            33220 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Standing, Direction.East, false),
+            33221 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.North, true),
+            33222 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.North, false),
+            33223 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.South, true),
+            33224 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.South, false),
+            33225 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.West, true),
+            33226 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.West, false),
+            33227 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.East, true),
+            33228 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Sitting, Direction.East, false),
+            33229 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.North, true),
+            33230 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.North, false),
+            33231 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.South, true),
+            33232 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.South, false),
+            33233 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.West, true),
+            33234 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.West, false),
+            33235 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.East, true),
+            33236 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Running, Direction.East, false),
+            33237 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.North, true),
+            33238 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.North, false),
+            33239 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.South, true),
+            33240 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.South, false),
+            33241 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.West, true),
+            33242 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.West, false),
+            33243 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.East, true),
+            33244 => new OxidizedCopperGolemStatueBlock(Identifier, CopperGolemPose.Star, Direction.East, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

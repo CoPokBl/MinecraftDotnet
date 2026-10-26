@@ -56,9 +56,10 @@ public class ClientBoundSectionBlocksUpdatePacket : ClientBoundPacket
 
     private static Vec3<int> DecodeChunkSectionPosition(long encoded)
     {
-        int x = (int)((encoded >> 42) & 0x3FFFFF);
-        int z = (int)((encoded >> 20) & 0x3FFFFF);
-        int y = (int)(encoded & 0x0FFFFF);
+        // SectionPos.x/y/z: each field is signed, so it is shifted to the top and back to sign extend.
+        int x = (int)(encoded >> 42);
+        int z = (int)(encoded << 22 >> 42);
+        int y = (int)(encoded << 44 >> 44);
 
         return new Vec3<int>(x, y, z);
     }
@@ -89,7 +90,7 @@ public class ClientBoundSectionBlocksUpdatePacket : ClientBoundPacket
 
         return new BlockUpdate()
         {
-            Block = registry[stateId],
+            Block = registry.GetByStateId((uint)stateId),
             Location = new Vec3<int>(x, y, z)
         };
     }

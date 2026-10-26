@@ -1,10 +1,36 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
+using NBT;
+using NBT.Tags;
 
 namespace Minecraft.Data.Components.Types;
 
 public record CustomModelDataComponent() : IDataComponent<CustomModelData> {
     public override Identifier Identifier => "minecraft:custom_model_data";
+
+    /// <summary>
+    /// Four lists rather than the four length prefixed arrays the wire form is, each left off when
+    /// it is empty.
+    /// </summary>
+    public override NbtCodec<CustomModelData>? Codec => Persistent;
+    private static readonly NbtCodec<CustomModelData> Persistent = new(
+        (val, _) => new CompoundBuilder()
+            .ListOrOmit("floats", val.Floats, f => new FloatTag(f))
+            .ListOrOmit("flags", val.Flags, flag => new BooleanTag(flag))
+            .ListOrOmit("strings", val.Strings, text => new StringTag(text))
+            .ListOrOmit("colors", val.Colors, colour => new IntegerTag(colour))
+            .Build(),
+        (tag, _) => {
+            NbtNode node = NbtNode.Of(tag, "minecraft:custom_model_data");
+            CustomModelData data = new(
+                node.List("floats", value => value.AsFloat()),
+                node.List("flags", value => value.AsBool()),
+                node.List("strings", value => value.GetString()),
+                node.List("colors", PackedColor.RgbFromNbt));
+            node.AssertRead();
+            return data;
+        });
     
     public override DataWriter WriteData(CustomModelData val, DataWriter writer, MinecraftRegistry registry) {
         return writer

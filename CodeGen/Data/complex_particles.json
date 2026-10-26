@@ -7,11 +7,18 @@
   "minecraft:dust_pillar": "DustPillarParticle",
   "minecraft:entity_effect": "EntityEffectParticle",
   "minecraft:falling_dust": "FallingDustParticle",
+  "minecraft:geyser": "GeyserParticle",
+  "minecraft:geyser_base": "GeyserBaseParticle",
+  "minecraft:geyser_plume": "GeyserParticle",
+  "minecraft:geyser_poof": "GeyserBaseParticle",
   "minecraft:item": "ItemParticle",
   "minecraft:sculk_charge": "SculkChargeParticle",
   "minecraft:shriek": "ShriekParticle",
   "minecraft:trail": "TrailParticle",
   "minecraft:vibration": "VibrationParticle",
   "minecraft:tinted_leaves": "TintedLeavesParticle",
-  "minecraft:dragon_breath": "DragonBreathParticle"
+  "minecraft:dragon_breath": "DragonBreathParticle",
+  "minecraft:effect": "SpellParticle",
+  "minecraft:instant_effect": "SpellParticle",
+  "minecraft:flash": "ColorParticle"
 }

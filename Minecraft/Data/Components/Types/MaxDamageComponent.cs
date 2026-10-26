@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 
@@ -5,6 +6,9 @@ namespace Minecraft.Data.Components.Types;
 
 public record MaxDamageComponent() : IDataComponent<int> {
     public override Identifier Identifier => "minecraft:max_damage";
+
+    public override NbtCodec<int>? Codec => Persistent;
+    private static readonly NbtCodec<int> Persistent = NbtCodecs.Int();
     
     public override DataWriter WriteData(int val, DataWriter writer, MinecraftRegistry registry) {
         return writer.WriteVarInt(val);

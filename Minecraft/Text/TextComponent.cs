@@ -162,14 +162,39 @@ public class TextComponent : CompoundTagSerialisable {
         return this;
     }
 
+    /// <summary>
+    /// <c>Component.tryCollapseToString</c>: the text of a component that is plain text with no style
+    /// and no children, which vanilla's codec writes as a bare string rather than a compound.
+    /// </summary>
+    public string? TryCollapseToString() {
+        bool styled = Color != null || Insertion != null || Font != null || ClickEvent != null || HoverEvent != null
+                      || Bold != null || Italic != null || Underlined != null || Strikethrough != null || Obfuscated != null
+                      || ShadowColor != null;
+        if (Content.Type != "text" || styled || Children.Count > 0) {
+            return null;
+        }
+        foreach ((string key, INbtTag tag) in Content.Fields) {
+            if (key == "text" && tag is StringTag text) {
+                return text.Value;
+            }
+        }
+        return null;
+    }
+
     public override CompoundTag SerialiseToTag() {
-        List<(string, INbtTag)> tags = [
-            ("type", new StringTag(Content.Type))
-        ];
+        List<(string, INbtTag)> tags = [];
         tags.AddRange(Content.Fields);  // add all the content fields
 
+        // Vanilla leaves the type out wherever the content fields already imply it, which is every
+        // component it writes, so spelling it out makes the same text differ from what a datapack or
+        // a resource pack holds. Written only where the fields would be read as something else,
+        // which is why it is asked rather than assumed.
+        if (InferType(tags) != Content.Type) {
+            tags.Insert(0, ("type", new StringTag(Content.Type)));
+        }
+
         if (Color != null) {
-            tags.Add(("color", new StringTag(Color.Value.ToHex())));
+            tags.Add(("color", new StringTag(Color.Value.Serialise())));
         }
 
         if (Bold.HasValue) {
@@ -229,11 +254,94 @@ public class TextComponent : CompoundTagSerialisable {
         return new CompoundTag(tags.ToArray());
     }
 
+    /// <summary>
+    /// The content type a compound's fields say it is, or null for fields that say nothing.
+    /// </summary>
+    /// <remarks>
+    /// The order is the one that decides, not the set: a component carrying both <c>text</c> and
+    /// <c>translate</c> is text. Shared between reading and writing because the writer leaves the
+    /// type out exactly when the reader would put it back.
+    /// </remarks>
+    private static string? InferType(IEnumerable<(string Key, INbtTag Tag)> fields) {
+        HashSet<string> keys = fields.Select(field => field.Key).ToHashSet();
+
+        // ComponentSerialization.bootstrap's order, which is the order its fuzzy codec tries them in.
+        if (keys.Contains("text")) return "text";
+        if (keys.Contains("translate")) return "translatable";
+        if (keys.Contains("keybind")) return "keybind";
+        if (keys.Contains("score")) return "score";
+        if (keys.Contains("selector")) return "selector";
+        if (keys.Contains("nbt")) return "nbt";
+        if (keys.Contains("object") || keys.Contains("sprite") || keys.Contains("player")) return "object";
+        return null;
+    }
+
+    /// <summary><c>ComponentSerialization.CODEC</c> through <c>JsonOps</c>.</summary>
+    public static TextComponent FromJson(string json) => FromJson(Newtonsoft.Json.Linq.JToken.Parse(json));
+
+    /// <inheritdoc cref="FromJson(string)"/>
+    public static TextComponent FromJson(Newtonsoft.Json.Linq.JToken json) => FromTag(JsonTag(json));
+
+    /// <summary>
+    /// <c>INbtTag.FromJson</c>, except that an array mixing types, which JSON text routinely does with
+    /// <c>"extra": ["a", {"text": "b"}]</c>, is wrapped the way <c>ListTag.wrapIfNeeded</c> writes one rather
+    /// than refused: every element that is not a compound, or is one that looks like a wrapper, goes
+    /// under an empty key, which <see cref="FromTag"/> unwraps.
+    /// </summary>
+    private static INbtTag JsonTag(Newtonsoft.Json.Linq.JToken json) {
+        switch (json) {
+            case Newtonsoft.Json.Linq.JObject obj:
+                return new CompoundTag(obj.Properties().Select(p => (p.Name, JsonTag(p.Value))).ToArray());
+            case Newtonsoft.Json.Linq.JArray array:
+                INbtTag[] items = array.Select(JsonTag).ToArray();
+                if (items.Any(i => i is LongTag)) {
+                    for (int i = 0; i < items.Length; i++) {
+                        if (items[i] is IntegerTag integer) {
+                            items[i] = new LongTag(integer.Value);
+                        }
+                    }
+                }
+                if (items.Select(i => i.GetPrefix()).Distinct().Count() > 1) {
+                    for (int i = 0; i < items.Length; i++) {
+                        if (items[i] is not CompoundTag compound || compound.Children.Select(c => c.key).SequenceEqual([""])) {
+                            items[i] = new CompoundTag(("", items[i]));
+                        }
+                    }
+                }
+                return new ListTag(items);
+            default:
+                return INbtTag.FromJson(json);
+        }
+    }
+
     public static TextComponent FromTag(INbtTag tag) {
         if (tag is StringTag str) {  // direct string
             return Text(str.Value);
         }
+
+        // A translation's arguments may be plain numbers and booleans, which read as their text.
+        switch (tag) {
+            case BooleanTag bo: return Text(bo.Value ? "true" : "false");
+            case ByteTag b: return Text(b.Value.ToString());
+            case ShortTag sh: return Text(sh.Value.ToString());
+            case IntegerTag i: return Text(i.Value.ToString());
+            case LongTag l: return Text(l.Value.ToString());
+            case FloatTag f: return Text(f.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            case DoubleTag d: return Text(d.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        }
         
+        if (tag is ListTag) {
+            // ComponentSerialization.createFromList: the first, with the rest appended to it.
+            INbtTag[] list = tag.AsList();
+            if (list.Length == 0) {
+                throw new ArgumentException("A text component list must not be empty", nameof(tag));
+            }
+
+            TextComponent first = FromTag(list[0]);
+            first.Children.AddRange(list.Skip(1).Select(FromTag));
+            return first;
+        }
+
         if (tag is not CompoundTag compound) {
             throw new ArgumentException($"Tag is not compound, it is {tag.GetType().Name}, {tag.ToJsonString()}", nameof(tag));
         }
@@ -243,26 +351,27 @@ public class TextComponent : CompoundTagSerialisable {
         // alright, let's work out what content it has
         Dictionary<string, INbtTag> fields = compound.Children.ToDictionary(c => c.Item1, c => c.Item2);
 
-        if (fields.Count == 1 && fields.ContainsKey("") && fields[""] is StringTag strTag) {
-            // special case, if the tag has only one field with an empty name, it's a string
-            // I couldn't find any documentation on this, but it seems to be used by EmortalMC at least.
-            // so by extension, Minestom and Adventure, so we support it.
-            return Text(strTag.Value);
+        if (fields.Count == 1 && fields.TryGetValue("", out INbtTag? wrapped)) {
+            // NbtOps wraps each element of a list whose elements differ in type as a compound with one
+            // unnamed entry, so a translation's arguments arrive like this when they mix a number and
+            // a component.
+            return FromTag(wrapped);
         }
 
         fields.TryGetValue("type", out INbtTag? contentTypeTag);
-        string? contentType = ((StringTag?)contentTypeTag)?.Value;
-        if (contentType == null) {
-                 if (fields.ContainsKey("text")) contentType = "text";
-            else if (fields.ContainsKey("translate")) contentType = "translatable";
-            else if (fields.ContainsKey("score")) contentType = "score";
-            else if (fields.ContainsKey("selector"))  contentType = "selector";
-            else if (fields.ContainsKey("keybind"))  contentType = "keybind";
-            else if (fields.ContainsKey("nbt")) throw new NotImplementedException("NBT content type not implemented");
-            else throw new Exception("Unknown content type, no type field found and no known content fields present");
+        string? contentType = ((StringTag?)contentTypeTag)?.Value
+            ?? InferType(fields.Select(field => (field.Key, field.Value)))
+            ?? throw new Exception($"Unknown content type, no type field and no known content fields: {compound.ToJsonString()}");
+
+        if (contentType is "nbt" or "object") {
+            // Resolving either needs the server's state or a sprite atlas, so the fields are kept as
+            // they came for whatever draws them.
+            textComponent.Content = new TextContent(contentType, fields
+                .Where(f => !StyleKeys.Contains(f.Key))
+                .Select(f => (f.Key, f.Value))
+                .ToArray());
         }
-        
-        if (contentType == "text") {
+        else if (contentType == "text") {
             textComponent.Content = TextContent.Text(((StringTag)fields["text"]).Value);
         }
         else if (contentType == "translatable") {
@@ -273,7 +382,7 @@ public class TextComponent : CompoundTagSerialisable {
                 fallback = ((StringTag)fallbackTag).Value;
             }
             if (fields.TryGetValue("with", out INbtTag? withTag)) {
-                with = ((ListTag)withTag).Tags.ToArray().Select(FromTag).ToArray();
+                with = withTag.AsList().Select(FromTag).ToArray();
             }
             textComponent.Content = TextContent.Translatable(key, fallback, with);
         }
@@ -292,10 +401,7 @@ public class TextComponent : CompoundTagSerialisable {
             textComponent.Content = TextContent.EntityNames(selector, separator);
         }
         else if (contentType == "keybind") {
-            textComponent.Content = TextContent.Text(((StringTag)fields["keybind"]).Value);
-        }
-        else if (contentType == "nbt") {
-            throw new NotImplementedException("NBT content type not implemented");
+            textComponent.Content = TextContent.Keybind(((StringTag)fields["keybind"]).Value);
         }
         else {
             throw new Exception("Unknown content type, data: " + compound.ToJsonString());
@@ -312,37 +418,27 @@ public class TextComponent : CompoundTagSerialisable {
         }
 
         if (fields.TryGetValue("bold", out INbtTag? bold)) {
-            textComponent.WithBold(bold.GetBoolean());
+            textComponent.WithBold(bold.AsBool());
         }
         
         if (fields.TryGetValue("italic", out INbtTag? italic)) {
-            textComponent.WithItalic(italic.GetBoolean());
+            textComponent.WithItalic(italic.AsBool());
         }
         
         if (fields.TryGetValue("underlined", out INbtTag? underlined)) {
-            textComponent.WithUnderlined(underlined.GetBoolean());
+            textComponent.WithUnderlined(underlined.AsBool());
         }
         
         if (fields.TryGetValue("strikethrough", out INbtTag? strikethrough)) {
-            textComponent.WithStrikethrough(strikethrough.GetBoolean());
+            textComponent.WithStrikethrough(strikethrough.AsBool());
         }
         
         if (fields.TryGetValue("obfuscated", out INbtTag? obfuscated)) {
-            textComponent.WithObfuscated(obfuscated.GetBoolean());
+            textComponent.WithObfuscated(obfuscated.AsBool());
         }
         
         if (fields.TryGetValue("shadow_color", out INbtTag? shadowColorTag)) {
-            // can be list or int
-            if (shadowColorTag is IntegerTag intShadowTag) {
-                textComponent.WithShadowColor(TextColor.FromDecimal(intShadowTag.Value));
-            }
-            else if (shadowColorTag is ListTag listShadowTag) {
-                textComponent.WithShadowColor(TextColor.Rgb(
-                    listShadowTag.Tags[0].GetFloat(), 
-                    listShadowTag.Tags[1].GetFloat(), 
-                    listShadowTag.Tags[2].GetFloat()));
-            }
-            else throw new Exception("Invalid field type for shadow color");
+            textComponent.WithShadowColor(TextColor.FromArgbNbt(shadowColorTag));
         }
         
         // now some interactivity things
@@ -372,18 +468,17 @@ public class TextComponent : CompoundTagSerialisable {
                     break;
                 
                 case "change_page": 
-                    textComponent.WithClickEvent(ClickEvent.ChangePage(ct["page"]!.GetInteger()));
+                    textComponent.WithClickEvent(ClickEvent.ChangePage(ct["page"]!.AsInt()));
                     break;
                 
                 case "copy_to_clipboard": 
-                    textComponent.WithClickEvent(ClickEvent.RunCommand(ct["value"]!.GetString()));
+                    textComponent.WithClickEvent(ClickEvent.CopyToClipboard(ct["value"]!.GetString()));
                     break;
-                
-                case "show_dialog":
-                case "custom": 
-                    throw new NotImplementedException();
 
-                default: throw new Exception("Unknown click event type");
+                default:
+                    // show_dialog, custom and anything newer: the action and its fields as sent.
+                    textComponent.WithClickEvent(new ClickEvent(action, OtherFields(ct, "action")));
+                    break;
             }
         }
         
@@ -400,31 +495,40 @@ public class TextComponent : CompoundTagSerialisable {
                     int count = 1;
                     INbtTag? countTag = ct["count"];
                     if (countTag != null) {
-                        count = countTag.GetInteger();
+                        count = countTag.AsInt();
                     }
 
                     INbtTag? componentsTag = ct["components"];
                     textComponent.WithHoverEvent(HoverEvent.ShowItem(ct["id"]!.GetString(), count, (CompoundTag?)componentsTag));
                     break;
                 
-                case "show_entity":
-                    throw new NotImplementedException();
-
-                default: throw new Exception("Unknown click event type");
+                default:
+                    // show_entity and anything newer: the action and its fields as sent.
+                    textComponent.WithHoverEvent(new HoverEvent(action, OtherFields(ct, "action")));
+                    break;
             }
         }
         
         // extras (aka children)
         if (fields.TryGetValue("extra", out INbtTag? extrasTag)) {
-            ListTag extrasList = (ListTag)extrasTag;
             textComponent.Children.Clear();
-            foreach (INbtTag extraTag in extrasList.Tags) {
+            foreach (INbtTag extraTag in extrasTag.AsList()) {
                 textComponent.Children.Add(FromTag(extraTag));
             }
         }
         
         // yay, finally we're done, return the fully constructed object.
         return textComponent;
+    }
+
+    /// <summary>Every key that styles a component rather than being part of its content.</summary>
+    private static readonly HashSet<string> StyleKeys = [
+        "type", "color", "font", "bold", "italic", "underlined", "strikethrough", "obfuscated",
+        "shadow_color", "insertion", "click_event", "hover_event", "extra"
+    ];
+
+    private static (string Key, INbtTag Tag)[] OtherFields(CompoundTag tag, string except) {
+        return tag.Children.Where(c => c.Item1 != except).Select(c => (c.Item1, c.Item2!)).ToArray();
     }
 
     public static TextComponent FromLegacyString(string message) {

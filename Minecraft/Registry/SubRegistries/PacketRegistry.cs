@@ -2,6 +2,7 @@ using Minecraft.Packets;
 using Minecraft.Registry.Tags;
 using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Tags;
 
 namespace Minecraft.Registry.SubRegistries;
 
@@ -63,11 +64,26 @@ public class PacketRegistry : ISubRegistry<PacketRegistry, MinecraftPacket> {
             clone._packetTypes.Add(pair.Key, new Dictionary<Type, int>(pair.Value));
         }
         foreach (KeyValuePair<ConnectionState, Dictionary<bool, Dictionary<int, PacketDataDeserialiser>>> pair in _packetDeserialisers) {
-            clone._packetDeserialisers.Add(pair.Key, new Dictionary<bool, Dictionary<int, PacketDataDeserialiser>>(pair.Value));
+            // Rebuilt a level down rather than copied whole. Copying the outer dictionary shares the
+            // inner one, so registering a packet on the clone would add it to the original as well.
+            Dictionary<bool, Dictionary<int, PacketDataDeserialiser>> byDirection = new();
+            foreach (KeyValuePair<bool, Dictionary<int, PacketDataDeserialiser>> direction in pair.Value) {
+                byDirection.Add(direction.Key, new Dictionary<int, PacketDataDeserialiser>(direction.Value));
+            }
+
+            clone._packetDeserialisers.Add(pair.Key, byDirection);
         }
+
+        // Assigned rather than added: both keys are already present from the field initialiser, so
+        // adding them throws on the first one.
         foreach (KeyValuePair<bool, HashSet<Type>> pair in _packetTypesByClientBound) {
-            clone._packetTypesByClientBound.Add(pair.Key, [..pair.Value]);
+            clone._packetTypesByClientBound[pair.Key] = [..pair.Value];
         }
+
+        foreach (KeyValuePair<Identifier, IRegistryTag> tag in Tags.Tags) {
+            clone.Tags.Tags[tag.Key] = tag.Value;
+        }
+
         return clone;
     }
 

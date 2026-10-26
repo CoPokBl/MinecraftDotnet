@@ -3,40 +3,119 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
-    public Identifier Category => "minecraft:fence";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:acacia_fence";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.5, 0.625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 15;
-    public string TranslationKey => "block.minecraft.acacia_fence";
-    public bool CanRespawnIn => false;
+public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.acacia_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:acacia_fence", BlockInfo.VanillaOnly, "minecraft:blocks/acacia_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 15, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
+    private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S27, CollisionShape = BlockShapes.S28, OcclusionShape = BlockShapes.S29, VisualShape = BlockShapes.S27, SupportShape = BlockShapes.S28 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S30, CollisionShape = BlockShapes.S31, OcclusionShape = BlockShapes.S32, VisualShape = BlockShapes.S30, SupportShape = BlockShapes.S31 };
+    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S27, CollisionShape = BlockShapes.S28, OcclusionShape = BlockShapes.S29, VisualShape = BlockShapes.S27, SupportShape = BlockShapes.S28 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S30, CollisionShape = BlockShapes.S31, OcclusionShape = BlockShapes.S32, VisualShape = BlockShapes.S30, SupportShape = BlockShapes.S31 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S33, CollisionShape = BlockShapes.S34, OcclusionShape = BlockShapes.S35, VisualShape = BlockShapes.S33, SupportShape = BlockShapes.S34 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S36, CollisionShape = BlockShapes.S37, OcclusionShape = BlockShapes.S38, VisualShape = BlockShapes.S36, SupportShape = BlockShapes.S37 };
+    private static readonly BlockStateInfo I10 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S33, CollisionShape = BlockShapes.S34, OcclusionShape = BlockShapes.S35, VisualShape = BlockShapes.S33, SupportShape = BlockShapes.S34 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S36, CollisionShape = BlockShapes.S37, OcclusionShape = BlockShapes.S38, VisualShape = BlockShapes.S36, SupportShape = BlockShapes.S37 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S41, VisualShape = BlockShapes.S39, SupportShape = BlockShapes.S40 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S42, CollisionShape = BlockShapes.S43, OcclusionShape = BlockShapes.S44, VisualShape = BlockShapes.S42, SupportShape = BlockShapes.S43 };
+    private static readonly BlockStateInfo I14 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S41, VisualShape = BlockShapes.S39, SupportShape = BlockShapes.S40 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S42, CollisionShape = BlockShapes.S43, OcclusionShape = BlockShapes.S44, VisualShape = BlockShapes.S42, SupportShape = BlockShapes.S43 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S45, CollisionShape = BlockShapes.S46, OcclusionShape = BlockShapes.S47, VisualShape = BlockShapes.S45, SupportShape = BlockShapes.S46 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S50, VisualShape = BlockShapes.S48, SupportShape = BlockShapes.S49 };
+    private static readonly BlockStateInfo I18 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S45, CollisionShape = BlockShapes.S46, OcclusionShape = BlockShapes.S47, VisualShape = BlockShapes.S45, SupportShape = BlockShapes.S46 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S50, VisualShape = BlockShapes.S48, SupportShape = BlockShapes.S49 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S51, CollisionShape = BlockShapes.S52, OcclusionShape = BlockShapes.S53, VisualShape = BlockShapes.S51, SupportShape = BlockShapes.S52 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S54, CollisionShape = BlockShapes.S55, OcclusionShape = BlockShapes.S56, VisualShape = BlockShapes.S54, SupportShape = BlockShapes.S55 };
+    private static readonly BlockStateInfo I22 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S51, CollisionShape = BlockShapes.S52, OcclusionShape = BlockShapes.S53, VisualShape = BlockShapes.S51, SupportShape = BlockShapes.S52 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S54, CollisionShape = BlockShapes.S55, OcclusionShape = BlockShapes.S56, VisualShape = BlockShapes.S54, SupportShape = BlockShapes.S55 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S57, CollisionShape = BlockShapes.S58, OcclusionShape = BlockShapes.S59, VisualShape = BlockShapes.S57, SupportShape = BlockShapes.S58 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S60, CollisionShape = BlockShapes.S61, OcclusionShape = BlockShapes.S62, VisualShape = BlockShapes.S60, SupportShape = BlockShapes.S61 };
+    private static readonly BlockStateInfo I26 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S57, CollisionShape = BlockShapes.S58, OcclusionShape = BlockShapes.S59, VisualShape = BlockShapes.S57, SupportShape = BlockShapes.S58 };
+    private static readonly BlockStateInfo I27 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S60, CollisionShape = BlockShapes.S61, OcclusionShape = BlockShapes.S62, VisualShape = BlockShapes.S60, SupportShape = BlockShapes.S61 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S63, CollisionShape = BlockShapes.S64, OcclusionShape = BlockShapes.S65, VisualShape = BlockShapes.S63, SupportShape = BlockShapes.S64 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S67, OcclusionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S67 };
+    private static readonly BlockStateInfo I30 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S63, CollisionShape = BlockShapes.S64, OcclusionShape = BlockShapes.S65, VisualShape = BlockShapes.S63, SupportShape = BlockShapes.S64 };
+    private static readonly BlockStateInfo I31 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S67, OcclusionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S67 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 15747];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
+
+    public bool HasFace(BlockFace face) => face is BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -46,44 +125,44 @@ public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13666,
-                                false => 13667,
+                                true => 15747,
+                                false => 15748,
                             },
                             false => West switch {
-                                true => 13668,
-                                false => 13669,
+                                true => 15749,
+                                false => 15750,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13670,
-                                false => 13671,
+                                true => 15751,
+                                false => 15752,
                             },
                             false => West switch {
-                                true => 13672,
-                                false => 13673,
+                                true => 15753,
+                                false => 15754,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13674,
-                                false => 13675,
+                                true => 15755,
+                                false => 15756,
                             },
                             false => West switch {
-                                true => 13676,
-                                false => 13677,
+                                true => 15757,
+                                false => 15758,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13678,
-                                false => 13679,
+                                true => 15759,
+                                false => 15760,
                             },
                             false => West switch {
-                                true => 13680,
-                                false => 13681,
+                                true => 15761,
+                                false => 15762,
                             },
                         },
                     },
@@ -92,44 +171,44 @@ public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13682,
-                                false => 13683,
+                                true => 15763,
+                                false => 15764,
                             },
                             false => West switch {
-                                true => 13684,
-                                false => 13685,
+                                true => 15765,
+                                false => 15766,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13686,
-                                false => 13687,
+                                true => 15767,
+                                false => 15768,
                             },
                             false => West switch {
-                                true => 13688,
-                                false => 13689,
+                                true => 15769,
+                                false => 15770,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13690,
-                                false => 13691,
+                                true => 15771,
+                                false => 15772,
                             },
                             false => West switch {
-                                true => 13692,
-                                false => 13693,
+                                true => 15773,
+                                false => 15774,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13694,
-                                false => 13695,
+                                true => 15775,
+                                false => 15776,
                             },
                             false => West switch {
-                                true => 13696,
-                                false => 13697,
+                                true => 15777,
+                                false => 15778,
                             },
                         },
                     },
@@ -140,38 +219,38 @@ public record AcaciaFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            13666 => new AcaciaFenceBlock(Identifier, true, true, true, true, true),
-            13667 => new AcaciaFenceBlock(Identifier, true, true, true, true, false),
-            13668 => new AcaciaFenceBlock(Identifier, true, true, true, false, true),
-            13669 => new AcaciaFenceBlock(Identifier, true, true, true, false, false),
-            13670 => new AcaciaFenceBlock(Identifier, true, true, false, true, true),
-            13671 => new AcaciaFenceBlock(Identifier, true, true, false, true, false),
-            13672 => new AcaciaFenceBlock(Identifier, true, true, false, false, true),
-            13673 => new AcaciaFenceBlock(Identifier, true, true, false, false, false),
-            13674 => new AcaciaFenceBlock(Identifier, true, false, true, true, true),
-            13675 => new AcaciaFenceBlock(Identifier, true, false, true, true, false),
-            13676 => new AcaciaFenceBlock(Identifier, true, false, true, false, true),
-            13677 => new AcaciaFenceBlock(Identifier, true, false, true, false, false),
-            13678 => new AcaciaFenceBlock(Identifier, true, false, false, true, true),
-            13679 => new AcaciaFenceBlock(Identifier, true, false, false, true, false),
-            13680 => new AcaciaFenceBlock(Identifier, true, false, false, false, true),
-            13681 => new AcaciaFenceBlock(Identifier, true, false, false, false, false),
-            13682 => new AcaciaFenceBlock(Identifier, false, true, true, true, true),
-            13683 => new AcaciaFenceBlock(Identifier, false, true, true, true, false),
-            13684 => new AcaciaFenceBlock(Identifier, false, true, true, false, true),
-            13685 => new AcaciaFenceBlock(Identifier, false, true, true, false, false),
-            13686 => new AcaciaFenceBlock(Identifier, false, true, false, true, true),
-            13687 => new AcaciaFenceBlock(Identifier, false, true, false, true, false),
-            13688 => new AcaciaFenceBlock(Identifier, false, true, false, false, true),
-            13689 => new AcaciaFenceBlock(Identifier, false, true, false, false, false),
-            13690 => new AcaciaFenceBlock(Identifier, false, false, true, true, true),
-            13691 => new AcaciaFenceBlock(Identifier, false, false, true, true, false),
-            13692 => new AcaciaFenceBlock(Identifier, false, false, true, false, true),
-            13693 => new AcaciaFenceBlock(Identifier, false, false, true, false, false),
-            13694 => new AcaciaFenceBlock(Identifier, false, false, false, true, true),
-            13695 => new AcaciaFenceBlock(Identifier, false, false, false, true, false),
-            13696 => new AcaciaFenceBlock(Identifier, false, false, false, false, true),
-            13697 => new AcaciaFenceBlock(Identifier, false, false, false, false, false),
+            15747 => new AcaciaFenceBlock(Identifier, true, true, true, true, true),
+            15748 => new AcaciaFenceBlock(Identifier, true, true, true, true, false),
+            15749 => new AcaciaFenceBlock(Identifier, true, true, true, false, true),
+            15750 => new AcaciaFenceBlock(Identifier, true, true, true, false, false),
+            15751 => new AcaciaFenceBlock(Identifier, true, true, false, true, true),
+            15752 => new AcaciaFenceBlock(Identifier, true, true, false, true, false),
+            15753 => new AcaciaFenceBlock(Identifier, true, true, false, false, true),
+            15754 => new AcaciaFenceBlock(Identifier, true, true, false, false, false),
+            15755 => new AcaciaFenceBlock(Identifier, true, false, true, true, true),
+            15756 => new AcaciaFenceBlock(Identifier, true, false, true, true, false),
+            15757 => new AcaciaFenceBlock(Identifier, true, false, true, false, true),
+            15758 => new AcaciaFenceBlock(Identifier, true, false, true, false, false),
+            15759 => new AcaciaFenceBlock(Identifier, true, false, false, true, true),
+            15760 => new AcaciaFenceBlock(Identifier, true, false, false, true, false),
+            15761 => new AcaciaFenceBlock(Identifier, true, false, false, false, true),
+            15762 => new AcaciaFenceBlock(Identifier, true, false, false, false, false),
+            15763 => new AcaciaFenceBlock(Identifier, false, true, true, true, true),
+            15764 => new AcaciaFenceBlock(Identifier, false, true, true, true, false),
+            15765 => new AcaciaFenceBlock(Identifier, false, true, true, false, true),
+            15766 => new AcaciaFenceBlock(Identifier, false, true, true, false, false),
+            15767 => new AcaciaFenceBlock(Identifier, false, true, false, true, true),
+            15768 => new AcaciaFenceBlock(Identifier, false, true, false, true, false),
+            15769 => new AcaciaFenceBlock(Identifier, false, true, false, false, true),
+            15770 => new AcaciaFenceBlock(Identifier, false, true, false, false, false),
+            15771 => new AcaciaFenceBlock(Identifier, false, false, true, true, true),
+            15772 => new AcaciaFenceBlock(Identifier, false, false, true, true, false),
+            15773 => new AcaciaFenceBlock(Identifier, false, false, true, false, true),
+            15774 => new AcaciaFenceBlock(Identifier, false, false, true, false, false),
+            15775 => new AcaciaFenceBlock(Identifier, false, false, false, true, true),
+            15776 => new AcaciaFenceBlock(Identifier, false, false, false, true, false),
+            15777 => new AcaciaFenceBlock(Identifier, false, false, false, false, true),
+            15778 => new AcaciaFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

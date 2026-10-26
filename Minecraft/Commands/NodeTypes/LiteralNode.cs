@@ -36,11 +36,7 @@ public record LiteralNode : ICommandNode {
         }
 
         writer.WriteString(Name);
-        
-        if (Flags.HasFlag(CommandNodeFlag.HasSuggestionsType)) {
-            writer.Write(SuggestionsType.ThrowIfNull());
-        }
-        
+
         return writer;
     }
 
@@ -48,7 +44,7 @@ public record LiteralNode : ICommandNode {
         int[] childrenIndexes = reader.ReadPrefixedArray(r => r.ReadVarInt());
         int? redirectNode = flags.HasFlag(CommandNodeFlag.HasRedirect) ? reader.ReadVarInt() : null;
         string name = reader.ReadString();
-        Identifier? suggestionsType = flags.HasFlag(CommandNodeFlag.HasSuggestionsType) ? reader.Read<Identifier>(registry) : null!;
+        Identifier? suggestionsType = null;
 
         return new LiteralNode(flags, childrenIndexes, redirectNode, name, suggestionsType);
     }

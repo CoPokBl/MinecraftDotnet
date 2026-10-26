@@ -3,51 +3,78 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock {
-    public Identifier Category => "minecraft:shulker_box";
-    public double Hardness => 2;
-    public double ExplosionResistance => 2;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "stone";
-    public Identifier? BlockEntity => "minecraft:shulker_box";
-    public Identifier? Item => "minecraft:shulker_box";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 1.0, 1.0]]");
-    public bool RedstoneConductor => true;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Destroy;
-    public int MapColorId => 24;
-    public string TranslationKey => "block.minecraft.shulker_box";
-    public bool CanRespawnIn => false;
+public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock, IDirectional {
+    private static readonly BlockInfo Data = new("block.minecraft.shulker_box", 2f, 0.6f, 1f, 1f, 0f, 0f, false, true, BlockOffsetType.None, 0f, 0f, "minecraft:shulker_box", "minecraft:shulker_box", BlockInfo.VanillaOnly, "minecraft:blocks/shulker_box");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.Popped, 24, "stone", NoteBlockInstrument.Harp, false, false, false, false, false, false, false, true, true, false, false, true, true, false, true, false, false, false, null, null, BlockShapes.S79, BlockShapes.S79, BlockShapes.S1, BlockShapes.S1, BlockShapes.S79, BlockShapes.S79);
+
+    public BlockStateInfo StateInfo => I0;
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Cardinal facing) => this with { Facing = facing };
 
 
     public uint StateId {
         get {
             return Facing switch {
-                Cardinal.North => 14662,
-                Cardinal.East => 14663,
-                Cardinal.South => 14664,
-                Cardinal.West => 14665,
-                Cardinal.Up => 14666,
-                Cardinal.Down => 14667,
+                Cardinal.North => 16845,
+                Cardinal.East => 16846,
+                Cardinal.South => 16847,
+                Cardinal.West => 16848,
+                Cardinal.Up => 16849,
+                Cardinal.Down => 16850,
                 _ => throw new ArgumentOutOfRangeException(nameof(Facing), Facing, "Unknown value for property facing.")
             };
         }
@@ -55,12 +82,12 @@ public record ShulkerBoxBlock(Identifier Identifier, Cardinal Facing) : IBlock {
     
     public IBlock WithState(uint state) {
         return state switch {
-            14662 => new ShulkerBoxBlock(Identifier, Cardinal.North),
-            14663 => new ShulkerBoxBlock(Identifier, Cardinal.East),
-            14664 => new ShulkerBoxBlock(Identifier, Cardinal.South),
-            14665 => new ShulkerBoxBlock(Identifier, Cardinal.West),
-            14666 => new ShulkerBoxBlock(Identifier, Cardinal.Up),
-            14667 => new ShulkerBoxBlock(Identifier, Cardinal.Down),
+            16845 => new ShulkerBoxBlock(Identifier, Cardinal.North),
+            16846 => new ShulkerBoxBlock(Identifier, Cardinal.East),
+            16847 => new ShulkerBoxBlock(Identifier, Cardinal.South),
+            16848 => new ShulkerBoxBlock(Identifier, Cardinal.West),
+            16849 => new ShulkerBoxBlock(Identifier, Cardinal.Up),
+            16850 => new ShulkerBoxBlock(Identifier, Cardinal.Down),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

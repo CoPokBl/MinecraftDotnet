@@ -18,10 +18,11 @@ public record DustColorTransitionParticle(
             .WriteFloat(Scale);
     }
 
+    // The colour arrives with an opaque alpha above the RGB, which nothing reads.
     public IParticle ReadData(DataReader reader, MinecraftRegistry _) {
         return this with {
-            FromColor = TextColor.FromDecimal(reader.ReadInteger()),
-            ToColor = TextColor.FromDecimal(reader.ReadInteger()),
+            FromColor = TextColor.FromDecimal(reader.ReadInteger() & 0xFFFFFF),
+            ToColor = TextColor.FromDecimal(reader.ReadInteger() & 0xFFFFFF),
             Scale = reader.ReadFloat()
         };
     }

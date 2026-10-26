@@ -18,6 +18,15 @@ public class InventoryPreClickEvent : IPlayerEvent, IInventoryEvent, ICancelable
     public required ItemStack? ClickedItem { get; init; }
     public required ItemStack CursorItem { get; init; }
     public required ClickType Type { get; init; }
+
+    /// <summary>
+    /// The packet's button, whose meaning depends on <see cref="Type"/>: which mouse button for a
+    /// regular click, and which hotbar slot for <see cref="ClickType.HotkeyToSlot"/>, where 40 is the
+    /// offhand rather than a hotbar index.
+    /// <p/>
+    /// Not required, so a listener that does not care about it never has to say so.
+    /// </summary>
+    public int Button { get; init; }
     
     /// <summary>
     /// Whether to do nothing and resend the inventory contents to the player.

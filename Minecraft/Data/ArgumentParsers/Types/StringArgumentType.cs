@@ -60,8 +60,9 @@ public record StringArgumentType(StringArgumentType.Behaviour ValueBehaviour = S
                 
                 // Single word without quotes
                 int spaceIndex = str.IndexOf(' ');
+                string word = spaceIndex == -1 ? str : str[..spaceIndex];
                 str = spaceIndex == -1 ? string.Empty : str[(spaceIndex + 1)..]; // remove the word from the string
-                return spaceIndex == -1 ? str : str[..spaceIndex];
+                return word;
             }
 
             case Behaviour.GreedyPhrase: {

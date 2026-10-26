@@ -24,7 +24,7 @@ public class ServerBoundChatMessagePacket : ServerBoundPacket {
             .WritePrefixedOptional(Signature, (v, wr) => wr.Write(v)) // must be 256
             .WriteVarInt(MessageCount)
             .Write(Acknowledged)  // BitSet of length 20, ceil(20/8)=3 bytes
-            .WriteByte(Checksum);
+            .Write(Checksum);
     }
     
     public static readonly PacketDataDeserialiser Deserialiser = (r, _) => new ServerBoundChatMessagePacket {

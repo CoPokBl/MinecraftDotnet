@@ -3,40 +3,81 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record MangroveShelfBlock(Identifier Identifier, Direction Facing, bool Powered, MangroveShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:shelf";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "shelf";
-    public Identifier? BlockEntity => "minecraft:shelf";
-    public Identifier? Item => "minecraft:mangrove_shelf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 28;
-    public string TranslationKey => "block.minecraft.mangrove_shelf";
-    public bool CanRespawnIn => false;
+public record MangroveShelfBlock(Identifier Identifier, Direction Facing, bool Powered, MangroveShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock, IHorizontalFacing, IPowered, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.mangrove_shelf", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:shelf", "minecraft:mangrove_shelf", BlockInfo.VanillaOnly, "minecraft:blocks/mangrove_shelf");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 28, "shelf", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, [], "minecraft:water", BlockShapes.S83, BlockShapes.S83, BlockShapes.S1, BlockShapes.S83, BlockShapes.S83, BlockShapes.S83);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 4540];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -45,39 +86,39 @@ public record MangroveShelfBlock(Identifier Identifier, Direction Facing, bool P
                 Direction.North => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2847,
-                            false => 2848,
+                            true => 4540,
+                            false => 4541,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2849,
-                            false => 2850,
+                            true => 4542,
+                            false => 4543,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2851,
-                            false => 2852,
+                            true => 4544,
+                            false => 4545,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2853,
-                            false => 2854,
+                            true => 4546,
+                            false => 4547,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2855,
-                            false => 2856,
+                            true => 4548,
+                            false => 4549,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2857,
-                            false => 2858,
+                            true => 4550,
+                            false => 4551,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2859,
-                            false => 2860,
+                            true => 4552,
+                            false => 4553,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2861,
-                            false => 2862,
+                            true => 4554,
+                            false => 4555,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -85,39 +126,39 @@ public record MangroveShelfBlock(Identifier Identifier, Direction Facing, bool P
                 Direction.South => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2863,
-                            false => 2864,
+                            true => 4556,
+                            false => 4557,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2865,
-                            false => 2866,
+                            true => 4558,
+                            false => 4559,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2867,
-                            false => 2868,
+                            true => 4560,
+                            false => 4561,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2869,
-                            false => 2870,
+                            true => 4562,
+                            false => 4563,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2871,
-                            false => 2872,
+                            true => 4564,
+                            false => 4565,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2873,
-                            false => 2874,
+                            true => 4566,
+                            false => 4567,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2875,
-                            false => 2876,
+                            true => 4568,
+                            false => 4569,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2877,
-                            false => 2878,
+                            true => 4570,
+                            false => 4571,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -125,39 +166,39 @@ public record MangroveShelfBlock(Identifier Identifier, Direction Facing, bool P
                 Direction.West => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2879,
-                            false => 2880,
+                            true => 4572,
+                            false => 4573,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2881,
-                            false => 2882,
+                            true => 4574,
+                            false => 4575,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2883,
-                            false => 2884,
+                            true => 4576,
+                            false => 4577,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2885,
-                            false => 2886,
+                            true => 4578,
+                            false => 4579,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2887,
-                            false => 2888,
+                            true => 4580,
+                            false => 4581,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2889,
-                            false => 2890,
+                            true => 4582,
+                            false => 4583,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2891,
-                            false => 2892,
+                            true => 4584,
+                            false => 4585,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2893,
-                            false => 2894,
+                            true => 4586,
+                            false => 4587,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -165,39 +206,39 @@ public record MangroveShelfBlock(Identifier Identifier, Direction Facing, bool P
                 Direction.East => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2895,
-                            false => 2896,
+                            true => 4588,
+                            false => 4589,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2897,
-                            false => 2898,
+                            true => 4590,
+                            false => 4591,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2899,
-                            false => 2900,
+                            true => 4592,
+                            false => 4593,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2901,
-                            false => 2902,
+                            true => 4594,
+                            false => 4595,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 2903,
-                            false => 2904,
+                            true => 4596,
+                            false => 4597,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 2905,
-                            false => 2906,
+                            true => 4598,
+                            false => 4599,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 2907,
-                            false => 2908,
+                            true => 4600,
+                            false => 4601,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 2909,
-                            false => 2910,
+                            true => 4602,
+                            false => 4603,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -209,70 +250,70 @@ public record MangroveShelfBlock(Identifier Identifier, Direction Facing, bool P
     
     public IBlock WithState(uint state) {
         return state switch {
-            2847 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
-            2848 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
-            2849 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
-            2850 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
-            2851 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
-            2852 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
-            2853 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
-            2854 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
-            2855 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
-            2856 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
-            2857 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
-            2858 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
-            2859 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
-            2860 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
-            2861 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
-            2862 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
-            2863 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
-            2864 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
-            2865 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
-            2866 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
-            2867 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
-            2868 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
-            2869 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
-            2870 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
-            2871 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
-            2872 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
-            2873 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
-            2874 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
-            2875 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
-            2876 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
-            2877 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
-            2878 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
-            2879 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
-            2880 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
-            2881 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
-            2882 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
-            2883 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
-            2884 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
-            2885 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
-            2886 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
-            2887 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
-            2888 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
-            2889 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
-            2890 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
-            2891 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
-            2892 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
-            2893 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
-            2894 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
-            2895 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
-            2896 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
-            2897 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
-            2898 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
-            2899 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
-            2900 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
-            2901 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
-            2902 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
-            2903 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
-            2904 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
-            2905 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
-            2906 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
-            2907 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
-            2908 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
-            2909 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
-            2910 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
+            4540 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
+            4541 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
+            4542 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
+            4543 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
+            4544 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
+            4545 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
+            4546 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
+            4547 => new MangroveShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
+            4548 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
+            4549 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
+            4550 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
+            4551 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
+            4552 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
+            4553 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
+            4554 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
+            4555 => new MangroveShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
+            4556 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
+            4557 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
+            4558 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
+            4559 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
+            4560 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
+            4561 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
+            4562 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
+            4563 => new MangroveShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
+            4564 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
+            4565 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
+            4566 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
+            4567 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
+            4568 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
+            4569 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
+            4570 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
+            4571 => new MangroveShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
+            4572 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
+            4573 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
+            4574 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
+            4575 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
+            4576 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
+            4577 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
+            4578 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
+            4579 => new MangroveShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
+            4580 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
+            4581 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
+            4582 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
+            4583 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
+            4584 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
+            4585 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
+            4586 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
+            4587 => new MangroveShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
+            4588 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
+            4589 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
+            4590 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
+            4591 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
+            4592 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
+            4593 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
+            4594 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
+            4595 => new MangroveShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
+            4596 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
+            4597 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
+            4598 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
+            4599 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
+            4600 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
+            4601 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
+            4602 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
+            4603 => new MangroveShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

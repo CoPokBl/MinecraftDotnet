@@ -3,40 +3,79 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Lit, bool SignalFire, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:campfire";
-    public double Hardness => 2;
-    public double ExplosionResistance => 2;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => false;
-    public bool RequiresTool => false;
-    public int LightEmission => 10;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => "minecraft:campfire";
-    public Identifier? Item => "minecraft:soul_campfire";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.4375, 1.0]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.4375, 1.0]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.0] -> [1.0, 0.4375, 1.0]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => false;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 34;
-    public string TranslationKey => "block.minecraft.soul_campfire";
-    public bool CanRespawnIn => false;
+public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Lit, bool SignalFire, bool Waterlogged) : IBlock, IHorizontalFacing, ILit, ISignalFire, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.soul_campfire", 2f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:campfire", "minecraft:soul_campfire", BlockInfo.VanillaOnly, "minecraft:blocks/soul_campfire");
+    private static readonly BlockStateInfo I0 = new(2f, 10, 1, PushReaction.PushPull, 34, "wood", NoteBlockInstrument.Bass, false, false, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S411, BlockShapes.S411, BlockShapes.S1, BlockShapes.S1, BlockShapes.S411, BlockShapes.S411);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { LightEmission = 0 };
+    private static readonly BlockStateInfo I3 = I0 with { LightEmission = 0, LightDampening = 0, Fluid = null };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I2, I3, I2, I3, I0, I1, I0, I1, I2, I3, I2, I3
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 24266];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithLit(bool lit) => this with { Lit = lit };
+
+    public IBlock WithSignalFire(bool signalFire) => this with { SignalFire = signalFire };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -45,88 +84,88 @@ public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Li
                 Direction.North => Lit switch {
                     true => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 20707,
-                            false => 20708,
+                            true => 24266,
+                            false => 24267,
                         },
                         false => Waterlogged switch {
-                            true => 20709,
-                            false => 20710,
+                            true => 24268,
+                            false => 24269,
                         },
                     },
                     false => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 20711,
-                            false => 20712,
+                            true => 24270,
+                            false => 24271,
                         },
                         false => Waterlogged switch {
-                            true => 20713,
-                            false => 20714,
+                            true => 24272,
+                            false => 24273,
                         },
                     },
                 },
                 Direction.South => Lit switch {
                     true => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 20715,
-                            false => 20716,
+                            true => 24274,
+                            false => 24275,
                         },
                         false => Waterlogged switch {
-                            true => 20717,
-                            false => 20718,
+                            true => 24276,
+                            false => 24277,
                         },
                     },
                     false => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 20719,
-                            false => 20720,
+                            true => 24278,
+                            false => 24279,
                         },
                         false => Waterlogged switch {
-                            true => 20721,
-                            false => 20722,
+                            true => 24280,
+                            false => 24281,
                         },
                     },
                 },
                 Direction.West => Lit switch {
                     true => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 20723,
-                            false => 20724,
+                            true => 24282,
+                            false => 24283,
                         },
                         false => Waterlogged switch {
-                            true => 20725,
-                            false => 20726,
+                            true => 24284,
+                            false => 24285,
                         },
                     },
                     false => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 20727,
-                            false => 20728,
+                            true => 24286,
+                            false => 24287,
                         },
                         false => Waterlogged switch {
-                            true => 20729,
-                            false => 20730,
+                            true => 24288,
+                            false => 24289,
                         },
                     },
                 },
                 Direction.East => Lit switch {
                     true => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 20731,
-                            false => 20732,
+                            true => 24290,
+                            false => 24291,
                         },
                         false => Waterlogged switch {
-                            true => 20733,
-                            false => 20734,
+                            true => 24292,
+                            false => 24293,
                         },
                     },
                     false => SignalFire switch {
                         true => Waterlogged switch {
-                            true => 20735,
-                            false => 20736,
+                            true => 24294,
+                            false => 24295,
                         },
                         false => Waterlogged switch {
-                            true => 20737,
-                            false => 20738,
+                            true => 24296,
+                            false => 24297,
                         },
                     },
                 },
@@ -137,38 +176,38 @@ public record SoulCampfireBlock(Identifier Identifier, Direction Facing, bool Li
     
     public IBlock WithState(uint state) {
         return state switch {
-            20707 => new SoulCampfireBlock(Identifier, Direction.North, true, true, true),
-            20708 => new SoulCampfireBlock(Identifier, Direction.North, true, true, false),
-            20709 => new SoulCampfireBlock(Identifier, Direction.North, true, false, true),
-            20710 => new SoulCampfireBlock(Identifier, Direction.North, true, false, false),
-            20711 => new SoulCampfireBlock(Identifier, Direction.North, false, true, true),
-            20712 => new SoulCampfireBlock(Identifier, Direction.North, false, true, false),
-            20713 => new SoulCampfireBlock(Identifier, Direction.North, false, false, true),
-            20714 => new SoulCampfireBlock(Identifier, Direction.North, false, false, false),
-            20715 => new SoulCampfireBlock(Identifier, Direction.South, true, true, true),
-            20716 => new SoulCampfireBlock(Identifier, Direction.South, true, true, false),
-            20717 => new SoulCampfireBlock(Identifier, Direction.South, true, false, true),
-            20718 => new SoulCampfireBlock(Identifier, Direction.South, true, false, false),
-            20719 => new SoulCampfireBlock(Identifier, Direction.South, false, true, true),
-            20720 => new SoulCampfireBlock(Identifier, Direction.South, false, true, false),
-            20721 => new SoulCampfireBlock(Identifier, Direction.South, false, false, true),
-            20722 => new SoulCampfireBlock(Identifier, Direction.South, false, false, false),
-            20723 => new SoulCampfireBlock(Identifier, Direction.West, true, true, true),
-            20724 => new SoulCampfireBlock(Identifier, Direction.West, true, true, false),
-            20725 => new SoulCampfireBlock(Identifier, Direction.West, true, false, true),
-            20726 => new SoulCampfireBlock(Identifier, Direction.West, true, false, false),
-            20727 => new SoulCampfireBlock(Identifier, Direction.West, false, true, true),
-            20728 => new SoulCampfireBlock(Identifier, Direction.West, false, true, false),
-            20729 => new SoulCampfireBlock(Identifier, Direction.West, false, false, true),
-            20730 => new SoulCampfireBlock(Identifier, Direction.West, false, false, false),
-            20731 => new SoulCampfireBlock(Identifier, Direction.East, true, true, true),
-            20732 => new SoulCampfireBlock(Identifier, Direction.East, true, true, false),
-            20733 => new SoulCampfireBlock(Identifier, Direction.East, true, false, true),
-            20734 => new SoulCampfireBlock(Identifier, Direction.East, true, false, false),
-            20735 => new SoulCampfireBlock(Identifier, Direction.East, false, true, true),
-            20736 => new SoulCampfireBlock(Identifier, Direction.East, false, true, false),
-            20737 => new SoulCampfireBlock(Identifier, Direction.East, false, false, true),
-            20738 => new SoulCampfireBlock(Identifier, Direction.East, false, false, false),
+            24266 => new SoulCampfireBlock(Identifier, Direction.North, true, true, true),
+            24267 => new SoulCampfireBlock(Identifier, Direction.North, true, true, false),
+            24268 => new SoulCampfireBlock(Identifier, Direction.North, true, false, true),
+            24269 => new SoulCampfireBlock(Identifier, Direction.North, true, false, false),
+            24270 => new SoulCampfireBlock(Identifier, Direction.North, false, true, true),
+            24271 => new SoulCampfireBlock(Identifier, Direction.North, false, true, false),
+            24272 => new SoulCampfireBlock(Identifier, Direction.North, false, false, true),
+            24273 => new SoulCampfireBlock(Identifier, Direction.North, false, false, false),
+            24274 => new SoulCampfireBlock(Identifier, Direction.South, true, true, true),
+            24275 => new SoulCampfireBlock(Identifier, Direction.South, true, true, false),
+            24276 => new SoulCampfireBlock(Identifier, Direction.South, true, false, true),
+            24277 => new SoulCampfireBlock(Identifier, Direction.South, true, false, false),
+            24278 => new SoulCampfireBlock(Identifier, Direction.South, false, true, true),
+            24279 => new SoulCampfireBlock(Identifier, Direction.South, false, true, false),
+            24280 => new SoulCampfireBlock(Identifier, Direction.South, false, false, true),
+            24281 => new SoulCampfireBlock(Identifier, Direction.South, false, false, false),
+            24282 => new SoulCampfireBlock(Identifier, Direction.West, true, true, true),
+            24283 => new SoulCampfireBlock(Identifier, Direction.West, true, true, false),
+            24284 => new SoulCampfireBlock(Identifier, Direction.West, true, false, true),
+            24285 => new SoulCampfireBlock(Identifier, Direction.West, true, false, false),
+            24286 => new SoulCampfireBlock(Identifier, Direction.West, false, true, true),
+            24287 => new SoulCampfireBlock(Identifier, Direction.West, false, true, false),
+            24288 => new SoulCampfireBlock(Identifier, Direction.West, false, false, true),
+            24289 => new SoulCampfireBlock(Identifier, Direction.West, false, false, false),
+            24290 => new SoulCampfireBlock(Identifier, Direction.East, true, true, true),
+            24291 => new SoulCampfireBlock(Identifier, Direction.East, true, true, false),
+            24292 => new SoulCampfireBlock(Identifier, Direction.East, true, false, true),
+            24293 => new SoulCampfireBlock(Identifier, Direction.East, true, false, false),
+            24294 => new SoulCampfireBlock(Identifier, Direction.East, false, true, true),
+            24295 => new SoulCampfireBlock(Identifier, Direction.East, false, true, false),
+            24296 => new SoulCampfireBlock(Identifier, Direction.East, false, false, true),
+            24297 => new SoulCampfireBlock(Identifier, Direction.East, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

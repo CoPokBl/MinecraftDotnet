@@ -1,3 +1,4 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Items;
@@ -6,6 +7,9 @@ namespace Minecraft.Data.Components.Types;
 
 public record RarityComponent() : IDataComponent<ItemRarity> {
     public override Identifier Identifier => "minecraft:rarity";
+
+    public override NbtCodec<ItemRarity>? Codec => Persistent;
+    private static readonly NbtCodec<ItemRarity> Persistent = NbtCodecs.Enum<ItemRarity>("minecraft:rarity");
 
     public override DataWriter WriteData(ItemRarity val, DataWriter writer, MinecraftRegistry registry) {
         return writer.WriteVarInt((int)val);

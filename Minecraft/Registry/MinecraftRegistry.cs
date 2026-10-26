@@ -15,6 +15,8 @@ public class MinecraftRegistry {
     public SoundTypeRegistry SoundTypes { get; set; } = new();
     public InventoryTypeRegistry InventoryTypes { get; set; } = new();
     public PotionEffectTypeRegistry PotionEffectTypes { get; set; } = new();
+    public PotionRegistry Potions { get; set; } = new();
+    public VillagerTypeRegistry VillagerTypes { get; set; } = new();
     public ConsumeEffectRegistry ConsumeEffects { get; set; } = new();
     public BlockEntityTypeRegistry BlockEntityTypes { get; set; } = new();
     public AttributeRegistry Attributes { get; set; } = new();
@@ -26,6 +28,39 @@ public class MinecraftRegistry {
     public TimelineRegistry Timelines { get; set; } = new();
     public DamageTypeRegistry DamageTypes { get; set; } = new();
     public PaintingVariantRegistry PaintingVariants { get; set; } = new();
+    public BannerPatternRegistry BannerPatterns { get; set; } = new();
+    public TrimPatternRegistry TrimPatterns { get; set; } = new();
+    public DecoratedPotPatternRegistry DecoratedPotPatterns { get; set; } = new();
+    public BlockTransformerRegistry BlockTransformers { get; set; } = new();
+    public BlockStateProviderRegistry BlockStateProviders { get; set; } = new();
+    public JukeboxSongRegistry JukeboxSongs { get; set; } = new();
+    public InstrumentRegistry Instruments { get; set; } = new();
+    public CowSoundVariantRegistry CowSoundVariants { get; set; } = new();
+    public WorldClockRegistry WorldClocks { get; set; } = new();
+    public EnvironmentAttributeRegistry EnvironmentAttributes { get; set; } = new();
+    public BiomeRegistry Biomes { get; set; } = new();
+    public ChatTypeRegistry ChatTypes { get; set; } = new();
+    public TrimMaterialRegistry TrimMaterials { get; set; } = new();
+    public WolfVariantRegistry WolfVariants { get; set; } = new();
+    public WolfSoundVariantRegistry WolfSoundVariants { get; set; } = new();
+    public PigVariantRegistry PigVariants { get; set; } = new();
+    public PigSoundVariantRegistry PigSoundVariants { get; set; } = new();
+    public FrogVariantRegistry FrogVariants { get; set; } = new();
+    public CatVariantRegistry CatVariants { get; set; } = new();
+    public CatSoundVariantRegistry CatSoundVariants { get; set; } = new();
+    public CowVariantRegistry CowVariants { get; set; } = new();
+    public ChickenVariantRegistry ChickenVariants { get; set; } = new();
+    public ChickenSoundVariantRegistry ChickenSoundVariants { get; set; } = new();
+    public ZombieNautilusVariantRegistry ZombieNautilusVariants { get; set; } = new();
+    public SulfurCubeArchetypeRegistry SulfurCubeArchetypes { get; set; } = new();
+    public TestEnvironmentRegistry TestEnvironments { get; set; } = new();
+    public TestInstanceRegistry TestInstances { get; set; } = new();
+    public DialogRegistry Dialogs { get; set; } = new();
+    public DebugSubscriptionRegistry DebugSubscriptions { get; set; } = new();
+    public MapDecorationTypeRegistry MapDecorationTypes { get; set; } = new();
+    public SlotDisplayTypeRegistry SlotDisplayTypes { get; set; } = new();
+    public RecipeDisplayTypeRegistry RecipeDisplayTypes { get; set; } = new();
+    public RecipeBookCategoryRegistry RecipeBookCategories { get; set; } = new();
 
     public ISubRegistry this[Identifier id] {
         get {
@@ -49,6 +84,8 @@ public class MinecraftRegistry {
         SoundTypes,
         InventoryTypes,
         PotionEffectTypes,
+        Potions,
+        VillagerTypes,
         ConsumeEffects,
         BlockEntityTypes,
         Attributes,
@@ -59,7 +96,40 @@ public class MinecraftRegistry {
         DimensionTypes,
         Timelines,
         DamageTypes,
-        PaintingVariants
+        PaintingVariants,
+        BannerPatterns,
+        TrimPatterns,
+        DecoratedPotPatterns,
+        BlockTransformers,
+        BlockStateProviders,
+        JukeboxSongs,
+        Instruments,
+        CowSoundVariants,
+        WorldClocks,
+        EnvironmentAttributes,
+        Biomes,
+        ChatTypes,
+        TrimMaterials,
+        WolfVariants,
+        WolfSoundVariants,
+        PigVariants,
+        PigSoundVariants,
+        FrogVariants,
+        CatVariants,
+        CatSoundVariants,
+        CowVariants,
+        ChickenVariants,
+        ChickenSoundVariants,
+        ZombieNautilusVariants,
+        SulfurCubeArchetypes,
+        TestEnvironments,
+        TestInstances,
+        Dialogs,
+        DebugSubscriptions,
+        MapDecorationTypes,
+        SlotDisplayTypes,
+        RecipeDisplayTypes,
+        RecipeBookCategories
     ];
 
     public MinecraftRegistry Clone() {
@@ -73,6 +143,8 @@ public class MinecraftRegistry {
             SoundTypes = SoundTypes.Clone(),
             InventoryTypes = InventoryTypes.Clone(),
             PotionEffectTypes = PotionEffectTypes.Clone(),
+            Potions = Potions.Clone(),
+            VillagerTypes = VillagerTypes.Clone(),
             ConsumeEffects = ConsumeEffects.Clone(),
             BlockEntityTypes = BlockEntityTypes.Clone(),
             Attributes = Attributes.Clone(),
@@ -83,7 +155,40 @@ public class MinecraftRegistry {
             DimensionTypes = DimensionTypes.Clone(),
             Timelines = Timelines.Clone(),
             DamageTypes = DamageTypes.Clone(),
-            PaintingVariants = PaintingVariants.Clone()
+            PaintingVariants = PaintingVariants.Clone(),
+            BannerPatterns = BannerPatterns.Clone(),
+            TrimPatterns = TrimPatterns.Clone(),
+            DecoratedPotPatterns = DecoratedPotPatterns.Clone(),
+            BlockTransformers = BlockTransformers.Clone(),
+            BlockStateProviders = BlockStateProviders.Clone(),
+            JukeboxSongs = JukeboxSongs.Clone(),
+            Instruments = Instruments.Clone(),
+            CowSoundVariants = CowSoundVariants.Clone(),
+            WorldClocks = WorldClocks.Clone(),
+            EnvironmentAttributes = EnvironmentAttributes.Clone(),
+            Biomes = Biomes.Clone(),
+            ChatTypes = ChatTypes.Clone(),
+            TrimMaterials = TrimMaterials.Clone(),
+            WolfVariants = WolfVariants.Clone(),
+            WolfSoundVariants = WolfSoundVariants.Clone(),
+            PigVariants = PigVariants.Clone(),
+            PigSoundVariants = PigSoundVariants.Clone(),
+            FrogVariants = FrogVariants.Clone(),
+            CatVariants = CatVariants.Clone(),
+            CatSoundVariants = CatSoundVariants.Clone(),
+            CowVariants = CowVariants.Clone(),
+            ChickenVariants = ChickenVariants.Clone(),
+            ChickenSoundVariants = ChickenSoundVariants.Clone(),
+            ZombieNautilusVariants = ZombieNautilusVariants.Clone(),
+            SulfurCubeArchetypes = SulfurCubeArchetypes.Clone(),
+            TestEnvironments = TestEnvironments.Clone(),
+            TestInstances = TestInstances.Clone(),
+            Dialogs = Dialogs.Clone(),
+            DebugSubscriptions = DebugSubscriptions.Clone(),
+            MapDecorationTypes = MapDecorationTypes.Clone(),
+            SlotDisplayTypes = SlotDisplayTypes.Clone(),
+            RecipeDisplayTypes = RecipeDisplayTypes.Clone(),
+            RecipeBookCategories = RecipeBookCategories.Clone()
         };
     }
     

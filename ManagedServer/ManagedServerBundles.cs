@@ -26,8 +26,71 @@ public partial class ManagedMinecraftServer {
         new RightClickToEquipArmourFeature(),
         new CommandsFeature(),
         new InventoryClosingFeature(),
+        new DialogFeature(),
         new AttributeModifiersFeature(true),
-        new PlayerSwapItemFeature()
+        new PlayerSwapItemFeature(),
+        new DeathFeature(),
+        new RespawnFeature(),
+        new EffectsFeature()
+    );
+
+    /// <summary>
+    /// Vanilla's block behaviour: what state a block goes down in and how it reacts to its
+    /// neighbours. Stairs face away from you, slabs double, doors get a top half, fences connect,
+    /// a ladder lets go of a wall that goes.
+    /// <p/>
+    /// Not part of <see cref="BasicsBundle"/>, on the same reasoning as <see cref="MobsBundle"/>:
+    /// <see cref="BlockPlacingFeature"/> gives a player the ability to place a block, and what state
+    /// it lands in is a separate choice. Without this every block places its default state, which is
+    /// what vanilla does for a block whose class overrides nothing.
+    /// <p/>
+    /// For a subset, register <c>VanillaPlacementRulesFeature</c> directly with
+    /// <c>VanillaPlacementRules.Only</c> or <c>Except</c> instead of taking this bundle.
+    /// </summary>
+    public static FeatureBundle BlockRulesBundle => new(
+        new VanillaPlacementRulesFeature()
+    );
+
+    /// <summary>
+    /// Vanilla's behaviour when a block is right clicked: doors, trapdoors and fence gates open,
+    /// levers flip, buttons press, a lit candle goes out.
+    /// <p/>
+    /// Not part of <see cref="BasicsBundle"/>, on the same reasoning as <see cref="BlockRulesBundle"/>:
+    /// the click sequence itself is core and always runs, and what each block does about being
+    /// clicked is a separate choice. Without this every block is inert when clicked and the click
+    /// falls through to the held item, which is what vanilla does for a block whose class overrides
+    /// neither hook.
+    /// <p/>
+    /// For a subset, register <c>VanillaBlockInteractionsFeature</c> directly with
+    /// <c>VanillaBlockInteractions.Only</c> or <c>Except</c> instead of taking this bundle.
+    /// </summary>
+    public static FeatureBundle BlockInteractionsBundle => new(
+        new VanillaBlockInteractionsFeature()
+    );
+
+    /// <summary>
+    /// Flowing water and lava, buckets that place and pick it up, and what standing in it does to an
+    /// entity. Not part of <see cref="BasicsBundle"/>: a map full of water only starts moving once
+    /// something simulates it, so which servers want that is theirs to say.
+    /// </summary>
+    public static FeatureBundle LiquidsBundle => new(
+        new LiquidsFeature(),
+        new BucketsFeature(),
+        new LavaDamageFeature(),
+        new WaterExtinguishesFireFeature()
+    );
+
+    /// <summary>
+    /// Mobs that decide things for themselves. Not part of <see cref="BasicsBundle"/>: it changes what
+    /// every mob in every world does, and it brings <see cref="PhysicsFeature"/> with it because a mob
+    /// whose movement is never simulated cannot act on anything it decides.
+    /// <p/>
+    /// A game that wants the AI engine but its own behaviour registers <see cref="PhysicsFeature"/>
+    /// alone and fills in each mob's goals itself; the engine is core and needs no feature.
+    /// </summary>
+    public static FeatureBundle MobsBundle => new(
+        new PhysicsFeature(),
+        new VanillaMobAiFeature()
     );
 
     public static FeatureBundle BasicsWithMojangAuthBundle => BasicsBundle

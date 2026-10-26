@@ -1,11 +1,26 @@
+using Minecraft.Data.Components.Codecs;
 using Minecraft.Data.Enchantments;
 using Minecraft.Registry;
 using Minecraft.Schemas;
+using NBT;
+using NBT.Tags;
 
 namespace Minecraft.Data.Components.Types;
 
 public record EnchantmentsComponent() : IDataComponent<(IEnchantment, int)[]> {
     public override Identifier Identifier => "minecraft:enchantments";
+
+    /// <summary>
+    /// An object of level by enchantment name, not a list of pairs as the wire form is.
+    /// </summary>
+    public override NbtCodec<(IEnchantment, int)[]>? Codec => Persistent;
+    private static readonly NbtCodec<(IEnchantment, int)[]> Persistent = new(
+        (val, _) => new CompoundTag(val
+            .Select(pair => (pair.Item1.Identifier.ToString(), (INbtTag)new IntegerTag(pair.Item2)))
+            .ToArray()),
+        (tag, registry) => tag.GetCompound().Children
+            .Select(pair => (registry.Enchantments[(Identifier)pair.key], pair.child.AsInt()))
+            .ToArray());
 
     public override DataWriter WriteData((IEnchantment, int)[] val, DataWriter writer, MinecraftRegistry registry) {
         return writer.WritePrefixedArray(val, (tuple, w) => w

@@ -15,19 +15,22 @@ public record ToolRule(IdSet Blocks, float? Speed, bool? CorrectDropForBlocks) :
 
     public static ToolRule ReadData(DataReader reader, MinecraftRegistry reg) {
         IdSet blocks = reader.Read<IdSet>(reg);
-        float? speed = reader.ReadPrefixedOptional(r => r.ReadFloat());
-        bool? correctDropForBlocks = reader.ReadPrefixedOptional(r => r.ReadBoolean());
+        float? speed = reader.ReadPrefixedOptionalValue(r => r.ReadFloat());
+        bool? correctDropForBlocks = reader.ReadPrefixedOptionalValue(r => r.ReadBoolean());
         return new ToolRule(blocks, speed, correctDropForBlocks);
     }
 
-    public bool ValidFor(IBlock block) {
+    public bool ValidFor(IBlock block, MinecraftRegistry reg) {
         if (Blocks is IdSet.Tag tagSet) {
-            return tagSet.TagName == block.Identifier;
+            return reg.Blocks.Tags.Contains(tagSet.TagName) &&
+                   reg.Blocks.Tags[tagSet.TagName].GetValueIds(reg).Contains(block.Identifier);
         }
         if (Blocks is IdSet.Ids idSet) {
-            return idSet.Values.Contains((int)block.StateId);
+            // The ids are block registry ids, not block state ids.
+            return reg.Blocks.Contains(block.Identifier) &&
+                   idSet.Values.Contains(reg.Blocks.GetProtocolId(block.Identifier));
         }
-        
+
         throw new InvalidOperationException("Invalid IdSet type in ToolRule.");
     }
 }

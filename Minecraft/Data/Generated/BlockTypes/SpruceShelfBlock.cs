@@ -3,40 +3,81 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record SpruceShelfBlock(Identifier Identifier, Direction Facing, bool Powered, SpruceShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock {
-    public Identifier Category => "minecraft:shelf";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "shelf";
-    public Identifier? BlockEntity => "minecraft:shelf";
-    public Identifier? Item => "minecraft:spruce_shelf";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.0, 0.0, 0.6875] -> [1.0, 0.25, 1.0], AABB[0.0, 0.25, 0.8125] -> [1.0, 1.0, 1.0], AABB[0.0, 0.75, 0.6875] -> [1.0, 1.0, 0.8125]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 34;
-    public string TranslationKey => "block.minecraft.spruce_shelf";
-    public bool CanRespawnIn => false;
+public record SpruceShelfBlock(Identifier Identifier, Direction Facing, bool Powered, SpruceShelfBlock.SideChain SideChainValue, bool Waterlogged) : IBlock, IHorizontalFacing, IPowered, IWaterlogged {
+    private static readonly BlockInfo Data = new("block.minecraft.spruce_shelf", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, "minecraft:shelf", "minecraft:spruce_shelf", BlockInfo.VanillaOnly, "minecraft:blocks/spruce_shelf");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 34, "shelf", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, true, false, [], "minecraft:water", BlockShapes.S83, BlockShapes.S83, BlockShapes.S1, BlockShapes.S83, BlockShapes.S83, BlockShapes.S83);
+    private static readonly BlockStateInfo I1 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null };
+    private static readonly BlockStateInfo I2 = I0 with { BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S84, CollisionShape = BlockShapes.S84, OcclusionShape = BlockShapes.S84, VisualShape = BlockShapes.S84, SupportShape = BlockShapes.S84 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I5 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S85, CollisionShape = BlockShapes.S85, OcclusionShape = BlockShapes.S85, VisualShape = BlockShapes.S85, SupportShape = BlockShapes.S85 };
+    private static readonly BlockStateInfo I6 = I0 with { BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, PathfindableWater = false, Fluid = null, BlockShape = BlockShapes.S86, CollisionShape = BlockShapes.S86, OcclusionShape = BlockShapes.S86, VisualShape = BlockShapes.S86, SupportShape = BlockShapes.S86 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I0, I1, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I2, I3, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I4, I5, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7, I6, I7
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 4796];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithFacing(Direction facing) => this with { Facing = facing };
+
+    public IBlock WithPowered(bool powered) => this with { Powered = powered };
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
 
 
     public uint StateId {
@@ -45,39 +86,39 @@ public record SpruceShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.North => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3039,
-                            false => 3040,
+                            true => 4796,
+                            false => 4797,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3041,
-                            false => 3042,
+                            true => 4798,
+                            false => 4799,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3043,
-                            false => 3044,
+                            true => 4800,
+                            false => 4801,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3045,
-                            false => 3046,
+                            true => 4802,
+                            false => 4803,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3047,
-                            false => 3048,
+                            true => 4804,
+                            false => 4805,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3049,
-                            false => 3050,
+                            true => 4806,
+                            false => 4807,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3051,
-                            false => 3052,
+                            true => 4808,
+                            false => 4809,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3053,
-                            false => 3054,
+                            true => 4810,
+                            false => 4811,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -85,39 +126,39 @@ public record SpruceShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.South => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3055,
-                            false => 3056,
+                            true => 4812,
+                            false => 4813,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3057,
-                            false => 3058,
+                            true => 4814,
+                            false => 4815,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3059,
-                            false => 3060,
+                            true => 4816,
+                            false => 4817,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3061,
-                            false => 3062,
+                            true => 4818,
+                            false => 4819,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3063,
-                            false => 3064,
+                            true => 4820,
+                            false => 4821,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3065,
-                            false => 3066,
+                            true => 4822,
+                            false => 4823,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3067,
-                            false => 3068,
+                            true => 4824,
+                            false => 4825,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3069,
-                            false => 3070,
+                            true => 4826,
+                            false => 4827,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -125,39 +166,39 @@ public record SpruceShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.West => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3071,
-                            false => 3072,
+                            true => 4828,
+                            false => 4829,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3073,
-                            false => 3074,
+                            true => 4830,
+                            false => 4831,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3075,
-                            false => 3076,
+                            true => 4832,
+                            false => 4833,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3077,
-                            false => 3078,
+                            true => 4834,
+                            false => 4835,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3079,
-                            false => 3080,
+                            true => 4836,
+                            false => 4837,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3081,
-                            false => 3082,
+                            true => 4838,
+                            false => 4839,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3083,
-                            false => 3084,
+                            true => 4840,
+                            false => 4841,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3085,
-                            false => 3086,
+                            true => 4842,
+                            false => 4843,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -165,39 +206,39 @@ public record SpruceShelfBlock(Identifier Identifier, Direction Facing, bool Pow
                 Direction.East => Powered switch {
                     true => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3087,
-                            false => 3088,
+                            true => 4844,
+                            false => 4845,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3089,
-                            false => 3090,
+                            true => 4846,
+                            false => 4847,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3091,
-                            false => 3092,
+                            true => 4848,
+                            false => 4849,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3093,
-                            false => 3094,
+                            true => 4850,
+                            false => 4851,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
                     false => SideChainValue switch {
                         SideChain.Unconnected => Waterlogged switch {
-                            true => 3095,
-                            false => 3096,
+                            true => 4852,
+                            false => 4853,
                         },
                         SideChain.Right => Waterlogged switch {
-                            true => 3097,
-                            false => 3098,
+                            true => 4854,
+                            false => 4855,
                         },
                         SideChain.Center => Waterlogged switch {
-                            true => 3099,
-                            false => 3100,
+                            true => 4856,
+                            false => 4857,
                         },
                         SideChain.Left => Waterlogged switch {
-                            true => 3101,
-                            false => 3102,
+                            true => 4858,
+                            false => 4859,
                         },
                         _ => throw new ArgumentOutOfRangeException(nameof(SideChainValue), SideChainValue, "Unknown value for property side_chain.")
                     },
@@ -209,70 +250,70 @@ public record SpruceShelfBlock(Identifier Identifier, Direction Facing, bool Pow
     
     public IBlock WithState(uint state) {
         return state switch {
-            3039 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
-            3040 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
-            3041 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
-            3042 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
-            3043 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
-            3044 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
-            3045 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
-            3046 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
-            3047 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
-            3048 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
-            3049 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
-            3050 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
-            3051 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
-            3052 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
-            3053 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
-            3054 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
-            3055 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
-            3056 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
-            3057 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
-            3058 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
-            3059 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
-            3060 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
-            3061 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
-            3062 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
-            3063 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
-            3064 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
-            3065 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
-            3066 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
-            3067 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
-            3068 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
-            3069 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
-            3070 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
-            3071 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
-            3072 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
-            3073 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
-            3074 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
-            3075 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
-            3076 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
-            3077 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
-            3078 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
-            3079 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
-            3080 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
-            3081 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
-            3082 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
-            3083 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
-            3084 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
-            3085 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
-            3086 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
-            3087 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
-            3088 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
-            3089 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
-            3090 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
-            3091 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
-            3092 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
-            3093 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
-            3094 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
-            3095 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
-            3096 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
-            3097 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
-            3098 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
-            3099 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
-            3100 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
-            3101 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
-            3102 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
+            4796 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, true),
+            4797 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Unconnected, false),
+            4798 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Right, true),
+            4799 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Right, false),
+            4800 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Center, true),
+            4801 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Center, false),
+            4802 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Left, true),
+            4803 => new SpruceShelfBlock(Identifier, Direction.North, true, SideChain.Left, false),
+            4804 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, true),
+            4805 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Unconnected, false),
+            4806 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Right, true),
+            4807 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Right, false),
+            4808 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Center, true),
+            4809 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Center, false),
+            4810 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Left, true),
+            4811 => new SpruceShelfBlock(Identifier, Direction.North, false, SideChain.Left, false),
+            4812 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, true),
+            4813 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Unconnected, false),
+            4814 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Right, true),
+            4815 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Right, false),
+            4816 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Center, true),
+            4817 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Center, false),
+            4818 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Left, true),
+            4819 => new SpruceShelfBlock(Identifier, Direction.South, true, SideChain.Left, false),
+            4820 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, true),
+            4821 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Unconnected, false),
+            4822 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Right, true),
+            4823 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Right, false),
+            4824 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Center, true),
+            4825 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Center, false),
+            4826 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Left, true),
+            4827 => new SpruceShelfBlock(Identifier, Direction.South, false, SideChain.Left, false),
+            4828 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, true),
+            4829 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Unconnected, false),
+            4830 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Right, true),
+            4831 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Right, false),
+            4832 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Center, true),
+            4833 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Center, false),
+            4834 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Left, true),
+            4835 => new SpruceShelfBlock(Identifier, Direction.West, true, SideChain.Left, false),
+            4836 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, true),
+            4837 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Unconnected, false),
+            4838 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Right, true),
+            4839 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Right, false),
+            4840 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Center, true),
+            4841 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Center, false),
+            4842 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Left, true),
+            4843 => new SpruceShelfBlock(Identifier, Direction.West, false, SideChain.Left, false),
+            4844 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, true),
+            4845 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Unconnected, false),
+            4846 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Right, true),
+            4847 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Right, false),
+            4848 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Center, true),
+            4849 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Center, false),
+            4850 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Left, true),
+            4851 => new SpruceShelfBlock(Identifier, Direction.East, true, SideChain.Left, false),
+            4852 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, true),
+            4853 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Unconnected, false),
+            4854 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Right, true),
+            4855 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Right, false),
+            4856 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Center, true),
+            4857 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Center, false),
+            4858 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Left, true),
+            4859 => new SpruceShelfBlock(Identifier, Direction.East, false, SideChain.Left, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

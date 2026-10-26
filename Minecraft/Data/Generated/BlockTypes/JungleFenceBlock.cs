@@ -3,40 +3,119 @@ using NBT.Tags;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Blocks.BlockEnums;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Blocks.Properties;
 using Minecraft.Schemas.Shapes;
 
 namespace Minecraft.Data.Generated.BlockTypes;
 
 // Generated using the CodeGen project. Do not edit manually.
 // See Block.cs for last updated date.
-public record JungleFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock {
-    public Identifier Category => "minecraft:fence";
-    public double Hardness => 2;
-    public double ExplosionResistance => 3;
-    public double Friction => 0.6;
-    public double SpeedFactor => 1;
-    public double JumpFactor => 1;
-    public bool Solid => true;
-    public bool Liquid => false;
-    public bool Occludes => true;
-    public bool RequiresTool => false;
-    public int LightEmission => 0;
-    public bool Replaceable => false;
-    public string SoundType => "wood";
-    public Identifier? BlockEntity => null;
-    public Identifier? Item => "minecraft:jungle_fence";
-    public ICollisionBox BlockShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox CollisionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.5, 0.625]]");
-    public ICollisionBox OcclusionShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public ICollisionBox InteractionShape => ICollisionBox.ParseAabbArrayString("[]");
-    public ICollisionBox VisualShape => ICollisionBox.ParseAabbArrayString("[AABB[0.375, 0.0, 0.375] -> [0.625, 1.0, 0.625]]");
-    public bool RedstoneConductor => false;
-    public bool SignalSource => false;
-    public bool Flammable => true;
-    public PushReaction PushReaction => PushReaction.Normal;
-    public int MapColorId => 10;
-    public string TranslationKey => "block.minecraft.jungle_fence";
-    public bool CanRespawnIn => false;
+public record JungleFenceBlock(Identifier Identifier, bool East, bool North, bool South, bool Waterlogged, bool West) : IBlock, IWaterlogged, IFaceConnected {
+    private static readonly BlockInfo Data = new("block.minecraft.jungle_fence", 3f, 0.6f, 1f, 1f, 0f, 0f, false, false, BlockOffsetType.None, 0f, 0f, null, "minecraft:jungle_fence", BlockInfo.VanillaOnly, "minecraft:blocks/jungle_fence");
+    private static readonly BlockStateInfo I0 = new(2f, 0, 1, PushReaction.PushPull, 10, "wood", NoteBlockInstrument.Bass, false, true, false, false, false, false, false, true, false, false, false, false, false, false, true, false, false, false, [], "minecraft:water", BlockShapes.S21, BlockShapes.S22, BlockShapes.S1, BlockShapes.S23, BlockShapes.S21, BlockShapes.S22);
+    private static readonly BlockStateInfo I1 = I0 with { BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
+    private static readonly BlockStateInfo I2 = I0 with { LightDampening = 0, Flammable = true, Fluid = null };
+    private static readonly BlockStateInfo I3 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S24, CollisionShape = BlockShapes.S25, OcclusionShape = BlockShapes.S26, VisualShape = BlockShapes.S24, SupportShape = BlockShapes.S25 };
+    private static readonly BlockStateInfo I4 = I0 with { BlockShape = BlockShapes.S27, CollisionShape = BlockShapes.S28, OcclusionShape = BlockShapes.S29, VisualShape = BlockShapes.S27, SupportShape = BlockShapes.S28 };
+    private static readonly BlockStateInfo I5 = I0 with { BlockShape = BlockShapes.S30, CollisionShape = BlockShapes.S31, OcclusionShape = BlockShapes.S32, VisualShape = BlockShapes.S30, SupportShape = BlockShapes.S31 };
+    private static readonly BlockStateInfo I6 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S27, CollisionShape = BlockShapes.S28, OcclusionShape = BlockShapes.S29, VisualShape = BlockShapes.S27, SupportShape = BlockShapes.S28 };
+    private static readonly BlockStateInfo I7 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S30, CollisionShape = BlockShapes.S31, OcclusionShape = BlockShapes.S32, VisualShape = BlockShapes.S30, SupportShape = BlockShapes.S31 };
+    private static readonly BlockStateInfo I8 = I0 with { BlockShape = BlockShapes.S33, CollisionShape = BlockShapes.S34, OcclusionShape = BlockShapes.S35, VisualShape = BlockShapes.S33, SupportShape = BlockShapes.S34 };
+    private static readonly BlockStateInfo I9 = I0 with { BlockShape = BlockShapes.S36, CollisionShape = BlockShapes.S37, OcclusionShape = BlockShapes.S38, VisualShape = BlockShapes.S36, SupportShape = BlockShapes.S37 };
+    private static readonly BlockStateInfo I10 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S33, CollisionShape = BlockShapes.S34, OcclusionShape = BlockShapes.S35, VisualShape = BlockShapes.S33, SupportShape = BlockShapes.S34 };
+    private static readonly BlockStateInfo I11 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S36, CollisionShape = BlockShapes.S37, OcclusionShape = BlockShapes.S38, VisualShape = BlockShapes.S36, SupportShape = BlockShapes.S37 };
+    private static readonly BlockStateInfo I12 = I0 with { BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S41, VisualShape = BlockShapes.S39, SupportShape = BlockShapes.S40 };
+    private static readonly BlockStateInfo I13 = I0 with { BlockShape = BlockShapes.S42, CollisionShape = BlockShapes.S43, OcclusionShape = BlockShapes.S44, VisualShape = BlockShapes.S42, SupportShape = BlockShapes.S43 };
+    private static readonly BlockStateInfo I14 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S39, CollisionShape = BlockShapes.S40, OcclusionShape = BlockShapes.S41, VisualShape = BlockShapes.S39, SupportShape = BlockShapes.S40 };
+    private static readonly BlockStateInfo I15 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S42, CollisionShape = BlockShapes.S43, OcclusionShape = BlockShapes.S44, VisualShape = BlockShapes.S42, SupportShape = BlockShapes.S43 };
+    private static readonly BlockStateInfo I16 = I0 with { BlockShape = BlockShapes.S45, CollisionShape = BlockShapes.S46, OcclusionShape = BlockShapes.S47, VisualShape = BlockShapes.S45, SupportShape = BlockShapes.S46 };
+    private static readonly BlockStateInfo I17 = I0 with { BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S50, VisualShape = BlockShapes.S48, SupportShape = BlockShapes.S49 };
+    private static readonly BlockStateInfo I18 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S45, CollisionShape = BlockShapes.S46, OcclusionShape = BlockShapes.S47, VisualShape = BlockShapes.S45, SupportShape = BlockShapes.S46 };
+    private static readonly BlockStateInfo I19 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S48, CollisionShape = BlockShapes.S49, OcclusionShape = BlockShapes.S50, VisualShape = BlockShapes.S48, SupportShape = BlockShapes.S49 };
+    private static readonly BlockStateInfo I20 = I0 with { BlockShape = BlockShapes.S51, CollisionShape = BlockShapes.S52, OcclusionShape = BlockShapes.S53, VisualShape = BlockShapes.S51, SupportShape = BlockShapes.S52 };
+    private static readonly BlockStateInfo I21 = I0 with { BlockShape = BlockShapes.S54, CollisionShape = BlockShapes.S55, OcclusionShape = BlockShapes.S56, VisualShape = BlockShapes.S54, SupportShape = BlockShapes.S55 };
+    private static readonly BlockStateInfo I22 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S51, CollisionShape = BlockShapes.S52, OcclusionShape = BlockShapes.S53, VisualShape = BlockShapes.S51, SupportShape = BlockShapes.S52 };
+    private static readonly BlockStateInfo I23 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S54, CollisionShape = BlockShapes.S55, OcclusionShape = BlockShapes.S56, VisualShape = BlockShapes.S54, SupportShape = BlockShapes.S55 };
+    private static readonly BlockStateInfo I24 = I0 with { BlockShape = BlockShapes.S57, CollisionShape = BlockShapes.S58, OcclusionShape = BlockShapes.S59, VisualShape = BlockShapes.S57, SupportShape = BlockShapes.S58 };
+    private static readonly BlockStateInfo I25 = I0 with { BlockShape = BlockShapes.S60, CollisionShape = BlockShapes.S61, OcclusionShape = BlockShapes.S62, VisualShape = BlockShapes.S60, SupportShape = BlockShapes.S61 };
+    private static readonly BlockStateInfo I26 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S57, CollisionShape = BlockShapes.S58, OcclusionShape = BlockShapes.S59, VisualShape = BlockShapes.S57, SupportShape = BlockShapes.S58 };
+    private static readonly BlockStateInfo I27 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S60, CollisionShape = BlockShapes.S61, OcclusionShape = BlockShapes.S62, VisualShape = BlockShapes.S60, SupportShape = BlockShapes.S61 };
+    private static readonly BlockStateInfo I28 = I0 with { BlockShape = BlockShapes.S63, CollisionShape = BlockShapes.S64, OcclusionShape = BlockShapes.S65, VisualShape = BlockShapes.S63, SupportShape = BlockShapes.S64 };
+    private static readonly BlockStateInfo I29 = I0 with { BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S67, OcclusionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S67 };
+    private static readonly BlockStateInfo I30 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S63, CollisionShape = BlockShapes.S64, OcclusionShape = BlockShapes.S65, VisualShape = BlockShapes.S63, SupportShape = BlockShapes.S64 };
+    private static readonly BlockStateInfo I31 = I0 with { LightDampening = 0, Flammable = true, Fluid = null, BlockShape = BlockShapes.S66, CollisionShape = BlockShapes.S67, OcclusionShape = BlockShapes.S66, VisualShape = BlockShapes.S66, SupportShape = BlockShapes.S67 };
+    private static readonly BlockStateInfo[] States = [
+        I0, I1, I2, I3, I4, I5, I6, I7, I8, I9, I10, I11, I12, I13, I14, I15, I16, I17, I18, I19, I20, I21, I22, I23, I24, I25, I26, I27, I28, I29, I30, I31
+    ];
+
+    public BlockStateInfo StateInfo => States[StateId - 15715];
+
+    public BlockInfo Info => Data;
+    public float ExplosionResistance => Data.ExplosionResistance;
+    public float Friction => Data.Friction;
+    public float SpeedFactor => Data.SpeedFactor;
+    public float JumpFactor => Data.JumpFactor;
+    public float BounceRestitution => Data.BounceRestitution;
+    public float FallDistanceReduction => Data.FallDistanceReduction;
+    public bool Gravity => Data.Gravity;
+    public string TranslationKey => Data.TranslationKey;
+    public Identifier? BlockEntity => Data.BlockEntity;
+    public Identifier? Item => Data.Item;
+    public Identifier? LootTable => Data.LootTable;
+    public (int Min, int Max)? Experience => Data.Experience;
+
+    public float Hardness => StateInfo.Hardness;
+    public bool Solid => StateInfo.Solid;
+    public bool Liquid => StateInfo.Liquid;
+    public bool Air => StateInfo.Air;
+    public bool Occludes => StateInfo.Occludes;
+    public bool RequiresTool => StateInfo.RequiresTool;
+    public int LightEmission => StateInfo.LightEmission;
+    public int LightDampening => StateInfo.LightDampening;
+    public bool Replaceable => StateInfo.Replaceable;
+    public string SoundType => StateInfo.SoundType;
+    public ICollisionBox BlockShape => StateInfo.BlockShape;
+    public ICollisionBox CollisionShape => StateInfo.CollisionShape;
+    public ICollisionBox OcclusionShape => StateInfo.OcclusionShape;
+    public ICollisionBox InteractionShape => StateInfo.InteractionShape;
+    public ICollisionBox VisualShape => StateInfo.VisualShape;
+    public ICollisionBox SupportShape => StateInfo.SupportShape;
+    public bool RedstoneConductor => StateInfo.RedstoneConductor;
+    public bool SignalSource => StateInfo.SignalSource;
+    public bool Flammable => StateInfo.Flammable;
+    public PushReaction PushReaction => StateInfo.PushReaction;
+    public int MapColorId => StateInfo.MapColorId;
+    public bool CanRespawnIn => StateInfo.CanRespawnIn;
+    public bool RandomlyTicking => StateInfo.RandomlyTicking;
+    public bool Suffocating => StateInfo.Suffocating;
+    public bool ViewBlocking => StateInfo.ViewBlocking;
+    public bool ViewBlockingNearPlane => StateInfo.ViewBlockingNearPlane;
+    public bool SpawnTerrainParticles => StateInfo.SpawnTerrainParticles;
+    public bool PathfindableLand => StateInfo.PathfindableLand;
+    public bool PathfindableWater => StateInfo.PathfindableWater;
+    public bool PathfindableAir => StateInfo.PathfindableAir;
+    public NoteBlockInstrument Instrument => StateInfo.Instrument;
+    public Identifier? Fluid => StateInfo.Fluid;
+
+    public IBlock WithWaterlogged(bool waterlogged) => this with { Waterlogged = waterlogged };
+
+    public bool HasFace(BlockFace face) => face is BlockFace.NegZ or BlockFace.PosZ or BlockFace.NegX or BlockFace.PosX;
+
+    public bool Connected(BlockFace face) => face switch {
+        BlockFace.NegZ => North,
+        BlockFace.PosZ => South,
+        BlockFace.NegX => West,
+        BlockFace.PosX => East,
+        _ => false
+    };
+
+    public IBlock WithConnection(BlockFace face, bool connected) => face switch {
+        BlockFace.NegZ => this with { North = connected },
+        BlockFace.PosZ => this with { South = connected },
+        BlockFace.NegX => this with { West = connected },
+        BlockFace.PosX => this with { East = connected },
+        _ => this
+    };
 
 
     public uint StateId {
@@ -46,44 +125,44 @@ public record JungleFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13634,
-                                false => 13635,
+                                true => 15715,
+                                false => 15716,
                             },
                             false => West switch {
-                                true => 13636,
-                                false => 13637,
+                                true => 15717,
+                                false => 15718,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13638,
-                                false => 13639,
+                                true => 15719,
+                                false => 15720,
                             },
                             false => West switch {
-                                true => 13640,
-                                false => 13641,
+                                true => 15721,
+                                false => 15722,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13642,
-                                false => 13643,
+                                true => 15723,
+                                false => 15724,
                             },
                             false => West switch {
-                                true => 13644,
-                                false => 13645,
+                                true => 15725,
+                                false => 15726,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13646,
-                                false => 13647,
+                                true => 15727,
+                                false => 15728,
                             },
                             false => West switch {
-                                true => 13648,
-                                false => 13649,
+                                true => 15729,
+                                false => 15730,
                             },
                         },
                     },
@@ -92,44 +171,44 @@ public record JungleFenceBlock(Identifier Identifier, bool East, bool North, boo
                     true => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13650,
-                                false => 13651,
+                                true => 15731,
+                                false => 15732,
                             },
                             false => West switch {
-                                true => 13652,
-                                false => 13653,
+                                true => 15733,
+                                false => 15734,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13654,
-                                false => 13655,
+                                true => 15735,
+                                false => 15736,
                             },
                             false => West switch {
-                                true => 13656,
-                                false => 13657,
+                                true => 15737,
+                                false => 15738,
                             },
                         },
                     },
                     false => South switch {
                         true => Waterlogged switch {
                             true => West switch {
-                                true => 13658,
-                                false => 13659,
+                                true => 15739,
+                                false => 15740,
                             },
                             false => West switch {
-                                true => 13660,
-                                false => 13661,
+                                true => 15741,
+                                false => 15742,
                             },
                         },
                         false => Waterlogged switch {
                             true => West switch {
-                                true => 13662,
-                                false => 13663,
+                                true => 15743,
+                                false => 15744,
                             },
                             false => West switch {
-                                true => 13664,
-                                false => 13665,
+                                true => 15745,
+                                false => 15746,
                             },
                         },
                     },
@@ -140,38 +219,38 @@ public record JungleFenceBlock(Identifier Identifier, bool East, bool North, boo
     
     public IBlock WithState(uint state) {
         return state switch {
-            13634 => new JungleFenceBlock(Identifier, true, true, true, true, true),
-            13635 => new JungleFenceBlock(Identifier, true, true, true, true, false),
-            13636 => new JungleFenceBlock(Identifier, true, true, true, false, true),
-            13637 => new JungleFenceBlock(Identifier, true, true, true, false, false),
-            13638 => new JungleFenceBlock(Identifier, true, true, false, true, true),
-            13639 => new JungleFenceBlock(Identifier, true, true, false, true, false),
-            13640 => new JungleFenceBlock(Identifier, true, true, false, false, true),
-            13641 => new JungleFenceBlock(Identifier, true, true, false, false, false),
-            13642 => new JungleFenceBlock(Identifier, true, false, true, true, true),
-            13643 => new JungleFenceBlock(Identifier, true, false, true, true, false),
-            13644 => new JungleFenceBlock(Identifier, true, false, true, false, true),
-            13645 => new JungleFenceBlock(Identifier, true, false, true, false, false),
-            13646 => new JungleFenceBlock(Identifier, true, false, false, true, true),
-            13647 => new JungleFenceBlock(Identifier, true, false, false, true, false),
-            13648 => new JungleFenceBlock(Identifier, true, false, false, false, true),
-            13649 => new JungleFenceBlock(Identifier, true, false, false, false, false),
-            13650 => new JungleFenceBlock(Identifier, false, true, true, true, true),
-            13651 => new JungleFenceBlock(Identifier, false, true, true, true, false),
-            13652 => new JungleFenceBlock(Identifier, false, true, true, false, true),
-            13653 => new JungleFenceBlock(Identifier, false, true, true, false, false),
-            13654 => new JungleFenceBlock(Identifier, false, true, false, true, true),
-            13655 => new JungleFenceBlock(Identifier, false, true, false, true, false),
-            13656 => new JungleFenceBlock(Identifier, false, true, false, false, true),
-            13657 => new JungleFenceBlock(Identifier, false, true, false, false, false),
-            13658 => new JungleFenceBlock(Identifier, false, false, true, true, true),
-            13659 => new JungleFenceBlock(Identifier, false, false, true, true, false),
-            13660 => new JungleFenceBlock(Identifier, false, false, true, false, true),
-            13661 => new JungleFenceBlock(Identifier, false, false, true, false, false),
-            13662 => new JungleFenceBlock(Identifier, false, false, false, true, true),
-            13663 => new JungleFenceBlock(Identifier, false, false, false, true, false),
-            13664 => new JungleFenceBlock(Identifier, false, false, false, false, true),
-            13665 => new JungleFenceBlock(Identifier, false, false, false, false, false),
+            15715 => new JungleFenceBlock(Identifier, true, true, true, true, true),
+            15716 => new JungleFenceBlock(Identifier, true, true, true, true, false),
+            15717 => new JungleFenceBlock(Identifier, true, true, true, false, true),
+            15718 => new JungleFenceBlock(Identifier, true, true, true, false, false),
+            15719 => new JungleFenceBlock(Identifier, true, true, false, true, true),
+            15720 => new JungleFenceBlock(Identifier, true, true, false, true, false),
+            15721 => new JungleFenceBlock(Identifier, true, true, false, false, true),
+            15722 => new JungleFenceBlock(Identifier, true, true, false, false, false),
+            15723 => new JungleFenceBlock(Identifier, true, false, true, true, true),
+            15724 => new JungleFenceBlock(Identifier, true, false, true, true, false),
+            15725 => new JungleFenceBlock(Identifier, true, false, true, false, true),
+            15726 => new JungleFenceBlock(Identifier, true, false, true, false, false),
+            15727 => new JungleFenceBlock(Identifier, true, false, false, true, true),
+            15728 => new JungleFenceBlock(Identifier, true, false, false, true, false),
+            15729 => new JungleFenceBlock(Identifier, true, false, false, false, true),
+            15730 => new JungleFenceBlock(Identifier, true, false, false, false, false),
+            15731 => new JungleFenceBlock(Identifier, false, true, true, true, true),
+            15732 => new JungleFenceBlock(Identifier, false, true, true, true, false),
+            15733 => new JungleFenceBlock(Identifier, false, true, true, false, true),
+            15734 => new JungleFenceBlock(Identifier, false, true, true, false, false),
+            15735 => new JungleFenceBlock(Identifier, false, true, false, true, true),
+            15736 => new JungleFenceBlock(Identifier, false, true, false, true, false),
+            15737 => new JungleFenceBlock(Identifier, false, true, false, false, true),
+            15738 => new JungleFenceBlock(Identifier, false, true, false, false, false),
+            15739 => new JungleFenceBlock(Identifier, false, false, true, true, true),
+            15740 => new JungleFenceBlock(Identifier, false, false, true, true, false),
+            15741 => new JungleFenceBlock(Identifier, false, false, true, false, true),
+            15742 => new JungleFenceBlock(Identifier, false, false, true, false, false),
+            15743 => new JungleFenceBlock(Identifier, false, false, false, true, true),
+            15744 => new JungleFenceBlock(Identifier, false, false, false, true, false),
+            15745 => new JungleFenceBlock(Identifier, false, false, false, false, true),
+            15746 => new JungleFenceBlock(Identifier, false, false, false, false, false),
             _ => throw new ArgumentOutOfRangeException(nameof(state), state, "Unknown state id.")
         };
     }

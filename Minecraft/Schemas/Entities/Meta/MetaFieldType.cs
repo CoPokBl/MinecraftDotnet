@@ -1,5 +1,15 @@
 namespace Minecraft.Schemas.Entities.Meta;
 
+/// <summary>
+/// Ids are positions in vanilla's <c>EntityDataSerializers</c> registry, which is filled in
+/// the order its <c>registerSerializer</c> calls run:
+/// <code>
+/// javap -p -c -constants -cp versions/&lt;version&gt;/server-&lt;version&gt;.jar \
+///     net.minecraft.network.syncher.EntityDataSerializers
+/// </code>
+/// A serializer added in the middle shifts everything after it, so re-derive the whole list on
+/// a version bump rather than appending.
+/// </summary>
 public enum MetaFieldType {
     Byte = 0,
     VarInt = 1,
@@ -23,21 +33,26 @@ public enum MetaFieldType {
     OptionalVarInt = 19,
     Pose = 20,
     CatVariant = 21,
-    CowVariant = 22,
-    WolfVariant = 23,
-    WolfSoundVariant = 24,
-    FrogVariant = 25,
-    PigVariant = 26,
-    ChickenVariant = 27,
-    ZombieNautilusVariant = 28,
-    OptionalGlobalPosition = 29,
-    PaintingVariant = 30,
-    SnifferState = 31,
-    ArmadilloState = 32,
-    CopperGolemState = 33,
-    WeatheringCopperState = 34,
-    Vector3 = 35,
-    Quaternion = 36,
-    ResolvableProfile = 37,
-    HumanoidArm = 38
+    CatSoundVariant = 22,
+    CowVariant = 23,
+    CowSoundVariant = 24,
+    WolfVariant = 25,
+    WolfSoundVariant = 26,
+    FrogVariant = 27,
+    PigVariant = 28,
+    PigSoundVariant = 29,
+    ChickenVariant = 30,
+    ChickenSoundVariant = 31,
+    ZombieNautilusVariant = 32,
+    OptionalGlobalPosition = 33,
+    PaintingVariant = 34,
+    SnifferState = 35,
+    ArmadilloState = 36,
+    CopperGolemState = 37,
+    WeatheringCopperState = 38,
+    Vector3 = 39,
+    Quaternion = 40,
+    ResolvableProfile = 41,
+    HumanoidArm = 42,
+    DyeColor = 43
 }
