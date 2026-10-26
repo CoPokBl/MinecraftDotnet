@@ -99,7 +99,7 @@ public sealed unsafe class CameraOverlays : IDisposable {
     /// <summary><c>Hud.tick</c>'s <c>updateVignetteBrightness</c>: the vignette eases a hundredth of the way towards the dark at the camera's eyes.</summary>
     public void Tick(ClientEntity camera, ClientLevel level, int skyDarkening) {
         int x = (int)Math.Floor(camera.Position.X), y = (int)Math.Floor(camera.Position.Y + camera.CurrentEyeHeight), z = (int)Math.Floor(camera.Position.Z);
-        float levelBrightness = Lighting.Brightness(level.DimensionType.AmbientLight, level.MaxLocalRawBrightness(x, y, z, skyDarkening));
+        float levelBrightness = ClientLib.World.Lightmap.Brightness(level.DimensionType.AmbientLight, level.MaxLocalRawBrightness(x, y, z, skyDarkening));
         float brightness = Math.Clamp(1.0F - levelBrightness, 0.0F, 1.0F);
         _vignetteBrightness += (brightness - _vignetteBrightness) * 0.01F;
     }

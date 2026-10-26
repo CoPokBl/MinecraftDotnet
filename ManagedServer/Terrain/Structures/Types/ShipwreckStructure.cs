@@ -76,21 +76,30 @@ public sealed class ShipwreckStructure(Structure.StructureSettings settings,
         Identifier[] options = isBeached ? Beached : Ocean;
         Identifier chosen = options[random.NextInt(options.Length)];
 
-        // How much further than half its height a beached wreck is buried. Vanilla draws this from
-        // the decoration random of whichever chunk settles the wreck, inside postProcess; a start
-        // here is replayed by every chunk it reaches, so it is drawn once, from the start's own
-        // sequence, and every one of those chunks buries the wreck by the same amount.
-        int buried = isBeached ? random.NextInt(3) : 0;
-
-        builder.AddPiece(new ShipwreckPiece(templates, chosen, position, rotation, isBeached, buried));
+        builder.AddPiece(new ShipwreckPiece(templates, chosen, position, rotation, isBeached));
     }
 
     /// <summary>One wreck.</summary>
     public sealed class ShipwreckPiece(StructureTemplateManager templates, Identifier template,
-        Vec3<int> position, BlockRotation rotation, bool isBeached, int buried)
+        Vec3<int> position, BlockRotation rotation, bool isBeached)
         : TemplateStructurePiece(0, templates, template, MakeSettings(rotation), position) {
 
+        private readonly int _sourceChunkX = position.X >> 4;
+        private readonly int _sourceChunkZ = position.Z >> 4;
+
+        private readonly Lock _settle = new();
+        private bool _heightAdjusted;
+
         public bool IsBeached => isBeached;
+
+        /// <summary>
+        /// A template over 32 blocks wide or tall is left where it was laid out. That is the only
+        /// thing standing between the settle and a footprint reaching outside the level's three by
+        /// three, so it is transcribed rather than dropped for being unreachable: no vanilla wreck is
+        /// bigger than nine by twenty-eight, and a pack shipping one would otherwise read the columns
+        /// past the region as the bottom of the world.
+        /// </summary>
+        private bool TooBigToFitInWorldGenRegion => Template.Size.X > 32 || Template.Size.Y > 32;
 
         private static StructurePlaceSettings MakeSettings(BlockRotation rotation) {
             return new StructurePlaceSettings {
@@ -101,7 +110,8 @@ public sealed class ShipwreckStructure(Structure.StructureSettings settings,
         }
 
         /// <summary>
-        /// Drops the wreck onto the mean height under it, or buries a beached one to half its depth.
+        /// Drops the wreck onto the mean height under it, or buries a beached one to half its depth
+        /// and up to two blocks more.
         /// </summary>
         /// <remarks>
         /// The footprint walked is the template's <b>own</b> size laid out from the template position,
@@ -110,18 +120,35 @@ public sealed class ShipwreckStructure(Structure.StructureSettings settings,
         /// <p/>
         /// A beached wreck measures the <b>lowest</b> column rather than the mean, which is what stops
         /// the end of one on a slope hanging in the air.
-        /// <p/>
-        /// A template over 32 blocks wide or tall is left where it was laid out. That is the only
-        /// thing standing between the walk and a footprint reaching outside the level's three by
-        /// three, so it is transcribed rather than dropped for being unreachable: no vanilla wreck is
-        /// bigger than nine by twenty-eight, and a pack shipping one would otherwise read the columns
-        /// past the region as the bottom of the world.
         /// </remarks>
-        protected override Vec3<int> SettleAgainstTerrain(IFeatureLevel level) {
-            if (Template.Size.X > 32 || Template.Size.Y > 32) {
-                return TemplatePosition;
+        public override void SettleOnce(IFeatureLevel level, Func<RandomSource> sourceRandom) {
+            lock (_settle) {
+                if (_heightAdjusted || TooBigToFitInWorldGenRegion) {
+                    return;
+                }
+
+                TemplatePosition = WithHeight(SettledHeight(level, sourceRandom));
+                _heightAdjusted = true;
+            }
+        }
+
+        /// <summary>
+        /// Takes the burial draw where upstream does: only the chunk deciding the height takes it,
+        /// and that is always the source chunk here.
+        /// </summary>
+        public override void PostProcess(IFeatureLevel level, RandomSource random,
+            BoundingBox chunkBox, int chunkX, int chunkZ, Vec3<int> referencePos) {
+
+            if (isBeached && !TooBigToFitInWorldGenRegion && chunkX == _sourceChunkX
+                && chunkZ == _sourceChunkZ) {
+
+                random.NextInt(3);
             }
 
+            base.PostProcess(level, random, chunkBox, chunkX, chunkZ, referencePos);
+        }
+
+        private int SettledHeight(IFeatureLevel level, Func<RandomSource> sourceRandom) {
             HeightmapType heightmap = isBeached
                 ? HeightmapType.WorldSurfaceWorldgen
                 : HeightmapType.OceanFloorWorldgen;
@@ -129,7 +156,7 @@ public sealed class ShipwreckStructure(Structure.StructureSettings settings,
             int columns = Template.Size.X * Template.Size.Z;
 
             if (columns == 0) {
-                return WithHeight(level.GetHeight(heightmap, TemplatePosition.X, TemplatePosition.Z));
+                return level.GetHeight(heightmap, TemplatePosition.X, TemplatePosition.Z);
             }
 
             int lowest = level.MaxY;
@@ -144,9 +171,9 @@ public sealed class ShipwreckStructure(Structure.StructureSettings settings,
                 }
             }
 
-            return WithHeight(isBeached
-                ? lowest - Template.Size.Y / 2 - buried
-                : total / columns);
+            return isBeached
+                ? lowest - Template.Size.Y / 2 - sourceRandom().NextInt(3)
+                : total / columns;
         }
 
         private Vec3<int> WithHeight(int y) {

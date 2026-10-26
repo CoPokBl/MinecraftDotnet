@@ -2,7 +2,7 @@
 # Every structure start the real server laid out over a spread of the world, as the fixture
 # StructureLayoutConformanceTest replays.
 #
-#   MCDOTNET_ACCEPT_EULA=1 Conformance/structurelayout.sh [version]
+#   MCDOTNET_ACCEPT_EULA=1 Conformance/structurelayout.sh [version] [overworld|nether|end]
 #
 # Only needed when the fixture is being regenerated, ie. on a version bump. The test itself just reads
 # the committed file. Needs the server jar the CodeGen project downloads, so run CodeGen for the
@@ -23,10 +23,10 @@
 set -euo pipefail
 
 version="${1:-26.3}"
+dimension="${2:-overworld}"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 jars="$repo/CodeGen/bin/Debug/net10.0"
 work="${TMPDIR:-/tmp}/mcdotnet-conformance/structurelayout"
-fixture="$repo/ManagedServer.Testing/Terrain/vanilla-structures.txt.gz"
 
 # The seed every worldgen test in the tree uses, so a start can be looked at with TestServer.
 seed=1234567890
@@ -104,6 +104,69 @@ clusters=(
     "3100:-2200"
 )
 
+# The nether's: one per biome, the chunks FindStructureClusters.PrintForRealStarts names for each of
+# its four structures with DIMENSION=nether, and a spread further out, since a fortress or a bastion
+# is one chunk in about seven hundred.
+nether_clusters=(
+    "0:0"        # nether wastes
+    "-64:-22"    # crimson forest
+    "-64:-54"    # warped forest
+    "-64:-4"     # soul sand valley
+    "-64:-64"    # basalt deltas
+    "10:0"       # fortress
+    "17:-21"     # fortress
+    "-23:13"     # bastion remnant
+    "31:-5"      # bastion remnant
+    "-10:10"     # nether fossil
+    "22:6"       # ruined portal
+    "18:-27"     # ruined portal
+    "200:-150"
+    "-330:260"
+    "480:410"
+    "-700:-520"
+)
+
+# The end's: the chunks FindStructureClusters.PrintForRealStarts names for an end city with
+# DIMENSION=end, the central island, where none may start, and a spread further out over the outer
+# islands, where most candidate chunks fall on void or barrens and decline.
+end_clusters=(
+    "0:0"
+    "-56:-54"
+    "-56:43"
+    "43:-74"
+    "-75:-16"
+    "-56:83"
+    "4:83"
+    "65:83"
+    "-13:85"
+    "150:-120"
+    "-230:170"
+    "310:290"
+)
+
+# The command prefix that runs a forceload or a load check in the dimension, and the region directory
+# the server saves it to.
+case "$dimension" in
+    overworld)
+        fixture="$repo/ManagedServer.Testing/Terrain/vanilla-structures.txt.gz"
+        in_dimension=""
+        regions="world/dimensions/minecraft/overworld/region"
+        ;;
+    nether)
+        fixture="$repo/ManagedServer.Testing/Terrain/vanilla-structures-nether.txt.gz"
+        in_dimension="execute in minecraft:the_nether run "
+        regions="world/dimensions/minecraft/the_nether/region"
+        clusters=("${nether_clusters[@]}")
+        ;;
+    end)
+        fixture="$repo/ManagedServer.Testing/Terrain/vanilla-structures-end.txt.gz"
+        in_dimension="execute in minecraft:the_end run "
+        regions="world/dimensions/minecraft/the_end/region"
+        clusters=("${end_clusters[@]}")
+        ;;
+    *) echo "No dimension named $dimension: overworld, nether or end." >&2; exit 2 ;;
+esac
+
 # How far either side of a cluster's centre to forceload, and how far to read starts off it. Eight is
 # the structure_references range, so a forceloaded chunk drags everything within eight to
 # structure_starts; one less than that is the margin that keeps a read chunk inside what was written.
@@ -177,7 +240,7 @@ for cluster in "${clusters[@]}"; do
     to_z=$(( (chunk_z + load) * 16 + 15 ))
 
     echo "Forceloading around $chunk_x,$chunk_z"
-    echo "forceload add $from_x $from_z $to_x $to_z" >&3
+    echo "${in_dimension}forceload add $from_x $from_z $to_x $to_z" >&3
 
     areas+=("$(( chunk_x - read_radius )):$(( chunk_z - read_radius )):$(( read_radius * 2 + 1 ))")
 done
@@ -191,7 +254,7 @@ for attempt in $(seq 1 120); do
         IFS=: read -r chunk_x chunk_z <<< "$cluster"
         corner_x=$(( (chunk_x + load) * 16 + 15 ))
         corner_z=$(( (chunk_z + load) * 16 + 15 ))
-        echo "execute if loaded $corner_x 64 $corner_z run say LAYOUT-$chunk_x-$chunk_z-$attempt" >&3
+        echo "${in_dimension}execute if loaded $corner_x 64 $corner_z run say LAYOUT-$chunk_x-$chunk_z-$attempt" >&3
     done
 
     sleep 5
@@ -216,4 +279,4 @@ cp="$server_jar:$(find "$jars/libraries" -name '*.jar' | tr '\n' ':')"
 javac -nowarn -cp "$cp" -d "$work/classes" "$repo/Conformance/StructureLayoutHarness.java"
 
 java -cp "$cp:$work/classes" StructureLayoutHarness \
-    "$work/world/dimensions/minecraft/overworld/region" "$fixture" "$seed" "${areas[@]}"
+    "$work/$regions" "$fixture" "$seed" "${areas[@]}"

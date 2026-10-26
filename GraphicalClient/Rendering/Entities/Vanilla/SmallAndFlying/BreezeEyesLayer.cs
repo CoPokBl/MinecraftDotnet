@@ -15,7 +15,7 @@ public sealed class BreezeEyesLayer : RenderLayer<BreezeRenderState, BreezeModel
             return;
         }
         _model.SetupAnim(state);
-        // Full sky and block light is the stand-in for entityTranslucentEmissive's unlit blending.
-        _model.RenderToBuffer(pose, context.Batch, new ModelDrawState(texture, 0xFFFFFFFF, 15, 15, 0) { NoOutline = true });
+        // RenderTypes.breezeEyes is entityTranslucentEmissive without an outline: shaded by direction, not by the lightmap.
+        _model.RenderToBuffer(pose, context.TranslucentBatch, new ModelDrawState(texture, 0xFFFFFFFF, 15, 15, 0) { NoOutline = true, Emissive = true });
     }
 }

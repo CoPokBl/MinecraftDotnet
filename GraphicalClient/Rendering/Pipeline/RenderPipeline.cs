@@ -62,6 +62,28 @@ public struct FrameUniforms {
 
     /// <summary>The near and far planes of <see cref="Projection"/>, then 0 and 0.</summary>
     public Vector4 ClipPlanes;
+
+    /// <summary>The dimension's <c>CardinalLighting</c>: the shade of a face looking down, up, north and south.</summary>
+    public Vector4 CardinalLight0;
+
+    /// <summary>The same for west and east, then 0 and 0.</summary>
+    public Vector4 CardinalLight1;
+
+    /// <summary><c>Lighting.Entry.LEVEL</c>'s two light directions, unit vectors in world space, that entities are shaded by.</summary>
+    public Vector4 DiffuseLight0;
+    public Vector4 DiffuseLight1;
+
+    /// <summary><c>FogData</c>: the environmental start and end, then the render distance start and end, in blocks.</summary>
+    public Vector4 FogDistances;
+
+    /// <summary><c>FogData</c>'s sky end and cloud end, then 0 and 0.</summary>
+    public Vector4 FogSkyClouds;
+
+    /// <summary>The <c>visual/sunrise_sunset_color</c> attribute, RGBA.</summary>
+    public Vector4 SunriseColour;
+
+    /// <summary>The <c>visual/sun_angle</c>, <c>moon_angle</c> and <c>star_angle</c> attributes in degrees, and <c>star_brightness</c>.</summary>
+    public Vector4 Celestial;
 }
 
 /// <summary>What a geometry pass asks the client to draw, with the pass's program bound.</summary>
@@ -125,7 +147,8 @@ public sealed unsafe class RenderPipeline : IDisposable {
         ["alpha"] = (BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha, BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha),
         ["additive"] = (BlendingFactor.One, BlendingFactor.One, BlendingFactor.One, BlendingFactor.One),
         ["premultiplied"] = (BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha, BlendingFactor.One, BlendingFactor.OneMinusSrcAlpha),
-        ["multiply"] = (BlendingFactor.DstColor, BlendingFactor.Zero, BlendingFactor.DstColor, BlendingFactor.Zero)
+        ["multiply"] = (BlendingFactor.DstColor, BlendingFactor.Zero, BlendingFactor.DstColor, BlendingFactor.Zero),
+        ["doubleMultiply"] = (BlendingFactor.DstColor, BlendingFactor.SrcColor, BlendingFactor.One, BlendingFactor.Zero)
     };
 
     private const int TimerFrames = 4;
@@ -144,6 +167,9 @@ public sealed unsafe class RenderPipeline : IDisposable {
     private readonly List<CompiledPass> _passes = [];
     private readonly uint _frameBuffer;
     private readonly uint _emptyVao;
+
+    /// <summary>The sampler the terrain passes read the block atlas through, for a pack whose <c>terrainFilter</c> is linear; 0 otherwise.</summary>
+    private readonly uint _terrainSampler;
     private int _screenWidth = -1, _screenHeight = -1;
 
     public ShaderPack Pack { get; }
@@ -154,6 +180,9 @@ public sealed unsafe class RenderPipeline : IDisposable {
     public RenderPipeline(GL gl, ShaderPack pack) {
         _gl = gl;
         Pack = pack;
+        if (pack.TerrainFilter is not ("nearest" or "linear")) {
+            throw new InvalidDataException($"Unknown terrainFilter {pack.TerrainFilter}");
+        }
         foreach (TargetDefinition target in pack.Targets) {
             if (target.Name == "screen") {
                 throw new InvalidDataException("A target cannot be called screen");
@@ -192,6 +221,10 @@ public sealed unsafe class RenderPipeline : IDisposable {
         _frameBuffer = gl.CreateBuffer();
         gl.NamedBufferStorage(_frameBuffer, (nuint)sizeof(FrameUniforms), null, BufferStorageMask.DynamicStorageBit);
         _emptyVao = gl.CreateVertexArray();
+        if (pack.TerrainFilter == "linear") {
+            _terrainSampler = gl.CreateSampler();
+            Configure((name, value) => _gl.SamplerParameter(_terrainSampler, (SamplerParameterI)name, value), "linear", true, TextureWrapMode.Repeat, false);
+        }
     }
 
     /// <summary>Filtering, wrapping and depth comparison, set through a texture's or a sampler's parameters.</summary>
@@ -478,6 +511,10 @@ public sealed unsafe class RenderPipeline : IDisposable {
         ApplyState(pass);
         pass.Program!.Use();
         UnbindSamplers();
+        if (_terrainSampler != 0 && definition.Geometry?.StartsWith("terrain") == true) {
+            _gl.BindSampler(0, _terrainSampler);
+            _boundSamplers.Add(0);
+        }
         for (int i = 0; i < pass.Inputs.Length; i++) {
             Input input = pass.Inputs[i];
             uint unit = (uint)(FirstInputUnit + i);
@@ -622,5 +659,8 @@ public sealed unsafe class RenderPipeline : IDisposable {
         }
         _gl.DeleteBuffer(_frameBuffer);
         _gl.DeleteVertexArray(_emptyVao);
+        if (_terrainSampler != 0) {
+            _gl.DeleteSampler(_terrainSampler);
+        }
     }
 }

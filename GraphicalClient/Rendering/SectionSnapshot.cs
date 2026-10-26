@@ -3,11 +3,17 @@ using ClientLib.World;
 namespace GraphicalClient.Rendering;
 
 /// <summary>
-/// The blocks and light of one section and a one block border around it, captured on the game thread
+/// The blocks and light of one section and a <see cref="Border"/> around it, captured on the game thread
 /// and copied out on a worker, so the worker can mesh it without touching the level.
 /// </summary>
 public sealed class SectionSnapshot {
-    public const int Width = 18;
+    /// <summary>
+    /// Two blocks, because smooth light for a face on the block's boundary asks whether the corner
+    /// cells one step further out along the face direction let light through.
+    /// </summary>
+    public const int Border = 2;
+
+    public const int Width = 16 + 2 * Border;
     public const int Volume = Width * Width * Width;
 
     /// <summary>What <see cref="Index"/> moves by for one step toward each <see cref="Assets.Face"/>.</summary>
@@ -39,7 +45,7 @@ public sealed class SectionSnapshot {
     /// <summary>The shader pack's material numbers, shared by every snapshot taken while that pack is loaded.</summary>
     public Pipeline.BlockMaterials Materials = Pipeline.BlockMaterials.None;
 
-    public static int Index(int x, int y, int z) => (y + 1) * Width * Width + (z + 1) * Width + (x + 1);
+    public static int Index(int x, int y, int z) => (y + Border) * Width * Width + (z + Border) * Width + (x + Border);
 
     private static int Nibble(byte[] layer, int index) => layer[index >> 1] >> ((index & 1) << 2) & 15;
 
@@ -98,12 +104,12 @@ public sealed class SectionSnapshot {
         }
     }
 
-    /// <summary>Copies the captured section and its one block border, resolving vanilla's light storage rules as it goes.</summary>
+    /// <summary>Copies the captured section and its border, resolving vanilla's light storage rules as it goes.</summary>
     public void Fill() {
         for (int cx = -1; cx <= 1; cx++) {
             for (int cz = -1; cz <= 1; cz++) {
-                int x0 = cx < 0 ? 15 : 0, x1 = cx > 0 ? 0 : 15;
-                int z0 = cz < 0 ? 15 : 0, z1 = cz > 0 ? 0 : 15;
+                int x0 = cx < 0 ? 16 - Border : 0, x1 = cx > 0 ? Border - 1 : 15;
+                int z0 = cz < 0 ? 16 - Border : 0, z1 = cz > 0 ? Border - 1 : 15;
                 int count = x1 - x0 + 1;
                 for (int cy = -1; cy <= 1; cy++) {
                     int piece = Piece(cx, cy, cz);
@@ -111,7 +117,7 @@ public sealed class SectionSnapshot {
                     byte[]? blockLight = _blockLight[piece], skyLayer = _skyLight[piece];
                     bool skyBottomRow = _skyBottomRow[piece];
                     byte flatSky = _flatSky[piece];
-                    int y0 = cy < 0 ? 15 : 0, y1 = cy > 0 ? 0 : 15;
+                    int y0 = cy < 0 ? 16 - Border : 0, y1 = cy > 0 ? Border - 1 : 15;
                     for (int ly = y0; ly <= y1; ly++) {
                         int py = ly + cy * 16;
                         for (int lz = z0; lz <= z1; lz++) {

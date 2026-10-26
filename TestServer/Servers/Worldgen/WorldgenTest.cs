@@ -11,6 +11,7 @@ using ManagedServer.Terrain.Structures;
 using ManagedServer.Terrain.Structures.Templates;
 using ManagedServer.Viewables;
 using ManagedServer.Worlds;
+using Minecraft.Data.Blocks;
 using Minecraft.Data.Generated;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Chunks;
@@ -49,6 +50,12 @@ public static class WorldgenTest {
     /// </summary>
     private const int StructureSearchRings = 100;
 
+    /// <summary>The nether's <c>coordinate_scale</c>: a block there is eight in the overworld.</summary>
+    private const int NetherScale = 8;
+
+    /// <summary>How far from the scaled position <c>/nether</c> looks for somewhere to stand.</summary>
+    private const int NetherSpotRadius = 48;
+
     public static async Task Start() {
         // BasicsBundle so a player can log in, walk around and fly. Nothing about terrain generation
         // is in it, or in any bundle: the generator is given to the world below.
@@ -60,12 +67,13 @@ public static class WorldgenTest {
         server.ViewDistance = 32;
 
         // One generator per world, sharing a seed. They are different noise settings, so the same
-        // seed gives four different shapes over the same climate.
+        // seed gives five different shapes, the first three over the same climate.
         Dictionary<string, VanillaTerrainGenerator> generators = new() {
             ["overworld"] = VanillaTerrainGenerator.Overworld(VanillaPack.Source, Seed),
             ["amplified"] = VanillaTerrainGenerator.Amplified(VanillaPack.Source, Seed),
             ["large"] = VanillaTerrainGenerator.LargeBiomes(VanillaPack.Source, Seed),
-            ["nether"] = VanillaTerrainGenerator.Nether(VanillaPack.Source, Seed)
+            ["nether"] = VanillaTerrainGenerator.Nether(VanillaPack.Source, Seed),
+            ["end"] = VanillaTerrainGenerator.End(VanillaPack.Source, Seed)
         };
 
         Dictionary<string, World> worlds = [];
@@ -77,8 +85,11 @@ public static class WorldgenTest {
         foreach ((string name, VanillaTerrainGenerator generator) in generators) {
             generator.WithCarvers().WithFeatures().WithStructures();
 
-            World world = server.CreateWorld(generator.AsProvider(),
-                name == "nether" ? "minecraft:the_nether" : "minecraft:overworld");
+            World world = server.CreateWorld(generator.AsProvider(), name switch {
+                "nether" => "minecraft:the_nether",
+                "end" => "minecraft:the_end",
+                _ => "minecraft:overworld"
+            });
 
             worlds[name] = world;
             byWorld[world] = generator;
@@ -106,6 +117,16 @@ public static class WorldgenTest {
         // followed from the inside rather than dug into.
         server.Commands.Add(GameModeCommand("gmc", GameMode.Creative));
         server.Commands.Add(GameModeCommand("gmsp", GameMode.Spectator));
+
+        server.Commands.Add(new CommandBuilder("nether")
+            .WithDefaultSyntax((player, _) => GoToNether(player, worlds["nether"]), _ => true)
+            .Build());
+        server.Commands.Add(new CommandBuilder("end")
+            .WithDefaultSyntax((player, _) => GoToEnd(player, worlds["end"]), _ => true)
+            .Build());
+        server.Commands.Add(new CommandBuilder("overworld")
+            .WithDefaultSyntax((player, _) => GoToOverworld(player, worlds), _ => true)
+            .Build());
 
         server.Commands.Add(SearchCommand("tpbiome", byWorld, FindBiome,
             generator => generator.PossibleBiomes));
@@ -445,6 +466,116 @@ public static class WorldgenTest {
         });
     }
 
+    /// <summary>
+    /// <c>/nether</c>: into the nether at the overworld position scaled down, standing in a cavern.
+    /// </summary>
+    /// <remarks>
+    /// A place to stand rather than a height, because the nether has a bedrock roof at 127: the 200
+    /// every other world drops a player at is on top of it, looking at nothing. The search runs off the
+    /// tick thread since it has to generate the chunks it looks in.
+    /// </remarks>
+    private static void GoToNether(Player player, World nether) {
+        int scale = ReferenceEquals(player.World, nether) ? 1 : NetherScale;
+        int x = (int)Math.Floor(player.Position.X / scale);
+        int z = (int)Math.Floor(player.Position.Z / scale);
+        ServerScheduler scheduler = player.Server.Scheduler;
+
+        Tell(player, $"&7Looking for somewhere to stand near &f{x}, {z}&7 in the nether...");
+
+        Task.Run(async () => {
+            try {
+                Vec3<int>? spot = await FindNetherSpot(nether, x, z);
+
+                scheduler.ScheduleNextTick(() => {
+                    if (spot is not { } at) {
+                        Tell(player, $"&cNo open floor within {NetherSpotRadius} blocks of {x}, {z}.");
+                        return;
+                    }
+
+                    if (!ReferenceEquals(player.World, nether)) {
+                        player.SetWorld(nether);
+                    }
+
+                    player.Teleport(new Vec3<double>(at.X + 0.5, at.Y, at.Z + 0.5));
+                    Tell(player, $"&aIn the nether at &f{at.X}, {at.Y}, {at.Z}&a. "
+                        + "&f/overworld&7 goes back.");
+                });
+            } catch (Exception error) {
+                Console.WriteLine($"/nether failed: {error}");
+                scheduler.ScheduleNextTick(() => Tell(player, $"&c/nether failed: {error.Message}"));
+            }
+        });
+    }
+
+    /// <summary>
+    /// The nearest column with open floor above the lava sea: a block to stand on that is not lava or
+    /// fire, and three blocks of air over it so the view is of a cavern rather than a crawlspace.
+    /// </summary>
+    /// <remarks>
+    /// Outward in square rings and upward from the sea within a column, so the first hit is a floor
+    /// near where the player asked rather than a ledge under the roof.
+    /// </remarks>
+    private static async Task<Vec3<int>?> FindNetherSpot(World nether, int centreX, int centreZ) {
+        for (int ring = 0; ring <= NetherSpotRadius; ring++) {
+            for (int x = centreX - ring; x <= centreX + ring; x++) {
+                for (int z = centreZ - ring; z <= centreZ + ring; z++) {
+                    if (Math.Max(Math.Abs(x - centreX), Math.Abs(z - centreZ)) != ring) {
+                        continue;
+                    }
+
+                    await nether.LoadChunk(new Vec2<int>(x >> 4, z >> 4));
+
+                    for (int y = 32; y < 124; y++) {
+                        IBlock floor = nether.GetBlock(new Vec3<int>(x, y - 1, z));
+                        if (!floor.Solid || floor.Identifier == Block.MagmaBlock.Identifier) {
+                            continue;
+                        }
+
+                        if (nether.GetBlock(new Vec3<int>(x, y, z)).Air
+                            && nether.GetBlock(new Vec3<int>(x, y + 1, z)).Air
+                            && nether.GetBlock(new Vec3<int>(x, y + 2, z)).Air) {
+
+                            return new Vec3<int>(x, y, z);
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// <c>/end</c>: onto the obsidian platform at 100 49 0, which is where vanilla puts an arriving
+    /// player and where the end's feature pass builds it.
+    /// </summary>
+    private static void GoToEnd(Player player, World end) {
+        if (!ReferenceEquals(player.World, end)) {
+            player.SetWorld(end);
+        }
+
+        player.Teleport(new Vec3<double>(100.5, 49, 0.5));
+        Tell(player, "&aOn the end's arrival platform. The spikes are around 0, 0.");
+    }
+
+    /// <summary>
+    /// <c>/overworld</c>: back out at the nether position scaled up, high above the terrain as every
+    /// other world is entered.
+    /// </summary>
+    private static void GoToOverworld(Player player, Dictionary<string, World> worlds) {
+        World overworld = worlds["overworld"];
+        bool scaled = ReferenceEquals(player.World, worlds["nether"]);
+        double x = player.Position.X * (scaled ? NetherScale : 1);
+        double z = player.Position.Z * (scaled ? NetherScale : 1);
+
+        if (!ReferenceEquals(player.World, overworld)) {
+            player.SetWorld(overworld);
+        }
+
+        player.Teleport(new Vec3<double>(x, 200, z));
+        Tell(player, $"&aIn the overworld at &f{(int)x}, {(int)z}&a.");
+    }
+
     /// <summary>Whether the message was one of the tour's, and so is not chat.</summary>
     private static bool HandleCommand(Dictionary<string, World> worlds, Player player, string message) {
         string[] parts = message.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -453,6 +584,14 @@ public static class WorldgenTest {
         }
 
         switch (parts[0]) {
+            case "world" when parts.Length > 1 && parts[1] == "nether":
+                GoToNether(player, worlds["nether"]);
+                return true;
+
+            case "world" when parts.Length > 1 && parts[1] == "end":
+                GoToEnd(player, worlds["end"]);
+                return true;
+
             case "world" when parts.Length > 1 && worlds.TryGetValue(parts[1], out World? world):
                 player.SetWorld(world);
 
@@ -494,7 +633,9 @@ public static class WorldgenTest {
         Tell(player, $"&aVanilla terrain generation demo. &7Seed &f{Seed}&7.");
         Tell(player, "");
         Tell(player, "&e Commands");
-        Tell(player, "&7  &fworld overworld|amplified|large|nether&7 - the four noise settings presets.");
+        Tell(player, "&7  &fworld overworld|amplified|large|nether|end&7 - the five noise settings presets.");
+        Tell(player, "&7  &f/nether&7 - into a nether cavern under where you stand. &f/end&7 - onto the end's");
+        Tell(player, "&7  arrival platform. &f/overworld&7 - back.");
         Tell(player, "&7  &ftp <x> <z>&7 - move to a position. &fwhere&7 - where you are.");
         Tell(player, "&7  &f/tpbiome <biome>&7 - the nearest of a biome. &f/tpstruct <structure>&7 -");
         Tell(player, "&7  the nearest of a structure. Either with no name lists what there is.");

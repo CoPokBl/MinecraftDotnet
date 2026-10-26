@@ -59,6 +59,7 @@ public sealed unsafe class WorldRenderer : IDisposable {
     private bool _walkUrgent;
     private bool _walkStale = true;
     private (int X, int Y, int Z) _walkFrom = (int.MinValue, 0, 0);
+    private bool _walkSmartCull = true;
 
     /// <summary>The last walk's slots for the culler, and how many slots had been freed when it started.</summary>
     private int[] _listSlots = new int[8192];
@@ -105,6 +106,20 @@ public sealed unsafe class WorldRenderer : IDisposable {
     /// 0 draws everything at full detail.
     /// </summary>
     public int LodDistance { get; set; } = 12;
+
+    private volatile bool _ambientOcclusion = true;
+
+    /// <summary>The <c>ao</c> option; a change remeshes every section, as <c>LevelExtractor.allChanged</c> does.</summary>
+    public bool AmbientOcclusion {
+        get => _ambientOcclusion;
+        set {
+            if (_ambientOcclusion == value) {
+                return;
+            }
+            _ambientOcclusion = value;
+            MarkAllDirty();
+        }
+    }
 
     /// <summary>The shader pack's material numbers; a change remeshes every section, as they are baked into the vertices.</summary>
     public BlockMaterials Materials {
@@ -157,11 +172,12 @@ public sealed unsafe class WorldRenderer : IDisposable {
     }
 
     private void Work() {
-        SectionMesher mesher = new(_models) { WaterState = _waterState, Pool = _vertexPool };
+        SectionMesher mesher = new(_models.ByState) { WaterState = _waterState, Pool = _vertexPool };
         CancellationToken token = _cts.Token;
         while (!token.IsCancellationRequested) {
             if (_jobs.TryDequeue(out SectionSnapshot? snapshot)) {
                 snapshot.Fill();
+                mesher.AmbientOcclusion = _ambientOcclusion;
                 SectionMesh mesh = mesher.Mesh(snapshot);
                 _snapshotPool.Enqueue(snapshot);
                 _results.Enqueue(mesh);
@@ -467,7 +483,11 @@ public sealed unsafe class WorldRenderer : IDisposable {
     /// Walks the visibility graph on a worker when the camera has changed section or the graph has
     /// changed, and hands the culler the last walk's result once it is done. No GL calls.
     /// </summary>
-    public void Walk(Camera camera) {
+    /// <param name="smartCull">
+    /// <c>CameraRenderState.smartCull</c>: whether sections are culled by what can be seen through them, which a
+    /// spectator inside a block that fills its cube turns off, so everything in range is drawn.
+    /// </param>
+    public void Walk(Camera camera, bool smartCull = true) {
         ClientLevel? level = _level;
         if (level == null) {
             return;
@@ -479,14 +499,15 @@ public sealed unsafe class WorldRenderer : IDisposable {
         (int X, int Y, int Z) from = SectionOf(camera.Position.X, camera.Position.Y, camera.Position.Z, level);
         // While sections stream in the graph changes constantly; ten walks a second is plenty to keep up.
         bool due = _walkUrgent || _walkStale && Stopwatch.GetElapsedTime(_lastWalkTicks).TotalMilliseconds >= 100;
-        if (_walkFrom == from && !due || _walkTask != null) {
+        if (_walkFrom == from && _walkSmartCull == smartCull && !due || _walkTask != null) {
             return;
         }
         long t0 = Stopwatch.GetTimestamp();
         _lastWalkTicks = t0;
         _walkFrom = from;
+        _walkSmartCull = smartCull;
         _walkStale = _walkUrgent = false;
-        _walk.Prepare(level, _sections.Values, _visibility, from.X, from.Y, from.Z, RenderDistance + 1);
+        _walk.Prepare(level, _sections.Values, _visibility, from.X, from.Y, from.Z, RenderDistance + 1, smartCull);
         _walkTask = Task.Run(_runWalk);
         Timings[0] += Stopwatch.GetElapsedTime(t0).TotalMilliseconds;
     }

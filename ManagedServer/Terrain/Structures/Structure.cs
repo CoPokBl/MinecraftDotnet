@@ -1,3 +1,4 @@
+using ManagedServer.Terrain.Features.Values;
 using ManagedServer.Terrain.Features;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -72,6 +73,10 @@ public delegate uint[] BaseColumnAt(int blockX, int blockZ);
 /// <see cref="Random"/> is already seeded from the world seed and the source chunk, as vanilla's
 /// <c>GenerationContext</c> constructor does, so a structure that draws from it gets the same numbers
 /// however many chunks are replaying it.
+/// <p/>
+/// <see cref="MinY"/> and <see cref="Height"/> are the level's, vanilla's <c>heightAccessor</c>.
+/// A height provider samples against <see cref="WorldGeneration"/> instead, which is the level clamped
+/// to the generator's own range: the nether is 256 high and generates 128.
 /// </remarks>
 public sealed record StructureGenerationContext(
     MinecraftRegistry Registry,
@@ -84,9 +89,13 @@ public sealed record StructureGenerationContext(
     int ChunkZ,
     int MinY,
     int Height,
-    int SeaLevel) {
+    int SeaLevel,
+    GenerationHeightContext? Generation = null) {
 
     public int MaxY => MinY + Height;
+
+    /// <summary>Vanilla's <c>new WorldGenerationContext(chunkGenerator, heightAccessor)</c>.</summary>
+    public GenerationHeightContext WorldGeneration => Generation ?? new GenerationHeightContext(MinY, Height, SeaLevel);
 
     /// <summary>
     /// Builds a context for a source chunk. The pass hands one of these round rather than a built

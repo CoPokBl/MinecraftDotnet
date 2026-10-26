@@ -41,31 +41,25 @@ public sealed record DeltaFeature(uint Contents, uint Rim, IIntProvider Size, II
 
         bool anyPlaced = false;
 
-        // Vanilla walks a manhattan iterator ordered by distance and stops past the limit, so the
-        // positions reached are the box intersected with the diamond. Nothing in the body draws from
-        // the random, so the set is the whole of what matters.
-        for (int dx = -radiusX; dx <= radiusX; dx++) {
-            for (int dz = -radiusZ; dz <= radiusZ; dz++) {
-                if (Math.Abs(dx) + Math.Abs(dz) > limit) {
-                    continue;
-                }
+        // The order is load bearing even though nothing here draws: a rim or a pool written at one
+        // position is a neighbour that is no longer air when a later one asks whether it is clear.
+        foreach (Vec3<int> pos in FeatureUtil.WithinBoxByManhattanDistance(origin, radiusX, 0, radiusZ)) {
+            if (Math.Abs(pos.X - origin.X) + Math.Abs(pos.Z - origin.Z) > limit) {
+                break;
+            }
 
-                int x = origin.X + dx;
-                int z = origin.Z + dz;
+            if (!IsClear(level, pos.X, pos.Y, pos.Z)) {
+                continue;
+            }
 
-                if (!IsClear(level, x, origin.Y, z)) {
-                    continue;
-                }
+            if (hasRim) {
+                anyPlaced = true;
+                level.SetState(pos.X, pos.Y, pos.Z, Rim);
+            }
 
-                if (hasRim) {
-                    anyPlaced = true;
-                    level.SetState(x, origin.Y, z, Rim);
-                }
-
-                if (IsClear(level, x + rimX, origin.Y, z + rimZ)) {
-                    anyPlaced = true;
-                    level.SetState(x + rimX, origin.Y, z + rimZ, Contents);
-                }
+            if (IsClear(level, pos.X + rimX, pos.Y, pos.Z + rimZ)) {
+                anyPlaced = true;
+                level.SetState(pos.X + rimX, pos.Y, pos.Z + rimZ, Contents);
             }
         }
 
@@ -76,7 +70,9 @@ public sealed record DeltaFeature(uint Contents, uint Rim, IIntProvider Size, II
         uint state = level.GetState(x, y, z);
         IBlock block = level.Registry.Blocks.GetByStateId(state);
 
-        if (state == Contents || CannotReplace.Contains(block.Identifier)) {
+        // The block rather than the state, so flowing lava is the contents too.
+        if (block.Identifier == level.Registry.Blocks.GetByStateId(Contents).Identifier
+            || CannotReplace.Contains(block.Identifier)) {
             return false;
         }
 

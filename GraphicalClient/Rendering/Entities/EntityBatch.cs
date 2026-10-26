@@ -17,7 +17,7 @@ public sealed unsafe class EntityBatch : IModelSink, IDisposable {
         public uint Colour;
         public byte Sky, Block;
         public sbyte NormalX, NormalY, NormalZ;
-        public byte RedOverlay, WhiteOverlay, Padding;
+        public byte RedOverlay, WhiteOverlay, Flags;
     }
 
     private readonly GL _gl;
@@ -62,6 +62,9 @@ public sealed unsafe class EntityBatch : IModelSink, IDisposable {
         Attribute(3, 2, VertexAttribType.UnsignedByte, false, 24);
         Attribute(4, 3, VertexAttribType.Byte, true, 26);
         Attribute(5, 2, VertexAttribType.UnsignedByte, true, 29);
+        _gl.EnableVertexArrayAttrib(_vao, 6);
+        _gl.VertexArrayAttribIFormat(_vao, 6, 1, VertexAttribIType.UnsignedByte, 31);
+        _gl.VertexArrayAttribBinding(_vao, 6, 0);
         return _vao;
 
         void Attribute(uint index, int size, VertexAttribType type, bool normalised, uint offset) {
@@ -82,7 +85,9 @@ public sealed unsafe class EntityBatch : IModelSink, IDisposable {
         NormalY = (sbyte)(normal.Y * 127),
         NormalZ = (sbyte)(normal.Z * 127),
         RedOverlay = (byte)(Math.Clamp(draw.RedOverlay, 0, 1) * 255),
-        WhiteOverlay = (byte)(Math.Clamp(draw.WhiteOverlay, 0, 1) * 255)
+        // OverlayTexture.u: the white flash in whole sixteenths, kept as u * 17 so the shader reads u / 15 exactly.
+        WhiteOverlay = (byte)((int)(Math.Clamp(draw.WhiteOverlay, 0, 1) * 15.0F) * 17),
+        Flags = (byte)((draw.Emissive ? 1 : 0) | (draw.Unshaded ? 2 : 0))
     };
 
     private Span<Vertex> Reserve(int count) {

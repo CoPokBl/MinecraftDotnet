@@ -150,7 +150,8 @@ public class DecorationParityHarness {
         bindTags();
 
         RegistryAccess.Frozen registries = datapackRegistries();
-        ChunkGenerator generator = overworldGenerator(registries);
+        ChunkGenerator generator = chunkGenerator(registries);
+        StubLevel.generator = generator;
         Registry<Biome> biomeRegistry = registries.lookupOrThrow(Registries.BIOME);
 
         // Resolved back through the registry the level reads from. The biome source's own holders come
@@ -455,7 +456,7 @@ public class DecorationParityHarness {
                     // The stub cannot answer what this feature asked for, so nothing about this chunk
                     // can be compared: the feature has already consumed some of the shared random and
                     // everything after it is a different sequence. Reported rather than swallowed.
-                    throw new Unreplayable(e.getMessage());
+                    throw new Unreplayable(e.getMessage() + " in " + level.currentFeature);
                 }
             }
         }
@@ -587,7 +588,8 @@ public class DecorationParityHarness {
                 Identifier.parse(placement.id()));
             Holder<Structure> structure = registries.lookupOrThrow(Registries.STRUCTURE).getOrThrow(key);
 
-            StructureStart start = structure.value().generate(structure, Level.OVERWORLD, registries,
+            StructureStart start = structure.value().generate(structure,
+                StubLevel.NETHER ? Level.NETHER : StubLevel.END ? Level.END : Level.OVERWORLD, registries,
                 generator, generator.getBiomeSource(), randomState.createClimateSampler(SamplerContext.builder().enableCaches().build()), randomState, templates, scene.seed,
                 new ChunkPos(placement.sourceChunkX(), placement.sourceChunkZ()), 0, structureBounds,
                 structure.value().biomes()::contains);
@@ -678,7 +680,7 @@ public class DecorationParityHarness {
 
         randomState = RandomState.create(registries.lookupOrThrow(Registries.NOISE), scene.seed,
             registries.lookupOrThrow(Registries.NOISE_SETTINGS)
-                .getOrThrow(NoiseGeneratorSettings.OVERWORLD).value());
+                .getOrThrow(settingsKey()).value());
 
         int minY = scene.minY;
         int height = scene.height;
@@ -708,16 +710,24 @@ public class DecorationParityHarness {
         }
     }
 
-    private static ChunkGenerator overworldGenerator(RegistryAccess.Frozen registries) {
+    private static ResourceKey<NoiseGeneratorSettings> settingsKey() {
+        return StubLevel.NETHER ? NoiseGeneratorSettings.NETHER
+            : StubLevel.END ? NoiseGeneratorSettings.END : NoiseGeneratorSettings.OVERWORLD;
+    }
+
+    private static ChunkGenerator chunkGenerator(RegistryAccess.Frozen registries) {
         HolderLookup.RegistryLookup<MultiNoiseBiomeSourceParameterList> lists =
             registries.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
         HolderLookup.RegistryLookup<NoiseGeneratorSettings> settings =
             registries.lookupOrThrow(Registries.NOISE_SETTINGS);
 
-        BiomeSource biomes = MultiNoiseBiomeSource.createFromPreset(
-            lists.getOrThrow(MultiNoiseBiomeSourceParameterLists.OVERWORLD));
+        BiomeSource biomes = StubLevel.END
+            ? net.minecraft.world.level.biome.TheEndBiomeSource.create(registries.lookupOrThrow(Registries.BIOME))
+            : MultiNoiseBiomeSource.createFromPreset(
+                lists.getOrThrow(StubLevel.NETHER ? MultiNoiseBiomeSourceParameterLists.NETHER
+                    : MultiNoiseBiomeSourceParameterLists.OVERWORLD));
 
-        return new NoiseBasedChunkGenerator(biomes, settings.getOrThrow(NoiseGeneratorSettings.OVERWORLD));
+        return new NoiseBasedChunkGenerator(biomes, settings.getOrThrow(settingsKey()));
     }
 
     /**

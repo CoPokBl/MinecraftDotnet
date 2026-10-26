@@ -99,6 +99,7 @@ public static class Shaders {
         layout(location = 2) in vec4 aColour;
         layout(location = 4) in vec3 aNormal;
         layout(location = 5) in vec2 aOverlay;
+        layout(location = 6) in uint aFlags;
 
         uniform vec2 uSize;
         uniform vec3 uLight0;
@@ -108,6 +109,7 @@ public static class Shaders {
         out vec4 vColourFront;
         out vec4 vColourBack;
         out vec4 vOverlay;
+        flat out uint vEmissive;
 
         // light.glsl's minecraft_mix_light_separate.
         vec4 mixLight(vec2 light, vec4 colour) {
@@ -118,17 +120,19 @@ public static class Shaders {
 
         void main() {
             gl_Position = vec4(aPosition.x / uSize.x * 2.0 - 1.0, 1.0 - aPosition.y / uSize.y * 2.0, -aPosition.z / 1000.0, 1.0);
+            // EMISSIVE leaves out the lightmap and NO_CARDINAL_LIGHTING the two lights, as the batch's flags say.
             vec2 light = vec2(dot(uLight0, aNormal), dot(uLight1, aNormal));
-            vColourFront = mixLight(light, aColour);
-            vColourBack = mixLight(-light, aColour);
-            // OverlayTexture's texel: the hurt row is red at alpha 178, the others white fading by
-            // u = (int)(progress * 15). The batch keeps the progress as a byte, which can land a hair
-            // under a whole step.
+            bool unshaded = (aFlags & 2u) != 0u;
+            vColourFront = unshaded ? aColour : mixLight(light, aColour);
+            vColourBack = unshaded ? aColour : mixLight(-light, aColour);
+            vEmissive = aFlags & 1u;
+            // OverlayTexture's texel: the hurt row is red at alpha 0xB3, the others white fading by
+            // u = (int)(progress * 15), which the batch keeps as u * 17.
             if (aOverlay.x > 0.5) {
-                vOverlay = vec4(1.0, 0.0, 0.0, 178.0 / 255.0);
+                vOverlay = vec4(1.0, 0.0, 0.0, 179.0 / 255.0);
             }
             else {
-                float u = floor(aOverlay.y * 15.0 + 0.001);
+                float u = floor(aOverlay.y * 15.0 + 0.5);
                 vOverlay = vec4(1.0, 1.0, 1.0, floor((1.0 - u / 15.0 * 0.75) * 255.0) / 255.0);
             }
             vUv = aUv;
@@ -145,6 +149,7 @@ public static class Shaders {
         in vec4 vColourFront;
         in vec4 vColourBack;
         in vec4 vOverlay;
+        flat in uint vEmissive;
 
         uniform sampler2D uAtlas;
         uniform sampler2D uLightmap;
@@ -158,7 +163,10 @@ public static class Shaders {
             }
             colour *= gl_FrontFacing ? vColourFront : vColourBack;
             colour.rgb = mix(vOverlay.rgb, colour.rgb, vOverlay.a);
-            colour *= texelFetch(uLightmap, ivec2(15, 15), 0);
+            // sample_lightmap at full light, which reads the one texel of the UiLightmap this is given.
+            if (vEmissive == 0u) {
+                colour *= texture(uLightmap, clamp(vec2(240.0) / 256.0 + 0.5 / 16.0, vec2(0.5 / 16.0), vec2(15.5 / 16.0)));
+            }
             fragColour = colour;
         }
         """;

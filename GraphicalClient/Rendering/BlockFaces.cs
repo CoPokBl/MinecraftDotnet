@@ -16,6 +16,19 @@ public static class BlockFaces {
         { { 1, 0, 0 }, { 1, 1, 0 }, { 1, 1, 1 }, { 1, 0, 1 } }
     };
 
+    /// <summary>
+    /// <c>FaceInfo</c>: the corner order <c>FaceBakery</c> gives a face of a box, which is the vertex
+    /// order <c>BlockModelLighter</c>'s corner remap is written against.
+    /// </summary>
+    public static readonly int[,,] FaceInfo = {
+        { { 0, 0, 1 }, { 0, 0, 0 }, { 1, 0, 0 }, { 1, 0, 1 } },
+        { { 0, 1, 0 }, { 0, 1, 1 }, { 1, 1, 1 }, { 1, 1, 0 } },
+        { { 1, 1, 0 }, { 1, 0, 0 }, { 0, 0, 0 }, { 0, 1, 0 } },
+        { { 0, 1, 1 }, { 0, 0, 1 }, { 1, 0, 1 }, { 1, 1, 1 } },
+        { { 0, 1, 0 }, { 0, 0, 0 }, { 0, 0, 1 }, { 0, 1, 1 } },
+        { { 1, 1, 1 }, { 1, 0, 1 }, { 1, 0, 0 }, { 1, 1, 0 } }
+    };
+
     /// <summary>The axis a face is perpendicular to: 0 for x, 1 for y, 2 for z.</summary>
     public static int Axis(int face) => face < 2 ? 1 : face < 4 ? 2 : 0;
 

@@ -51,7 +51,7 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
  * Writes down every block the vanilla fill, surface and carver passes leave in a chunk, into
  * the fixture {@code TerrainStageConformanceTest} replays.
  *
- * <p>Usage: {@code java TerrainStageHarness <fixture> <seed> <chunkX>:<chunkZ>...}. See
+ * <p>Usage: {@code java TerrainStageHarness <fixture> <seed> <overworld|nether|end> <chunkX>:<chunkZ>...}. See
  * Conformance/terrainstage.sh.
  *
  * <p>{@code terrain.sh} pins the density functions, the climate sample and the biome the parameter
@@ -79,31 +79,39 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
  */
 public class TerrainStageHarness {
 
-    /** What a chunk is generated over: the overworld's own range. */
-    private static final int MIN_Y = -64;
-    private static final int HEIGHT = 384;
+    /**
+     * What a chunk is generated over: the dimension type's range, which for the nether and the end is
+     * twice what their noise covers, so the top half is the noise clamp's air.
+     */
+    private static int MIN_Y = -64;
+    private static int HEIGHT = 384;
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 3) {
-            System.err.println("usage: TerrainStageHarness <fixture> <seed> <chunkX>:<chunkZ>...");
+        if (args.length < 4) {
+            System.err.println("usage: TerrainStageHarness <fixture> <seed> <overworld|nether|end> <chunkX>:<chunkZ>...");
             System.exit(2);
         }
 
         Path out = Path.of(args[0]);
         long seed = Long.parseLong(args[1]);
+        String dimension = args[2];
+        if (!dimension.equals("overworld")) {
+            MIN_Y = 0;
+            HEIGHT = 256;
+        }
 
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
 
         RegistryAccess.Frozen registries = Harness.buildRegistryAccess();
-        NoiseBasedChunkGenerator generator = overworldGenerator(registries);
+        NoiseBasedChunkGenerator generator = generator(registries, dimension);
 
         NoiseGeneratorSettings settings = registries.lookupOrThrow(Registries.NOISE_SETTINGS)
-            .getOrThrow(NoiseGeneratorSettings.OVERWORLD).value();
+            .getOrThrow(settingsKey(dimension)).value();
         RandomState randomState = RandomState.create(registries.lookupOrThrow(Registries.NOISE), seed, settings);
 
         List<ChunkPos> positions = new ArrayList<>();
-        for (int i = 2; i < args.length; i++) {
+        for (int i = 3; i < args.length; i++) {
             String[] parts = args[i].split(":");
             positions.add(new ChunkPos(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])));
         }
@@ -216,16 +224,28 @@ public class TerrainStageHarness {
         }
     }
 
-    private static NoiseBasedChunkGenerator overworldGenerator(RegistryAccess.Frozen registries) {
-        Holder<MultiNoiseBiomeSourceParameterList> parameters =
-            registries.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST)
-                .getOrThrow(MultiNoiseBiomeSourceParameterLists.OVERWORLD);
+    private static ResourceKey<NoiseGeneratorSettings> settingsKey(String dimension) {
+        return switch (dimension) {
+            case "nether" -> NoiseGeneratorSettings.NETHER;
+            case "end" -> NoiseGeneratorSettings.END;
+            default -> NoiseGeneratorSettings.OVERWORLD;
+        };
+    }
 
-        BiomeSource source = MultiNoiseBiomeSource.createFromPreset(parameters);
+    private static NoiseBasedChunkGenerator generator(RegistryAccess.Frozen registries, String dimension) {
+        BiomeSource source;
+        if (dimension.equals("end")) {
+            source = net.minecraft.world.level.biome.TheEndBiomeSource.create(registries.lookupOrThrow(Registries.BIOME));
+        } else {
+            Holder<MultiNoiseBiomeSourceParameterList> parameters =
+                registries.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST)
+                    .getOrThrow(dimension.equals("nether") ? MultiNoiseBiomeSourceParameterLists.NETHER
+                        : MultiNoiseBiomeSourceParameterLists.OVERWORLD);
+            source = MultiNoiseBiomeSource.createFromPreset(parameters);
+        }
 
-        ResourceKey<NoiseGeneratorSettings> key = NoiseGeneratorSettings.OVERWORLD;
         return new NoiseBasedChunkGenerator(source,
-            registries.lookupOrThrow(Registries.NOISE_SETTINGS).getOrThrow(key));
+            registries.lookupOrThrow(Registries.NOISE_SETTINGS).getOrThrow(settingsKey(dimension)));
     }
 
     /**

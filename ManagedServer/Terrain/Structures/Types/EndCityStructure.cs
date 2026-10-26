@@ -10,10 +10,9 @@ namespace ManagedServer.Terrain.Structures.Types;
 /// itself.
 /// </summary>
 /// <remarks>
-/// <b>Nothing here will ever generate in this build</b>, because its biome list is the end's and the
-/// end is not generated. It is ported anyway: a structure that is skipped and a structure that
-/// declines look the same from outside the pass, and leaving the type unported would keep it on a
-/// list that is meant to be empty.
+/// <c>couldValidBiomeExistInTerrainColumn</c> is not asked first. The end's biome source reads no y,
+/// so it answers the column the same as the start position <see cref="Structure.FindValidGenerationPoint"/>
+/// tests, and declining before or after the rotation draw leaves no start either way.
 /// </remarks>
 public sealed class EndCityStructure(Structure.StructureSettings settings,
     StructureTemplateManager templates) : Structure(settings) {
@@ -91,11 +90,23 @@ public sealed class EndCityStructure(Structure.StructureSettings settings,
         /// The chest, sentry and elytra markers.
         /// </summary>
         /// <remarks>
-        /// The chest is written by the template and this hook only attaches its loot table upstream,
-        /// so it does nothing here. The other two are a shulker and an item frame holding an elytra,
-        /// both entities the generator cannot place.
+        /// The chest under a chest marker is the template's, and this only seeds its loot table, which
+        /// is a draw where the chest is really there. The other two are a shulker and an item frame
+        /// holding an elytra, both entities the generator cannot place, and neither draws.
         /// </remarks>
         protected override void HandleDataMarker(string marker, Vec3<int> position,
-            IFeatureLevel level, RandomSource random, BoundingBox chunkBox) { }
+            IFeatureLevel level, RandomSource random, BoundingBox chunkBox) {
+
+            if (!marker.StartsWith("Chest", StringComparison.Ordinal)) {
+                return;
+            }
+
+            int chestY = position.Y - 1;
+            if (chunkBox.IsInside(position.X, chestY, position.Z)
+                && StructureTemplate.IsRandomisableContainer(level, level.GetState(position.X, chestY, position.Z))) {
+
+                random.NextLong();
+            }
+        }
     }
 }

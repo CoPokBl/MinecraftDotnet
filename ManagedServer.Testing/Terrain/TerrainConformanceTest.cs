@@ -20,39 +20,43 @@ namespace ManagedServer.Testing.Terrain;
 /// The tolerance is <b>exact</b>. Both sides run the same float arithmetic in the same order, so they
 /// agree bit for bit or the port is wrong. The point path and the volume path are pinned separately
 /// because they round differently, and the fill reads the volume one.
+/// <p/>
+/// One fixture per dimension, each named by its noise settings, which is also what picks the biome
+/// parameter preset. The end has no preset: its biome source reads the router's erosion entry.
 /// </remarks>
-[TestFixture]
-public class TerrainConformanceTest {
-    /// <summary>The order the harness wrote the floats in, <c>TerrainHarness.ENTRIES</c>.</summary>
-    private static readonly string[] Entries = [
-        "temperature", "vegetation", "continents", "erosion", "depth", "ridges", "chunk_surface_level", "final_density",
-        "aquifer_barrier", "aquifer_fluid_level_floodedness", "aquifer_fluid_level_spread", "aquifer_lava",
-        "aquifer_exclusion", "aquifer_surface_level",
-        "overworld/ore_vein/toggle", "overworld/ore_vein/mask", "overworld/ore_vein/gap",
-        "overworld/ore_vein/richness", "overworld/ore_vein/copper_density", "overworld/ore_vein/iron_density"
-    ];
-
-    private static string FixturePath =>
-        Path.Combine(TestContext.CurrentContext.TestDirectory, "Terrain", "vanilla-terrain.bin.gz");
+[TestFixture("overworld", "vanilla-terrain.bin.gz")]
+[TestFixture("nether", "vanilla-terrain-nether.bin.gz")]
+[TestFixture("end", "vanilla-terrain-end.bin.gz")]
+public class TerrainConformanceTest(string dimension, string fixtureName) {
+    private string FixturePath =>
+        Path.Combine(TestContext.CurrentContext.TestDirectory, "Terrain", fixtureName);
 
     private sealed record ChunkVolumes(int ChunkX, int ChunkZ, float[] FinalDensity, float[][] Climate, float[] SurfaceLevel);
 
+    /// <param name="Entries">The order the harness wrote each point's floats in.</param>
     private sealed record Fixture(
         long Seed,
+        int MinY,
+        int Height,
+        string[] Entries,
         List<(int X, int Y, int Z, float[] Values)> Points,
         List<(int QuartX, int QuartY, int QuartZ, long[] Climate)> Climate,
         List<string> Biomes,
         List<ChunkVolumes> Volumes);
 
-    private const int MinY = -64;
-    private const int Height = 384;
-
-    private static Fixture Read() {
+    private Fixture Read() {
         using FileStream file = File.OpenRead(FixturePath);
         using GZipStream gzip = new(file, CompressionMode.Decompress);
         using BinaryReader reader = new(gzip);
 
         long seed = ReadInt64(reader);
+        int minY = ReadInt32(reader);
+        int height = ReadInt32(reader);
+
+        string[] entries = new string[ReadInt32(reader)];
+        for (int i = 0; i < entries.Length; i++) {
+            entries[i] = ReadJavaUtf(reader);
+        }
 
         int pointCount = ReadInt32(reader);
         List<(int, int, int, float[])> points = new(pointCount);
@@ -60,7 +64,7 @@ public class TerrainConformanceTest {
             int x = ReadInt32(reader);
             int y = ReadInt32(reader);
             int z = ReadInt32(reader);
-            points.Add((x, y, z, ReadFloats(reader, Entries.Length)));
+            points.Add((x, y, z, ReadFloats(reader, entries.Length)));
         }
 
         int climateCount = ReadInt32(reader);
@@ -87,16 +91,16 @@ public class TerrainConformanceTest {
         for (int i = 0; i < chunkCount; i++) {
             int chunkX = ReadInt32(reader);
             int chunkZ = ReadInt32(reader);
-            float[] finalDensity = ReadFloats(reader, 16 * Height * 16);
+            float[] finalDensity = ReadFloats(reader, 16 * height * 16);
             float[][] climateVolumes = new float[6][];
             for (int c = 0; c < 6; c++) {
-                climateVolumes[c] = ReadFloats(reader, 4 * (Height >> 2) * 4);
+                climateVolumes[c] = ReadFloats(reader, 4 * (height >> 2) * 4);
             }
 
             volumes.Add(new ChunkVolumes(chunkX, chunkZ, finalDensity, climateVolumes, ReadFloats(reader, 16 * 16)));
         }
 
-        return new Fixture(seed, points, climate, biomes, volumes);
+        return new Fixture(seed, minY, height, entries, points, climate, biomes, volumes);
     }
 
     // Java's DataOutputStream is big endian throughout; BinaryReader is little endian.
@@ -120,15 +124,15 @@ public class TerrainConformanceTest {
 
     private static VanillaWorldgenData Data => VanillaWorldgenData.Load(VanillaPack.Source);
 
-    private static NoiseGeneratorSettings Settings => Data.GetNoiseSettings("minecraft:overworld");
+    private NoiseGeneratorSettings Settings => Data.GetNoiseSettings("minecraft:" + dimension);
 
-    private static RandomState BuildRandomState(long seed) {
+    private RandomState BuildRandomState(long seed) {
         return new RandomState(VanillaRegistry.Data, Settings, Data.ResolveNoise, seed);
     }
 
     private static IDensityFunction EntryOf(NoiseGeneratorSettings settings, string name) {
         NoiseRouter router = settings.NoiseRouter;
-        AquiferConfig aquifers = settings.Aquifers!;
+        AquiferConfig? aquifers = settings.Aquifers;
         return name switch {
             "temperature" => router.Temperature,
             "vegetation" => router.Vegetation,
@@ -138,12 +142,12 @@ public class TerrainConformanceTest {
             "ridges" => router.Ridges,
             "chunk_surface_level" => router.ChunkSurfaceLevel,
             "final_density" => router.FinalDensity,
-            "aquifer_barrier" => aquifers.Barrier,
-            "aquifer_fluid_level_floodedness" => aquifers.FluidLevelFloodedness,
-            "aquifer_fluid_level_spread" => aquifers.FluidLevelSpread,
-            "aquifer_lava" => aquifers.Lava,
-            "aquifer_exclusion" => aquifers.Exclusion,
-            "aquifer_surface_level" => aquifers.SurfaceLevel,
+            "aquifer_barrier" => aquifers!.Barrier,
+            "aquifer_fluid_level_floodedness" => aquifers!.FluidLevelFloodedness,
+            "aquifer_fluid_level_spread" => aquifers!.FluidLevelSpread,
+            "aquifer_lava" => aquifers!.Lava,
+            "aquifer_exclusion" => aquifers!.Exclusion,
+            "aquifer_surface_level" => aquifers!.SurfaceLevel,
             _ => Data.Resolve(Identifier.Parse("minecraft:" + name))
         };
     }
@@ -154,17 +158,17 @@ public class TerrainConformanceTest {
     public void TestPointSamplesMatchVanilla() {
         Fixture fixture = Read();
         RandomState randomState = BuildRandomState(fixture.Seed);
-        IDensitySampler[] samplers = Entries.Select(entry => randomState.GetSampler(EntryOf(Settings, entry))).ToArray();
+        IDensitySampler[] samplers = fixture.Entries.Select(entry => randomState.GetSampler(EntryOf(Settings, entry))).ToArray();
         List<string> failures = [];
 
         foreach ((int x, int y, int z, float[] expected) in fixture.Points) {
-            for (int i = 0; i < Entries.Length; i++) {
+            for (int i = 0; i < fixture.Entries.Length; i++) {
                 float actual = samplers[i].SampleValue(SamplerContext.EmptyUncached, x, y, z);
                 if (Same(actual, expected[i])) {
                     continue;
                 }
 
-                failures.Add($"{Entries[i]} at ({x},{y},{z}): vanilla {expected[i]:R}, ours {actual:R}");
+                failures.Add($"{fixture.Entries[i]} at ({x},{y},{z}): vanilla {expected[i]:R}, ours {actual:R}");
                 if (failures.Count > 40) {
                     goto done;
                 }
@@ -185,12 +189,12 @@ public class TerrainConformanceTest {
 
         foreach (ChunkVolumes chunk in fixture.Volumes) {
             SamplerContext fill = SamplerContext.CreateBuilder().EnableCaches().Build();
-            DensityVolume volume = new(16, Height, 16, chunk.ChunkX << 4, MinY, chunk.ChunkZ << 4);
+            DensityVolume volume = new(16, fixture.Height, 16, chunk.ChunkX << 4, fixture.MinY, chunk.ChunkZ << 4);
             Compare($"final_density of chunk {chunk.ChunkX},{chunk.ChunkZ}", Sample(randomState, fill, router.FinalDensity, volume),
                 chunk.FinalDensity, failures);
 
             SamplerContext biomes = SamplerContext.CreateBuilder().EnableCaches().Build();
-            DensityVolume quarts = new(4, Height >> 2, 4, chunk.ChunkX << 4, MinY, chunk.ChunkZ << 4, 4, 4, 4);
+            DensityVolume quarts = new(4, fixture.Height >> 2, 4, chunk.ChunkX << 4, fixture.MinY, chunk.ChunkZ << 4, 4, 4, 4);
             for (int c = 0; c < climate.Length; c++) {
                 Compare($"climate {c} of chunk {chunk.ChunkX},{chunk.ChunkZ}", Sample(randomState, biomes, climate[c], quarts),
                     chunk.Climate[c], failures);
@@ -258,16 +262,20 @@ public class TerrainConformanceTest {
         Assert.That(failures, Is.Empty, $"{failures.Count} climate samples differ from vanilla:\n  " + string.Join("\n  ", failures));
     }
 
+    private IBiomeSource BiomeSource => dimension == "end"
+        ? new TheEndBiomeSource()
+        : new MultiNoiseBiomeSource(Data.GetBiomeParameters("minecraft:" + dimension));
+
     [Test]
     public void TestBiomeSearchMatchesVanilla() {
         Fixture fixture = Read();
         ClimateSampler sampler = BuildRandomState(fixture.Seed).UncachedClimateSampler();
-        ClimateParameterList<Identifier> parameters = Data.GetBiomeParameters("minecraft:overworld");
+        IBiomeSource source = BiomeSource;
         List<string> failures = [];
 
         for (int i = 0; i < fixture.Climate.Count; i++) {
             (int quartX, int quartY, int quartZ, _) = fixture.Climate[i];
-            string actual = parameters.FindValue(sampler.Sample(quartX, quartY, quartZ)).ToString();
+            string actual = source.GetBiome(quartX, quartY, quartZ, sampler).ToString();
             if (actual == fixture.Biomes[i]) {
                 continue;
             }
@@ -283,16 +291,27 @@ public class TerrainConformanceTest {
 
     [Test]
     public void TestSearchTreeAgreesWithBruteForce() {
-        // Whatever the tree's shape, it has to give the same answer as a scan of every region, which is
-        // the thing a wrong bounding box or a wrong sort would break.
+        Assume.That(dimension, Is.Not.EqualTo("end"), "The end's biome source has no search tree.");
+
+        // Whatever the tree's shape, it has to find a region as close as a scan of every region does,
+        // which is the thing a wrong bounding box or a wrong sort would break. As close rather than the
+        // same one: the nether's five points sit on a lattice, so exact ties are common there, and the
+        // tree breaks them by where its warm start was while the scan takes the first in the list.
         ClimateSampler sampler = BuildRandomState(1234567890L).UncachedClimateSampler();
-        ClimateParameterList<Identifier> parameters = Data.GetBiomeParameters("minecraft:overworld");
+        ClimateParameterList<Identifier> parameters = Data.GetBiomeParameters("minecraft:" + dimension);
 
         for (int x = -2000; x <= 2000; x += 137) {
             for (int z = -2000; z <= 2000; z += 149) {
                 ClimateTargetPoint target = sampler.Sample(x >> 2, 16, z >> 2);
-                Assert.That(parameters.FindValue(target), Is.EqualTo(parameters.FindValueBruteForce(target)),
-                    $"Tree and scan disagree at ({x},{z}).");
+                Identifier found = parameters.FindValue(target);
+
+                long best = parameters.Values.Min(entry => entry.Point.Fitness(target));
+                long foundFitness = parameters.Values
+                    .Where(entry => entry.Value == found)
+                    .Min(entry => entry.Point.Fitness(target));
+
+                Assert.That(foundFitness, Is.EqualTo(best),
+                    $"The tree answered {found} at ({x},{z}), which is not the nearest region.");
             }
         }
     }

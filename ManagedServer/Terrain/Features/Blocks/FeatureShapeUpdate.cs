@@ -23,9 +23,12 @@ namespace ManagedServer.Terrain.Features.Blocks;
 /// <b>Only the classes whose answer the pass can be seen to depend on are here, and a block with no
 /// entry is left alone.</b> That default is what keeps the list safe to grow: a class nobody has
 /// transcribed keeps the state it was given, which is where every block started. The two callers ask
-/// for different things. At a tree, the only state <c>updateShapeAtEdge</c> changes is a vine that has
-/// lost what it hung from, since <c>LeavesBlock.updateShape</c> only schedules a tick and this build
-/// settles that in <c>TreeFeature.UpdateLeaves</c> instead. A template brings the connecting blocks:
+/// for different things. At a tree, what <c>updateShapeAtEdge</c> changes is a vine that has lost what
+/// it hung from and a plant that cannot survive where it stands, its own decorations included: under a
+/// sky worldgen light is always 15, so a mushroom a decorator set down off podzol is taken straight
+/// back out. <c>LeavesBlock.updateShape</c> only schedules a tick, which this build settles in
+/// <c>TreeFeature.UpdateLeaves</c> instead. A structure piece brings the torches, ladders and fences
+/// it marks for post processing. A template brings the connecting blocks:
 /// its stairs and fences are saved with whatever state they had where the build was cut from, so a
 /// wreck's stairs arrive as <c>outer_right</c> and have to settle against what they landed on.
 /// <p/>
@@ -62,6 +65,29 @@ public static class FeatureShapeUpdate {
 
             if (vanillaClass == BlockClass.WallBlock) {
                 return Wall(block, level, pos, towards);
+            }
+
+            if (vanillaClass == BlockClass.AttachedStemBlock) {
+                return AttachedStem(block, level, pos, towards);
+            }
+
+            // Before TorchBlock, which it extends. The redstone torches extend BaseTorchBlock rather
+            // than either and have no entry.
+            if (vanillaClass == BlockClass.WallTorchBlock || vanillaClass == BlockClass.LadderBlock) {
+                return WallHung(block, level, pos, towards);
+            }
+
+            if (vanillaClass == BlockClass.TorchBlock) {
+                return towards == BlockFace.NegY && !ShapeSupport.IsFaceSturdy(
+                    BlockAt(level, pos + Step(BlockFace.NegY)), BlockFace.PosY, SupportType.Center)
+                    ? Block.Air
+                    : block;
+            }
+
+            // The overrides below it in the family add only a fluid tick, which the generator has no
+            // use for, and the mangrove propagule's own test on an update from above is this one again.
+            if (vanillaClass == BlockClass.VegetationBlock) {
+                return FeatureSurvival.CanSurvive(block, level, pos.X, pos.Y, pos.Z) ? block : Block.Air;
             }
         }
 
@@ -145,6 +171,47 @@ public static class FeatureShapeUpdate {
         return WallPlacementRule.Settled(level.Registry, block, towards, neighbour,
             ShapeSupport.IsFaceSturdy(neighbour, Opposite(towards), SupportType.Full),
             towards == BlockFace.PosY ? neighbour : BlockAt(level, pos.WithY(pos.Y + 1)));
+    }
+
+    /// <summary>
+    /// <c>AttachedStemBlock.updateShape</c>: losing the fruit it is bent towards turns it back into a
+    /// fully grown stem, without asking whether that stem survives.
+    /// </summary>
+    private static IBlock AttachedStem(IBlock block, IFeatureLevel level, Vec3<int> pos,
+        BlockFace towards) {
+
+        if (AttachedStemPlacementRule.Grown.TryGetValue(block.Identifier,
+                out AttachedStemPlacementRule.Attachment attachment)
+            && block is IHorizontalFacing stem && towards == stem.Facing.ToFace()
+            && BlockAt(level, pos + Step(towards)).Identifier != attachment.Fruit) {
+
+            return ((IAged)level.Registry.Blocks[attachment.Stem]).WithAge(7);
+        }
+
+        return FeatureSurvival.CanSurvive(block, level, pos.X, pos.Y, pos.Z) ? block : Block.Air;
+    }
+
+    /// <summary>
+    /// <c>WallTorchBlock.updateShape</c> and <c>LadderBlock.updateShape</c>, which are the same test:
+    /// only the block behind can take it down, and it does when its facing side is not sturdy.
+    /// </summary>
+    /// <remarks>
+    /// A ladder also schedules a water tick when waterlogged, which belongs to a fluid simulation the
+    /// generator does not have.
+    /// </remarks>
+    private static IBlock WallHung(IBlock block, IFeatureLevel level, Vec3<int> pos, BlockFace towards) {
+        if (block is not IHorizontalFacing hung) {
+            return block;
+        }
+
+        BlockFace facing = hung.Facing.ToFace();
+        if (Opposite(towards) != facing) {
+            return block;
+        }
+
+        return ShapeSupport.IsFaceSturdy(BlockAt(level, pos + Step(Opposite(facing))), facing, SupportType.Full)
+            ? block
+            : Block.Air;
     }
 
     private static IBlock BlockAt(IFeatureLevel level, Vec3<int> pos) {

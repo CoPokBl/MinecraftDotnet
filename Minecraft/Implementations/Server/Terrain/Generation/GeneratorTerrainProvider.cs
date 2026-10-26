@@ -64,7 +64,9 @@ public class GeneratorTerrainProvider : ITerrainProvider {
         }
 
         Vec2<int> pos = new(chunk.ChunkX, chunk.ChunkZ);
-        GenerationContext context = new(minY, maxY, _registry);
+        GenerationContext context = new(minY, maxY, _registry,
+            neighbour => _host?.SnapshotLoadedChunk(neighbour),
+            (neighbour, read) => _forks.Peek(neighbour, read));
 
         // Taken before the generator runs, because that is what lets it put them where vanilla does:
         // a neighbour's writes reach a chunk between its carvers and its features, so this chunk's own

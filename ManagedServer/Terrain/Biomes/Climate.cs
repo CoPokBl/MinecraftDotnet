@@ -394,7 +394,7 @@ public sealed class ClimateParameterList<T> {
 /// A biome per position, from a climate sample and a region list. Vanilla's
 /// <c>MultiNoiseBiomeSource</c>.
 /// </summary>
-public sealed class MultiNoiseBiomeSource(ClimateParameterList<Identifier> parameters) {
+public sealed class MultiNoiseBiomeSource(ClimateParameterList<Identifier> parameters) : IBiomeSource {
     private IReadOnlyList<Identifier>? _possible;
 
     public ClimateParameterList<Identifier> Parameters => parameters;

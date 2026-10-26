@@ -10,7 +10,7 @@ namespace GraphicalClient.Rendering.Entities;
 /// The round shadows on the ground under entities, the <c>entity_shadows</c> geometry: one instance per entity,
 /// the box below its feet that the shadow can fall in. Vanilla cuts the shadow into a quad on top of each full
 /// block under the entity; here the shader pack finds the ground inside the box from the depth it has drawn, so
-/// a shadow lies on slabs, stairs, paths and edges alike and costs the CPU one instance whatever is below.
+/// the CPU pays one instance whatever is below and a pack decides what the shadow lies on.
 /// </summary>
 public sealed unsafe class EntityShadows : IDisposable {
     [StructLayout(LayoutKind.Sequential)]
@@ -28,6 +28,8 @@ public sealed unsafe class EntityShadows : IDisposable {
     private int _count, _uploaded, _capacity;
     private Vector4 _uv;
     private bool _textureReady;
+    private ClientLib.World.ClientLevel? _level;
+    private int _skyDarken;
 
     public EntityShadows(GL gl, EntityTextures textures) {
         _gl = gl;
@@ -35,9 +37,14 @@ public sealed unsafe class EntityShadows : IDisposable {
         _buffer = gl.CreateBuffer();
     }
 
-    /// <summary>Starts a frame's shadows with the pack's <c>textures/misc/shadow.png</c>, or the built in blob without one.</summary>
-    public void Begin() {
+    /// <summary>
+    /// Starts a frame's shadows with the pack's <c>textures/misc/shadow.png</c>, or the built in blob without one.
+    /// <paramref name="skyDarken"/> is <c>Level.getSkyDarken</c>, which the brightness under each shadow is taken down by.
+    /// </summary>
+    public void Begin(ClientLib.World.ClientLevel level, int skyDarken) {
         _count = 0;
+        _level = level;
+        _skyDarken = skyDarken;
         EntityTexture? texture = _textures.Get("minecraft:textures/misc/shadow.png") ?? _textures.Get("shadow:blob", Blob);
         _textureReady = texture != null && texture != _textures.Pending;
         if (_textureReady) {
@@ -50,9 +57,19 @@ public sealed unsafe class EntityShadows : IDisposable {
     /// fading to nothing 16 blocks from the camera; it sets how dark the shadow is and how far down it reaches.
     /// </summary>
     public void Add(double x, double y, double z, Vec3d camera, float radius, float power) {
-        if (!_textureReady) {
+        if (!_textureReady || _level == null) {
             return;
         }
+        // extractShadowPiece's getMaxLocalRawBrightness and Lightmap.getBrightness, which vanilla takes per block above
+        // each top the shadow lies on; here once, at the block the feet are in, which is that block for an entity on
+        // the ground and differs only where the light changes under a wide or a falling shadow.
+        int bx = (int)Math.Floor(x), by = (int)Math.Floor(y), bz = (int)Math.Floor(z);
+        int raw = Math.Max(_level.GetBlockLight(bx, by, bz), _level.GetSkyLight(bx, by, bz) - _skyDarken);
+        if (raw <= 3) {
+            return;
+        }
+        float level = raw / 15.0F;
+        float brightness = Minecraft.Schemas.Mth.Lerp(_level.DimensionType.AmbientLight, level / (4.0F - 3.0F * level), 1.0F);
         // extractShadow's depth: the shadow lies on the tops of blocks from floor(y - depth) up to the feet. Vanilla
         // has none at all once that floor is above the feet's block, far off and on a slab; here the block under the
         // feet always takes one.
@@ -63,7 +80,7 @@ public sealed unsafe class EntityShadows : IDisposable {
         }
         _instances[_count++] = new Instance {
             CentreRadius = new Vector4((float)(x - camera.X), (float)(y - camera.Y), (float)(z - camera.Z), radius),
-            PowerBottom = new Vector4(power, (float)(bottom - camera.Y) - 0.01F, 0, 0),
+            PowerBottom = new Vector4(power, (float)(bottom - camera.Y) - 0.01F, brightness, 0),
             Uv = _uv
         };
     }

@@ -3,6 +3,7 @@ using System.Numerics;
 using ClientLib;
 using ClientLib.Entities;
 using ClientLib.Maths;
+using ClientLib.Physics;
 using ClientLib.Player;
 using ClientLib.World;
 using GraphicalClient.Assets;
@@ -41,8 +42,8 @@ public sealed class GameRenderer : IDisposable {
     private double _previousFrameSeconds;
     private long _frameNumber;
     private Vector2 _easedEyeLight = new(-1);
-    private readonly LightningFlash _lightning = new();
     private WeatherView _weather;
+    private SkyState _sky;
 
     public Camera Camera { get; } = new();
     public PlayerCamera View { get; } = new();
@@ -104,7 +105,7 @@ public sealed class GameRenderer : IDisposable {
             Console.WriteLine($"Resource packs: {string.Join(", ", packs.Names)}");
         }
         IResourceSource source = (IResourceSource?)pack ?? art;
-        BlockModels models = new(VanillaRegistry.Data, source, (keys, pixels) => new TextureArray(_gl, keys, pixels));
+        BlockModels models = new(VanillaRegistry.Data, source, (keys, pixels, levels) => new TextureArray(_gl, keys, pixels, levels));
         if (pack is { Warnings.Count: > 0 }) {
             Console.WriteLine($"Resource pack problems ({pack.Warnings.Count}): {string.Join("; ", pack.Warnings.Take(10))}");
         }
@@ -121,7 +122,7 @@ public sealed class GameRenderer : IDisposable {
             Packs = packs, Client = client, Models = models, Animator = animator, World = world, Text = new TextRenderer(Gui, font),
             Sprites = sprites, Icons = new HudIcons(_gl, sprites), Glint = glint, ItemModels = itemModels,
             Items = new ItemAtlas(_gl, VanillaRegistry.Data, source, itemModels, glint), Scene = scene,
-            GuiEntities = new GuiEntityRenderer(_gl, client, scene.Entities, scene.Textures, scene.Flames, Lighting.LightmapTexture),
+            GuiEntities = new GuiEntityRenderer(_gl, client, scene.Entities, scene.Textures, scene.Flames, Lighting.UiLightmapTexture),
             EndPortalColours = EndPortalPalette.Read(packs)
         };
     }
@@ -164,6 +165,7 @@ public sealed class GameRenderer : IDisposable {
     /// </summary>
     public void Attach(MinecraftClient client) {
         _client = client;
+        Camera.AttributeProbe.Reset();
         World.SetLevel(null);
         ItemModels.Client = client;
         GuiEntities.Attach(client);
@@ -215,21 +217,36 @@ public sealed class GameRenderer : IDisposable {
         Scene.ScreenEffects.Update();
     }
 
+    /// <summary><c>GameRenderer.tick</c>: the lightmap's flicker, the camera's tick, which samples the biomes round it, and the boss overlay.</summary>
     public void Tick() {
         Scene.Tick();
-        _lightning.Tick(_client);
-        if (_client.Level is { TickRateManager.RunsNormally: true }) {
-            Lighting.TickBossOverlay(_client.BossOverlay.ShouldDarkenScreen());
+        ClientLevel? level = _client.Level;
+        Lighting.Tick(level is { TickRateManager.RunsNormally: true }, _client.BossOverlay.ShouldDarkenScreen());
+        if (_client.CameraEntity is { } camera && level != null) {
+            Camera.AttributeProbe.Tick(level.Environment.Attributes, level.Environment,
+                new Minecraft.Schemas.Vec.Vec3<double>(Camera.Position.X, Camera.Position.Y, Camera.Position.Z));
         }
         View.Tick(_client.CameraEntity, _client.Player, (float)_settings.FovEffectScale);
-        if (_client.CameraEntity is { } camera && _client.Level is { } level) {
-            Scene.CameraOverlays.Tick(camera, level, Lighting.SkyDarkening);
+        if (_client.CameraEntity is { } entity && level != null) {
+            Scene.CameraOverlays.Tick(entity, level, level.SkyDarken);
         }
-        _client.AnimateTicks.SkyDarkening = Lighting.SkyDarkening;
     }
 
+    /// <summary><c>Camera.extractRenderState</c>'s <c>smartCull</c>: off for a spectator whose camera is inside a block that fills its cube.</summary>
+    private bool SmartCull(ClientLevel level, LocalPlayer player) {
+        if (!player.IsSpectator) {
+            return true;
+        }
+        Vec3d position = Camera.Position;
+        Minecraft.Data.Blocks.IBlock block = level.GetBlock((int)Math.Floor(position.X), (int)Math.Floor(position.Y), (int)Math.Floor(position.Z));
+        return !(block.Occludes && Minecraft.Placement.Helpers.ShapeSupport.IsShapeFullBlock(block.OcclusionShape));
+    }
+
+    /// <summary><c>Options.getEffectiveRenderDistance</c>: the option, or the server's view distance if that is nearer.</summary>
+    private int EffectiveRenderDistance => _client.ServerViewDistance > 0 ? Math.Min(_options.ViewDistance, _client.ServerViewDistance) : _options.ViewDistance;
+
     /// <summary>The CPU half of a frame: the camera, the world's bookkeeping and the overlay geometry. No GL calls.</summary>
-    public FramePlan Prepare(float partialTick, Vector2D<int> size, bool disconnected) {
+    public FramePlan Prepare(float partialTick, Vector2D<int> size, bool disconnected, float deltaTicks = 0.0F) {
         Glint.Update(_clock.ElapsedMilliseconds, _settings.GlintSpeed, _settings.GlintStrength);
         LocalPlayer? player = _client.Player;
         ClientLevel? level = _client.Level;
@@ -246,29 +263,28 @@ public sealed class GameRenderer : IDisposable {
         _client.Interactions.Pick(partialTick);
 
         Vec3d position = Camera.Position;
-        int cx = (int)Math.Floor(position.X), cy = (int)Math.Floor(position.Y), cz = (int)Math.Floor(position.Z);
-        bool underwater = level.GetBlock(cx, cy, cz).Fluid?.Key is "water" or "flowing_water";
-        Minecraft.Data.Biomes.IBiome biome = BiomeAt(level, cx, cy, cz);
         _weather = WeatherView.Of(level, _options.TestWeather);
-        bool bossFog = _client.BossOverlay.ShouldCreateWorldFog();
-        Lighting.Update(level, partialTick, _options.ViewDistance, underwater,
-            BiomeColours.Environment(level, biome, EnvironmentAttribute.VisualSkyColor, 0x78A7FF),
-            BiomeColours.Environment(level, biome, EnvironmentAttribute.VisualFogColor, 0xC0D8FF),
-            BiomeColours.Environment(level, biome, EnvironmentAttribute.VisualWaterFogColor, 0x050533),
-            _weather, _lightning.Flashing && !_settings.HideLightningFlashes, bossFog);
+        level.Environment.WeatherOverride = _options.TestWeather != null && level.CanHaveWeather ? (_weather.Rain, _weather.Thunder) : null;
+        level.Environment.HideLightningFlash = _settings.HideLightningFlashes;
+        Lighting.Update(new LightingFrame(_client, level, player, cameraEntity, Camera, partialTick, deltaTicks, EffectiveRenderDistance, _weather,
+            _client.BossOverlay.ShouldCreateWorldFog(), _settings));
+        bool underwater = Lighting.FogType == FogType.Water;
         _profiler.Begin("sky");
-        PrepareSky(level, biome, partialTick, underwater || bossFog);
+        PrepareSky(level, partialTick);
+        _sky = SkyStateFor(level, player, cameraEntity, partialTick, _client.BossOverlay.ShouldCreateWorldFog());
 
         _profiler.Begin("schedule");
         World.Schedule(new Vector3((float)position.X, (float)position.Y, (float)position.Z));
         _profiler.Begin("walk");
-        World.Walk(Camera);
+        World.Walk(Camera, SmartCull(level, player));
         _profiler.Begin("overlays");
         // LevelExtractor.extractVisibleEntities' Entity.setViewScale, on the effective render distance.
         Entities.EntityRenderer.ViewScale =
             Math.Clamp(Math.Min(_options.ViewDistance, _client.ServerViewDistance) / 8.0, 1.0, 2.5) * _settings.EntityDistanceScaling;
         Scene.LineWidth = Math.Max(2.5F, size.X / 1920.0F * 2.5F);
         Scene.ShowEntityShadows = _settings.EntityShadows;
+        Scene.SkyDarken = Lighting.SkyDarkening;
+        World.AmbientOcclusion = _settings.AmbientOcclusion;
         // TextDisplayRenderer's default background, at getBackgroundOpacity(0.25F).
         Scene.DefaultTextBackground = _settings.BackgroundColor(0x3F000000);
         Scene.ShadowCasterLight = _pipeline.Pack.DrawsEntitiesFromShadowCamera ? ShadowCamera.LightDirection(SunDirection) : null;
@@ -276,19 +292,22 @@ public sealed class GameRenderer : IDisposable {
         return new FramePlan(true, partialTick, underwater, size);
     }
 
-    /// <summary>
-    /// The clouds and the rain or snow for this frame. The clouds fade out by <c>FogData.cloudEnd</c>: the cloud range,
-    /// or the attribute's distance if nearer, or with the world's fog pulled in, under water or by a boss, its end.
-    /// </summary>
-    private void PrepareSky(ClientLevel level, Minecraft.Data.Biomes.IBiome biome, float partialTick, bool fogPulledIn) {
+    /// <summary>The clouds and the rain or snow for this frame. The clouds fade out by <c>FogData.cloudEnd</c>.</summary>
+    private void PrepareSky(ClientLevel level, float partialTick) {
         float tickPartial = level.TickRateManager.RunsNormally ? partialTick : 0.0F;
         Scene.Weather.Prepare(level, Camera.Position, partialTick, _weather.Rain, _settings.WeatherRadius, _weather.ForceSnow);
-        float fade = Math.Min(_settings.CloudRange * 16.0F, CloudAttributes.FogEnd(level, biome));
-        if (fogPulledIn) {
-            fade = Math.Min(fade, Lighting.FogEnd);
-        }
-        Scene.Clouds.Prepare(Camera.Position, level.GameTime, tickPartial, _settings.Clouds,
-            CloudAttributes.Colour(level, biome, level.DefaultClockTimeAt(partialTick), _weather), CloudAttributes.Height(level, biome), fade);
+        Scene.Clouds.Prepare(Camera.Position, level.GameTime, tickPartial, _settings.Clouds, Lighting.CloudColour, Lighting.CloudHeight, Lighting.Fog.CloudEnd);
+    }
+
+    /// <summary><c>SkyRenderer.extractRenderState</c>'s level half and <c>LevelRenderer.addSkyPass</c>'s conditions.</summary>
+    private SkyState SkyStateFor(ClientLevel level, LocalPlayer player, ClientEntity cameraEntity, float partialTick, bool bossFog) {
+        bool fluidBlocksSky = Lighting.FogType is FogType.Lava or FogType.PowderSnow;
+        bool effectBlocksSky = cameraEntity.IsLiving && (cameraEntity.HasEffect(PotionEffectType.Blindness) || cameraEntity.HasEffect(PotionEffectType.Darkness));
+        double horizon = level.IsFlat ? level.MinY : 63.0;
+        bool darkDisc = ClientLib.Interaction.Picking.EyePosition(player, partialTick).Y - horizon < 0.0 && !player.IsUnderWater;
+        EndFlashState? flash = level.Environment.EndFlash;
+        return new SkyState(level.DimensionType.Skybox, bossFog || fluidBlocksSky || effectBlocksSky, darkDisc,
+            flash?.GetIntensity(partialTick) ?? 0.0F, flash?.XAngle ?? 0.0F, flash?.YAngle ?? 0.0F);
     }
 
     private static Minecraft.Data.Biomes.IBiome BiomeAt(ClientLevel level, int x, int y, int z) =>
@@ -327,6 +346,7 @@ public sealed class GameRenderer : IDisposable {
         FrameUniforms frame = FrameFor(level, plan.PartialTick, plan.Underwater);
         frame.ShadowView = shadowView;
         frame.ShadowProjection = shadowProjection;
+        Scene.Sky.Update(_sky, frame);
         _pipeline.Execute(ref frame, Scene, _pack.Models.Textures.Handle, Lighting.LightmapTexture, Scene.Textures.Handle,
             Scene.EndSkyTexture, Scene.EndPortalTexture, Glint.ItemTexture, Glint.ArmorTexture, plan.Size.X, plan.Size.Y, drawShadows);
     }
@@ -355,6 +375,14 @@ public sealed class GameRenderer : IDisposable {
 
         Minecraft.Data.Biomes.IBiome biome = BiomeAt(level, bx, by, bz);
         double dayTime = level.DefaultClockTimeAt(partialTick);
+        FogData fog = Lighting.Fog;
+        // A pack reading one fog range gets the pair that ends nearer, which is the one vanilla's fog is all but
+        // decided by: the render distance's in the open, the environment's in water, lava, snow or a blinding effect.
+        (float fogStart, float fogEnd) = fog.EnvironmentalEnd < fog.RenderDistanceEnd
+            ? (fog.EnvironmentalStart, fog.EnvironmentalEnd)
+            : (fog.RenderDistanceStart, fog.RenderDistanceEnd);
+        float timeOfDay = Lighting.SunAngle / 360.0F - MathF.Floor(Lighting.SunAngle / 360.0F);
+        bool nether = level.DimensionType.CardinalLight == Minecraft.Data.DimensionType.CardinalLight.Nether;
         float gameTime = level.TickRateManager.RunsNormally ? level.GameTime % 24000 + partialTick : level.GameTime % 24000;
         return new FrameUniforms {
             View = Camera.View,
@@ -364,22 +392,34 @@ public sealed class GameRenderer : IDisposable {
             InverseProjection = inverseProjection,
             InverseViewProjection = inverseViewProjection,
             CameraPosition = new Vector4((float)Camera.Position.X, (float)Camera.Position.Y, (float)Camera.Position.Z, underwater ? 1 : 0),
-            SunDirection = new Vector4(SunDirection, Lighting.SkyDarken),
+            SunDirection = new Vector4(SunDirection, Lighting.Daylight),
             SkyColour = new Vector4(Lighting.SkyColour, 1),
-            FogColour = new Vector4(Lighting.FogColour, 1),
-            FogRange = new Vector4(Lighting.FogStart, Lighting.FogEnd, _options.ViewDistance * 16, level.DimensionType.HasSkyLight ? 1 : 0),
-            Time = new Vector4(Lighting.TimeOfDay(dayTime), level.GameTime / 20.0F, (float)_clock.Elapsed.TotalSeconds, partialTick),
-            Weather = new Vector4(_weather.Rain, _weather.Thunder, Lighting.SkyDarken, level.DimensionType.AmbientLight),
+            FogColour = fog.Color,
+            FogRange = new Vector4(fogStart, fogEnd, EffectiveRenderDistance * 16, level.DimensionType.HasSkyLight ? 1 : 0),
+            Time = new Vector4(timeOfDay, level.GameTime / 20.0F, (float)_clock.Elapsed.TotalSeconds, partialTick),
+            Weather = new Vector4(_weather.Rain, _weather.Thunder, Lighting.Daylight, level.DimensionType.AmbientLight),
             PreviousViewProjection = previousViewProjection,
             CameraMotion = new Vector4((float)motion.X, (float)motion.Y, (float)motion.Z, frameSeconds),
-            Counters = new Vector4(_frameNumber & 0xFFFF, (float)((dayTime % 24000 + 24000) % 24000), (int)(((long)Math.Floor(dayTime / 24000) % 8 + 8) % 8),
-                gameTime),
+            Counters = new Vector4(_frameNumber & 0xFFFF, (float)((dayTime % 24000 + 24000) % 24000), (int)Lighting.MoonPhase, gameTime),
             EyeLight = new Vector4(eyeLight, _easedEyeLight.X, _easedEyeLight.Y),
             HeldLight = new Vector4(HeldLight(Hand.MainHand), HeldLight(Hand.OffHand), 0, 0),
             Biome = new Vector4(biome.Temperature, biome.Downfall, biome.HasPrecipitation ? 1 : 0, 0),
-            ClipPlanes = new Vector4(Camera.NearPlane, Camera.FarPlane, 0, 0)
+            ClipPlanes = new Vector4(Camera.NearPlane, Camera.FarPlane, 0, 0),
+            CardinalLight0 = nether ? new Vector4(0.9F, 0.9F, 0.8F, 0.8F) : new Vector4(0.5F, 1.0F, 0.8F, 0.8F),
+            CardinalLight1 = new Vector4(0.6F, 0.6F, 0, 0),
+            DiffuseLight0 = new Vector4(DiffuseLight0, 0),
+            DiffuseLight1 = new Vector4(nether ? NetherDiffuseLight1 : DiffuseLight1, 0),
+            FogDistances = new Vector4(fog.EnvironmentalStart, fog.EnvironmentalEnd, fog.RenderDistanceStart, fog.RenderDistanceEnd),
+            FogSkyClouds = new Vector4(fog.SkyEnd, fog.CloudEnd, 0, 0),
+            SunriseColour = Lighting.SunriseColour,
+            Celestial = new Vector4(Lighting.SunAngle, Lighting.MoonAngle, Lighting.StarAngle, Lighting.StarBrightness)
         };
     }
+
+    // Lighting's DIFFUSE_LIGHT_0 and _1, and the nether's second, which points down.
+    private static readonly Vector3 DiffuseLight0 = Vector3.Normalize(new Vector3(0.2F, 1.0F, -0.7F));
+    private static readonly Vector3 DiffuseLight1 = Vector3.Normalize(new Vector3(-0.2F, 1.0F, 0.7F));
+    private static readonly Vector3 NetherDiffuseLight1 = Vector3.Normalize(new Vector3(-0.2F, -1.0F, 0.7F));
 
     /// <summary>The light the block an item places gives off, which is what a pack lights a held torch by.</summary>
     private float HeldLight(Hand hand) {

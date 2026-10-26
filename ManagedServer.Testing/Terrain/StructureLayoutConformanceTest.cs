@@ -30,10 +30,17 @@ namespace ManagedServer.Testing.Terrain;
 /// shapes; what a piece then writes into the world is the templates and
 /// <c>Conformance/blocktransform.sh</c>.
 /// </remarks>
-[TestFixture]
-public class StructureLayoutConformanceTest {
-    private static readonly string Fixture =
-        Path.Combine(TestContext.CurrentContext.TestDirectory, "Terrain", "vanilla-structures.txt.gz");
+[TestFixture("overworld", "vanilla-structures.txt.gz")]
+[TestFixture("nether", "vanilla-structures-nether.txt.gz")]
+[TestFixture("end", "vanilla-structures-end.txt.gz")]
+public class StructureLayoutConformanceTest(string dimension, string fixtureName) {
+    private string Fixture => Path.Combine(TestContext.CurrentContext.TestDirectory, "Terrain", fixtureName);
+
+    private VanillaTerrainGenerator Generator(long seed) => dimension switch {
+        "nether" => VanillaTerrainGenerator.Nether(VanillaPack.Source, seed),
+        "end" => VanillaTerrainGenerator.End(VanillaPack.Source, seed),
+        _ => VanillaTerrainGenerator.Overworld(VanillaPack.Source, seed)
+    };
 
     /// <summary>
     /// Structures whose piece settles its own height inside <c>PostProcess</c> here as well as
@@ -71,8 +78,7 @@ public class StructureLayoutConformanceTest {
     public void EveryStartIsWhereVanillaPutIt() {
         Recording recording = Read();
 
-        VanillaTerrainGenerator generator = VanillaTerrainGenerator
-            .Overworld(VanillaPack.Source, recording.Seed)
+        VanillaTerrainGenerator generator = Generator(recording.Seed)
             .WithFeatures()
             .WithStructures();
 
@@ -111,8 +117,7 @@ public class StructureLayoutConformanceTest {
     public void TheRecordingCoversMostStructures() {
         Recording recording = Read();
 
-        VanillaTerrainGenerator generator = VanillaTerrainGenerator
-            .Overworld(VanillaPack.Source, recording.Seed)
+        VanillaTerrainGenerator generator = Generator(recording.Seed)
             .WithFeatures()
             .WithStructures();
 
@@ -269,7 +274,7 @@ public class StructureLayoutConformanceTest {
         _ => -1
     };
 
-    private static Recording Read() {
+    private Recording Read() {
         if (!File.Exists(Fixture)) {
             Assert.Ignore($"No fixture at {Fixture}. Run Conformance/structurelayout.sh to make one.");
         }

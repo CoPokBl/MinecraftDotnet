@@ -9,8 +9,9 @@ namespace GraphicalClient.Assets.ResourcePacks;
 /// <param name="Texture">The texture's identifier, <c>minecraft:block/stone</c>, or null for the missing texture.</param>
 /// <param name="CullFace">The neighbour whose face hides this quad, already turned by the variant's rotation.</param>
 /// <param name="Direction">The direction the quad faces, <c>FaceBakery.calculateFacing</c>.</param>
+/// <param name="ShadeDirection">The element's <c>shade_direction_override</c>, the direction it is shaded as instead; no variant turns it.</param>
 public sealed record BakedQuad(Vector3[] Positions, Vector2[] Uvs, string? Texture, bool ForceTranslucent, int? CullFace,
-    int Direction, int TintIndex, bool Shade, int LightEmission);
+    int Direction, int TintIndex, int? ShadeDirection, int LightEmission);
 
 /// <summary><c>ItemTransform</c>: how a model is posed for one display context, translation already in blocks.</summary>
 public sealed record ItemTransform(Vector3 Rotation, Vector3 Translation, Vector3 Scale) {

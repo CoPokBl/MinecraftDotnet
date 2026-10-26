@@ -167,6 +167,12 @@ public sealed class ShaderPack {
     /// </summary>
     [JsonProperty("sunPathRotation")] public float SunPathRotation;
 
+    /// <summary>
+    /// How the terrain passes read <c>blockAtlas</c>: <c>nearest</c>, or <c>linear</c> with linear mipmapping, as
+    /// vanilla's terrain sampler reads its atlas. Every other pass reads it nearest.
+    /// </summary>
+    [JsonProperty("terrainFilter")] public string TerrainFilter = "nearest";
+
     [JsonProperty("targets")] public List<TargetDefinition> Targets = [];
 
     [JsonProperty("textures")] public List<TextureDefinition> Textures = [];

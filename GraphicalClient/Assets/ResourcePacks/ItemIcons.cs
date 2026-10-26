@@ -79,7 +79,7 @@ public sealed class ItemIcons(PackFiles files, BlockModelBaker baker, Func<strin
             }
             foreach (BakedQuad quad in model.Quads) {
                 quads.Add(new IconQuad(quad.Positions, quad.Uvs, texture(quad.Texture),
-                    quad.TintIndex >= 0 && quad.TintIndex < tints.Length ? tints[quad.TintIndex] : 0xFFFFFF, quad.Shade));
+                    quad.TintIndex >= 0 && quad.TintIndex < tints.Length ? tints[quad.TintIndex] : 0xFFFFFF));
             }
         }
         if (quads.Count == 0) {

@@ -36,7 +36,7 @@ public sealed class ResourcePackSource(PackFiles files, IResourceSource fallback
         if (path is "water" or "lava") {
             string texture = PackPrefix + $"minecraft:block/{path}_still";
             return new BlockAppearance(BlockGeometry.Fluid, path == "water" ? RenderLayer.Translucent : RenderLayer.Solid,
-                [texture, texture, texture, texture, texture, texture], path == "lava", path == "water" ? TintKind.Water : TintKind.None);
+                [texture, texture, texture, texture, texture, texture], path == "water" ? TintKind.Water : TintKind.None);
         }
         BakedBlockModel? model = _baker.Bake(state);
         if (model == null) {
@@ -96,8 +96,17 @@ public sealed class ResourcePackSource(PackFiles files, IResourceSource fallback
         }
         string file = FileOf(key);
         byte[]? meta = files.Read(file + ".mcmeta");
-        return meta != null && Load(file) is { } image ? TextureAnimation.Read(image, meta) : null;
+        return meta != null && Load(file) is { } image && TextureAnimation.Read(image, meta) is { } animation
+            ? animation with { IsItem = IsItemSprite(key) }
+            : null;
     }
+
+    public Rendering.TextureMipSettings MipSettings(string key) =>
+        key.StartsWith(PackPrefix, StringComparison.Ordinal) ? Rendering.TextureMipSettings.Read(files.Read(FileOf(key) + ".mcmeta")) : fallback.MipSettings(key);
+
+    /// <summary>The sprite's path starts with <c>item/</c>, which <c>MipmapGenerator</c> leaves unsolidified.</summary>
+    public static bool IsItemSprite(string key) =>
+        key.StartsWith(PackPrefix, StringComparison.Ordinal) && Minecraft.Schemas.Identifier.Parse(key[PackPrefix.Length..]).Key.StartsWith("item/", StringComparison.Ordinal);
 
     public string SpriteKey(Minecraft.Schemas.Identifier sprite) => BlockModels.TextureKey(sprite);
 

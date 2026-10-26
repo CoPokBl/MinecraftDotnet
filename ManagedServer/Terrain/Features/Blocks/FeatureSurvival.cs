@@ -154,6 +154,12 @@ public static class FeatureSurvival {
             }
 
             if (VegetationTags.TryGetValue(vanillaClass, out Identifier vegetationTag)) {
+                // CropBlock's hasSufficientLight, getRawBrightness(pos, 0) >= 8, which the sky
+                // answers alone while the pass runs.
+                if (vanillaClass == BlockClass.CropBlock && !level.HasSkyLight) {
+                    return false;
+                }
+
                 return level.Blocks.IsIn(vegetationTag, level.GetState(x, y - 1, z));
             }
 
@@ -312,12 +318,12 @@ public static class FeatureSurvival {
     /// under a position dark enough.
     /// </summary>
     /// <remarks>
-    /// <b>The tag is the whole rule here, because the light term decides the other branch and it is
-    /// always bright.</b> A chunk reaches <c>INITIALIZE_LIGHT</c> after <c>FEATURES</c>, so while the
-    /// pass runs no light section exists and <c>SkyLightSectionStorage.getLightValue</c> falls through
-    /// to its default and answers 15 at every position, however deep. <c>getRawBrightness(pos, 0) &lt;
-    /// 13</c> is therefore false wherever a feature asks, and the <c>isSolidRender</c> half it guards
-    /// is unreachable: a mushroom grows on mycelium, podzol or nylium and nowhere else.
+    /// <b>The light term is the dimension's sky and nothing else.</b> A chunk reaches
+    /// <c>INITIALIZE_LIGHT</c> after <c>FEATURES</c>, so while the pass runs no light section exists
+    /// and <c>SkyLightSectionStorage.getLightValue</c> falls through to its default and answers 15 at
+    /// every position, however deep. <c>getRawBrightness(pos, 0) &lt; 13</c> is therefore false
+    /// wherever a feature asks under a sky, so there a mushroom grows on mycelium, podzol or nylium and
+    /// nowhere else; in the nether there is no sky layer, the answer is 0, and any full block will do.
     /// <p/>
     /// That is not the approximation <c>MushroomPlacementRule</c> makes. A player places a block into
     /// a world whose light is real, so that rule errs permissive and this one does not.
@@ -326,7 +332,10 @@ public static class FeatureSurvival {
     /// <c>supports_vegetation</c>, which is a different set again.
     /// </remarks>
     private static bool Mushroom(IFeatureLevel level, int x, int y, int z) {
-        return level.Blocks.IsIn(OverridesMushroomLight, level.GetState(x, y - 1, z));
+        uint below = level.GetState(x, y - 1, z);
+
+        return level.Blocks.IsIn(OverridesMushroomLight, below)
+            || (!level.HasSkyLight && level.Blocks.IsSolidRender(below));
     }
 
     /// <summary>

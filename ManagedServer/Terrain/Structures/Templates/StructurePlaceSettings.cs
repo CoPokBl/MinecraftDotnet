@@ -9,9 +9,9 @@ namespace ManagedServer.Terrain.Structures.Templates;
 /// </summary>
 /// <remarks>
 /// <b>Mutable and copied, as vanilla's is.</b> <see cref="Copy"/> is how a piece hands its own settings
-/// to a nested placement without the nested one's box escaping back, and
-/// <c>TemplateStructurePiece.PostProcess</c> writes <see cref="BoundingBox"/> on its own settings once
-/// per chunk it is placed into. Making this a record would leave that caller updating a copy.
+/// to a nested placement without the nested one's box escaping back, and how
+/// <c>TemplateStructurePiece.PostProcess</c> gets a set of its own to write the chunk's
+/// <see cref="BoundingBox"/> on, since several chunks place one piece at once.
 /// </remarks>
 public sealed class StructurePlaceSettings {
     private readonly List<IStructureProcessor> _processors = [];

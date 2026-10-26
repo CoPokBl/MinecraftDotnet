@@ -12,7 +12,7 @@ namespace GraphicalClient.Assets.ResourcePacks;
 /// held still against that turn where a variant asks for <c>uvlock</c>.
 /// </summary>
 public sealed class BlockModelBaker(PackFiles files) {
-    private sealed record Element(Vector3 From, Vector3 To, Vector3 RotationOrigin, Mat3? Rotation, bool Shade, int LightEmission, ElementFace?[] Faces);
+    private sealed record Element(Vector3 From, Vector3 To, Vector3 RotationOrigin, Mat3? Rotation, int? ShadeDirection, int LightEmission, ElementFace?[] Faces);
 
     private sealed record ElementFace(int? CullFace, int TintIndex, string Texture, Vector4? Uv, int Rotation);
 
@@ -242,7 +242,7 @@ public sealed class BlockModelBaker(PackFiles files) {
         ElementFace?[] faces = new ElementFace?[6];
         ElementFace face = new(null, tintIndex, "", uv, 0);
         faces[direction] = face;
-        return BakeQuad(new Element(from, to, Vector3.Zero, null, true, 0, faces), face, direction, Mat3.Identity, false, texture, false);
+        return BakeQuad(new Element(from, to, Vector3.Zero, null, null, 0, faces), face, direction, Mat3.Identity, false, texture, false);
     }
 
     private static Vector3 Vector(JToken? token) {
@@ -285,7 +285,7 @@ public sealed class BlockModelBaker(PackFiles files) {
                     face.Value<string>("texture") ?? "", uv, (((face.Value<int?>("rotation") ?? 0) % 360 + 360) % 360) / 90);
             }
         }
-        return new Element(from, to, origin, rotation, json.Value<bool?>("shade") ?? true, json.Value<int?>("light_emission") ?? 0, faces);
+        return new Element(from, to, origin, rotation, Directions.Parse(json.Value<string>("shade_direction_override")), json.Value<int?>("light_emission") ?? 0, faces);
     }
 
     /// <summary><c>CuboidRotation.scaleFactorForAxis</c>: stretches a turned element back across the block.</summary>
@@ -351,14 +351,7 @@ public sealed class BlockModelBaker(PackFiles files) {
     }
 
     // FaceInfo's corners per direction, as MIN (0) or MAX (1) of x, y and z.
-    private static readonly int[,,] FaceCorners = {
-        { { 0, 0, 1 }, { 0, 0, 0 }, { 1, 0, 0 }, { 1, 0, 1 } },
-        { { 0, 1, 0 }, { 0, 1, 1 }, { 1, 1, 1 }, { 1, 1, 0 } },
-        { { 1, 1, 0 }, { 1, 0, 0 }, { 0, 0, 0 }, { 0, 1, 0 } },
-        { { 0, 1, 1 }, { 0, 0, 1 }, { 1, 0, 1 }, { 1, 1, 1 } },
-        { { 0, 1, 0 }, { 0, 0, 0 }, { 0, 0, 1 }, { 0, 1, 1 } },
-        { { 1, 1, 1 }, { 1, 0, 1 }, { 1, 0, 0 }, { 1, 1, 0 } }
-    };
+    private static readonly int[,,] FaceCorners = Rendering.BlockFaces.FaceInfo;
 
     // BlockMath's per face frames, VANILLA_UV_TRANSFORM_LOCAL_TO_GLOBAL.
     private static readonly Mat3[] LocalToGlobal = [
@@ -427,7 +420,7 @@ public sealed class BlockModelBaker(PackFiles files) {
             RecalculateWinding(positions, texels, finalDirection);
         }
         int? cull = face.CullFace is { } c ? Directions.Nearest(blockRotation.Transform(Directions.Normals[c])) : null;
-        return new BakedQuad(positions, texels, texture, force, cull, direction ?? 1, face.TintIndex, element.Shade, element.LightEmission);
+        return new BakedQuad(positions, texels, texture, force, cull, direction ?? 1, face.TintIndex, element.ShadeDirection, element.LightEmission);
     }
 
     /// <summary>

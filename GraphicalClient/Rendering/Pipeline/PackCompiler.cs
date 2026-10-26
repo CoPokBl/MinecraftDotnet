@@ -38,6 +38,14 @@ public static partial class PackCompiler {
             vec4 heldLight;
             vec4 biome;
             vec4 clipPlanes;
+            vec4 cardinalLight0;
+            vec4 cardinalLight1;
+            vec4 diffuseLight0;
+            vec4 diffuseLight1;
+            vec4 fogDistances;
+            vec4 fogSkyClouds;
+            vec4 sunriseColour;
+            vec4 celestial;
         };
 
         uniform sampler2DArray blockAtlas;
@@ -64,17 +72,22 @@ public static partial class PackCompiler {
         vec2 vertexLight() { return _light / 16.0; }
         vec3 vertexTint() { return _colour.rgb; }
         float vertexOcclusion() { return _colour.a; }
-        uint vertexFace() { return _faceFlags.x; }
+        uint vertexFace() { return _faceFlags.x & 7u; }
         bool vertexIsPlant() { return (_faceFlags.y & 1u) != 0u; }
         bool vertexIsFluidSurface() { return (_faceFlags.y & 2u) != 0u; }
         uint vertexMaterial() { return _faceFlags.y >> 2u; }
         vec3 vertexNormal() {
             const vec3 normals[6] = vec3[6](vec3(0, -1, 0), vec3(0, 1, 0), vec3(0, 0, -1), vec3(0, 0, 1), vec3(-1, 0, 0), vec3(1, 0, 0));
-            return normals[min(_faceFlags.x, 5u)];
+            return normals[min(_faceFlags.x & 7u, 5u)];
         }
         float vertexFaceShade() {
-            const float shades[6] = float[6](0.5, 1.0, 0.8, 0.8, 0.6, 0.6);
-            return shades[min(_faceFlags.x, 5u)];
+            uint shade = _faceFlags.x >> 3u;
+            float scale = shade == 6u ? cardinalLight0.y * cardinalLight0.z
+                : shade == 7u ? cardinalLight0.y * cardinalLight1.x
+                : shade < 4u ? cardinalLight0[shade] : cardinalLight1[shade - 4u];
+            // ARGB.scaleRGB truncates the occlusion gray times the scale to a whole channel.
+            float gray = floor(_colour.a * 255.0 + 0.5);
+            return gray > 0.0 ? floor(gray * scale) / gray : scale;
         }
         """;
 
@@ -85,6 +98,7 @@ public static partial class PackCompiler {
         layout(location = 3) in vec2 _light;
         layout(location = 4) in vec3 _normal;
         layout(location = 5) in vec2 _overlay;
+        layout(location = 6) in uint _entityFlags;
 
         vec3 vertexPosition() { return _position; }
         vec2 vertexUv() { return _uv; }
@@ -93,6 +107,8 @@ public static partial class PackCompiler {
         vec3 vertexNormal() { return _normal; }
         float vertexRedOverlay() { return _overlay.x; }
         float vertexWhiteOverlay() { return _overlay.y; }
+        bool vertexIsEmissive() { return (_entityFlags & 1u) != 0u; }
+        bool vertexIsUnshaded() { return (_entityFlags & 2u) != 0u; }
         """;
 
     private const string GlintInputs = """
@@ -448,6 +464,7 @@ public static partial class PackCompiler {
         float shadowRadius() { return _shadowCentreRadius.w; }
         float shadowPower() { return _shadowPowerBottom.x; }
         float shadowBottom() { return _shadowPowerBottom.y; }
+        float shadowBrightness() { return _shadowPowerBottom.z; }
         vec4 shadowUv() { return _shadowUv; }
         vec3 vertexPosition() {
             const int corners[36] = int[36](0, 4, 1, 1, 4, 5, 2, 3, 6, 3, 7, 6, 0, 2, 4, 2, 6, 4, 1, 5, 3, 3, 5, 7, 0, 1, 2, 1, 3, 2, 4, 6, 5, 5, 6, 7);
@@ -457,6 +474,42 @@ public static partial class PackCompiler {
             return vec3(centre.x + ((corner & 1) != 0 ? radius : -radius), (corner & 2) != 0 ? centre.y + 0.1 : shadowBottom(),
                 centre.z + ((corner & 4) != 0 ? radius : -radius));
         }
+        """;
+
+    /// <summary>Both stages of a <c>sky</c> pass: the celestial sprites, and the numbers of the parts.</summary>
+    private static readonly string SkyShared = $$"""
+        layout(binding = {{SkyRenderer.TextureUnit}}) uniform sampler2D celestialAtlas;
+
+        #define SKY_DISC {{(int)SkyRenderer.Part.Disc}}u
+        #define SKY_SUNRISE {{(int)SkyRenderer.Part.Sunrise}}u
+        #define SKY_SUN {{(int)SkyRenderer.Part.Sun}}u
+        #define SKY_MOON {{(int)SkyRenderer.Part.Moon}}u
+        #define SKY_STARS {{(int)SkyRenderer.Part.Stars}}u
+        #define SKY_DARK_DISC {{(int)SkyRenderer.Part.DarkDisc}}u
+        #define SKY_END {{(int)SkyRenderer.Part.EndSky}}u
+        #define SKY_END_FLASH {{(int)SkyRenderer.Part.EndFlash}}u
+        """;
+
+    /// <summary>
+    /// Vanilla's sky meshes as it builds them, each vertex tagged with its part; the part's transform (the pose
+    /// <c>SkyRenderer.render</c> sets up, without the camera's rotation) and its <c>ColorModulator</c> come once a frame.
+    /// </summary>
+    private static readonly string SkyInputs = $$"""
+        layout(location = 0) in vec3 _position;
+        layout(location = 1) in vec2 _uv;
+        layout(location = 2) in vec4 _colour;
+        layout(location = 3) in uint _part;
+
+        layout(std140, binding = {{SkyRenderer.UniformBinding}}) uniform SkyFrame {
+            mat4 _skyPose[8];
+            vec4 _skyModulator[8];
+        };
+
+        vec3 vertexPosition() { return (_skyPose[_part] * vec4(_position, 1.0)).xyz; }
+        vec3 vertexFogPosition() { return _position; }
+        vec2 vertexUv() { return _uv; }
+        vec4 vertexColour() { return _colour * _skyModulator[_part]; }
+        uint vertexSkyPart() { return _part; }
         """;
 
     /// <summary>The vertex stage a fullscreen pass gets when its pack does not supply one.</summary>
@@ -492,6 +545,7 @@ public static partial class PackCompiler {
             : pass.Geometry == "clouds" ? "CLOUDS"
             : pass.Geometry is "text" or "text_see_through" ? "TEXT"
             : pass.Geometry == "entity_shadows" ? "ENTITY_SHADOW"
+            : pass.Geometry == "sky" ? "SKY"
             : "COLOURED";
         StringBuilder header = new();
         header.AppendLine("#version 450 core");
@@ -508,7 +562,7 @@ public static partial class PackCompiler {
             header.AppendLine($"#define {key} {value}");
         }
         header.AppendLine(FrameBlock);
-        header.Append(kind switch { "WEATHER" => WeatherShared + "\n", "CLOUDS" => CloudShared + "\n", _ => "" });
+        header.Append(kind switch { "WEATHER" => WeatherShared + "\n", "CLOUDS" => CloudShared + "\n", "SKY" => SkyShared + "\n", _ => "" });
 
         string vertexInputs = kind switch {
             "TERRAIN" => TerrainInputs,
@@ -520,6 +574,7 @@ public static partial class PackCompiler {
             "CLOUDS" => CloudInputs,
             "TEXT" => TextInputs,
             "ENTITY_SHADOW" => EntityShadowInputs,
+            "SKY" => SkyInputs,
             _ => ""
         };
         string? vertex = pack.ReadFile(pass.Program + ".vsh");

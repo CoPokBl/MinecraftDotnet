@@ -10,6 +10,11 @@ layout(location = 1) out vec4 outNormal;
 layout(location = 2) out vec4 outLight;
 
 void main() {
+    // Only a plant's planes are meant to be seen from behind. A model can put two faces back to back
+    // in one plane, as leaf litter's top and underside are, and the one facing away would fight the other.
+    if (!gl_FrontFacing && (vFlags & 1u) == 0u) {
+        discard;
+    }
     vec4 texel = texture(blockAtlas, vUv);
 #ifdef ALPHA_TEST
     if (texel.a < 0.5) {

@@ -2,7 +2,7 @@
 # Runs the real vanilla noise router over a grid of positions and writes down every number it produced,
 # into the fixture TerrainConformanceTest replays.
 #
-#   Conformance/terrain.sh [version]
+#   Conformance/terrain.sh [version] [overworld|nether|end]
 #
 # Only needed when the fixture is being regenerated, ie. on a version bump. The test itself just reads
 # the committed file. Needs the server jar the CodeGen project downloads, so run CodeGen for the
@@ -14,10 +14,16 @@
 set -euo pipefail
 
 version="${1:-26.3}"
+dimension="${2:-overworld}"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 jars="$repo/CodeGen/bin/Debug/net10.0"
 work="${TMPDIR:-/tmp}/mcdotnet-conformance"
-fixture="$repo/ManagedServer.Testing/Terrain/vanilla-terrain.bin.gz"
+case "$dimension" in
+    overworld) fixture="$repo/ManagedServer.Testing/Terrain/vanilla-terrain.bin.gz" ;;
+    nether) fixture="$repo/ManagedServer.Testing/Terrain/vanilla-terrain-nether.bin.gz" ;;
+    end) fixture="$repo/ManagedServer.Testing/Terrain/vanilla-terrain-end.bin.gz" ;;
+    *) echo "No dimension named $dimension: overworld, nether or end." >&2; exit 2 ;;
+esac
 
 server_jar="$jars/versions/$version/server-$version.jar"
 if [[ ! -f "$server_jar" ]]; then
@@ -29,4 +35,4 @@ fi
 mkdir -p "$work" "$(dirname "$fixture")"
 cp="$server_jar:$(find "$jars/libraries" -name '*.jar' | tr '\n' ':')"
 javac -nowarn -cp "$cp" -d "$work/terrain-classes" "$repo/Conformance/TerrainHarness.java" "$repo/Conformance/Harness.java"
-java -cp "$cp:$work/terrain-classes" TerrainHarness "$fixture"
+java -cp "$cp:$work/terrain-classes" TerrainHarness "$fixture" "$dimension"

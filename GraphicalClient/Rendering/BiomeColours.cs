@@ -76,25 +76,4 @@ public static class BiomeColours {
             ((lush >> shift) & 0xFF) * wLush + ((dry >> shift) & 0xFF) * wDry + ((cold >> shift) & 0xFF) * wCold, 0, 255);
         return Channel(16) << 16 | Channel(8) << 8 | Channel(0);
     }
-
-    /// <summary>A colour environment attribute from the biome, else the dimension, else the fallback.</summary>
-    public static uint Environment(ClientLevel level, IBiome biome, Minecraft.Data.EnvironmentAttributes.IEnvironmentAttribute attribute, uint fallback) {
-        if (biome.Attributes[attribute] is EnvironmentAttributeEntry.Constant constant && Parse(constant.Value.ToNbt()) is { } fromBiome) {
-            return fromBiome;
-        }
-        if (level.DimensionType.Attributes?[attribute.Identifier.ToString()] is { } tag && Parse(tag) is { } fromDimension) {
-            return fromDimension;
-        }
-        return fallback;
-    }
-
-    /// <summary>A colour in any form <c>ExtraCodecs.STRING_RGB_COLOR</c> reads, or null for anything else.</summary>
-    private static uint? Parse(INbtTag tag) {
-        return tag switch {
-            StringTag s when !s.Value.StartsWith('#') => null,
-            StringTag or ListTag => (uint)PackedColor.StringRgbFromNbt(tag) & 0xFFFFFF,
-            _ when tag.IsNumber() => (uint)PackedColor.StringRgbFromNbt(tag) & 0xFFFFFF,
-            _ => null
-        };
-    }
 }

@@ -41,6 +41,7 @@ internal abstract class GenerationUnitBase : IGenerationUnit, IUnitModifier {
     public abstract IGenerationUnit Fork(Vec3<int> start, Vec3<int> end);
     public abstract void Fork(Action<IBlockSetter> build);
     public abstract bool ReadForkedWrites(ForkedBlock into);
+    public abstract ChunkData? ReadNeighbour(int chunkX, int chunkZ, ForkedBlock forked);
 
     // --- primitives a subclass provides ------------------------------------
 

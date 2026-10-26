@@ -124,7 +124,7 @@ public sealed class OptionsScreen(Screen parent) : OptionsPage(parent) {
     };
 }
 
-/// <summary>Vanilla's <c>VideoSettingsScreen</c>, with the options that apply here: the entity distance, the vignette, particles and entity shadows.</summary>
+/// <summary>Vanilla's <c>VideoSettingsScreen</c>, with the options that apply here: the entity distance, the vignette, particles, clouds, weather radius, entity shadows, brightness and smooth lighting.</summary>
 public sealed class VideoSettingsScreen(Screen parent) : OptionsPage(parent) {
     protected override string Title => T("options.videoTitle");
 
@@ -147,7 +147,22 @@ public sealed class VideoSettingsScreen(Screen parent) : OptionsPage(parent) {
             value => $"{T("options.weatherRadius")}: {T("options.blocks").Replace("%s", FromSlider(value, 3, 10).ToString())}"));
         Add(new CycleButton<bool>([true, false], settings.EntityShadows, on => $"{T("options.entityShadows")}: {T(on ? "options.on" : "options.off")}",
             width / 2.0F - 155, 109, 150, on => settings.EntityShadows = on));
+        Add(new Slider(width / 2.0F + 5, 109, 150, () => settings.Gamma, value => settings.Gamma = value, GammaLabel));
+        Add(new CycleButton<bool>([true, false], settings.AmbientOcclusion, on => $"{T("options.ao")}: {T(on ? "options.on" : "options.off")}",
+            width / 2.0F - 155, 133, 150, on => settings.AmbientOcclusion = on));
         AddDone(context, width, height);
+    }
+
+    /// <summary>The <c>gamma</c> option's caption: Moody, Default and Bright at the ends and the middle, the percentage between.</summary>
+    private static string GammaLabel(double value) {
+        int progressValueToDisplay = (int)(value * 100.0);
+        string shown = progressValueToDisplay switch {
+            0 => T("options.gamma.min"),
+            50 => T("options.gamma.default"),
+            100 => T("options.gamma.max"),
+            _ => progressValueToDisplay.ToString()
+        };
+        return $"{T("options.gamma")}: {shown}";
     }
 
     /// <summary><c>CloudStatus.caption</c>.</summary>
@@ -191,18 +206,20 @@ public sealed class AccessibilityOptionsScreen(Screen parent) : OptionsPage(pare
         float left = width / 2.0F - 155, right = width / 2.0F + 5;
         Add(NarratorButton = OptionWidgets.Narrator(context, left, 37));
         Add(new Button(T("options.controls"), right, 37, 150, () => context.Open?.Invoke(new ControlsScreen(this))));
-        Add(new Slider(left, 62, 150, () => settings.ScreenEffectScale, value => settings.ScreenEffectScale = value, value => PercentOrOff(T("options.screenEffectScale"), value)));
-        // fovEffectScale's slider is the square root of the value, which the label shows.
-        Add(new Slider(right, 62, 150, () => Math.Sqrt(settings.FovEffectScale), value => settings.FovEffectScale = value * value,
-            value => PercentOrOff(T("options.fovEffectScale"), value * value)));
-        Add(new Slider(left, 87, 150, () => settings.GlintSpeed, value => settings.GlintSpeed = value, value => PercentOrOff(T("options.glintSpeed"), value)));
-        Add(new Slider(right, 87, 150, () => settings.GlintStrength, value => settings.GlintStrength = value, value => PercentOrOff(T("options.glintStrength"), value)));
-        Add(OptionWidgets.Boolean("options.accessibility.narrator_hotkey", settings.NarratorHotkey, left, 112, on => settings.NarratorHotkey = on));
-        Add(OptionWidgets.Boolean("options.hideLightningFlashes", settings.HideLightningFlashes, left, 137, on => settings.HideLightningFlashes = on));
-        // notificationDisplayTime is an IntRange(5, 100) in tenths; its label is the multiplier as Java prints a double.
-        Add(new Slider(right, 112, 150, () => TenthsToSlider((int)Math.Round(settings.NotificationDisplayTime * 10.0)),
+        // Vanilla's order, of the options this client has.
+        Add(new Slider(left, 62, 150, () => TenthsToSlider((int)Math.Round(settings.NotificationDisplayTime * 10.0)),
             value => settings.NotificationDisplayTime = SliderToTenths(value) / 10.0,
             value => $"{T("options.notifications.display_time")}: {T("options.multiplier").Replace("%s", JavaDouble(SliderToTenths(value) / 10.0))}"));
+        Add(new Slider(right, 62, 150, () => settings.ScreenEffectScale, value => settings.ScreenEffectScale = value, value => PercentOrOff(T("options.screenEffectScale"), value)));
+        // fovEffectScale's and darknessEffectScale's sliders are the square root of the value, which the label shows.
+        Add(new Slider(left, 87, 150, () => Math.Sqrt(settings.FovEffectScale), value => settings.FovEffectScale = value * value,
+            value => PercentOrOff(T("options.fovEffectScale"), value * value)));
+        Add(new Slider(right, 87, 150, () => Math.Sqrt(settings.DarknessEffectScale), value => settings.DarknessEffectScale = value * value,
+            value => PercentOrOff(T("options.darknessEffectScale"), value * value)));
+        Add(new Slider(left, 112, 150, () => settings.GlintSpeed, value => settings.GlintSpeed = value, value => PercentOrOff(T("options.glintSpeed"), value)));
+        Add(new Slider(right, 112, 150, () => settings.GlintStrength, value => settings.GlintStrength = value, value => PercentOrOff(T("options.glintStrength"), value)));
+        Add(OptionWidgets.Boolean("options.hideLightningFlashes", settings.HideLightningFlashes, left, 137, on => settings.HideLightningFlashes = on));
+        Add(OptionWidgets.Boolean("options.accessibility.narrator_hotkey", settings.NarratorHotkey, right, 137, on => settings.NarratorHotkey = on));
         AddDone(context, width, height);
     }
 

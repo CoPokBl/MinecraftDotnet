@@ -1,5 +1,6 @@
 using System.Numerics;
 using ClientLib.Maths;
+using Minecraft.Data.EnvironmentAttributes;
 
 namespace GraphicalClient.Rendering;
 
@@ -9,6 +10,9 @@ namespace GraphicalClient.Rendering;
 /// </summary>
 public sealed class Camera {
     public Vec3d Position { get; private set; }
+
+    /// <summary><c>Camera.attributeProbe</c>: the environment attributes where the camera is, ticked at last frame's position.</summary>
+    public EnvironmentAttributeProbe AttributeProbe { get; } = new();
     public float Yaw { get; private set; }
     public float Pitch { get; private set; }
     public Matrix4x4 View { get; private set; } = Matrix4x4.Identity;

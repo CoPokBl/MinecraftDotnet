@@ -102,11 +102,11 @@ public sealed class BeaconRenderer(BlockEntityRendererContext context) : BlockEn
         pose.RotateYDegrees(animationTime * 2.25F - 45.0F);
         float vv2 = -1.0F + texVOff;
         float vv1 = height * scale * (0.5F / solidBeamRadius) + vv2;
-        RenderPart(pose, render.Batch, new ModelDrawState(texture, 0xFF000000 | color, 15, 15, 0), repeats, beamStart, beamEnd, visibleFrom, visibleTo,
+        RenderPart(pose, render.Batch, new ModelDrawState(texture, 0xFF000000 | color, 15, 15, 0) { Emissive = true, Unshaded = true }, repeats, beamStart, beamEnd, visibleFrom, visibleTo,
             0.0F, solidBeamRadius, solidBeamRadius, 0.0F, -solidBeamRadius, 0.0F, 0.0F, -solidBeamRadius, vv1, vv2);
         pose.Pop();
         vv1 = height * scale + vv2;
-        RenderPart(pose, render.TranslucentBatch, new ModelDrawState(texture, 32u << 24 | (color & 0xFFFFFF), 15, 15, 0), repeats, beamStart, beamEnd,
+        RenderPart(pose, render.TranslucentBatch, new ModelDrawState(texture, 32u << 24 | (color & 0xFFFFFF), 15, 15, 0) { Emissive = true, Unshaded = true }, repeats, beamStart, beamEnd,
             visibleFrom, visibleTo, -beamGlowRadius, -beamGlowRadius, beamGlowRadius, -beamGlowRadius, -beamGlowRadius, beamGlowRadius, beamGlowRadius,
             beamGlowRadius, vv1, vv2);
         pose.Pop();

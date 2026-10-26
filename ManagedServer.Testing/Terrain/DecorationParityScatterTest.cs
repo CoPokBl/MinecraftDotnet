@@ -90,10 +90,11 @@ public class DecorationParityScatterTest {
     /// the sample to every structure the overworld generates. What is left unmeasured is the nether's
     /// and the end's.
     /// <p/>
-    /// <b>The desert pyramid is here knowing it reads as a difference</b>, since a
-    /// <c>ScatteredFeaturePiece</c> keeps its ground height on the start and the harness rebuilds the
-    /// start per scene. What it is here for is the rest of the pyramid, and for the shape of that
-    /// difference staying the one the base class documents rather than growing a second cause.
+    /// <b>The desert pyramid is here knowing it reads as a difference</b> outside its source chunk,
+    /// since its height is decided once for the start and the harness rebuilds the start per scene, so
+    /// in a neighbour it decides from that neighbour's draw. What it is here for is the rest of the
+    /// pyramid, and for the shape of that difference staying the one <c>ScatteredFeaturePiece</c>
+    /// documents rather than growing a second cause.
     /// <p/>
     /// <b>The ring is the point rather than the middle.</b> A wreck is 28 blocks long, so it spans two
     /// chunks and each of them settles it again; the chunk holding the far half is where a settle that
@@ -118,7 +119,7 @@ public class DecorationParityScatterTest {
         (-43, 51),    // pillager_outpost
         (-26, 23),    // ruined_portal
 
-        (-96, -77),   // desert_pyramid
+        (-21, -156),  // desert_pyramid
         (34, 11),     // monument
         (205, 107),   // swamp_hut
         (-61, -120),  // jungle_pyramid

@@ -89,6 +89,10 @@ public sealed class ArmorStandRenderer : LivingEntityRenderer<ArmorStandRenderSt
         int flags = entity.Get(EntityDataFields.ArmorStand.ClientFlags);
         state.ArmorStandYRot = Mth.RotLerp(partialTick, entity.YRotO, entity.YRot);
         state.IsMarker = (flags & 16) != 0;
+        if (state.IsMarker) {
+            // ArmorStand.getLightProbePosition: a marker's box has no size, so the probe is the block it stands in.
+            LightAt(entity, state, (int)Math.Floor(entity.Position.X), (int)Math.Floor(entity.Position.Y), (int)Math.Floor(entity.Position.Z), context.Level);
+        }
         state.IsSmall = (flags & 1) != 0;
         // ArmorStand.isBaby is isSmall.
         state.IsBaby = state.IsSmall;

@@ -182,7 +182,7 @@ public sealed class DevArtSource : IResourceSource {
         }
         if (path == "lava") {
             string tex = Register("lava", new DevArt.Spec(DevArt.Style.Lava, 0xE3601B, 0, seed));
-            return new BlockAppearance(BlockGeometry.Fluid, RenderLayer.Solid, Six(tex), true);
+            return new BlockAppearance(BlockGeometry.Fluid, RenderLayer.Solid, Six(tex));
         }
 
         if (CrossCategories.Contains(category) || path.EndsWith("_sapling") || path is "dead_bush" or "short_grass" or "fern" or "large_fern" or "tall_grass" or "cobweb") {
@@ -279,8 +279,6 @@ public sealed class DevArtSource : IResourceSource {
             style = DevArt.Style.Machine;
         }
 
-        bool emissive = state.LightEmission >= 14 && path is not ("beacon" or "conduit" or "end_rod");
-
         // Columns: a log's end grain faces along its axis, everything else is bark.
         if (category is "rotated_pillar" or "infested_rotated_pillar" or "hay" || path.EndsWith("_log") || path.EndsWith("_stem") || path.Contains("basalt")) {
             bool wood = path.EndsWith("_log") || path.EndsWith("_stem") || path.EndsWith("_wood") || path.EndsWith("_hyphae");
@@ -294,7 +292,7 @@ public sealed class DevArtSource : IResourceSource {
                 "z" => [side, side, end, end, side, side],
                 _ => [end, end, side, side, side, side]
             };
-            return new BlockAppearance(BlockGeometry.Shape, layer, faces, emissive);
+            return new BlockAppearance(BlockGeometry.Shape, layer, faces);
         }
 
         if (path is "grass_block" or "podzol" or "mycelium" or "crimson_nylium" or "warped_nylium") {
@@ -321,7 +319,7 @@ public sealed class DevArtSource : IResourceSource {
             string front = Register(path + ":front", new DevArt.Spec(DevArt.Style.MachineFront, colour, faceColour, seed));
             string[] faces = Six(sideKey);
             faces[Directions.Parse(StateProperties.Get(state, "facing")) ?? (int)Face.North] = front;
-            return new BlockAppearance(BlockGeometry.Shape, layer, faces, emissive);
+            return new BlockAppearance(BlockGeometry.Shape, layer, faces);
         }
 
         if (path is "crafting_table" or "bookshelf" or "tnt" or "cartography_table" or "fletching_table" or "smithing_table") {
@@ -331,7 +329,7 @@ public sealed class DevArtSource : IResourceSource {
         }
 
         string key = Register(path, new DevArt.Spec(style, colour, accent, seed));
-        return new BlockAppearance(BlockGeometry.Shape, layer, Six(key), emissive, tint);
+        return new BlockAppearance(BlockGeometry.Shape, layer, Six(key), tint);
     }
 
     private BlockAppearance CrossAppearance(string path, string category, uint colour, int seed) {
@@ -364,9 +362,8 @@ public sealed class DevArtSource : IResourceSource {
             spec = new DevArt.Spec(DevArt.Style.Plant, plant, 0, seed);
         }
         string key = category == "fire" ? SpriteKey("minecraft:block/fire_0") : Register(path + ":cross", spec);
-        bool emissive = category is "torch" or "wall_torch" or "fire" or "soul_fire";
         bool grassy = path is "short_grass" or "tall_grass" or "fern" or "large_fern" or "sugar_cane";
-        return new BlockAppearance(BlockGeometry.Cross, RenderLayer.Cutout, Six(key), emissive, grassy ? TintKind.Grass : TintKind.None);
+        return new BlockAppearance(BlockGeometry.Cross, RenderLayer.Cutout, Six(key), grassy ? TintKind.Grass : TintKind.None);
     }
 
     private static uint FlowerColour(string path, uint mapColour) {

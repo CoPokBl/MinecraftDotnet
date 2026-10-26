@@ -3,7 +3,7 @@ using System.Numerics;
 namespace GraphicalClient.Assets.ResourcePacks;
 
 /// <summary>One quad for <see cref="IconRasterizer"/>: corners in item model space, 0 to 1 across the block, and what it is painted with.</summary>
-public readonly record struct IconQuad(Vector3[] Positions, Vector2[] Uvs, TextureImage Image, uint Tint, bool Shade);
+public readonly record struct IconQuad(Vector3[] Positions, Vector2[] Uvs, TextureImage Image, uint Tint);
 
 /// <summary>
 /// Draws a model into a square image the way <c>GuiItemAtlas</c> draws an item into its slot: the
@@ -46,12 +46,9 @@ public static class IconRasterizer {
             if (turned.Z <= 0) {
                 continue;
             }
-            float light = 1.0F;
-            if (quad.Shade) {
-                // minecraft_mix_light, in the slot's flipped space where the light directions are given.
-                Vector3 n = flip.Transform(turned);
-                light = Math.Min(1.0F, 0.4F + 0.6F * (Math.Max(0, Vector3.Dot(lightA, n)) + Math.Max(0, Vector3.Dot(lightB, n))));
-            }
+            // minecraft_mix_light, in the slot's flipped space where the light directions are given.
+            Vector3 n = flip.Transform(turned);
+            float light = Math.Min(1.0F, 0.4F + 0.6F * (Math.Max(0, Vector3.Dot(lightA, n)) + Math.Max(0, Vector3.Dot(lightB, n))));
             Triangle(screen[0], screen[1], screen[2], quad.Uvs[0], quad.Uvs[1], quad.Uvs[2], quad.Image, quad.Tint, light, rgba, depth, size);
             Triangle(screen[2], screen[3], screen[0], quad.Uvs[2], quad.Uvs[3], quad.Uvs[0], quad.Image, quad.Tint, light, rgba, depth, size);
         }

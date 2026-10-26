@@ -19,13 +19,16 @@ internal sealed class OcclusionWalk {
     private bool[] _loaded = [];
     private int _stampValue;
     private int _width, _height, _start;
+    private bool _smartCull;
 
     /// <summary>The sections the last <see cref="Run"/> reached, nearest first.</summary>
     public List<SectionRender> Reachable { get; } = new(8192);
 
     /// <summary>Copies the camera relative grid of sections, their visibility and which columns are loaded.</summary>
     /// <param name="range">Sections from the camera's column to the edge of the grid.</param>
-    public void Prepare(ClientLevel level, Dictionary<long, SectionRender>.ValueCollection sections, Dictionary<long, ulong> visibility, int camX, int camY, int camZ, int range) {
+    /// <param name="smartCull">False floods every loaded section in range, as vanilla does with <c>smartCull</c> off.</param>
+    public void Prepare(ClientLevel level, Dictionary<long, SectionRender>.ValueCollection sections, Dictionary<long, ulong> visibility, int camX, int camY, int camZ, int range,
+        bool smartCull = true) {
         int width = range * 2 + 1;
         int height = level.SectionCount;
         int columns = width * width;
@@ -58,6 +61,7 @@ internal sealed class OcclusionWalk {
             }
         }
         _stampValue++;
+        _smartCull = smartCull;
         _width = width;
         _height = height;
         _start = (Math.Clamp(camY, 0, height - 1) * width + range) * width + range;
@@ -70,6 +74,7 @@ internal sealed class OcclusionWalk {
     public void Run() {
         Reachable.Clear();
         int width = _width, height = _height, columns = width * width, stamp = _stampValue;
+        bool smartCull = _smartCull;
         _stamp[_start] = stamp;
         _directions[_start] = 0;
         _sources[_start] = 0;
@@ -87,10 +92,10 @@ internal sealed class OcclusionWalk {
             ulong visibility = _visibility[cell];
 
             for (int d = 0; d < 6; d++) {
-                if ((directions & (1 << (d ^ 1))) != 0) {
+                if (smartCull && (directions & (1 << (d ^ 1))) != 0) {
                     continue;
                 }
-                if (sources != 0) {
+                if (smartCull && sources != 0) {
                     bool seen = false;
                     for (int i = 0; i < 6 && !seen; i++) {
                         seen = (sources & (1 << i)) != 0 && (visibility & (1UL << ((i ^ 1) * 6 + d))) != 0;

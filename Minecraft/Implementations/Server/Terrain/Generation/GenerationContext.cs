@@ -9,6 +9,7 @@ internal interface IForkSink {
     IGenerationUnit Fork(Vec3<int> start, Vec3<int> end);
     void Fork(Action<IBlockSetter> build);
     bool ReadForkedWrites(ForkedBlock into);
+    ChunkData? ReadNeighbour(int chunkX, int chunkZ, ForkedBlock forked);
 }
 
 /// <summary>
@@ -35,10 +36,39 @@ internal sealed class GenerationContext : IForkSink {
     private List<ForkedSection>? _forkedIn;
     private Vec2<int> _forkedInChunk;
 
-    public GenerationContext(int minY, int maxY, MinecraftRegistry registry) {
+    /// <summary>What <see cref="ReadNeighbour"/> asks, or null for a context with no world behind it.</summary>
+    private readonly Func<Vec2<int>, ChunkData?>? _generated;
+    private readonly Func<Vec2<int>, Action<ForkedSection>, bool>? _parked;
+
+    public GenerationContext(int minY, int maxY, MinecraftRegistry registry,
+        Func<Vec2<int>, ChunkData?>? generated = null,
+        Func<Vec2<int>, Action<ForkedSection>, bool>? parked = null) {
+
         _minY = minY;
         _maxY = maxY;
         _registry = registry;
+        _generated = generated;
+        _parked = parked;
+    }
+
+    /// <summary>
+    /// A neighbour as the world holds it: a frozen copy if it has been generated, and otherwise null
+    /// after replaying what other chunks have forked into it so far.
+    /// </summary>
+    public ChunkData? ReadNeighbour(int chunkX, int chunkZ, ForkedBlock forked) {
+        Vec2<int> chunk = new(chunkX, chunkZ);
+
+        if (_generated?.Invoke(chunk) is { } generated) {
+            return generated;
+        }
+
+        _parked?.Invoke(chunk, fork => {
+            int sectionMinY = _minY + fork.SectionIndex * ChunkSection.Size;
+            fork.Overlay.ForEachWrite((x, y, z, state) =>
+                forked((chunkX << 4) | x, sectionMinY + y, (chunkZ << 4) | z, state));
+        });
+
+        return null;
     }
 
     /// <summary>

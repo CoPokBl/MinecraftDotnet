@@ -1,7 +1,11 @@
-out vec4 vColour;
+#include "common.glsl"
 
-// Vanilla's rendertype_lines: each end pulled a 256th of the way toward the camera, so a line on a
-// surface wins against it, then pushed sideways on screen by half the width either way.
+out vec4 vColour;
+out float vSpherical;
+out float vCylindrical;
+
+// Vanilla's rendertype_lines: each end pulled a 256th of the way toward the camera, so a line on a surface wins
+// against it, then pushed sideways on screen by half the width either way.
 const float VIEW_SHRINK = 1.0 - (1.0 / 256.0);
 
 void main() {
@@ -16,5 +20,7 @@ void main() {
         offset = -offset;
     }
     gl_Position = vec4((ndcStart + vec3(offset * vertexLineSide(), 0.0)) * start.w, start.w);
+    vSpherical = fogSphericalDistance(position);
+    vCylindrical = fogCylindricalDistance(position);
     vColour = vertexColour();
 }

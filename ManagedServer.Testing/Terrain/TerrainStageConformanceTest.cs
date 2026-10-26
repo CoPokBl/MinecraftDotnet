@@ -33,22 +33,26 @@ public class TerrainStageConformanceTest {
     private const int MinY = -64;
     private const int Height = 384;
 
+    /// <summary>The nether and end dimension types' range, twice the height their noise covers.</summary>
+    private const int NetherMinY = 0;
+    private const int NetherHeight = 256;
+
     /// <summary>An iceberg's own block, which no material rule writes.</summary>
     private static uint PackedIce => Minecraft.Data.Generated.Block.PackedIce.StateId;
 
     /// <summary>The badlands banding, which the spires pass moves the heightmap for.</summary>
     private static uint Terracotta => Minecraft.Data.Generated.Block.Terracotta.StateId;
 
-    private static string FixturePath =>
-        Path.Combine(TestContext.CurrentContext.TestDirectory, "Terrain", "vanilla-terrainstage.bin.gz");
+    private static string FixturePath(string name) =>
+        Path.Combine(TestContext.CurrentContext.TestDirectory, "Terrain", name);
 
     private sealed record Scene(int ChunkX, int ChunkZ, int MinY, int Height, uint[] Noise,
         uint[] Surface, uint[] Carved);
 
     private sealed record Fixture(long Seed, IReadOnlyList<Scene> Scenes);
 
-    private static Fixture Read() {
-        using FileStream file = File.OpenRead(FixturePath);
+    private static Fixture Read(string name = "vanilla-terrainstage.bin.gz") {
+        using FileStream file = File.OpenRead(FixturePath(name));
         using GZipStream gzip = new(file, CompressionMode.Decompress);
         using MemoryStream buffer = new();
         gzip.CopyTo(buffer);
@@ -140,19 +144,78 @@ public class TerrainStageConformanceTest {
         Assert.That(fixture.Scenes.Any(scene => scene.Surface.Contains(Terracotta)), Is.True,
             "no chunk in the sample has badlands banding in it");
 
+        CompareAll(generator, fixture, MinY, Height, failures);
+        Assert.That(failures, Is.Empty, string.Join("\n", failures.Take(40)));
+    }
+
+    [Test]
+    public void EveryBlockOfTheNethersThreePassesMatchesVanilla() {
+        Fixture fixture = Read("vanilla-terrainstage-nether.bin.gz");
+
+        VanillaTerrainGenerator generator = VanillaTerrainGenerator
+            .Nether(VanillaPack.Source, fixture.Seed)
+            .WithCarvers();
+
+        List<string> failures = [];
+
+        // One chunk per nether biome, two wholly inside a forest, and five more for the carver, which in
+        // the nether runs through netherrack above a lava sea rather than through stone above an aquifer.
+        Assert.That(fixture.Scenes, Has.Count.EqualTo(12));
+        Assert.That(fixture.Scenes.Count(scene => !scene.Surface.SequenceEqual(scene.Carved)),
+            Is.GreaterThan(5), "the sample holds almost no carving, so it is not measuring the pass");
+
+        // Each biome's own floor, so a chunk landing in the wrong biome is not five chunks of
+        // netherrack agreeing with each other.
+        HashSet<uint> surfaces = fixture.Scenes.SelectMany(scene => scene.Surface).ToHashSet();
+        foreach (IBlock floor in (IBlock[])[
+                     Minecraft.Data.Generated.Block.SoulSand, Minecraft.Data.Generated.Block.SoulSoil,
+                     Minecraft.Data.Generated.Block.CrimsonNylium, Minecraft.Data.Generated.Block.WarpedNylium,
+                     Minecraft.Data.Generated.Block.Basalt, Minecraft.Data.Generated.Block.Blackstone,
+                     Minecraft.Data.Generated.Block.Gravel, Minecraft.Data.Generated.Block.Lava,
+                     Minecraft.Data.Generated.Block.Bedrock]) {
+
+            Assert.That(surfaces.Contains(floor.StateId), Is.True, $"no chunk in the sample has {floor.Identifier}");
+        }
+
+        CompareAll(generator, fixture, NetherMinY, NetherHeight, failures);
+        Assert.That(failures, Is.Empty, string.Join("\n", failures.Take(40)));
+    }
+
+    [Test]
+    public void EveryBlockOfTheEndsThreePassesMatchesVanilla() {
+        Fixture fixture = Read("vanilla-terrainstage-end.bin.gz");
+
+        VanillaTerrainGenerator generator = VanillaTerrainGenerator
+            .End(VanillaPack.Source, fixture.Seed)
+            .WithCarvers();
+
+        List<string> failures = [];
+
+        // The end is end stone and air, so what decides whether the sample measures anything is how
+        // much of it is island: the central one and outer ones both.
+        Assert.That(fixture.Scenes, Has.Count.EqualTo(13));
+        uint endStone = Minecraft.Data.Generated.Block.EndStone.StateId;
+        Assert.That(fixture.Scenes.Count(scene => scene.Noise.Contains(endStone)), Is.GreaterThan(9),
+            "most of the sample is void, so it is not measuring the islands");
+
+        CompareAll(generator, fixture, NetherMinY, NetherHeight, failures);
+        Assert.That(failures, Is.Empty, string.Join("\n", failures.Take(40)));
+    }
+
+    private static void CompareAll(VanillaTerrainGenerator generator, Fixture fixture, int minY, int height,
+        List<string> failures) {
+
         foreach (Scene scene in fixture.Scenes) {
-            Assert.That(scene.MinY, Is.EqualTo(MinY), "fixture generated over a different range");
-            Assert.That(scene.Height, Is.EqualTo(Height), "fixture generated over a different range");
+            Assert.That(scene.MinY, Is.EqualTo(minY), "fixture generated over a different range");
+            Assert.That(scene.Height, Is.EqualTo(height), "fixture generated over a different range");
 
             (uint[] noise, uint[] surface, uint[] carved) =
-                generator.TerrainStages(scene.ChunkX, scene.ChunkZ, MinY, MinY + Height);
+                generator.TerrainStages(scene.ChunkX, scene.ChunkZ, minY, minY + height);
 
             Compare(failures, scene, "noise", scene.Noise, noise);
             Compare(failures, scene, "surface", scene.Surface, surface);
             Compare(failures, scene, "carver", scene.Carved, carved);
         }
-
-        Assert.That(failures, Is.Empty, string.Join("\n", failures.Take(40)));
     }
 
     /// <summary>
@@ -176,7 +239,7 @@ public class TerrainStageConformanceTest {
                 continue;
             }
 
-            int y = MinY + (i / 256);
+            int y = scene.MinY + (i / 256);
             int z = (i % 256) / 16;
             int x = i % 16;
 

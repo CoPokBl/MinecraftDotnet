@@ -7,6 +7,44 @@ namespace GraphicalClient.Assets.ResourcePacks;
 /// ticks to show them for, as <c>SpriteContents.createAnimatedTexture</c> reads them.
 /// </summary>
 public sealed record TextureAnimation(TextureImage[] Frames, (int Index, int Time)[] Sequence, bool Interpolate) {
+    /// <summary>The image the frames were cut from, which vanilla mipmaps whole; null for frames drawn one by one.</summary>
+    public TextureImage? Strip { get; init; }
+
+    /// <summary>Frames across a row of <see cref="Strip"/>.</summary>
+    public int Columns { get; init; } = 1;
+
+    public Rendering.TextureMipSettings Mip { get; init; } = Rendering.TextureMipSettings.Default;
+
+    public bool IsItem { get; init; }
+
+    private TextureImage[][]? _levels;
+
+    /// <summary>
+    /// A frame's mipmap levels at <paramref name="size"/> square, cut from the strip's levels as vanilla's frames are.
+    /// Frames that are not that size, or have no strip, are each scaled to it and mipped alone, which differs from
+    /// vanilla only where the flood fill or the alpha coverage would have reached across a frame's edge.
+    /// </summary>
+    public TextureImage[] FrameLevels(int frame, int size, int levels) {
+        if (_levels == null) {
+            int width = Frames[0].Width, height = Frames[0].Height;
+            if (Strip is { } strip && width == size && height == size) {
+                TextureImage[] stripLevels = Rendering.Mipmaps.Generate(strip, Mip, IsItem, levels);
+                _levels = new TextureImage[Frames.Length][];
+                for (int i = 0; i < Frames.Length; i++) {
+                    _levels[i] = new TextureImage[levels];
+                    for (int level = 0; level < levels; level++) {
+                        _levels[i][level] = stripLevels[level].Region((i % Columns * width) >> level, (i / Columns * height) >> level,
+                            Math.Max(1, width >> level), Math.Max(1, height >> level));
+                    }
+                }
+            }
+            else {
+                _levels = Frames.Select(f => Rendering.Mipmaps.Generate(f.Resized(size), Mip, IsItem, levels)).ToArray();
+            }
+        }
+        return _levels[frame];
+    }
+
     /// <summary>The animation in a texture, or null for a still one; frames are square unless the metadata sizes them.</summary>
     public static TextureAnimation? Read(TextureImage image, byte[]? meta) {
         if (Section(meta) is not { } animation) {
@@ -41,7 +79,11 @@ public sealed record TextureAnimation(TextureImage[] Frames, (int Index, int Tim
                 sequence.Add((i, Math.Max(1, frameTime)));
             }
         }
-        return sequence.Count <= 1 ? null : new TextureAnimation(frames, sequence.ToArray(), animation.Value<bool?>("interpolate") ?? false);
+        return sequence.Count <= 1
+            ? null
+            : new TextureAnimation(frames, sequence.ToArray(), animation.Value<bool?>("interpolate") ?? false) {
+                Strip = image, Columns = columns, Mip = Rendering.TextureMipSettings.Read(meta)
+            };
     }
 
     /// <summary>A <c>.mcmeta</c>'s <c>animation</c> section; null when there is none or the file does not parse.</summary>

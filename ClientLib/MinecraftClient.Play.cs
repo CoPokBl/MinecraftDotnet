@@ -75,6 +75,7 @@ public sealed partial class MinecraftClient {
     /// <summary>Puts the client in a level with no server behind it, for driving the player in tests.</summary>
     internal LocalPlayer StartOffline(ClientLevel level, int entityId = 1) {
         Level = level;
+        level.TimelineTag ??= tag => Tags.GetValueOrDefault("minecraft:timeline")?.GetValueOrDefault(tag);
         Player = new LocalPlayer(this) {
             Id = entityId,
             Uuid = Profile.Uuid,
@@ -190,7 +191,11 @@ public sealed partial class MinecraftClient {
     private void SetLevel(Identifier name, int dimensionType, int seaLevel, bool flat, long seed) {
         IDimensionType type = Registry.DimensionTypes[dimensionType];
         Level?.Clear();
-        Level = new ClientLevel(Registry, name, type, seaLevel, flat, seed, _clocks);
+        Level = new ClientLevel(Registry, name, type, seaLevel, flat, seed, _clocks) {
+            TimelineTag = tag => Tags.GetValueOrDefault("minecraft:timeline")?.GetValueOrDefault(tag)
+        };
+        // ClientLevel's constructor ends with updateSkyBrightness.
+        Level.Environment.UpdateSkyBrightness();
         LevelChanged?.Invoke(Level);
     }
 
@@ -375,11 +380,14 @@ public sealed partial class MinecraftClient {
         ClientLevel? level = Level;
         level?.Light.Tick();
         TickEntities();
+        level?.Environment.TickLightning(Entities);
         TickBlockEntities();
+        level?.Environment.UpdateSkyBrightness();
         if (level is { TickRateManager.RunsNormally: true }) {
             level.WorldBorder.Tick();
             level.TickTime();
         }
+        level?.Environment.Tick();
         if (level != null) {
             Particles.TickExplosions();
         }

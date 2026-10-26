@@ -71,14 +71,17 @@ public abstract class TemplateStructurePiece : StructurePiece {
 
         Vec3<int> position = SettleAgainstTerrain(level);
 
-        PlaceSettings.BoundingBox = chunkBox;
-        BoundingBox = Template.GetBoundingBox(PlaceSettings, position);
+        // Upstream writes the chunk box onto the piece's own settings. Neighbouring chunks place one
+        // piece at once here, and a placement reading the other chunk's box clips itself away.
+        StructurePlaceSettings settings = PlaceSettings.Copy();
+        settings.BoundingBox = chunkBox;
+        BoundingBox = Template.GetBoundingBox(settings, position);
 
-        if (!Template.PlaceInWorld(level, position, referencePos, PlaceSettings, random)) {
+        if (!Template.PlaceInWorld(level, position, referencePos, settings, random)) {
             return;
         }
 
-        foreach (TemplateBlockInfo marker in Template.FilterBlocks(position, PlaceSettings,
+        foreach (TemplateBlockInfo marker in Template.FilterBlocks(position, settings,
             Block.StructureBlock.Identifier, level.Registry)) {
 
             if (marker.Nbt is null) {
@@ -98,7 +101,7 @@ public abstract class TemplateStructurePiece : StructurePiece {
             HandleDataMarker(metadata, marker.Pos, level, random, chunkBox);
         }
 
-        foreach (TemplateBlockInfo jigsaw in Template.FilterBlocks(position, PlaceSettings,
+        foreach (TemplateBlockInfo jigsaw in Template.FilterBlocks(position, settings,
             Block.Jigsaw.Identifier, level.Registry)) {
 
             if (jigsaw.Nbt is null) {
@@ -130,9 +133,9 @@ public abstract class TemplateStructurePiece : StructurePiece {
     /// these footprints is at most 28 blocks across, so it spans two chunks, and a chunk whose
     /// writable area the box reaches is at most one chunk from either.
     /// <p/>
-    /// Nothing here writes to <see cref="TemplatePosition"/>. Upstream settles the field and guards
-    /// it with a flag, which leaves the answer belonging to whichever chunk got there first; two of
-    /// this pass's chunks reach a piece at once.
+    /// Nothing here writes to <see cref="TemplatePosition"/>, since two of this pass's chunks reach a
+    /// piece at once. A piece whose answer is not a function of the terrain, the beached wreck's
+    /// burial, decides in <see cref="StructurePiece.SettleOnce"/> instead.
     /// </remarks>
     protected virtual Vec3<int> SettleAgainstTerrain(IFeatureLevel level) => TemplatePosition;
 

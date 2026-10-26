@@ -33,8 +33,8 @@ public sealed class StructureSystem : IStructurePlacementState {
     public const int Range = 8;
 
     /// <summary>
-    /// How many source chunks' starts are kept. Sized well past a view distance of 32, whose
-    /// viewport is 4225 chunks, so a player exploring never evicts what they are standing in.
+    /// How many source chunks' starts the newer of the two cache generations holds before it becomes
+    /// the older. Sized well past a view distance of 32, whose viewport is 4225 chunks.
     /// </summary>
     private const int CacheLimit = 1 << 16;
 
@@ -49,7 +49,23 @@ public sealed class StructureSystem : IStructurePlacementState {
     /// </remarks>
     private readonly Dictionary<DecorationStep, (Identifier Id, Structure Structure)[]> _byStep;
 
-    private readonly ConcurrentDictionary<long, IReadOnlyList<StructureStart>> _starts = new();
+    /// <summary>
+    /// The start cache, in two generations: a lookup that misses the newer one takes the entry over
+    /// from the older, and the newer becomes the older once full.
+    /// </summary>
+    /// <remarks>
+    /// <b>A start is not only a cache entry.</b> What a piece decides once in
+    /// <see cref="StructurePiece.SettleOnce"/> lives on it, as vanilla keeps it on the start a chunk
+    /// stores, so each source chunk must be laid out by exactly one instance and that instance must
+    /// outlive the chunks placing it. Hence the <see cref="Lazy{T}"/>, so two chunks asking at once
+    /// get one start between them, and the two generations, so whatever was used recently is kept.
+    /// </remarks>
+    private volatile ConcurrentDictionary<long, Lazy<IReadOnlyList<StructureStart>>> _starts = new();
+
+    private volatile ConcurrentDictionary<long, Lazy<IReadOnlyList<StructureStart>>> _olderStarts =
+        new();
+
+    private readonly Lock _rotate = new();
 
     private readonly BiomeAtQuart _biomes;
 
@@ -113,6 +129,7 @@ public sealed class StructureSystem : IStructurePlacementState {
         for (int index = 0; index < structures.Length; index++) {
             (Identifier id, Structure structure) = structures[index];
             random.SetFeatureSeed(decorationSeed, index, (int)step);
+            int featureIndex = index;
 
             foreach (StructureStart start in StartsReaching(chunkX, chunkZ, structure,
                 contextFactory)) {
@@ -129,7 +146,23 @@ public sealed class StructureSystem : IStructurePlacementState {
                     attributed.CurrentWriter = Features.FeatureLevelDump.WriterFor(id.ToString());
                 }
 
-                start.PlaceInChunk(level, features, random, chunkBox, chunkX, chunkZ);
+                // A fresh box per start, as vanilla calls getWritableArea per start: a ruined portal
+                // or a fossil encapsulates its whole piece into the box it is handed, and sharing one
+                // would let every later start in the chunk write that far out too.
+                BoundingBox writable = new(chunkBox.MinX, chunkBox.MinY, chunkBox.MinZ,
+                    chunkBox.MaxX, chunkBox.MaxY, chunkBox.MaxZ);
+
+                start.PlaceInChunk(level, features, random, SourceRandom, writable, chunkX, chunkZ);
+
+                // Built as the feature pass builds the decoration random, on Xoroshiro: setting the
+                // decoration seed reseeds whatever source it wraps, and the two draw differently.
+                RandomSource SourceRandom() {
+                    WorldgenRandom source = new(new XoroshiroRandomSource(0L));
+                    source.SetFeatureSeed(source.SetDecorationSeed(_seed, start.ChunkX << 4,
+                        start.ChunkZ << 4), featureIndex, (int)step);
+
+                    return source;
+                }
             }
         }
     }
@@ -215,9 +248,34 @@ public sealed class StructureSystem : IStructurePlacementState {
 
         long key = ((long)sourceChunkX << 32) | (uint)sourceChunkZ;
 
-        if (_starts.TryGetValue(key, out IReadOnlyList<StructureStart>? cached)) {
-            return cached;
+        ConcurrentDictionary<long, Lazy<IReadOnlyList<StructureStart>>> starts = _starts;
+
+        if (starts.TryGetValue(key, out Lazy<IReadOnlyList<StructureStart>>? cached)) {
+            return cached.Value;
         }
+
+        if (!_olderStarts.TryGetValue(key, out Lazy<IReadOnlyList<StructureStart>>? entry)) {
+            entry = new Lazy<IReadOnlyList<StructureStart>>(
+                () => ComputeStartsAt(sourceChunkX, sourceChunkZ, contextFactory),
+                LazyThreadSafetyMode.ExecutionAndPublication);
+        }
+
+        entry = starts.GetOrAdd(key, entry);
+
+        if (starts.Count >= CacheLimit) {
+            lock (_rotate) {
+                if (ReferenceEquals(_starts, starts)) {
+                    _olderStarts = starts;
+                    _starts = new ConcurrentDictionary<long, Lazy<IReadOnlyList<StructureStart>>>();
+                }
+            }
+        }
+
+        return entry.Value;
+    }
+
+    private IReadOnlyList<StructureStart> ComputeStartsAt(int sourceChunkX, int sourceChunkZ,
+        StructureGenerationContext.Factory contextFactory) {
 
         List<StructureStart> found = [];
 
@@ -235,13 +293,6 @@ public sealed class StructureSystem : IStructurePlacementState {
             }
         }
 
-        // Deterministic, so a race that computes the same source chunk twice stores equal answers and
-        // whichever wins is the same world.
-        if (_starts.Count >= CacheLimit) {
-            _starts.Clear();
-        }
-
-        _starts[key] = found;
         return found;
     }
 

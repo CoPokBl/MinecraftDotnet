@@ -116,31 +116,7 @@ public sealed unsafe class TextureAnimator {
         _byLayer.TryGetValue(layer, out Playing? playing) ? (playing.Shown, playing.Version) : (null, 0);
 
     private byte[][] ChainOf(Playing playing, int frame) =>
-        playing.Chains[frame] ??= MipChain(playing.Animation.Frames[frame].Resized(_array.Size), _array.Levels);
-
-    /// <summary>Box filtered levels, as the array's own mipmaps were generated.</summary>
-    private static byte[][] MipChain(TextureImage image, int levels) {
-        byte[][] chain = new byte[levels][];
-        chain[0] = image.Rgba;
-        int size = image.Width;
-        for (int level = 1; level < levels; level++) {
-            int half = Math.Max(1, size / 2);
-            byte[] smaller = new byte[half * half * 4];
-            byte[] larger = chain[level - 1];
-            for (int y = 0; y < half; y++) {
-                for (int x = 0; x < half; x++) {
-                    for (int c = 0; c < 4; c++) {
-                        int sum = larger[((y * 2) * size + x * 2) * 4 + c] + larger[((y * 2) * size + x * 2 + 1) * 4 + c]
-                                  + larger[((y * 2 + 1) * size + x * 2) * 4 + c] + larger[((y * 2 + 1) * size + x * 2 + 1) * 4 + c];
-                        smaller[(y * half + x) * 4 + c] = (byte)(sum / 4);
-                    }
-                }
-            }
-            chain[level] = smaller;
-            size = half;
-        }
-        return chain;
-    }
+        playing.Chains[frame] ??= playing.Animation.FrameLevels(frame, _array.Size, _array.Levels).Select(level => level.Rgba).ToArray();
 
     /// <summary>Sends what the last ticks changed to the texture array.</summary>
     public void Upload() {

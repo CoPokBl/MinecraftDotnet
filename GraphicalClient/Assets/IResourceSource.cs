@@ -46,12 +46,11 @@ public enum TintKind : byte {
 }
 
 /// <param name="Textures">A texture key per face, in <see cref="Face"/> order.</param>
-/// <param name="Emissive">Drawn at full brightness whatever the light, as lava and glowstone look.</param>
 /// <param name="Tint">The biome colour the textures are multiplied by, which is why tinted art is drawn pale.</param>
 /// <param name="TintFaces">Which faces take the tint, a bit per <see cref="Face"/>.</param>
 /// <param name="Model">For <see cref="BlockGeometry.Model"/>: the baked quads, and the colours their tint indices take.</param>
 /// <param name="Particle">The texture key of the block's particle sprite; null for its north face's texture.</param>
-public sealed record BlockAppearance(BlockGeometry Geometry, RenderLayer Layer, string[] Textures, bool Emissive = false,
+public sealed record BlockAppearance(BlockGeometry Geometry, RenderLayer Layer, string[] Textures,
     TintKind Tint = TintKind.None, byte TintFaces = 0x3F, BakedBlockModel? Model = null, TintSource[]? Tints = null, string? Particle = null) {
     public static readonly BlockAppearance Invisible = new(BlockGeometry.None, RenderLayer.Solid, ["", "", "", "", "", ""]);
 }
@@ -69,6 +68,9 @@ public interface IResourceSource {
 
     /// <summary>How a texture key animates, or null for a still texture.</summary>
     TextureAnimation? Animation(string key) => null;
+
+    /// <summary>How a still texture's mipmaps are made, from its <c>.mcmeta</c>; an animated one carries its own.</summary>
+    Rendering.TextureMipSettings MipSettings(string key) => Rendering.TextureMipSettings.Default;
 
     /// <summary>
     /// The texture key of a block atlas sprite that code draws rather than a block model names, such as

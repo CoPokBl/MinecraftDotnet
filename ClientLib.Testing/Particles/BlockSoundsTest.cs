@@ -226,6 +226,8 @@ public class BlockSoundsTest {
         level.Clocks.HandleUpdates(0, [("minecraft:overworld", 6000L, 0.0F, 1.0F)]);
         Assert.That(Animate(client, sounds, x, y, z, 2000), Is.Empty);
         level.Clocks.HandleUpdates(0, [("minecraft:overworld", 24000L * 3 + 18000L, 0.0F, 1.0F)]);
+        // A timeline is sampled once a tick, and the level's tick is what moves it on.
+        level.Environment.Attributes.InvalidateTickCache();
         List<AnimateTickSound> made = Animate(client, sounds, x, y, z, 2000, SoundType.CreakingHeartIdle);
         Assert.That(made, Has.Count.EqualTo(2000 / 16).Within(40));
         Set(level, x, y + 1, z, Block.OakLog);

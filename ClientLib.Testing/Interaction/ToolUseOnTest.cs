@@ -91,6 +91,30 @@ public class ToolUseOnTest {
     [TestCase("minecraft:stone", false)]
     public void AHoneycombIsPredictedToActOnlyOnWhatItWaxes(string block, bool consumes) {
         IBlock target = VanillaRegistry.Data.Blocks[block];
-        Assert.That(UsePrediction.ItemUseOnConsumes(new ItemStack(Item.Honeycomb), target), Is.EqualTo(consumes));
+        Assert.That(UseOn(new ItemStack(Item.Honeycomb), target) == InteractionResult.Success, Is.EqualTo(consumes));
     }
+
+    [Test]
+    public void AnEyeOfEnderOnlyStopsAtAFrameWithoutOne() {
+        IBlock empty = Block.EndPortalFrame.WithState(new NBT.Tags.CompoundTag(("eye", new NBT.Tags.StringTag("false"))));
+        IBlock filled = Block.EndPortalFrame.WithState(new NBT.Tags.CompoundTag(("eye", new NBT.Tags.StringTag("true"))));
+        Assert.That(UseOn(new ItemStack(Item.EnderEye), empty), Is.EqualTo(InteractionResult.Success));
+        Assert.That(UseOn(new ItemStack(Item.EnderEye), filled), Is.EqualTo(InteractionResult.Pass));
+        Assert.That(UseOn(new ItemStack(Item.EnderEye), Block.Stone), Is.EqualTo(InteractionResult.Pass));
+    }
+
+    [Test]
+    public void ABottleAndALeadPassToTheirUse() {
+        Assert.That(UseOn(new ItemStack(Item.GlassBottle), Block.Stone), Is.EqualTo(InteractionResult.Pass));
+        Assert.That(UseOn(new ItemStack(Item.Lead), Block.OakFence), Is.EqualTo(InteractionResult.Pass));
+    }
+
+    [Test]
+    public void AFireworkLaunchesFromABlockUnlessGliding() {
+        Assert.That(UseOn(new ItemStack(Item.FireworkRocket), Block.Stone), Is.EqualTo(InteractionResult.Success));
+        Assert.That(UsePrediction.ItemUseOn(new ItemStack(Item.FireworkRocket), Block.Stone, BlockFace.PosY, true, new BlockTags(Client)),
+            Is.EqualTo(InteractionResult.Pass));
+    }
+
+    private InteractionResult UseOn(ItemStack held, IBlock target) => UsePrediction.ItemUseOn(held, target, BlockFace.PosY, false, new BlockTags(Client));
 }

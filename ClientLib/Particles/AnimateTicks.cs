@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using ClientLib.World;
 using Minecraft.Data.Blocks;
 using Minecraft.Data.Blocks.Properties;
@@ -162,14 +163,11 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
     private readonly ClientChunk?[] _grid = new ClientChunk?[GridSize * GridSize];
     private int _gridX, _gridZ;
     private readonly ParticleRandom _random = new();
-    private (IParticle Particle, float Probability)[]?[] _ambient = [];
+    private readonly ConditionalWeakTable<IReadOnlyList<AmbientParticle>, (IParticle Particle, float Probability)[]> _ambient = new();
     private Dictionary<Identifier, int[]>? _tagSource;
     private readonly Dictionary<Identifier, HashSet<int>> _tags = new();
 
     private ParticleEngine Engine => client.Particles;
-
-    /// <summary><c>Level.getSkyDarken</c>, which the client's renderer works out; fireflies ask for it.</summary>
-    public int SkyDarkening { get; set; }
 
     /// <summary><c>ClientLevel.animateTick</c> around the block the player is in.</summary>
     public void Tick() {
@@ -200,8 +198,7 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
         if (!ReferenceEquals(level, _level)) {
             _level = level;
             _facts = new Facts[(int)level.Registry.Blocks.StatesCount];
-            _ambient = new (IParticle, float)[]?[(int)level.Registry.Biomes.Count];
-            _tracks = null;
+            _ambient.Clear();
         }
         _gridX = ((int)Math.Floor(x) >> 4) - GridRadius;
         _gridZ = ((int)Math.Floor(z) >> 4) - GridRadius;
@@ -252,7 +249,7 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
         if (marker != null && marker.Identifier == level.Registry.Blocks.GetByStateId(state).Identifier) {
             Engine.AddParticle(Particle.BlockMarker with { BlockState = state }, x + 0.5, y + 0.5, z + 0.5, 0.0, 0.0, 0.0);
         }
-        if (!facts.CollisionFullBlock && chunk != null && AmbientAt(level, chunk, x, y, z) is { } ambient) {
+        if (!facts.CollisionFullBlock && AmbientAt(level, x, y, z) is { } ambient) {
             foreach ((IParticle particle, float probability) in ambient) {
                 // AmbientParticle.canSpawn.
                 if (random.NextFloat() <= probability) {
@@ -326,41 +323,20 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
     #region Biome ambience
 
     /// <summary>
-    /// The <c>visual/ambient_particles</c> attribute where a position is: its quart cell's biome, else the dimension's.
-    /// Only constant values and overrides are read, which is all a list attribute takes.
+    /// The <c>visual/ambient_particles</c> attribute at the block, as particles. Only a type with no options of its own
+    /// can be made from the data form; every vanilla biome's is one.
     /// </summary>
-    private (IParticle Particle, float Probability)[]? AmbientAt(ClientLevel level, ClientChunk chunk, int x, int y, int z) {
-        int section = Math.Clamp((y - level.MinY) >> 4, 0, level.SectionCount - 1);
-        int biome = chunk.GetBiome(x & 15, section, (y - level.MinY) & 15, z & 15);
-        if ((uint)biome >= (uint)_ambient.Length) {
+    private (IParticle Particle, float Probability)[]? AmbientAt(ClientLevel level, int x, int y, int z) {
+        IReadOnlyList<AmbientParticle> value = level.Environment.Attributes.GetValue(EnvironmentAttribute.VisualAmbientParticles, x, y, z);
+        if (value.Count == 0) {
             return null;
         }
-        (IParticle, float)[]? known = _ambient[biome];
-        if (known != null) {
-            return known.Length == 0 ? null : known;
-        }
-        IEnvironmentAttribute attribute = EnvironmentAttribute.VisualAmbientParticles;
-        EnvironmentAttributeValue? value = Constant(level, attribute, level.Registry.Biomes[biome].Attributes[attribute])
-            ?? DimensionConstant(level, attribute);
-        List<(IParticle, float)> particles = [];
-        if (value is EnvironmentAttributeValue.AmbientParticles list) {
-            foreach (AmbientParticle ambient in list.Values) {
-                // Only a type with no options of its own can be made from the data form; every vanilla biome's is one.
-                if (ambient.Particle.Options.Count == 0 && level.Registry.Particles.Contains(ambient.Particle.Type)) {
-                    particles.Add((level.Registry.Particles[ambient.Particle.Type], ambient.Probability));
-                }
-            }
-        }
-        _ambient[biome] = particles.ToArray();
-        return particles.Count == 0 ? null : _ambient[biome];
+        (IParticle, float)[] particles = _ambient.GetValue(value, list => list
+            .Where(ambient => ambient.Particle.Options.Count == 0 && level.Registry.Particles.Contains(ambient.Particle.Type))
+            .Select(ambient => (level.Registry.Particles[ambient.Particle.Type], ambient.Probability))
+            .ToArray());
+        return particles.Length == 0 ? null : particles;
     }
-
-    private static EnvironmentAttributeValue? Constant(ClientLevel level, IEnvironmentAttribute attribute, EnvironmentAttributeEntry? entry) => entry switch {
-        EnvironmentAttributeEntry.Constant constant => constant.Value,
-        EnvironmentAttributeEntry.Modified { Operation: EnvironmentAttributeOperation.Override } overridden =>
-            EnvironmentAttributeValue.FromNbt(attribute.ValueKind, overridden.Argument, level.Registry),
-        _ => null
-    };
 
     #endregion
 
@@ -587,11 +563,11 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
                 break;
             }
             case Kind.FireflyBush:
-                if (random.NextInt(30) == 0 && BooleanAttribute(level, ChunkAt(level, x, z), EnvironmentAttribute.AudioFireflyBushSounds, x, y, z)
+                if (random.NextInt(30) == 0 && BooleanAttribute(level, EnvironmentAttribute.AudioFireflyBushSounds, x, y, z)
                     && level.GetHeight(Minecraft.Schemas.Chunks.HeightmapType.MotionBlockingNoLeaves, x, z) <= y) {
                     Sound(SoundType.FireflyBushIdle, SoundCategory.Ambient, x + 0.5, y + 0.5, z + 0.5, 1.0F, 1.0F);
                 }
-                if (level.MaxLocalRawBrightness(x, y, z, SkyDarkening) <= 13 && random.NextDouble() <= 0.7) {
+                if (level.MaxLocalRawBrightness(x, y, z, level.SkyDarken) <= 13 && random.NextDouble() <= 0.7) {
                     engine.AddParticle(Particle.Firefly, x + random.NextDouble() * 10.0 - 5.0, y + random.NextDouble() * 5.0,
                         z + random.NextDouble() * 10.0 - 5.0, 0.0, 0.0, 0.0);
                 }
@@ -662,7 +638,7 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
                 }
                 break;
             case Kind.CreakingHeart when block is CreakingHeartBlock { CreakingHeartState: not CreakingHeartState.Uprooted }:
-                if (BooleanAttribute(level, ChunkAt(level, x, z), EnvironmentAttribute.GameplayCreakingActive, x, y, z) && random.NextInt(16) == 0
+                if (BooleanAttribute(level, EnvironmentAttribute.GameplayCreakingActive, x, y, z) && random.NextInt(16) == 0
                     && IsSurroundedByLogs(level, x, y, z)) {
                     Sound(SoundType.CreakingHeartIdle, SoundCategory.Blocks, x, y, z, 1.0F, 1.0F);
                 }
@@ -892,7 +868,7 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
         int aboveY = rootY + 1;
         IBlock source = BlockAt(level, x, aboveY, z);
         byte fluid = source.Identifier == Block.Mud.Identifier
-            && DimensionConstant(level, EnvironmentAttribute.GameplayWaterEvaporates) is not EnvironmentAttributeValue.Boolean { Value: true }
+            && !level.Environment.Attributes.GetValue(EnvironmentAttribute.GameplayWaterEvaporates, x, aboveY, z)
             ? ParticleEngine.FluidWater
             : FactsAt(level, x, aboveY, z).Fluid;
         if (!(randomValue < 0.02F || fluid != 0)) {
@@ -901,25 +877,19 @@ public sealed partial class AnimateTicks(MinecraftClient client) {
         IParticle drip = fluid switch {
             ParticleEngine.FluidLava => Particle.DrippingDripstoneLava,
             ParticleEngine.FluidWater => Particle.DrippingDripstoneWater,
-            _ => DefaultDripstoneParticle(level)
+            _ => DefaultDripstoneParticle(level, x, aboveY, z)
         };
         Minecraft.Schemas.Vec.Vec3<double> offset = block.ShapeOffset(new Minecraft.Schemas.Vec.Vec3<int>(x, y, z));
         // STALACTITE_DRIP_START_PIXEL is the tip shape's bottom, five sixteenths up.
         Engine.AddParticle(drip, x + 0.5 + offset.X, y + 5.0 / 16.0 - 0.0625, z + 0.5 + offset.Z, 0.0, 0.0, 0.0);
     }
 
-    /// <summary>The <c>visual/default_dripstone_particle</c> attribute, read from the dimension only.</summary>
-    private static IParticle DefaultDripstoneParticle(ClientLevel level) =>
-        DimensionConstant(level, EnvironmentAttribute.VisualDefaultDripstoneParticle) is EnvironmentAttributeValue.Particle { Value: { Options.Count: 0 } value }
+    /// <summary><c>getDripFluid</c>'s <c>visual/default_dripstone_particle</c> at the block above the root.</summary>
+    private static IParticle DefaultDripstoneParticle(ClientLevel level, int x, int y, int z) =>
+        level.Environment.Attributes.GetValue(EnvironmentAttribute.VisualDefaultDripstoneParticle, x, y, z) is { Options.Count: 0 } value
         && level.Registry.Particles.Contains(value.Type)
             ? level.Registry.Particles[value.Type]
             : Particle.DrippingDripstoneWater;
-
-    /// <summary>An attribute's value as the dimension sets it, ignoring what biomes, weather and timelines do to it.</summary>
-    private static EnvironmentAttributeValue? DimensionConstant(ClientLevel level, IEnvironmentAttribute attribute) =>
-        level.DimensionType.Attributes?[attribute.Identifier.ToString()] is { } tag
-            ? Constant(level, attribute, EnvironmentAttributeEntry.FromNbt(attribute, tag, level.Registry))
-            : null;
 
     /// <summary>
     /// <c>CryingObsidianBlock</c> and <c>WetSpongeBlock</c>: a drip from a face that is not covered. The sponge's

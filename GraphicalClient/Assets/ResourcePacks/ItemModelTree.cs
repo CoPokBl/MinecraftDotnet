@@ -789,12 +789,10 @@ public sealed class ItemModelTree(BlockModelBaker baker, Rendering.BiomeColours.
         private readonly Random _random = new();
 
         protected override float Calculate(ItemModelQuery query, ClientLevel level, ClientEntity owner) {
+            Minecraft.Schemas.Vec.Vec3<double> position = new(owner.Position.X, owner.Position.Y, owner.Position.Z);
             float targetRotation = source switch {
-                // EnvironmentAttributes.SUN_ANGLE over 360, which the overworld's timeline eases through the
-                // day; this client draws its sun by the classic curve, so the clock reads that.
-                "daytime" => Rendering.Lighting.TimeOfDay(level.DefaultClockTime),
-                // MOON_PHASE: a phase a day through the eight, as the overworld's moon timeline steps them.
-                "moon_phase" => (float)(level.DefaultClockTime / 24000L % 8L) / 8,
+                "daytime" => level.Environment.Attributes.GetValue(Minecraft.Data.Generated.EnvironmentAttribute.VisualSunAngle, position) / 360.0F,
+                "moon_phase" => (float)(int)level.Environment.Attributes.GetValue(Minecraft.Data.Generated.EnvironmentAttribute.VisualMoonPhase, position) / 8,
                 _ => _random.NextSingle()
             };
             long gameTime = level.GameTime;

@@ -1,3 +1,4 @@
+using ManagedServer.Terrain.Features.Values;
 using Minecraft.Data.Biomes;
 using Minecraft.Registry;
 using Minecraft.Schemas;
@@ -51,6 +52,28 @@ public interface IFeatureLevel {
 
     /// <summary>Facts about a state, cached per state id.</summary>
     FeatureBlockData Blocks { get; }
+
+    /// <summary>
+    /// The dimension type's <c>has_skylight</c>, which is the whole of what light a feature can see.
+    /// </summary>
+    /// <remarks>
+    /// No light section exists while the pass runs, so <c>getRawBrightness</c> answers the sky layer's
+    /// default: 15 at every depth where there is a sky layer, and 0 in a dimension without one, since
+    /// the light engine has no sky layer there and the dummy listener answers zero.
+    /// </remarks>
+    bool HasSkyLight => true;
+
+    /// <summary>
+    /// <c>WorldGenerationContext.of(level)</c>: the level's range clamped to the generator's, which is
+    /// what an anchor resolves against. The nether is 256 high and generates 128.
+    /// </summary>
+    GenerationHeightContext WorldGeneration => new(MinY, MaxY - MinY, SeaLevel);
+
+    /// <summary>
+    /// <c>ChunkAccess.markPosForPostprocessing</c>: the block here settles against its neighbours'
+    /// shapes once the chunk is finished, rather than keeping the state it was written with.
+    /// </summary>
+    void MarkForPostProcessing(int x, int y, int z) { }
 
     /// <summary>
     /// <c>WorldGenRegion.hasChunk</c>: whether a read at this column answers the real terrain rather

@@ -17,7 +17,9 @@ public abstract class EnergySwirlLayer<S, M>(LivingEntityRenderer<S, M> parent) 
         model.SetupAnim(state);
         Vector2 offset = new(XOffset(t) % 1.0F, t * 0.01F % 1.0F);
         EntityTexture? tiled = TiledTextures.Get(context.Textures, TextureLocation, ScrollingSink.Tiles, ScrollingSink.Tiles);
-        model.RenderToBuffer(pose, new ScrollingSink(additive, offset, tiled), new ModelDrawState(texture, 0xFF808080, 15, 15, 0) { NoOutline = true });
+        model.RenderToBuffer(pose, new ScrollingSink(additive, offset, tiled), new ModelDrawState(texture, 0xFF808080, 15, 15, 0) {
+            NoOutline = true, Emissive = true, Unshaded = true
+        });
     }
 
     protected abstract bool IsPowered(S state);

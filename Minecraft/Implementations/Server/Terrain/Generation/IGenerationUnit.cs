@@ -1,4 +1,5 @@
 using Minecraft.Registry;
+using Minecraft.Schemas.Chunks;
 using Minecraft.Schemas.Vec;
 
 namespace Minecraft.Implementations.Server.Terrain.Generation;
@@ -80,6 +81,19 @@ public interface IGenerationUnit {
     /// a forked unit rather than on the chunk's own reads the chunk's.
     /// </remarks>
     bool ReadForkedWrites(ForkedBlock into);
+
+    /// <summary>
+    /// What a chunk outside this unit holds right now, for a generator reading across its border: a
+    /// frozen copy if that chunk has been generated, and otherwise null after replaying through
+    /// <paramref name="forked"/> what other chunks have forked into it so far, without taking it.
+    /// </summary>
+    /// <remarks>
+    /// Vanilla decorates through a region whose neighbours may already have decorated, so a feature
+    /// crossing the border meets their trees and ores. The terrain under a chunk not generated yet is
+    /// the generator's to compute; what this adds is the rest. Null with nothing replayed when the
+    /// world cannot say, which is also a chunk nothing has touched.
+    /// </remarks>
+    ChunkData? ReadNeighbour(int chunkX, int chunkZ, ForkedBlock forked);
 }
 
 /// <summary>A block a neighbouring chunk forked in, in absolute coordinates.</summary>

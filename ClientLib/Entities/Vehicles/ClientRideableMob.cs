@@ -57,12 +57,7 @@ public class ClientRideableMob(MinecraftClient client) : ClientVehicle(client), 
         if (slot != equippable.Slot || !CanUseSlot(equippable.Slot)) {
             return false;
         }
-        return equippable.AllowedEntities switch {
-            null => true,
-            Minecraft.Schemas.Tags.IdSet.Ids ids => Array.IndexOf(ids.Values, Client.Registry.EntityTypes.GetProtocolId(Type)) >= 0,
-            Minecraft.Schemas.Tags.IdSet.Tag tag => Client.InEntityTypeTag(Type, tag.TagName),
-            _ => false
-        };
+        return Client.CanBeEquippedBy(equippable, Type);
     }
 
     /// <summary>What <c>AbstractHorse</c> and <c>AbstractNautilus</c> ask before tack goes on: alive, grown and tamed.</summary>

@@ -55,11 +55,18 @@ public class FindStructureClusters {
     /// <summary>Every eighth chunk, which is two biome cells and finer than any biome is small.</summary>
     private const int Step = 8;
 
+    /// <summary><c>DIMENSION=nether</c> or <c>DIMENSION=end</c> searches that dimension's biome source instead.</summary>
+    private static VanillaTerrainGenerator Generator() {
+        return Environment.GetEnvironmentVariable("DIMENSION") switch {
+            "nether" => VanillaTerrainGenerator.Nether(VanillaPack.Source, Seed),
+            "end" => VanillaTerrainGenerator.End(VanillaPack.Source, Seed),
+            _ => VanillaTerrainGenerator.Overworld(VanillaPack.Source, Seed)
+        };
+    }
+
     [Test]
     public void Print() {
-        VanillaTerrainGenerator generator = VanillaTerrainGenerator
-            .Overworld(VanillaPack.Source, Seed)
-            .WithFeatures();
+        VanillaTerrainGenerator generator = Generator().WithFeatures();
 
         Dictionary<string, (int, int)> found = [];
         int radius = int.Parse(Environment.GetEnvironmentVariable("SEARCH") ?? "1200");
@@ -119,8 +126,7 @@ public class FindStructureClusters {
     /// </remarks>
     [Test]
     public void PrintForRealStarts() {
-        VanillaTerrainGenerator generator = VanillaTerrainGenerator
-            .Overworld(VanillaPack.Source, Seed)
+        VanillaTerrainGenerator generator = Generator()
             .WithFeatures()
             .WithStructures();
 
@@ -194,8 +200,7 @@ public class FindStructureClusters {
     /// </remarks>
     [Test]
     public void PrintForStructures() {
-        VanillaTerrainGenerator generator = VanillaTerrainGenerator
-            .Overworld(VanillaPack.Source, Seed)
+        VanillaTerrainGenerator generator = Generator()
             .WithFeatures()
             .WithStructures();
 
@@ -228,6 +233,63 @@ public class FindStructureClusters {
 
         TestContext.Out.WriteLine("never found: "
             + string.Join(", ", wanted.Where(id => !found.ContainsKey(id))));
+    }
+
+    /// <summary>
+    /// Prints the first chunks this build generates a named block in, for a feature too rare to be
+    /// found by biome: an end gateway is one highlands chunk in seven hundred.
+    /// </summary>
+    /// <remarks>
+    /// <c>BLOCK</c> names it, <c>FROM</c> is the ring to start at, and the dimension's range comes from
+    /// <c>MIN_Y</c> and <c>HEIGHT</c>. What a chunk forks into a neighbour is dropped, so a hit is what the
+    /// chunk's own decoration wrote.
+    /// </remarks>
+    [Test]
+    public void PrintForBlocks() {
+        VanillaTerrainGenerator generator = Generator().WithFeatures();
+        Minecraft.Implementations.Server.Terrain.Generation.GeneratorTerrainProvider provider = generator.AsProvider();
+        provider.Attach(new StructurePassTest.DiscardingHost());
+        Identifier wanted = Identifier.Parse(Environment.GetEnvironmentVariable("BLOCK") ?? "minecraft:end_gateway");
+        int count = int.Parse(Environment.GetEnvironmentVariable("COUNT") ?? "3");
+        int from = int.Parse(Environment.GetEnvironmentVariable("FROM") ?? "0");
+        int radius = int.Parse(Environment.GetEnvironmentVariable("SEARCH") ?? "160");
+        int minY = int.Parse(Environment.GetEnvironmentVariable("MIN_Y") ?? "-64");
+        int height = int.Parse(Environment.GetEnvironmentVariable("HEIGHT") ?? "384");
+
+        List<(int, int)> found = [];
+        for (int ring = from; ring <= radius && found.Count < count; ring++) {
+            for (int chunkX = -ring; chunkX <= ring && found.Count < count; chunkX++) {
+                for (int chunkZ = -ring; chunkZ <= ring && found.Count < count; chunkZ++) {
+                    if (Math.Max(Math.Abs(chunkX), Math.Abs(chunkZ)) != ring) {
+                        continue;
+                    }
+
+                    Minecraft.Schemas.Chunks.ChunkData chunk = new(height) { ChunkX = chunkX, ChunkZ = chunkZ, MinY = minY };
+                    provider.GetChunk(ref chunk);
+                    if (Holds(chunk, height, wanted)) {
+                        found.Add((chunkX, chunkZ));
+                        TestContext.Out.WriteLine($"    \"{chunkX}:{chunkZ}\"   # {wanted.Key}");
+                    }
+                }
+            }
+        }
+
+        TestContext.Out.WriteLine($"found {found.Count} of {count}");
+    }
+
+    private static bool Holds(Minecraft.Schemas.Chunks.ChunkData chunk, int height, Identifier block) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < 16; x++) {
+                for (int z = 0; z < 16; z++) {
+                    if (Minecraft.Data.Generated.VanillaRegistry.Data.Blocks.GetByStateId(chunk.GetBlock(x, y, z))
+                            .Identifier == block) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     private static void Candidates(VanillaTerrainGenerator generator, StructureSystem pass,

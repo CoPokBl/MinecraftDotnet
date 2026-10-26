@@ -32,7 +32,7 @@ import net.minecraft.world.level.chunk.storage.SerializableChunkData;
  * Writes down every block and biome the real server put in a set of chunks, out of the region files it
  * saved, into the fixture WorldParityConformanceTest replays.
  *
- * <p>Usage: {@code java WorldParityHarness <regionDir> <fixture> <seed> <scene>...}, a scene being
+ * <p>Usage: {@code java WorldParityHarness <regionDir> <fixture> <seed> <minY> <height> <scene>...}, a scene being
  * {@code name:chunkX:chunkZ:size}. See Conformance/worldparity.sh, which generates the world first.
  *
  * <p>This is the only fixture in the tree whose input is a world rather than a method. Everything else
@@ -48,13 +48,13 @@ import net.minecraft.world.level.chunk.storage.SerializableChunkData;
  */
 public class WorldParityHarness {
 
-    /** The overworld, whose sections run from -64 up. Written into the fixture, not assumed by it. */
-    private static final int MIN_Y = -64;
-    private static final int HEIGHT = 384;
+    /** The dimension's range, from the arguments. Written into the fixture, not assumed by it. */
+    private static int MIN_Y;
+    private static int HEIGHT;
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 4) {
-            System.err.println("usage: WorldParityHarness <regionDir> <fixture> <seed> <name:x:z:size>...");
+        if (args.length < 6) {
+            System.err.println("usage: WorldParityHarness <regionDir> <fixture> <seed> <minY> <height> <name:x:z:size>...");
             System.exit(2);
         }
 
@@ -64,9 +64,11 @@ public class WorldParityHarness {
         Path regions = Path.of(args[0]);
         Path fixture = Path.of(args[1]);
         long seed = Long.parseLong(args[2]);
+        MIN_Y = Integer.parseInt(args[3]);
+        HEIGHT = Integer.parseInt(args[4]);
 
         List<Scene> scenes = new ArrayList<>();
-        for (int i = 3; i < args.length; i++) {
+        for (int i = 5; i < args.length; i++) {
             String[] parts = args[i].split(":");
             if (parts.length != 4) {
                 System.err.println("Scene \"" + args[i] + "\" is not name:chunkX:chunkZ:size");
@@ -162,6 +164,21 @@ public class WorldParityHarness {
             throw new IllegalStateException("Chunk " + x + "," + z + " is at status "
                 + data.chunkStatus().getName() + " rather than full. Only a forceloaded chunk is "
                 + "generated the whole way, so the scene has to be inside the forceloaded area.");
+        }
+
+        // A full chunk only settles the blocks its structures marked once it starts ticking, which
+        // is after its neighbours are full, and the list is saved with it until then. Recorded
+        // before that, a fence keeps the connections its piece wrote rather than the ones vanilla's
+        // world ends up with.
+        int pending = 0;
+        for (it.unimi.dsi.fastutil.shorts.ShortList section : data.postProcessingSections()) {
+            pending += section == null ? 0 : section.size();
+        }
+
+        if (pending > 0) {
+            throw new IllegalStateException("Chunk " + x + "," + z + " still has " + pending
+                + " blocks waiting for post processing. It was saved before it started ticking, so "
+                + "wait longer before saving.");
         }
 
         // A section the file does not carry is one the generator left empty, which is air with the

@@ -259,6 +259,26 @@ public sealed partial class LocalPlayer {
 
     private FluidKind FluidAt(int x, int y, int z) => BlockAt(x, y, z).Fluid;
 
+    private int _waterVisionTime;
+
+    /// <summary>
+    /// <c>LocalPlayer.getWaterVision</c>: how far the eyes have adjusted under water, rising over the first hundred ticks
+    /// to 0.6 and the next five hundred to one, and falling ten times as fast once out.
+    /// </summary>
+    public float WaterVision {
+        get {
+            if (!Fluids.EyeInWater) {
+                return 0.0F;
+            }
+            if (_waterVisionTime >= 600.0F) {
+                return 1.0F;
+            }
+            float a = Math.Clamp(_waterVisionTime / 100.0F, 0.0F, 1.0F);
+            float b = _waterVisionTime < 100.0F ? 0.0F : Math.Clamp((_waterVisionTime - 100.0F) / 500.0F, 0.0F, 1.0F);
+            return a * 0.6F + b * 0.39999998F;
+        }
+    }
+
     /// <summary><c>LocalPlayer.aiStep</c>.</summary>
     private void AiStep() {
         if (_sprintTriggerTime > 0) {
@@ -352,6 +372,14 @@ public sealed partial class LocalPlayer {
 
         if (IsInWater && KeyPresses.Shift && IsAffectedByFluids) {
             DeltaMovement = DeltaMovement.Add(0.0, -0.04F, 0.0);
+        }
+
+        if (Fluids.EyeInWater) {
+            int speed = IsSpectator ? 10 : 1;
+            _waterVisionTime = Math.Clamp(_waterVisionTime + speed, 0, 600);
+        }
+        else if (_waterVisionTime > 0) {
+            _waterVisionTime = Math.Clamp(_waterVisionTime - 10, 0, 600);
         }
 
         if (Flying && IsControlledCamera) {

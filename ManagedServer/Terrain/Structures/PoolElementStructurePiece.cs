@@ -64,19 +64,18 @@ public sealed class PoolElementStructurePiece : StructurePiece {
         Position = new Vec3<int>(Position.X + dx, Position.Y + dy, Position.Z + dz);
     }
 
-    /// <summary>
-    /// The feature context a feature pool element needs, set by the pass before placing.
-    /// </summary>
-    /// <remarks>
-    /// Carried on the piece rather than passed through <see cref="PostProcess"/>, whose signature is
-    /// shared with every other kind of piece and which no other piece needs it for.
-    /// </remarks>
-    public PlacementContext? Features { get; set; }
-
+    /// <summary>Places the piece without a feature context, so a feature element does nothing.</summary>
     public override void PostProcess(IFeatureLevel level, RandomSource random, BoundingBox chunkBox,
         int chunkX, int chunkZ, Vec3<int> referencePos) {
 
+        PostProcess(level, null, random, chunkBox, chunkX, chunkZ, referencePos);
+    }
+
+    /// <param name="features">The context a feature pool element runs its feature in.</param>
+    public void PostProcess(IFeatureLevel level, PlacementContext? features, RandomSource random,
+        BoundingBox chunkBox, int chunkX, int chunkZ, Vec3<int> referencePos) {
+
         Element.Place(_templates, level, Position, referencePos, Rotation, chunkBox, random,
-            ApplyWaterlogging, Features);
+            ApplyWaterlogging, features);
     }
 }

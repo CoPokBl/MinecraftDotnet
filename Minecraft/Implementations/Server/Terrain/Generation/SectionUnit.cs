@@ -42,6 +42,9 @@ internal sealed class SectionUnit : GenerationUnitBase {
 
     public override bool ReadForkedWrites(ForkedBlock into) => _forks.ReadForkedWrites(into);
 
+    public override ChunkData? ReadNeighbour(int chunkX, int chunkZ, ForkedBlock forked) =>
+        _forks.ReadNeighbour(chunkX, chunkZ, forked);
+
     public override void SetBlockState(int x, int y, int z, uint stateId) {
         _section.SetBlock(x & 15, y & 15, z & 15, stateId);
     }

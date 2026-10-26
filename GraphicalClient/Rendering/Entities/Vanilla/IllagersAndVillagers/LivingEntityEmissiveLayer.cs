@@ -36,8 +36,10 @@ public class LivingEntityEmissiveLayer<S, M> : RenderLayer<S, M> where S : Livin
         }
         uint color = (uint)Math.Clamp((int)(alpha * 255.0F), 0, 255) << 24 | 0xFFFFFF;
         _model.SetupAnim(state);
-        // Full sky and block light is the stand-in for the emissive render types' unlit blending.
+        // entityTranslucentEmissive keeps the directional shading and the overlay; eyes has neither.
         _model.RenderToBuffer(pose, _translucent ? context.TranslucentBatch : context.Batch,
-            new ModelDrawState(texture, color, 15, 15, state.HasRedOverlay ? 1 : 0) { NoOutline = !_translucent });
+            new ModelDrawState(texture, color, 15, 15, _translucent && state.HasRedOverlay ? 1 : 0) {
+                NoOutline = !_translucent, Emissive = true, Unshaded = !_translucent
+            });
     }
 }

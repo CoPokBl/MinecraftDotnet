@@ -265,6 +265,7 @@ public sealed partial class ParticleEngine {
             _level = _client.Level;
             if (_level != null) {
                 _shapes = new Box[(int)_level.Registry.Blocks.StatesCount][];
+                _emission = BuildEmission(_level);
                 _level.LevelEvent += LevelEvent;
             }
             Clear();
@@ -431,6 +432,27 @@ public sealed partial class ParticleEngine {
     /// <summary>Filled as states are met, sized for every state at once so either thread can fill it.</summary>
     private Box[]?[] _shapes = [];
 
+    /// <summary>
+    /// Each state's light emission, or <see cref="EmissiveRendering"/> for one that renders emissive: what
+    /// <c>LightCoordsUtil.getLightCoords</c> reads off the block where a particle is.
+    /// </summary>
+    private byte[] _emission = [];
+
+    private const byte EmissiveRendering = 255;
+
+    /// <summary>Magma is the one block that always renders emissive; an active sculk sensor does too and is taken at its emission.</summary>
+    private static byte[] BuildEmission(ClientLib.World.ClientLevel level) {
+        byte[] emission = new byte[(int)level.Registry.Blocks.StatesCount];
+        for (int state = 0; state < emission.Length; state++) {
+            emission[state] = (byte)level.Registry.Blocks.GetByStateId((uint)state).LightEmission;
+        }
+        uint magma = Minecraft.Data.Generated.Block.MagmaBlock.StateId;
+        if (magma < emission.Length) {
+            emission[magma] = EmissiveRendering;
+        }
+        return emission;
+    }
+
     private ClientChunk? ChunkAt(TickContext context, int x, int z) {
         long key = ClientLevel.Key(x >> 4, z >> 4);
         if (key != context.ChunkKey) {
@@ -463,7 +485,10 @@ public sealed partial class ParticleEngine {
         return shapes[state] ??= BlockPhysicsData.Get(_level!.Registry, state).Collision;
     }
 
-    /// <summary><c>Particle.getLightCoords</c> at its tick: full sky and no block light outside loaded chunks.</summary>
+    /// <summary>
+    /// <c>Particle.getLightCoords</c> at its tick: <c>LightCoordsUtil.getLightCoords</c> where it is, raised to the block's
+    /// own emission, and full sky with no block light outside loaded chunks.
+    /// </summary>
     private void SampleLight(TickContext context, ref ParticleState p) {
         int x = Floor(p.X), y = Floor(p.Y), z = Floor(p.Z);
         if (ChunkAt(context, x, z) is not { } chunk) {
@@ -476,6 +501,15 @@ public sealed partial class ParticleEngine {
         if ((uint)section < (uint)_level.SectionCount) {
             p.BlockLight = (byte)chunk.GetBlockLight(x & 15, section, y & 15, z & 15);
             p.SkyLight = _level.DimensionType.HasSkyLight ? (byte)chunk.GetSkyLight(x & 15, section, y & 15, z & 15) : (byte)0;
+            ushort state = chunk.Sections[section].Get(x & 15, y & 15, z & 15);
+            byte emission = state < _emission.Length ? _emission[state] : (byte)0;
+            if (emission == EmissiveRendering) {
+                p.SkyLight = 15;
+                p.BlockLight = 15;
+            }
+            else if (p.BlockLight < emission) {
+                p.BlockLight = emission;
+            }
         }
         else {
             p.BlockLight = 0;

@@ -40,4 +40,40 @@ public static class FeatureUtil {
     public static readonly BlockFace[] AllDirections = [
         BlockFace.NegY, BlockFace.PosY, BlockFace.NegZ, BlockFace.PosZ, BlockFace.NegX, BlockFace.PosX
     ];
+
+    /// <summary>
+    /// <c>BlockPos.withinBoxByManhattanDistance</c>: the box around <paramref name="origin"/>, nearest
+    /// first by Manhattan distance.
+    /// </summary>
+    /// <remarks>
+    /// Within one distance the walk is x ascending, then y ascending, and each z is handed out as the
+    /// positive offset and then its mirror. A caller whose writes change what a later position sees
+    /// depends on all of that, not only on the set.
+    /// </remarks>
+    public static IEnumerable<Vec3<int>> WithinBoxByManhattanDistance(Vec3<int> origin, int reachX, int reachY,
+        int reachZ) {
+
+        int maxDepth = reachX + reachY + reachZ;
+
+        for (int depth = 0; depth <= maxDepth; depth++) {
+            int maxX = Math.Min(reachX, depth);
+
+            for (int x = -maxX; x <= maxX; x++) {
+                int maxY = Math.Min(reachY, depth - Math.Abs(x));
+
+                for (int y = -maxY; y <= maxY; y++) {
+                    int z = depth - Math.Abs(x) - Math.Abs(y);
+                    if (z > reachZ) {
+                        continue;
+                    }
+
+                    yield return new Vec3<int>(origin.X + x, origin.Y + y, origin.Z + z);
+
+                    if (z != 0) {
+                        yield return new Vec3<int>(origin.X + x, origin.Y + y, origin.Z - z);
+                    }
+                }
+            }
+        }
+    }
 }

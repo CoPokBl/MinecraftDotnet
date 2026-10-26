@@ -72,6 +72,7 @@ public class FeatureOrderConformanceTest {
         return dimension switch {
             "minecraft:overworld" => VanillaTerrainGenerator.Overworld(VanillaPack.Source, 0L),
             "minecraft:nether" => VanillaTerrainGenerator.Nether(VanillaPack.Source, 0L),
+            "minecraft:the_end" => VanillaTerrainGenerator.End(VanillaPack.Source, 0L),
             _ => throw new ArgumentException($"The fixture names a dimension {dimension} nothing builds.")
         };
     }

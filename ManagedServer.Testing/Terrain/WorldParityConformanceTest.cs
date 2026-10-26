@@ -37,6 +37,10 @@ namespace ManagedServer.Testing.Terrain;
 public class WorldParityConformanceTest {
     private const string Fixture = "Terrain/vanilla-world.bin.gz";
 
+    private const string NetherFixture = "Terrain/vanilla-world-nether.bin.gz";
+
+    private const string EndFixture = "Terrain/vanilla-world-end.bin.gz";
+
     /// <summary>
     /// How many chunks around a scene are generated without being compared.
     /// <para>
@@ -63,25 +67,27 @@ public class WorldParityConformanceTest {
     /// disagree wherever that matters, and no port reaches zero against a recording made this way.
     /// </para>
     /// <para>
-    /// <b>How much that is worth has been measured rather than guessed, and it is a lot.</b> Varying
-    /// only the order these scenes are generated in, through <c>WORLD_PARITY_ORDER</c> and changing
-    /// nothing else, moves the total from 29966 to 40735: an error bar of about a third. The jungle
-    /// alone spans 17828 to 19398. <b>So a change worth a couple of thousand blocks here is not
-    /// measurable here</b>, and a scene count that moved is not on its own evidence of anything.
+    /// <b>How much that is worth is a lot.</b> Varying only the order these scenes are generated in,
+    /// through <c>WORLD_PARITY_ORDER</c> and changing nothing else, moves the total from 23001 to
+    /// 38671, and the real server does not agree with itself either: two of its runs differ by 4665
+    /// blocks of sculk in <c>jagged_peaks</c> alone. The jungle is the spawn area, generated at
+    /// startup in an order nothing here reproduces, so its number is order rather than port. <b>So a
+    /// change worth a couple of thousand blocks here is not measurable here</b>, and a scene count that
+    /// moved is not on its own evidence of anything.
     /// <c>Conformance/featuretrace.sh</c> is what settles a feature instead: it runs the vanilla
     /// feature over the same bytes this build had in front of it, so the order drops out entirely and
     /// what is left is the port.
     /// </para>
     /// </summary>
     private static readonly Dictionary<string, int> Baseline = new() {
-        ["jungle"] = 18045,
-        ["desert"] = 537,
-        ["badlands"] = 1308,
-        ["deep_ocean"] = 1003,
-        ["jagged_peaks"] = 3903,
-        ["plains_village"] = 656,
-
-        ["taiga_village"] = 1224
+        ["jungle"] = 20979,
+        ["desert"] = 216,
+        ["badlands"] = 50,
+        ["deep_ocean"] = 189,
+        ["jagged_peaks"] = 334,
+        ["plains_village"] = 102,
+        ["taiga_village"] = 340,
+        ["desert_pyramid"] = 795
     };
 
     /// <summary>
@@ -99,8 +105,59 @@ public class WorldParityConformanceTest {
         ["deep_ocean"] = 0,
         ["jagged_peaks"] = 0,
         ["plains_village"] = 0,
-        ["taiga_village"] = 0
+        ["taiga_village"] = 0,
+        ["desert_pyramid"] = 0
     };
+
+    /// <summary>
+    /// The nether's scenes on <see cref="Baseline"/>'s terms: one per biome and one per structure the
+    /// nether has.
+    /// <para>
+    /// None of these is the port. <c>decorationparity.sh</c> with <c>PARITY_DIMENSION=nether</c> over
+    /// the same scenes reads every write identical, and what is left is three things the real server
+    /// does that this comparison cannot take out. Lava the recording ticked into flowing during the
+    /// wait, which is every <c>air -> lava</c> pair and the whole of the bastion's count. Nylium that
+    /// random ticked to netherrack under whatever grew on it. And chunk order, which the nether feels
+    /// far more than the overworld: basalt blobs and deltas reach across borders and overwrite each
+    /// other, so <c>WORLD_PARITY_ORDER=reverse</c> moves the basalt deltas from 11113 to 32398 with
+    /// nothing else changed. The fortress and portal scenes are crimson forest, which is the huge
+    /// fungi crossing borders the same way.
+    /// </para>
+    /// </summary>
+    private static readonly Dictionary<string, int> NetherBaseline = new() {
+        ["nether_wastes"] = 102,
+        ["crimson_forest"] = 504,
+        ["warped_forest"] = 416,
+        ["soul_sand_valley"] = 1,
+        ["basalt_deltas"] = 11113,
+        ["fortress"] = 3243,
+        ["bastion_remnant"] = 264,
+        ["nether_fossil"] = 0,
+        ["ruined_portal_nether"] = 2011
+    };
+
+    /// <summary>The nether's biome cells, a pass on <see cref="BiomeBaseline"/>'s terms.</summary>
+    private static readonly Dictionary<string, int> NetherBiomeBaseline =
+        NetherBaseline.ToDictionary(entry => entry.Key, _ => 0);
+
+    /// <summary>
+    /// The end's scenes on <see cref="Baseline"/>'s terms: the spike ring, the arrival platform, an end
+    /// city, a return gateway and one per outer biome.
+    /// </summary>
+    private static readonly Dictionary<string, int> EndBaseline = new() {
+        ["spikes"] = 0,
+        ["platform"] = 0,
+        ["end_city"] = 0,
+        ["end_gateway"] = 0,
+        ["end_highlands"] = 0,
+        ["end_midlands"] = 0,
+        ["small_end_islands"] = 0,
+        ["end_barrens"] = 0
+    };
+
+    /// <summary>The end's biome cells, a pass on <see cref="BiomeBaseline"/>'s terms.</summary>
+    private static readonly Dictionary<string, int> EndBiomeBaseline =
+        EndBaseline.ToDictionary(entry => entry.Key, _ => 0);
 
     /// <summary>
     /// Report every difference broken down rather than only the counts, which is how the next thing to
@@ -168,8 +225,11 @@ public class WorldParityConformanceTest {
         }
     }
 
-    private static Fixtures Read() {
-        string path = Path.Combine(TestContext.CurrentContext.TestDirectory, Fixture);
+    private static Fixtures Read(string fixture) {
+        // WORLD_PARITY_FIXTURE reads a recording of other scenes, which fails the baselines by design
+        // and still prints the report.
+        string path = Environment.GetEnvironmentVariable("WORLD_PARITY_FIXTURE")
+            ?? Path.Combine(TestContext.CurrentContext.TestDirectory, fixture);
 
         using FileStream file = File.OpenRead(path);
         using GZipStream gzip = new(file, CompressionMode.Decompress);
@@ -256,9 +316,10 @@ public class WorldParityConformanceTest {
     /// throw. Generating is what is thread safe, and it is what the time goes on.
     /// </para>
     /// </remarks>
-    private static GeneratorTerrainProvider Build(Fixtures fixtures, out CollectingHost host) {
-        VanillaTerrainGenerator generator = VanillaTerrainGenerator
-            .Overworld(VanillaPack.Source, fixtures.Seed)
+    private static GeneratorTerrainProvider Build(Fixtures fixtures,
+        Func<IDatapackSource, long, VanillaTerrainGenerator> create, out CollectingHost host) {
+
+        VanillaTerrainGenerator generator = create(VanillaPack.Source, fixtures.Seed)
             .WithCarvers()
             .WithFeatures()
             .WithStructures();
@@ -280,10 +341,20 @@ public class WorldParityConformanceTest {
     private static Dictionary<Vec2<int>, ChunkData> Generate(Fixtures fixtures, Scene scene,
         GeneratorTerrainProvider provider, CollectingHost host) {
 
-        foreach ((int x, int z) in Order(scene)) {
-            ChunkData chunk = new(fixtures.Height) { ChunkX = x, ChunkZ = z, MinY = fixtures.MinY };
+        void GenerateOne((int X, int Z) at) {
+            ChunkData chunk = new(fixtures.Height) { ChunkX = at.X, ChunkZ = at.Z, MinY = fixtures.MinY };
             provider.GetChunk(ref chunk);
             host.Publish(chunk);
+        }
+
+        // "parallel" is how a server generates, neighbours at once on the pool, and is what finds a
+        // structure keeping per chunk state on a start every chunk shares.
+        if (Environment.GetEnvironmentVariable("WORLD_PARITY_ORDER") == "parallel") {
+            Parallel.ForEach(Order(scene), GenerateOne);
+        } else {
+            foreach ((int X, int Z) at in Order(scene)) {
+                GenerateOne(at);
+            }
         }
 
         return host.Chunks;
@@ -316,6 +387,13 @@ public class WorldParityConformanceTest {
 
         if (Environment.GetEnvironmentVariable("WORLD_PARITY_ORDER") == "reverse") {
             chunks.Reverse();
+        }
+
+        // Outwards from the scene's middle, which is how the real server generates the spawn area.
+        if (Environment.GetEnvironmentVariable("WORLD_PARITY_ORDER") == "radial") {
+            int middleX = scene.ChunkX + scene.Size / 2;
+            int middleZ = scene.ChunkZ + scene.Size / 2;
+            chunks = [..chunks.OrderBy(at => Math.Max(Math.Abs(at.X - middleX), Math.Abs(at.Z - middleZ)))];
         }
 
         return chunks;
@@ -423,7 +501,25 @@ public class WorldParityConformanceTest {
 
     [Test]
     public void TheWorldMatchesVanillaBlockForBlock() {
-        Fixtures fixtures = Read();
+        Measure(Fixture, (source, seed) => VanillaTerrainGenerator.Overworld(source, seed), Baseline, BiomeBaseline);
+    }
+
+    [Test]
+    public void TheNetherMatchesVanillaBlockForBlock() {
+        Measure(NetherFixture, (source, seed) => VanillaTerrainGenerator.Nether(source, seed), NetherBaseline,
+            NetherBiomeBaseline);
+    }
+
+    [Test]
+    public void TheEndMatchesVanillaBlockForBlock() {
+        Measure(EndFixture, (source, seed) => VanillaTerrainGenerator.End(source, seed), EndBaseline,
+            EndBiomeBaseline);
+    }
+
+    private static void Measure(string fixture, Func<IDatapackSource, long, VanillaTerrainGenerator> create,
+        Dictionary<string, int> baseline, Dictionary<string, int> biomeBaseline) {
+
+        Fixtures fixtures = Read(fixture);
         MinecraftRegistry registry = VanillaRegistry.Data;
 
         uint[] blockStates = Resolve(fixtures.BlockPalette,
@@ -432,10 +528,10 @@ public class WorldParityConformanceTest {
             written => (uint)registry.Biomes.GetProtocolId(Identifier.Parse(written)));
 
         // A scene has a provider of its own and touches nothing another scene touches, so they go at
-        // once: seven scenes of 25 chunks each is most of a minute in a row.
+        // once: eight scenes of 25 chunks each is most of a minute in a row.
         List<(Scene Scene, GeneratorTerrainProvider Provider, CollectingHost Host)> work = [];
         foreach (Scene scene in fixtures.Scenes) {
-            work.Add((scene, Build(fixtures, out CollectingHost host), host));
+            work.Add((scene, Build(fixtures, create, out CollectingHost host), host));
         }
 
         Dictionary<string, Tally> tallies = [];
@@ -506,11 +602,11 @@ public class WorldParityConformanceTest {
         TestContext.Out.Write(report.ToString());
 
         Assert.Multiple(() => {
-            Assert.That(blocks, Is.EqualTo(Baseline),
+            Assert.That(blocks, Is.EqualTo(baseline),
                 "The world differs from vanilla by a different amount than the baseline records. "
                 + "Update Baseline if the change was deliberate.\n" + report);
 
-            Assert.That(biomes, Is.EqualTo(BiomeBaseline),
+            Assert.That(biomes, Is.EqualTo(biomeBaseline),
                 "The biome grid differs from vanilla by a different amount than the baseline "
                 + "records.\n" + report);
         });
@@ -527,17 +623,39 @@ public class WorldParityConformanceTest {
         public event Action<Vec2<int>>? ChunkAvailable;
 
         public bool TryApplyToLoadedChunk(Vec2<int> chunk, Action<ChunkData> apply) {
-            if (!Chunks.TryGetValue(chunk, out ChunkData? data)) {
-                return false;
+            ChunkData? data;
+            lock (Chunks) {
+                if (!Chunks.TryGetValue(chunk, out data)) {
+                    return false;
+                }
             }
 
-            apply(data);
+            lock (data) {
+                apply(data);
+            }
+
             return true;
+        }
+
+        public ChunkData? SnapshotLoadedChunk(Vec2<int> chunk) {
+            ChunkData? data;
+            lock (Chunks) {
+                if (!Chunks.TryGetValue(chunk, out data)) {
+                    return null;
+                }
+            }
+
+            lock (data) {
+                return data.Clone();
+            }
         }
 
         public void Publish(ChunkData chunk) {
             Vec2<int> pos = new(chunk.ChunkX, chunk.ChunkZ);
-            Chunks[pos] = chunk;
+            lock (Chunks) {
+                Chunks[pos] = chunk;
+            }
+
             ChunkAvailable?.Invoke(pos);
         }
     }

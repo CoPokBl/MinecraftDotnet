@@ -12,7 +12,8 @@ public abstract class EyesLayer<S, M> : RenderLayer<S, M> where S : LivingEntity
         if (texture == null) {
             return;
         }
-        // Full sky and block light is the stand-in for the eyes render type's additive, unlit blending.
-        Parent.CurrentModel.RenderToBuffer(pose, context.Batch, new ModelDrawState(texture, 0xFFFFFFFF, 15, 15, 0) { NoOutline = true });
+        // RenderTypes.eyes blends without writing depth; the texels it draws are opaque, which the cut out batch draws alike.
+        Parent.CurrentModel.RenderToBuffer(pose, context.Batch,
+            new ModelDrawState(texture, 0xFFFFFFFF, 15, 15, 0) { NoOutline = true, Emissive = true, Unshaded = true });
     }
 }

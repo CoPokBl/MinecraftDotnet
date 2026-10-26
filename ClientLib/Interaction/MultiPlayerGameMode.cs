@@ -677,7 +677,11 @@ public sealed partial class MultiPlayerGameMode {
         if (hit.Entity.Is(EntityClass.Interaction)) {
             return hit.Entity.Get(EntityDataFields.Interaction.Response) ? UseResult.Success : UseResult.Consume;
         }
-        return UsePrediction.InteractWithEntity(hit.Entity, held, Player.KeyPresses.Shift) ? UseResult.Success : UseResult.Pass;
+        return UsePrediction.InteractWithEntity(_client, Player, hit.Entity, held, Player.KeyPresses.Shift) switch {
+            InteractionResult.Success => UseResult.Success,
+            InteractionResult.Consume => UseResult.Consume,
+            _ => UseResult.Pass
+        };
     }
 
     /// <summary><c>MultiPlayerGameMode.useItemOn</c>: the packet always goes, the result decides what follows.</summary>
@@ -755,7 +759,17 @@ public sealed partial class MultiPlayerGameMode {
                 ? UseResult.Success
                 : UseResult.Pass;
         }
-        return UsePrediction.ItemUseOnConsumes(held, block) ? UseResult.Success : UseResult.Pass;
+        switch (UsePrediction.ItemUseOn(held, block, hit.Face, Player.IsFallFlying, _tags)) {
+            case InteractionResult.Success:
+                return UseResult.Success;
+            case InteractionResult.Consume:
+                // BrushItem.useOn: the brush is held in use on the block from here.
+                Player.StartUsingItem(hand);
+                StartedUsingItem?.Invoke(hand, held);
+                return UseResult.Consume;
+            default:
+                return UseResult.Pass;
+        }
     }
 
     /// <summary>

@@ -2,21 +2,20 @@
 
 in vec2 vUv;
 in vec4 vColour;
-in vec3 vLight;
-in vec3 vRelative;
+in float vSpherical;
+in float vCylindrical;
 
 layout(location = 0) out vec4 fragColour;
 
+// Vanilla's text.fsh: see through text is neither lit nor fogged.
 void main() {
     vec4 colour = texture(entityAtlas, vUv) * vColour;
-    // Vanilla's text and text background shaders cut at a tenth.
     if (colour.a < 0.1) {
         discard;
     }
-    vec3 linear = toLinear(colour.rgb * vLight);
 #ifdef SEE_THROUGH
-    fragColour = vec4(linear, colour.a);
+    fragColour = colour;
 #else
-    fragColour = vec4(applyFog(linear, vRelative), colour.a);
+    fragColour = applyFog(colour, vSpherical, vCylindrical);
 #endif
 }

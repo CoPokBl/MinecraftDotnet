@@ -1,3 +1,4 @@
+using ManagedServer.Terrain.Features.Values;
 using ManagedServer.Terrain;
 using ManagedServer.Terrain.Features;
 using Minecraft.Data.Blocks;
@@ -132,7 +133,9 @@ public class FeaturePassTest {
     public void AForkedBlockReadsBackRatherThanAnsweringAir() {
         ChunkColumn column = new(-64, 320, Block.Air.StateId);
         ChunkFeatureLevel level = new(column, new DiscardingSetter(), (_, _, _) => null!,
-            VanillaRegistry.Data, 0, 0, -64, 320, 63, Seed, new LegacyRandomSource(Seed));
+            VanillaRegistry.Data, 0, 0, -64, 320, 63, Seed, new LegacyRandomSource(Seed)) {
+            WorldGeneration = new GenerationHeightContext(-64, 384, 63)
+        };
 
         // One block east of the chunk, which is where a canopy overhanging the border lands.
         const int outsideX = 16;

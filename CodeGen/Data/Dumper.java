@@ -17,6 +17,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.mojang.serialization.JsonOps;
+import org.joml.Vector3fc;
+import org.joml.Vector4fc;
+
 import net.minecraft.SharedConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,6 +40,7 @@ import net.minecraft.tags.TagLoader;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.entity.EntityAttachment;
 import net.minecraft.world.entity.EntityAttachments;
 import net.minecraft.world.entity.EntityDimensions;
@@ -105,12 +110,14 @@ public final class Dumper {
         write(out.resolve("sound_type.json"), soundTypes());
         write(out.resolve("attribute.json"), attributes());
         write(out.resolve("light.json"), light());
+        write(out.resolve("render.json"), render());
         write(out.resolve("path_type.json"), pathTypes());
         write(out.resolve("block_conversion.json"), blockConversions());
+        write(out.resolve("environment_attribute.json"), environmentAttributes());
 
         reportUnknownMembers();
         System.out.println("Dumped block.json, entity_type.json, entity_data.json, sound_type.json, attribute.json, light.json, " +
-                "path_type.json and block_conversion.json to " + out);
+                "render.json, path_type.json, block_conversion.json and environment_attribute.json to " + out);
     }
 
     // ------------------------------------------------------- completeness
@@ -135,8 +142,10 @@ public final class Dumper {
                 "requiredFeatures", "spawnTerrainParticles",
                 // Solidity is read off the state, which is what these two force.
                 "forceSolidOff", "forceSolidOn",
-                // Server behaviour or rendering, none of which the protocol layer models.
-                "emissiveRendering", "ignitedByLava", "postProcess",
+                // Server behaviour, none of which the protocol layer models.
+                "ignitedByLava", "postProcess",
+                // Read off the state into render.json.
+                "emissiveRendering",
                 // The loot table key, dumped through Block.getLootTable rather than off the field.
                 "drops"));
 
@@ -150,10 +159,12 @@ public final class Dumper {
                 "getBlock", "hasBlockEntity", "hasLargeCollisionShape", "initCache", "typeHolder",
                 // Folded into light.json: the first two are what getLightDampening is derived from,
                 // and the third is what decides whether the light occlusion shape is the block's or
-                // an empty one.
+                // an empty one. The first is also in render.json.
                 "isSolidRender", "propagatesSkylightDown", "useShapeForLightOcclusion",
+                // render.json.
+                "emissiveRendering", "isLightPermeable",
                 // Rendering and server behaviour.
-                "emissiveRendering", "getRenderShape", "hasAnalogOutputSignal", "ignitedByLava"));
+                "getRenderShape", "hasAnalogOutputSignal", "ignitedByLava"));
 
         report("EntityType", zeroArgMethodNames(EntityType.class), Set.of(
                 // Dumped.
@@ -550,6 +561,58 @@ public final class Dumper {
         return json;
     }
 
+    /**
+     * What the client's block model lighter reads off a state, {@code BlockModelLighter} and
+     * {@code ModelBlockRenderer}: whether a corner may look through it, how dark it makes the
+     * ambient occlusion around it, whether it lights itself, and which of its faces cull a neighbour's
+     * outright or not at all. The two that take a level are asked
+     * with an empty one, which is what the per state cache vanilla keeps for a non dynamic block
+     * holds anyway.
+     */
+    private static Obj render() {
+        List<Object> solidRender = new ArrayList<>();
+        List<Object> lightPermeable = new ArrayList<>();
+        List<Object> collisionFull = new ArrayList<>();
+        List<Object> shadeBrightness = new ArrayList<>();
+        List<Object> emissive = new ArrayList<>();
+        List<Object> faceFull = new ArrayList<>();
+        List<Object> faceEmpty = new ArrayList<>();
+
+        int stateCount = Block.BLOCK_STATE_REGISTRY.size();
+        for (int stateId = 0; stateId < stateCount; stateId++) {
+            BlockState state = Objects.requireNonNull(Block.BLOCK_STATE_REGISTRY.byId(stateId));
+            // Block.shouldRenderFace and FluidRenderer test these against the two shape singletons, and a face
+            // that is covered but whose shape has more than one cell across is not the block() one.
+            int full = 0, empty = 0;
+            for (Direction face : Direction.values()) {
+                VoxelShape faceShape = state.getFaceOcclusionShape(face);
+                if (faceShape == Shapes.block()) {
+                    full |= 1 << face.ordinal();
+                }
+                if (faceShape == Shapes.empty()) {
+                    empty |= 1 << face.ordinal();
+                }
+            }
+            faceFull.add(full);
+            faceEmpty.add(empty);
+            solidRender.add(state.isSolidRender());
+            lightPermeable.add(state.isLightPermeable());
+            collisionFull.add(state.isCollisionShapeFullBlock(EmptyBlockGetter.INSTANCE, BlockPos.ZERO));
+            shadeBrightness.add(state.getShadeBrightness(EmptyBlockGetter.INSTANCE, BlockPos.ZERO));
+            emissive.add(state.emissiveRendering());
+        }
+
+        Obj json = new Obj();
+        json.put("solidRender", solidRender);
+        json.put("lightPermeable", lightPermeable);
+        json.put("collisionShapeFullBlock", collisionFull);
+        json.put("shadeBrightness", shadeBrightness);
+        json.put("emissiveRendering", emissive);
+        json.put("faceOcclusionFull", faceFull);
+        json.put("faceOcclusionEmpty", faceEmpty);
+        return json;
+    }
+
     @SuppressWarnings("unchecked")
     private static void addBlockEntities(Map<Block, Obj> byBlock) {
         Field validBlocks = field(BlockEntityType.class, "validBlocks");
@@ -917,6 +980,43 @@ public final class Dumper {
             attributes.put(BuiltInRegistries.ATTRIBUTE.getKey(attribute).toString(), json);
         }
         return attributes;
+    }
+
+    /**
+     * Each environment attribute's type, default and flags, which only the builder in EnvironmentAttributes holds.
+     * A float or colour default goes out as its components, since the colour codecs quantise to eight bits; anything
+     * else as its codec's JSON text. A float range is found by sanitising both infinities, which AttributeRange.any()
+     * hands back unchanged.
+     */
+    private static Obj environmentAttributes() {
+        Obj attributes = new Obj();
+        for (EnvironmentAttribute<?> attribute : BuiltInRegistries.ENVIRONMENT_ATTRIBUTE) {
+            Obj json = new Obj();
+            json.put("type", BuiltInRegistries.ATTRIBUTE_TYPE.getKey(attribute.type()).toString());
+            json.put("syncable", attribute.isSyncable());
+            json.put("positional", attribute.isPositional());
+            json.put("spatiallyInterpolated", attribute.isSpatiallyInterpolated());
+            json.put("fullResolutionBiomes", attribute.isFullResolutionBiomes());
+            Object defaultValue = attribute.defaultValue();
+            switch (defaultValue) {
+                case Float number -> {
+                    json.put("defaultComponents", List.of(number));
+                    @SuppressWarnings("unchecked")
+                    EnvironmentAttribute<Float> floats = (EnvironmentAttribute<Float>) attribute;
+                    json.put("rangeMin", Float.toString(floats.sanitizeValue(Float.NEGATIVE_INFINITY)));
+                    json.put("rangeMax", Float.toString(floats.sanitizeValue(Float.POSITIVE_INFINITY)));
+                }
+                case Vector3fc vector -> json.put("defaultComponents", List.of(vector.x(), vector.y(), vector.z()));
+                case Vector4fc vector -> json.put("defaultComponents", List.of(vector.x(), vector.y(), vector.z(), vector.w()));
+                default -> json.put("default", encodeDefault(attribute));
+            }
+            attributes.put(BuiltInRegistries.ENVIRONMENT_ATTRIBUTE.getKey(attribute).toString(), json);
+        }
+        return attributes;
+    }
+
+    private static <V> String encodeDefault(EnvironmentAttribute<V> attribute) {
+        return attribute.valueCodec().encodeStart(JsonOps.INSTANCE, attribute.defaultValue()).getOrThrow().toString();
     }
 
     // ------------------------------------------------------------ reflection

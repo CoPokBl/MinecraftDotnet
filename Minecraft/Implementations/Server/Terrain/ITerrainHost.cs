@@ -46,6 +46,17 @@ public interface ITerrainHost {
     void NotifyChunkChanged(Vec2<int> chunk) { }
 
     /// <summary>
+    /// A frozen copy of a chunk that has already been generated, or null when it is not loaded.
+    /// </summary>
+    /// <remarks>
+    /// What a generator decorating next to it reads, as vanilla's <c>WorldGenRegion</c> reads a
+    /// neighbour that decorated first: its features are there, so a tree or an ore crossing the border
+    /// is judged against them. Must not count as a write. Defaulted to null, so a host that cannot
+    /// provide one leaves the generator reading the terrain it computes for itself.
+    /// </remarks>
+    ChunkData? SnapshotLoadedChunk(Vec2<int> chunk) => null;
+
+    /// <summary>
     /// Something went wrong that the provider recovered from and carried on past, which whoever runs
     /// the world should still hear about. Defaulted, so a host with nowhere to report implements
     /// nothing.

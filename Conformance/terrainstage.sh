@@ -2,7 +2,7 @@
 # Every block the vanilla noise, surface and carver passes leave in a chunk, into the fixture
 # TerrainStageConformanceTest replays.
 #
-#   Conformance/terrainstage.sh [version]
+#   Conformance/terrainstage.sh [version] [overworld|nether|end]
 #
 # Only needed when the fixture is being regenerated, ie. on a version bump. The test itself just reads
 # the committed file. Needs the server jar the CodeGen project downloads, so run CodeGen for the
@@ -27,10 +27,10 @@
 set -euo pipefail
 
 version="${1:-26.3}"
+dimension="${2:-overworld}"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 jars="$repo/CodeGen/bin/Debug/net10.0"
 work="${TMPDIR:-/tmp}/mcdotnet-conformance"
-fixture="$repo/ManagedServer.Testing/Terrain/vanilla-terrainstage.bin.gz"
 
 # The seed every worldgen fixture in the tree uses, so a chunk can be looked at with TestServer.
 seed=1234567890
@@ -104,6 +104,59 @@ chunks=(
     "-81:14"      # a frozen ocean chunk carrying a large iceberg, which is a pass of its own
 )
 
+# The nether's five biomes, from the same search with DIMENSION=nether, two chunks lying wholly
+# inside a forest, since the search's hit is one quart and 0:-16 turns out to hold no warped floor,
+# and five more chunks for their carving: the nether's cave carver is a cave with its own data, so a
+# chunk is only worth having for it where a tunnel reaches.
+nether_chunks=(
+    "16:24"       # basalt_deltas
+    "0:8"         # crimson_forest
+    "0:0"         # nether_wastes
+    "-8:8"        # soul_sand_valley
+    "0:-16"       # warped_forest
+    "-64:-54"     # warped_forest, all sixteen quarts of it
+    "-64:-22"     # crimson_forest, all sixteen quarts of it
+    "3:-5"
+    "-20:11"
+    "40:-33"
+    "-57:-61"
+    "101:7"
+)
+
+# The end's five biomes, from the same search with DIMENSION=end, and the central island across its
+# middle and out to where it thins into the void, since that island is a distance function of its own
+# rather than the outer islands' noise. 64:1 is the first chunk past the circle both the biome source and
+# the outer islands function draw, and the rest are outer islands further out. The end has no carvers,
+# so the third stage only checks that nothing carves.
+end_chunks=(
+    "48:48"       # end_barrens
+    "-56:56"      # end_highlands
+    "-48:-48"     # end_midlands
+    "48:-48"      # small_end_islands
+    "0:0"         # the_end
+    "-1:-1"
+    "3:-2"
+    "-6:2"
+    "0:7"
+    "64:1"
+    "-56:-54"     # an end city starts here
+    "100:-37"
+    "-210:150"
+)
+
+case "$dimension" in
+    overworld) fixture="$repo/ManagedServer.Testing/Terrain/vanilla-terrainstage.bin.gz" ;;
+    nether)
+        fixture="$repo/ManagedServer.Testing/Terrain/vanilla-terrainstage-nether.bin.gz"
+        chunks=("${nether_chunks[@]}")
+        ;;
+    end)
+        fixture="$repo/ManagedServer.Testing/Terrain/vanilla-terrainstage-end.bin.gz"
+        chunks=("${end_chunks[@]}")
+        ;;
+    *) echo "No dimension named $dimension: overworld, nether or end." >&2; exit 2 ;;
+esac
+
 server_jar="$jars/versions/$version/server-$version.jar"
 
 if [[ ! -f "$server_jar" ]]; then
@@ -119,4 +172,4 @@ javac -nowarn -cp "$cp" -d "$work/terrainstage-classes" \
     "$repo/Conformance/TerrainStageHarness.java" "$repo/Conformance/Harness.java"
 
 java -Xmx3G -cp "$cp:$work/terrainstage-classes" TerrainStageHarness \
-    "$fixture" "$seed" "${chunks[@]}"
+    "$fixture" "$seed" "$dimension" "${chunks[@]}"

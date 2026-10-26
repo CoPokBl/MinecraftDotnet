@@ -46,21 +46,16 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
     /// The feature types this build does not transcribe, each with why.
     /// </summary>
     /// <remarks>
-    /// Every one of these needs a subsystem that does not exist here rather than being merely long:
-    /// a structure template loader, a block entity, or a dimension whose terrain is not generated.
+    /// Every one of these needs a subsystem that does not exist here rather than being merely long, or
+    /// is never reached by a biome's feature list.
     /// <p/>
     /// A biome asking for one of these loses that feature and keeps the rest of its list, and the
     /// global feature order is unaffected because it is keyed on the placed features that did load.
     /// </remarks>
     public static readonly IReadOnlyDictionary<string, string> NotTranscribed = new Dictionary<string, string> {
         ["bonus_chest"] = "needs a chest block entity and a loot table roll at generation time",
-        ["end_gateway"] = "needs an end gateway block entity",
-        ["end_spike"] = "needs the ender crystal entity and its block entity",
-        ["end_platform"] = "the end is not generated",
-        ["end_island"] = "the end is not generated",
         ["void_start_platform"] = "only reachable in the void world preset",
-        ["chorus_plant"] = "the end is not generated",
-        ["end_podium"] = "the end is not generated",
+        ["end_podium"] = "placed by the dragon fight rather than by any biome",
     };
 
     /// <summary>
@@ -103,6 +98,29 @@ public sealed class FeatureParser(BlockParser blocks, PlacementParser placement,
             case "template":
                 return new TemplateFeature(templates, ParseTemplateEntries(config),
                     config.TryGetProperty("processors", out JsonElement processors) ? Processors(processors) : []);
+
+            case "end_spike":
+                return new EndSpikeFeature(config.GetProperty("spikes").EnumerateArray()
+                    .Select(spike => new EndSpikeFeature.Spike(
+                        ValueParser.OptionalInt(spike, "centerX", 0), ValueParser.OptionalInt(spike, "centerZ", 0),
+                        ValueParser.OptionalInt(spike, "radius", 0), ValueParser.OptionalInt(spike, "height", 0),
+                        spike.TryGetProperty("guarded", out JsonElement guarded) && guarded.GetBoolean()))
+                    .ToList());
+
+            case "end_gateway":
+                return new EndGatewayFeature(config.TryGetProperty("exit", out JsonElement exit)
+                        ? new Vec3<int>(exit[0].GetInt32(), exit[1].GetInt32(), exit[2].GetInt32())
+                        : null,
+                    config.GetProperty("exact").GetBoolean());
+
+            case "end_island":
+                return EndIslandFeature.Instance;
+
+            case "end_platform":
+                return EndPlatformFeature.Instance;
+
+            case "chorus_plant":
+                return ChorusPlantFeature.Instance;
 
             case "freeze_top_layer":
                 return SnowAndFreezeFeature.Instance;

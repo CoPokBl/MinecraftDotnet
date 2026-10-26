@@ -253,7 +253,7 @@ public sealed class GameWindow : IDisposable, IMenuHost {
         float partialTick = (float)_tickResidual;
         _script.CheckJoined(now, _screens);
 
-        FramePlan plan = _renderer.Prepare(partialTick, _window.FramebufferSize, _screens.Current is DisconnectedScreen) with { DeltaTicks = deltaTicks };
+        FramePlan plan = _renderer.Prepare(partialTick, _window.FramebufferSize, _screens.Current is DisconnectedScreen, deltaTicks) with { DeltaTicks = deltaTicks };
         if (plan.InWorld) {
             _audio.UpdateListener(_renderer.Camera);
         }

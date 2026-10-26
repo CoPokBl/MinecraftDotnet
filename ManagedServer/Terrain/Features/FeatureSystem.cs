@@ -37,14 +37,16 @@ public sealed class FeatureSystem {
     private readonly MinecraftRegistry _registry;
     private readonly long _seed;
     private readonly IPositionalRandomFactory _levelRandom;
+    private readonly bool _hasSkyLight;
 
     public FeatureSystem(BiomeFeatureTable table, MinecraftRegistry registry, long seed,
-        IPositionalRandomFactory levelRandom) {
+        IPositionalRandomFactory levelRandom, bool hasSkyLight = true) {
 
         _table = table;
         _registry = registry;
         _seed = seed;
         _levelRandom = levelRandom;
+        _hasSkyLight = hasSkyLight;
     }
 
     /// <summary>
@@ -74,7 +76,7 @@ public sealed class FeatureSystem {
         WorldgenRandom random, long decorationSeed);
 
     public void Decorate(IGenerationUnit unit, ChunkColumn column, BiomeAtBlock biomes,
-        IReadOnlyCollection<Identifier> chunkBiomes, int seaLevel, NeighbourTerrain? neighbours = null,
+        IReadOnlyCollection<Identifier> chunkBiomes, GenerationHeightContext heights, NeighbourTerrain? neighbours = null,
         StepHook? beforeStep = null, BiomeAtQuart? cellBiomes = null) {
 
         int chunkX = unit.AbsoluteStart.X >> 4;
@@ -84,9 +86,11 @@ public sealed class FeatureSystem {
             // At the chunk's minimum corner at y zero, which is what a ChunkPos answers for its world
             // position.
             ChunkFeatureLevel level = new(column, outside, biomes, _registry, chunkX, chunkZ, unit.MinY,
-                unit.MaxY, seaLevel, _seed, _levelRandom.At(chunkX << 4, 0, chunkZ << 4), neighbours);
+                unit.MaxY, heights.SeaLevel ?? 0, _seed, _levelRandom.At(chunkX << 4, 0, chunkZ << 4), neighbours,
+                neighbours is null ? null : unit.ReadNeighbour) {
+                HasSkyLight = _hasSkyLight, WorldGeneration = heights
+            };
 
-            GenerationHeightContext heights = new(unit.MinY, unit.MaxY - unit.MinY, seaLevel);
             PlacementContext context = new(level, heights, HasFeature, null);
 
             WorldgenRandom random = new(new XoroshiroRandomSource(RandomSupportUniqueSeed()));
@@ -154,6 +158,10 @@ public sealed class FeatureSystem {
                     FeatureLevelDump.Capture(level, chunkX, chunkZ), _seed, chunkX, chunkZ,
                     structureWrites, level.Writers, FeatureLevelDump.TakePlacements());
             }
+
+            // After the dump, which compares against vanilla's decoration pass and not its promotion
+            // to full.
+            level.PostProcess();
         });
     }
 

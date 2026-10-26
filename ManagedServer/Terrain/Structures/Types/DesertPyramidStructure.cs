@@ -113,7 +113,12 @@ public sealed class DesertPyramidPiece(RandomSource random, int west, int north)
 
     private readonly bool[] _hasPlacedChest = new bool[4];
 
-    private readonly List<Vec3<int>> _potentialSuspiciousSand = [];
+    /// <summary>
+    /// Rebuilt by every placement and swapped in whole, where vanilla appends to one list per placement
+    /// and lets the after-place pass deduplicate. The positions are the same every time once the
+    /// height is decided, and two chunks place a pyramid at once.
+    /// </summary>
+    private IReadOnlyList<Vec3<int>> _potentialSuspiciousSand = [];
 
     /// <summary>Every cellar position the after-place pass may turn into suspicious sand.</summary>
     public IReadOnlyList<Vec3<int>> PotentialSuspiciousSandPositions => _potentialSuspiciousSand;
@@ -121,11 +126,20 @@ public sealed class DesertPyramidPiece(RandomSource random, int west, int north)
     /// <summary>The one roof block that is always suspicious, wherever the piece put it.</summary>
     public Vec3<int> RandomCollapsedRoofPos { get; private set; }
 
+    /// <summary>
+    /// Sinks the pyramid by the source chunk's draw, the same <c>nextInt(3)</c> its
+    /// <see cref="PostProcess"/> takes first.
+    /// </summary>
+    public override void SettleOnce(IFeatureLevel level, Func<RandomSource> sourceRandom) {
+        UpdateHeightPositionToLowestGroundHeight(level, -sourceRandom().NextInt(3));
+    }
+
     public override void PostProcess(IFeatureLevel level, RandomSource random, BoundingBox chunkBox,
         int chunkX, int chunkZ, Vec3<int> referencePos) {
 
         // The draw happens whether or not the height is already known, since it is an argument, so
-        // it must not be hoisted into the constructor or moved behind the test.
+        // it must not be hoisted into the constructor or moved behind the test. SettleOnce has always
+        // decided by now, so this only ever takes the draw.
         if (!UpdateHeightPositionToLowestGroundHeight(level, -random.NextInt(3))) {
             return;
         }
@@ -352,8 +366,12 @@ public sealed class DesertPyramidPiece(RandomSource random, int west, int north)
 
     private void AddCellar(IFeatureLevel level, BoundingBox chunkBox) {
         Vec3<int> roomCenter = new(16, -4, 13);
+        List<Vec3<int>> sand = [];
+
         AddCellarStairs(roomCenter, level, chunkBox);
-        AddCellarRoom(roomCenter, level, chunkBox);
+        AddCellarRoom(roomCenter, level, chunkBox, sand);
+
+        _potentialSuspiciousSand = sand;
     }
 
     private void AddCellarStairs(Vec3<int> roomCenter, IFeatureLevel level, BoundingBox chunkBox) {
@@ -392,7 +410,8 @@ public sealed class DesertPyramidPiece(RandomSource random, int west, int north)
         PlaceBlock(level, sand, x, y + 1, z + 4, chunkBox);
     }
 
-    private void AddCellarRoom(Vec3<int> roomCenter, IFeatureLevel level, BoundingBox chunkBox) {
+    private void AddCellarRoom(Vec3<int> roomCenter, IFeatureLevel level, BoundingBox chunkBox,
+        List<Vec3<int>> sand) {
         int x = roomCenter.X;
         int y = roomCenter.Y;
         int z = roomCenter.Z;
@@ -413,7 +432,7 @@ public sealed class DesertPyramidPiece(RandomSource random, int west, int north)
         GenerateBox(level, chunkBox, x - 3, -1, z - 3, x + 3, -1, z - 2, cut, cut, true);
         GenerateBox(level, chunkBox, x - 3, -1, z + 3, x + 3, -1, z + 3, cut, cut, true);
 
-        RecordSandBox(x - 2, y + 1, z - 2, x + 2, y + 3, z + 2);
+        RecordSandBox(sand, x - 2, y + 1, z - 2, x + 2, y + 3, z + 2);
         PlaceCollapsedRoof(level, chunkBox, x - 2, y + 4, z - 2, x + 2, z + 2);
 
         uint orange = Block.OrangeTerracotta.StateId;
@@ -429,24 +448,24 @@ public sealed class DesertPyramidPiece(RandomSource random, int west, int north)
         PlaceBlock(level, orange, x, y, z - 2, chunkBox);
 
         PlaceBlock(level, orange, x + 3, y, z, chunkBox);
-        RecordSand(x + 3, y + 1, z);
-        RecordSand(x + 3, y + 2, z);
+        RecordSand(sand, x + 3, y + 1, z);
+        RecordSand(sand, x + 3, y + 2, z);
         PlaceBlock(level, cut, x + 4, y + 1, z, chunkBox);
         PlaceBlock(level, hieroglyphs, x + 4, y + 2, z, chunkBox);
 
         PlaceBlock(level, orange, x - 3, y, z, chunkBox);
-        RecordSand(x - 3, y + 1, z);
-        RecordSand(x - 3, y + 2, z);
+        RecordSand(sand, x - 3, y + 1, z);
+        RecordSand(sand, x - 3, y + 2, z);
         PlaceBlock(level, cut, x - 4, y + 1, z, chunkBox);
         PlaceBlock(level, hieroglyphs, x - 4, y + 2, z, chunkBox);
 
         PlaceBlock(level, orange, x, y, z + 3, chunkBox);
-        RecordSand(x, y + 1, z + 3);
-        RecordSand(x, y + 2, z + 3);
+        RecordSand(sand, x, y + 1, z + 3);
+        RecordSand(sand, x, y + 2, z + 3);
 
         PlaceBlock(level, orange, x, y, z - 3, chunkBox);
-        RecordSand(x, y + 1, z - 3);
-        RecordSand(x, y + 2, z - 3);
+        RecordSand(sand, x, y + 1, z - 3);
+        RecordSand(sand, x, y + 2, z - 3);
         PlaceBlock(level, cut, x, y + 1, z - 4, chunkBox);
         PlaceBlock(level, hieroglyphs, x, -2, z - 4, chunkBox);
     }
@@ -459,15 +478,15 @@ public sealed class DesertPyramidPiece(RandomSource random, int west, int north)
     /// cellar is <c>afterPlace</c> walking this list, so a position recorded here is left as whatever
     /// the terrain had until then.
     /// </remarks>
-    private void RecordSand(int x, int y, int z) {
-        _potentialSuspiciousSand.Add(GetWorldPos(x, y, z));
+    private void RecordSand(List<Vec3<int>> sand, int x, int y, int z) {
+        sand.Add(GetWorldPos(x, y, z));
     }
 
-    private void RecordSandBox(int x0, int y0, int z0, int x1, int y1, int z1) {
+    private void RecordSandBox(List<Vec3<int>> sand, int x0, int y0, int z0, int x1, int y1, int z1) {
         for (int y = y0; y <= y1; y++) {
             for (int x = x0; x <= x1; x++) {
                 for (int z = z0; z <= z1; z++) {
-                    RecordSand(x, y, z);
+                    RecordSand(sand, x, y, z);
                 }
             }
         }

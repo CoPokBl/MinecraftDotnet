@@ -34,7 +34,7 @@ namespace ManagedServer.Terrain;
 /// One instance per world. It holds that world's seeded noises and its biome table, both of which are
 /// expensive to build and neither of which depends on the chunk, so sharing one between worlds of
 /// different seeds is what the seed argument exists to prevent.
-/// <p/>
+/// <p/>r
 /// <b>What this generates.</b> The noise terrain, the aquifers, the biomes and the material rules,
 /// ore veins included; when <see cref="WithCarvers"/> is asked for, the caves and ravines; when
 /// <see cref="WithFeatures"/> is asked for, the decoration pass: trees, grass, flowers, ores and the
@@ -52,7 +52,7 @@ public sealed class VanillaTerrainGenerator : IGenerator {
     private readonly IDatapackSource _source;
     private readonly NoiseGeneratorSettings _settings;
     private readonly RandomState _randomState;
-    private readonly MultiNoiseBiomeSource _biomeSource;
+    private readonly IBiomeSource _biomeSource;
     private readonly BiomeZoom _biomeZoom;
     private readonly IFluidPicker _globalFluidPicker;
 
@@ -86,8 +86,21 @@ public sealed class VanillaTerrainGenerator : IGenerator {
     /// <summary>The parsed feature data, which the structure pass needs for its pool elements.</summary>
     private VanillaFeatureData? _featureData;
 
+    /// <param name="hasSkyLight">
+    /// The dimension type's <c>has_skylight</c>. The generator is built for a dimension rather than
+    /// handed one, and a feature's light rules read it: a mushroom in the nether grows on any full
+    /// block, where in the overworld it needs mycelium or nylium.
+    /// </param>
     public VanillaTerrainGenerator(IDatapackSource source, Identifier noiseSettings,
-        Identifier biomePreset, long seed, MinecraftRegistry? registry = null) {
+        Identifier biomePreset, long seed, MinecraftRegistry? registry = null, bool hasSkyLight = true)
+        : this(source, noiseSettings,
+            new MultiNoiseBiomeSource(VanillaWorldgenData.Load(source, registry).GetBiomeParameters(biomePreset)),
+            seed, registry, hasSkyLight) {
+    }
+
+    /// <param name="hasSkyLight">See the other constructor.</param>
+    public VanillaTerrainGenerator(IDatapackSource source, Identifier noiseSettings,
+        IBiomeSource biomeSource, long seed, MinecraftRegistry? registry = null, bool hasSkyLight = true) {
 
         _registry = registry ?? VanillaRegistry.Data;
         _source = source;
@@ -95,16 +108,19 @@ public sealed class VanillaTerrainGenerator : IGenerator {
         VanillaWorldgenData data = VanillaWorldgenData.Load(source, _registry);
         _settings = data.GetNoiseSettings(noiseSettings);
         _randomState = new RandomState(_registry, _settings, data.ResolveNoise, seed);
-        _biomeSource = new MultiNoiseBiomeSource(data.GetBiomeParameters(biomePreset));
+        _biomeSource = biomeSource;
         _biomeZoom = new BiomeZoom(BiomeZoom.ObfuscateSeed(seed));
 
         _globalFluidPicker = new GlobalFluidPicker(_settings.SeaLevel, _settings.DefaultFluid);
         _airState = Block.Air.StateId;
 
         Seed = seed;
+        HasSkyLight = hasSkyLight;
     }
 
     public long Seed { get; }
+
+    public bool HasSkyLight { get; }
 
     public NoiseGeneratorSettings Settings => _settings;
 
@@ -135,7 +151,18 @@ public sealed class VanillaTerrainGenerator : IGenerator {
     public static VanillaTerrainGenerator Nether(IDatapackSource source, long seed,
         MinecraftRegistry? registry = null) {
 
-        return new VanillaTerrainGenerator(source, "minecraft:nether", "minecraft:nether", seed, registry);
+        return new VanillaTerrainGenerator(source, "minecraft:nether", "minecraft:nether", seed, registry,
+            hasSkyLight: false);
+    }
+
+    /// <summary>The end: the central island, the outer islands past a thousand blocks, and the void between.</summary>
+    /// <remarks>
+    /// The end's dimension type has a sky layer, unlike the nether's, so a feature there sees sky light 15.
+    /// </remarks>
+    public static VanillaTerrainGenerator End(IDatapackSource source, long seed,
+        MinecraftRegistry? registry = null) {
+
+        return new VanillaTerrainGenerator(source, "minecraft:end", new TheEndBiomeSource(), seed, registry);
     }
 
     /// <summary>
@@ -155,7 +182,7 @@ public sealed class VanillaTerrainGenerator : IGenerator {
     public VanillaTerrainGenerator WithFeatures() {
         _featureData = VanillaFeatureData.Load(_source, _registry);
         _features = new FeatureSystem(_featureData.TableFor(_biomeSource.PossibleBiomes), _registry, Seed,
-            _randomState.GetOrCreateRandomFactory(FeatureSystem.LevelRandomName));
+            _randomState.GetOrCreateRandomFactory(FeatureSystem.LevelRandomName), HasSkyLight);
         return this;
     }
 
@@ -358,7 +385,8 @@ public sealed class VanillaTerrainGenerator : IGenerator {
 
             // A neighbour that decorated first has already computed this chunk's terrain, in which case
             // it is put back rather than built again. Either way the snapshot is taken before
-            // decoration, since that is the state this chunk's own neighbours have to read.
+            // decoration: it is what a neighbour reads this chunk as until it is generated, and what
+            // its _WG heightmaps stay at after.
             if (_terrain.TryGet(new Vec2<int>(chunkX, chunkZ), out TerrainSnapshot kept)) {
                 kept.RestoreInto(column);
             } else {
@@ -372,7 +400,7 @@ public sealed class VanillaTerrainGenerator : IGenerator {
             unit.ReadForkedWrites((x, y, z, state) => column.Write(x & 15, y, z & 15, state));
 
             _features?.Decorate(unit, column, biomes.GetBiomeAtBlock,
-                BiomesAround(chunkX, chunkZ, unit.MinY, unit.MaxY), _settings.SeaLevel,
+                BiomesAround(chunkX, chunkZ, unit.MinY, unit.MaxY), HeightContext(unit.MinY, unit.MaxY),
                 NeighbourTerrain(minY, maxY), StructureHook(unit, chunkX, chunkZ),
                 biomes.GetBiomeAtQuart);
 
@@ -544,7 +572,7 @@ public sealed class VanillaTerrainGenerator : IGenerator {
                 (blockX, blockZ, type) => GetBaseHeight(blockX, blockZ, type, minY, height),
                 (blockX, blockZ) => GetBaseColumn(blockX, blockZ, minY, height),
                 BiomeAt, random, Seed, sourceChunkX, sourceChunkZ, minY, height,
-                _settings.SeaLevel);
+                _settings.SeaLevel, HeightContext(minY, minY + height));
         };
     }
 
@@ -554,7 +582,8 @@ public sealed class VanillaTerrainGenerator : IGenerator {
     /// <remarks>
     /// The writable area is the chunk over the world's whole height, vanilla's <c>getWritableArea</c>,
     /// and it starts one above the bottom so a structure cannot replace the void barrier. Every piece
-    /// clips to it, which is what keeps the pass free of forks.
+    /// clips to it, which is what keeps the pass free of forks. <see cref="StructureSystem.PlaceStep"/>
+    /// hands each start a copy, since a ruined portal or a fossil grows the box it is given.
     /// </remarks>
     private FeatureSystem.StepHook? StructureHook(IGenerationUnit unit, int chunkX, int chunkZ) {
         if (_structures is null) {
@@ -564,7 +593,7 @@ public sealed class VanillaTerrainGenerator : IGenerator {
         StructureSystem structures = _structures;
 
         BoundingBox writable = new(chunkX << 4, unit.MinY + 1, chunkZ << 4,
-            (chunkX << 4) + 15, unit.MaxY, (chunkZ << 4) + 15);
+            (chunkX << 4) + 15, unit.MaxY - 1, (chunkZ << 4) + 15);
 
         StructureGenerationContext.Factory factory = ContextFactory(unit.MinY, unit.MaxY - unit.MinY);
 

@@ -1,3 +1,6 @@
+using ManagedServer.Terrain.Features.Values;
+using Minecraft.Data.Blocks;
+using ManagedServer.Terrain.Features.Blocks;
 using Minecraft.Data.Biomes;
 using Minecraft.Implementations.Server.Terrain.Generation;
 using Minecraft.Registry;
@@ -23,12 +26,16 @@ public delegate IBiome BiomeAtQuart(int quartX, int quartY, int quartZ);
 /// A neighbouring chunk's terrain, as the carvers left it.
 /// </summary>
 /// <remarks>
-/// Vanilla decorates through a region spanning the three by three, and the neighbours in it are at the
-/// carvers step: surfaced and carved, not yet decorated. That is what this hands back, and it is a pure
-/// function of the seed and the chunk position, so a chunk still generates the same whatever order the
-/// world was asked for.
+/// A pure function of the seed and the chunk position. It is what a neighbour's two <c>_WG</c>
+/// heightmaps are read off, and what its blocks are underneath whatever has been decorated onto it.
 /// </remarks>
 public delegate IColumnStates NeighbourTerrain(int chunkX, int chunkZ);
+
+/// <summary>
+/// <see cref="IGenerationUnit.ReadNeighbour"/>: a generated neighbour's blocks, or null after
+/// replaying what has been forked into one that is not generated yet.
+/// </summary>
+public delegate ChunkData? NeighbourBlocks(int chunkX, int chunkZ, ForkedBlock forked);
 
 /// <summary>
 /// An <see cref="IFeatureLevel"/> over one chunk being generated: the staging column for the chunk
@@ -41,11 +48,14 @@ public delegate IColumnStates NeighbourTerrain(int chunkX, int chunkZ);
 /// and are remembered here so a decorator asking whether the position it just filled is empty is told
 /// the truth.
 /// <p/>
-/// <b>Reads outside the chunk answer the neighbour's terrain</b>, which is what vanilla's
-/// <c>WorldGenRegion</c> spanning the three by three does. The neighbour is at its carvers step there:
-/// surfaced and carved, not yet decorated. Answering air instead is not a small loss, because a
-/// candidate is judged on the block that is there: no ore blob would ever cross a chunk border, and a
-/// chunk would come out with about 70% of the blob material vanilla gives it.
+/// <b>Reads outside the chunk answer the neighbour as the world holds it</b>, which is what vanilla's
+/// <c>WorldGenRegion</c> spanning the three by three does: a neighbour that decorated first with its
+/// features on, and one that has not with its terrain and whatever other chunks forked into it. A
+/// neighbour is never further than its features step in vanilla, so a generated one here can differ
+/// only by what a player has since changed. Answering the terrain alone puts an ore blob or a tree
+/// crossing the border over a neighbour's dirt or canopy as though it were bare stone and air, and
+/// answering air is worse: no ore blob would ever cross a chunk border, and a chunk would come out
+/// with about 70% of the blob material vanilla gives it.
 /// <p/>
 /// <b>Heightmaps split into a frozen pair and a live four</b>, which is vanilla's and not an
 /// optimisation. <c>ProtoChunk.setBlockState</c> updates only the heightmaps of the chunk's current
@@ -63,6 +73,7 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
     private readonly IBlockSetter _outside;
     private readonly BiomeAtBlock _biomes;
     private readonly NeighbourTerrain? _neighbours;
+    private readonly NeighbourBlocks? _world;
     private readonly int _chunkX;
     private readonly int _chunkZ;
     private readonly int _originX;
@@ -83,15 +94,18 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
     private readonly ColumnHeights _worldgenHeights;
 
     /// <summary>
-    /// The eight neighbours' terrain and heightmaps, by <see cref="NeighbourSlot"/>, each built on the
+    /// The eight neighbours' terrain, blocks and heightmaps, by <see cref="SlotOf"/>, each built on the
     /// first read into it.
     /// </summary>
     /// <remarks>
     /// Most chunks read one or two of them and a chunk with nothing near its borders reads none, so
     /// none of this is built up front. The centre slot is left empty: the chunk itself is the column.
+    /// The blocks are taken once, on that first read, as vanilla's region would see them then.
     /// </remarks>
     private readonly IColumnStates?[] _neighbourTerrain = new IColumnStates[9];
+    private readonly IColumnStates?[] _neighbourBlocks = new IColumnStates[9];
     private readonly ColumnHeights?[] _neighbourHeights = new ColumnHeights[9];
+    private readonly ColumnHeights?[] _neighbourWorldgenHeights = new ColumnHeights[9];
 
     /// <summary>What this pass has forked outside the chunk, so a read there sees it.</summary>
     /// <remarks>
@@ -103,15 +117,26 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
     /// </remarks>
     private Dictionary<long, uint>? _forked;
 
+    public bool HasSkyLight { get; init; } = true;
+
+    public required GenerationHeightContext WorldGeneration { get; init; }
+
+    /// <summary>
+    /// The positions marked for post processing, per section from the bottom and in the order they
+    /// were marked within one, which is the order <c>postProcessGeneration</c> walks them.
+    /// </summary>
+    private SortedDictionary<int, List<Vec3<int>>>? _postProcessing;
+
     public ChunkFeatureLevel(ChunkColumn column, IBlockSetter outside, BiomeAtBlock biomes,
         MinecraftRegistry registry, int chunkX, int chunkZ, int minY, int maxY, int seaLevel, long seed,
-        RandomSource levelRandom, NeighbourTerrain? neighbours = null) {
+        RandomSource levelRandom, NeighbourTerrain? neighbours = null, NeighbourBlocks? world = null) {
 
         LevelRandom = levelRandom;
         _column = column;
         _outside = outside;
         _biomes = biomes;
         _neighbours = neighbours;
+        _world = world;
         _chunkX = chunkX;
         _chunkZ = chunkZ;
         _originX = chunkX << 4;
@@ -178,6 +203,66 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
         return ((dx + 1) * 3) + dz + 1;
     }
 
+    /// <remarks>
+    /// Only a position in the chunk being generated is kept. Upstream a mark outside it lands in the
+    /// neighbour's own list; the only callers here are structure pieces, which clip to this chunk.
+    /// </remarks>
+    public void MarkForPostProcessing(int x, int y, int z) {
+        if (!InChunk(x, z) || y < MinY || y >= MaxY) {
+            return;
+        }
+
+        _postProcessing ??= [];
+        int section = (y - MinY) >> 4;
+
+        if (!_postProcessing.TryGetValue(section, out List<Vec3<int>>? marked)) {
+            _postProcessing[section] = marked = [];
+        }
+
+        marked.Add(new Vec3<int>(x, y, z));
+    }
+
+    /// <summary>
+    /// <c>LevelChunk.postProcessGeneration</c>: each marked block settles against its neighbours.
+    /// </summary>
+    /// <remarks>
+    /// <b>A deliberate divergence in timing.</b> Upstream this runs in <c>prepareTickingChunk</c>,
+    /// once all eight neighbours are full; here it runs as soon as this chunk has decorated, since the
+    /// generator has no stage after its neighbours. A marked block on the border therefore reads a
+    /// neighbour that has not decorated yet as bare terrain: a mineshaft fence joins the stone its
+    /// neighbour's corridor is about to carve away. Measured against the real server, that is 4 fence
+    /// blocks in <c>WorldParityConformanceTest</c>'s plains village and 9 over its nether scenes, every
+    /// one on a chunk edge, against 271 interior fences this settles correctly.
+    /// <p/>
+    /// Each write is <c>UPDATE_KNOWN_SHAPE</c>, so it settles that block alone, and later positions
+    /// read the earlier ones' answers. A liquid is ticked upstream rather than reshaped, and the
+    /// generator has no fluid ticks.
+    /// </remarks>
+    public void PostProcess() {
+        if (_postProcessing is null) {
+            return;
+        }
+
+        foreach (List<Vec3<int>> marked in _postProcessing.Values) {
+            foreach (Vec3<int> pos in marked) {
+                uint state = GetState(pos.X, pos.Y, pos.Z);
+                // instanceof LiquidBlock upstream, which BlockState.liquid stands for exactly.
+                if (Blocks.IsLiquid(state)) {
+                    continue;
+                }
+
+                IBlock settled = FeatureShapeUpdate.UpdateFromNeighbourShapes(
+                    Registry.Blocks.GetByStateId(state), this, pos);
+
+                if (settled.StateId != state) {
+                    SetState(pos.X, pos.Y, pos.Z, settled.StateId);
+                }
+            }
+        }
+
+        _postProcessing = null;
+    }
+
     public uint GetState(int x, int y, int z) {
         if (InChunk(x, z)) {
             return _column.Read(x & 15, y, z & 15);
@@ -188,7 +273,7 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
             return forked;
         }
 
-        return TerrainAt(x, z) is { } terrain ? terrain.Read(x & 15, y, z & 15) : AirState;
+        return BlocksAt(x, z) is { } blocks ? blocks.Read(x & 15, y, z & 15) : AirState;
     }
 
     public void SetState(int x, int y, int z, uint stateId) {
@@ -202,11 +287,9 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
 
             // Vanilla's WorldGenRegion writes through to the neighbour's own heightmaps, so a feature
             // that fills across a border and then asks how high the ground is there is answered with
-            // what it put down.
-            int slot = SlotOf(x, z);
-            if (slot >= 0 && _neighbourHeights[slot] is { } heights) {
-                heights.Update(x & 15, y, z & 15, stateId);
-            }
+            // what it put down. The map is built here if nothing has read it yet: built on a later
+            // read it would be primed off the terrain alone and miss this write.
+            HeightsAt(x, z)?.Update(x & 15, y, z & 15, stateId);
 
             Writes++;
 
@@ -251,7 +334,7 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
                 : _heights.Get(type, x & 15, z & 15);
         }
 
-        ColumnHeights? heights = HeightsAt(x, z);
+        ColumnHeights? heights = Frozen(type) ? WorldgenHeightsAt(x, z) : HeightsAt(x, z);
 
         // The bottom of the world, which reads as "nothing here". HeightmapPlacement drops a position
         // whose height is not above the minimum, so a feature scattered past the region is skipped
@@ -284,12 +367,55 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
         return _neighbourTerrain[slot] ??= _neighbours((x >> 4), (z >> 4));
     }
 
-    private ColumnHeights? HeightsAt(int x, int z) {
+    /// <summary>The neighbour as the world holds it, taken on the first read into it.</summary>
+    private IColumnStates? BlocksAt(int x, int z) {
         if (TerrainAt(x, z) is not { } terrain) {
             return null;
         }
 
-        return _neighbourHeights[SlotOf(x, z)] ??= new ColumnHeights(terrain, this);
+        int slot = SlotOf(x, z);
+        if (_neighbourBlocks[slot] is { } blocks) {
+            return blocks;
+        }
+
+        if (_world is null) {
+            return _neighbourBlocks[slot] = terrain;
+        }
+
+        Dictionary<int, uint>? forked = null;
+        ChunkData? generated = _world(x >> 4, z >> 4, (forkX, forkY, forkZ, state) =>
+            (forked ??= [])[OverlaidColumns.Index(forkX & 15, forkY, forkZ & 15)] = state);
+
+        return _neighbourBlocks[slot] = generated is not null
+            ? new GeneratedColumns(generated, MinY, MaxY)
+            : forked is not null
+                ? new OverlaidColumns(terrain, forked)
+                : terrain;
+    }
+
+    /// <summary>
+    /// The four live heightmaps over a neighbour as the world holds it, which vanilla primes off the
+    /// blocks there on the first ask and keeps up with every write after.
+    /// </summary>
+    private ColumnHeights? HeightsAt(int x, int z) {
+        if (BlocksAt(x, z) is not { } blocks) {
+            return null;
+        }
+
+        int originX = x & ~15;
+        int originZ = z & ~15;
+
+        return _neighbourHeights[SlotOf(x, z)] ??= new ColumnHeights(blocks, this,
+            (localX, y, localZ) => GetState(originX + localX, y, originZ + localZ));
+    }
+
+    /// <summary>The two <c>_WG</c> heightmaps over a neighbour, which stopped at its terrain.</summary>
+    private ColumnHeights? WorldgenHeightsAt(int x, int z) {
+        if (TerrainAt(x, z) is not { } terrain) {
+            return null;
+        }
+
+        return _neighbourWorldgenHeights[SlotOf(x, z)] ??= new ColumnHeights(terrain, this);
     }
 
     /// <summary>A position packed into a long, on <c>BlockPos</c>'s own field widths.</summary>
@@ -312,12 +438,21 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
     private sealed class ColumnHeights {
         private readonly IColumnStates _states;
         private readonly ChunkFeatureLevel _level;
+        private readonly Func<int, int, int, uint> _current;
         private readonly int[] _values = new int[HeightmapCount * 256];
         private readonly bool[] _primed = new bool[256];
 
-        public ColumnHeights(IColumnStates states, ChunkFeatureLevel level) {
+        /// <param name="current">
+        /// The column as it stands now, for the rescan after a top block is taken away. A neighbour's
+        /// terrain is the column before this pass forked anything into it, which is right for priming
+        /// and wrong for that.
+        /// </param>
+        public ColumnHeights(IColumnStates states, ChunkFeatureLevel level,
+            Func<int, int, int, uint>? current = null) {
+
             _states = states;
             _level = level;
+            _current = current ?? states.Read;
 
             Array.Fill(_values, NotPrimed);
         }
@@ -441,7 +576,7 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
             // The top block of the column was taken away, so the next one down has to be found.
             // Vanilla rescans for the same reason and this is the only branch that costs anything.
             for (int below = y - 1; below >= _level.MinY; below--) {
-                if (_level.Matches(type, _states.Read(localX, below, localZ))) {
+                if (_level.Matches(type, _current(localX, below, localZ))) {
                     _values[index] = below + 1;
                     return;
                 }
@@ -462,5 +597,48 @@ public sealed class ChunkFeatureLevel : IFeatureLevel {
             HeightmapType.MotionBlockingNoLeaves => (flags & HeightmapStates.MotionBlockingNoLeaves) != 0,
             _ => false
         };
+    }
+
+    /// <summary>A generated neighbour's blocks, read off a frozen copy of the chunk.</summary>
+    private sealed class GeneratedColumns(ChunkData chunk, int minY, int maxY) : IColumnStates {
+        public uint Read(int localX, int blockY, int localZ) {
+            return blockY < minY || blockY >= maxY
+                ? Minecraft.Data.Generated.Block.Air.StateId
+                : chunk.GetBlock(localX, blockY - minY, localZ);
+        }
+
+        public int HighestWritten(int localX, int localZ) => maxY;
+    }
+
+    /// <summary>A neighbour not generated yet: its terrain, under what other chunks forked into it.</summary>
+    private sealed class OverlaidColumns : IColumnStates {
+        private readonly IColumnStates _terrain;
+        private readonly Dictionary<int, uint> _forked;
+        private readonly int[] _highest = new int[256];
+
+        public OverlaidColumns(IColumnStates terrain, Dictionary<int, uint> forked) {
+            _terrain = terrain;
+            _forked = forked;
+
+            Array.Fill(_highest, int.MinValue);
+            foreach (int index in forked.Keys) {
+                int column = index & 0xFF;
+                _highest[column] = Math.Max(_highest[column], (index >> 8) + 1);
+            }
+        }
+
+        public static int Index(int localX, int blockY, int localZ) {
+            return (blockY << 8) | (localZ << 4) | localX;
+        }
+
+        public uint Read(int localX, int blockY, int localZ) {
+            return _forked.TryGetValue(Index(localX, blockY, localZ), out uint state)
+                ? state
+                : _terrain.Read(localX, blockY, localZ);
+        }
+
+        public int HighestWritten(int localX, int localZ) {
+            return Math.Max(_terrain.HighestWritten(localX, localZ), _highest[(localZ << 4) | localX]);
+        }
     }
 }

@@ -76,6 +76,27 @@ public abstract class StructurePiece {
         int chunkX, int chunkZ, Vec3<int> referencePos);
 
     /// <summary>
+    /// Decides what the piece keeps for every chunk it reaches, called before each
+    /// <see cref="PostProcess"/> and doing nothing once the answer is held.
+    /// </summary>
+    /// <remarks>
+    /// <b>A deliberate divergence.</b> Upstream the first chunk to place the piece decides inside
+    /// <c>postProcess</c>, drawing from its own decoration random, so the answer depends on which chunk
+    /// generated first, and on a server several neighbours are generating at once. Here it is always
+    /// drawn from <paramref name="sourceRandom"/>, the random the start's own chunk places it with.
+    /// That is the chunk vanilla decides with whenever one task schedules every chunk the piece
+    /// reaches, since it walks a layer x first from the lowest corner. Four desert pyramids forceloaded on the real
+    /// server all sat where their source chunk put them. The ground read is still the deciding
+    /// chunk's, which differs from the source chunk's own only where an earlier step lowered the top
+    /// of the footprint. Called with the piece unlocked, so an override takes its own lock.
+    /// </remarks>
+    /// <param name="sourceRandom">
+    /// A fresh random seeded as the source chunk's decoration random is at this structure, so its
+    /// first draw is the one the source chunk's <see cref="PostProcess"/> takes first.
+    /// </param>
+    public virtual void SettleOnce(IFeatureLevel level, Func<RandomSource> sourceRandom) { }
+
+    /// <summary>
     /// Adds whatever this piece decides should join it, which is how a structure grows from its start
     /// piece into a tree. Does nothing for a piece that is a leaf.
     /// </summary>
@@ -150,10 +171,9 @@ public abstract class StructurePiece {
     /// Writes one block, turned the way the piece faces, if it lands inside the writable area.
     /// </summary>
     /// <remarks>
-    /// Vanilla also schedules a fluid tick where the write lands in liquid, and marks a handful of
-    /// blocks for post processing so their shape settles. There is no block tick scheduler in the
-    /// generator, so neither happens: a fence or a torch placed against a wall keeps the state it was
-    /// written with. Same gap the placement rules and the carvers document.
+    /// A block of <see cref="ShapeCheckBlocks"/> is marked for post processing, so a fence settles
+    /// against whatever stands beside it once the chunk is decorated. Vanilla also schedules a fluid
+    /// tick where the write lands in liquid; the generator has no fluid ticks.
     /// </remarks>
     protected void PlaceBlock(IFeatureLevel level, uint stateId, int x, int y, int z,
         BoundingBox chunkBox) {
@@ -170,8 +190,25 @@ public abstract class StructurePiece {
             return;
         }
 
-        level.SetState(worldX, worldY, worldZ, Turned(level, stateId));
+        uint turned = Turned(level, stateId);
+        level.SetState(worldX, worldY, worldZ, turned);
+
+        if (ShapeCheckBlocks.Contains(level.Registry.Blocks.GetByStateId(turned).Identifier)) {
+            level.MarkForPostProcessing(worldX, worldY, worldZ);
+        }
     }
+
+    /// <summary><c>StructurePiece.SHAPE_CHECK_BLOCKS</c>.</summary>
+    /// <remarks>
+    /// Not every fence: mangrove, cherry, bamboo, crimson and warped are missing upstream too, so a
+    /// crimson fence a piece places keeps the state it was written with.
+    /// </remarks>
+    private static readonly HashSet<Identifier> ShapeCheckBlocks = [
+        Block.NetherBrickFence.Identifier, Block.Torch.Identifier, Block.WallTorch.Identifier,
+        Block.OakFence.Identifier, Block.SpruceFence.Identifier, Block.DarkOakFence.Identifier,
+        Block.PaleOakFence.Identifier, Block.AcaciaFence.Identifier, Block.BirchFence.Identifier,
+        Block.JungleFence.Identifier, Block.Ladder.Identifier, Block.IronBars.Identifier
+    ];
 
     /// <summary>
     /// The state as the piece's own facing leaves it. Identity for a piece laid out in world

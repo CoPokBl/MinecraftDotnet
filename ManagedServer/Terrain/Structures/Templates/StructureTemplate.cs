@@ -595,7 +595,7 @@ public sealed class StructureTemplate {
     /// does not, which writes the same blocks and moves everything the piece draws afterwards, so a
     /// village's furnace shows up as its tree being the wrong shape.
     /// </remarks>
-    private static bool IsRandomisableContainer(IFeatureLevel level, uint stateId) {
+    internal static bool IsRandomisableContainer(IFeatureLevel level, uint stateId) {
         Identifier? entity = level.Registry.Blocks.GetByStateId(stateId).BlockEntity;
 
         return entity is not null && RandomisableContainers.Contains(entity.Value);

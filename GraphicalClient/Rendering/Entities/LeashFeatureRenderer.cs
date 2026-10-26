@@ -96,7 +96,7 @@ public static class LeashFeatureRenderer {
         ReadOnlySpan<Vector2> uvs = [new(0.5F, 0.5F), new(0.5F, 0.5F), new(0.5F, 0.5F), new(0.5F, 0.5F)];
         for (int p = 0; p + 1 < pair; p++) {
             (uint argb, int block, int sky) = looks[p + 1];
-            ModelDrawState draw = new(batch.Textures.White, argb, sky, block, 0) { NoOutline = true };
+            ModelDrawState draw = new(batch.Textures.White, argb, sky, block, 0) { NoOutline = true, Unshaded = true };
             batch.Quad([strip[p * 2], strip[p * 2 + 1], strip[p * 2 + 3], strip[p * 2 + 2]], uvs, Vector3.UnitY, draw);
         }
         pose.Pop();

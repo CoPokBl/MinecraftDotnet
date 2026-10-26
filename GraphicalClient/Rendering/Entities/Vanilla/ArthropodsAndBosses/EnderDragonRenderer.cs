@@ -187,7 +187,7 @@ public sealed class EnderDragonRenderer : EntityRenderer<EnderDragonRenderState>
         _model.RenderToBuffer(pose, context.Batch, new ModelDrawState(texture, 0xFFFFFFFF, state.SkyLight, state.BlockLight, red));
         if (context.Textures.Get(DragonEyesLocation) is { } eyes) {
             // Full sky and block light is the stand-in for the eyes render type's additive, unlit blending.
-            _model.RenderToBuffer(pose, context.Batch, new ModelDrawState(eyes, 0xFFFFFFFF, 15, 15, 0) { NoOutline = true });
+            _model.RenderToBuffer(pose, context.Batch, new ModelDrawState(eyes, 0xFFFFFFFF, 15, 15, 0) { NoOutline = true, Emissive = true, Unshaded = true });
         }
         if (state.DeathTime > 0.0F && context.AdditiveBatch is { } additive) {
             float deathTime = state.DeathTime / 200.0F;

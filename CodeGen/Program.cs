@@ -220,6 +220,7 @@ RunFileStep("Game Version", GameVersionCodeGen.GenerateGameVersionCode);
 RunStep("Particles", ParticleCodeGen.CreateParticleEntries);
 RunStep("Blocks", BlockCodeGen.GenerateBlockCode);
 RunFileStep("Block Light", BlockLightCodeGen.GenerateBlockLightCode);
+RunFileStep("Block Render", BlockRenderCodeGen.GenerateBlockRenderCode);
 RunStep("Packets", PacketCodeGen.CreatePacketEntries);
 RunStep("Data Components", DataComponentCodeGen.CreateComponentEntries);
 RunStep("Items", ItemCodeGen.CreateItemEntries);

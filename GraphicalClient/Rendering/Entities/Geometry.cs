@@ -459,6 +459,15 @@ public readonly record struct ModelDrawState(EntityTexture Texture, uint Argb, f
     /// </summary>
     public bool NoOutline { get; init; }
 
+    /// <summary>Vanilla's <c>EMISSIVE</c> render types: the lightmap is left out, so the light coordinates mean nothing.</summary>
+    public bool Emissive { get; init; }
+
+    /// <summary>
+    /// Vanilla's <c>NO_CARDINAL_LIGHTING</c> render types (eyes, swirls, the breeze's wind, beams, leashes): not shaded
+    /// by the two directional lights, so the normal means nothing.
+    /// </summary>
+    public bool Unshaded { get; init; }
+
     /// <summary>Lit as <paramref name="state"/> is, without an overlay.</summary>
     public ModelDrawState(EntityTexture texture, EntityRenderState state, uint argb = 0xFFFFFFFF) : this(texture, argb, state.SkyLight, state.BlockLight, 0) { }
 }

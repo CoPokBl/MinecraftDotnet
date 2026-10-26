@@ -179,7 +179,7 @@ public static class NameTags {
         int id = state.Entity.Id;
         if (!state.IsDiscrete) {
             // LightCoordsUtil.lightCoordsWithEmission(lightCoords, 2).
-            batch.SubmitLine(id, slot, text, pose.Matrix, x, offset, false, 255, 0, state.SkyLight, Math.Max(state.BlockLight, 2));
+            batch.SubmitLine(id, slot, text, pose.Matrix, x, offset, false, 255, 0, Math.Max(state.SkyLight, 2), Math.Max(state.BlockLight, 2));
             batch.SubmitLine(id, slot, text, pose.Matrix, x, offset, true, textAlpha, background, state.SkyLight, state.BlockLight);
         }
         else {

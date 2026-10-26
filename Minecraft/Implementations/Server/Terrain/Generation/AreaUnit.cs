@@ -55,6 +55,9 @@ internal sealed class AreaUnit : GenerationUnitBase {
 
     public override bool ReadForkedWrites(ForkedBlock into) => _forks.ReadForkedWrites(into);
 
+    public override ChunkData? ReadNeighbour(int chunkX, int chunkZ, ForkedBlock forked) =>
+        _forks.ReadNeighbour(chunkX, chunkZ, forked);
+
     private int IndexOf(int sectionX, int sectionY, int sectionZ) {
         return sectionZ * _width * _height + sectionY * _width + sectionX;
     }

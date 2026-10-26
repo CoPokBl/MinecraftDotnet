@@ -26,6 +26,7 @@
 
     <ItemGroup>
       <None Include="Interaction\vanilla-picking.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Sky\vanilla-sky.bin.gz" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
 </Project>

@@ -47,6 +47,7 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
     public WorldParticles Particles { get; }
     public WeatherRenderer Weather { get; }
     public CloudRenderer Clouds { get; }
+    public SkyRenderer Sky { get; }
     public uint EndSkyTexture => _endPortals.SkyTexture;
     public uint EndPortalTexture => _endPortals.PortalTexture;
 
@@ -97,6 +98,7 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
         _endPortals = new EndPortalRenderer(gl, pack);
         Weather = new WeatherRenderer(gl, pack);
         Clouds = new CloudRenderer(gl, pack);
+        Sky = new SkyRenderer(gl, pack);
         EntityAtlasSprite fire0 = new(Textures, animator, models, BlockModels.Fire0);
         EntityAtlasSprite fire1 = new(Textures, animator, models, BlockModels.Fire1);
         Flames = new FlameFeatureRenderer(fire0, fire1);
@@ -162,9 +164,12 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
     /// <summary>Stopwatch ticks <see cref="Collect"/> has spent on entities, block entities and particles, for <c>--verbose</c> to read and clear.</summary>
     public long[] CollectTicks { get; } = new long[3];
 
+    /// <summary><c>Level.getSkyDarken</c> for this frame, which the brightness under the round shadows is taken down by.</summary>
+    public int SkyDarken { get; set; }
+
     public void Collect(ClientLevel level, float partialTick, ClientEntity cameraEntity, bool firstPerson, bool hideGui) {
         _textDisplays.Begin(Frustum.FromMatrix(_camera.View * _camera.CullProjection));
-        _entityShadows.Begin();
+        _entityShadows.Begin(level, SkyDarken);
         EntityRenderContext context = new() {
             Client = _client, Level = level, Camera = _camera, Batch = _entityBatch, TranslucentBatch = _translucentBatch, PartialTick = partialTick,
             Flames = Flames, WaterMaskBatch = _waterMaskBatch, AdditiveBatch = _additiveBatch, Lines = _overlay,
@@ -216,7 +221,10 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
         float k = MathF.Tan(_camera.FovDegrees * MathF.PI / 360.0F) / MathF.Tan(_camera.HudFovDegrees * MathF.PI / 360.0F);
         System.Numerics.Matrix4x4.Invert(_camera.View, out System.Numerics.Matrix4x4 inverseView);
         PoseStack pose = new(System.Numerics.Matrix4x4.CreateScale(k, k, 1) * inverseView);
-        int bx = (int)Math.Floor(_camera.Position.X), by = (int)Math.Floor(_camera.Position.Y), bz = (int)Math.Floor(_camera.Position.Z);
+        // The avatar's lightCoords: the player renderer's getPackedLightCoords, at the eyes as they are this frame.
+        int bx = (int)Math.Floor(ClientEntity.Lerp(partialTick, player.OldPosition.X, player.Position.X));
+        int by = (int)Math.Floor(ClientEntity.Lerp(partialTick, player.OldPosition.Y, player.Position.Y) + player.CurrentEyeHeight);
+        int bz = (int)Math.Floor(ClientEntity.Lerp(partialTick, player.OldPosition.Z, player.Position.Z));
         float block = player.IsOnFire ? 15 : level.GetBlockLight(bx, by, bz);
         _itemInHand.SubmitHandsWithItems(partialTick, pose, _handBatch, player, _client, level.GetSkyLight(bx, by, bz), block);
     }
@@ -283,6 +291,7 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
             case "particles_translucent": Particles.Quads.Draw(true); break;
             case "weather": Weather.Draw(); break;
             case "clouds": Clouds.Draw(); break;
+            case "sky": Sky.Draw(); break;
         }
     }
 
@@ -305,6 +314,7 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
         "particles_translucent" => Particles.Quads.IsEmpty(true),
         "weather" => Weather.IsEmpty,
         "clouds" => Clouds.IsEmpty,
+        "sky" => Sky.IsEmpty,
         _ => false
     };
 
@@ -315,6 +325,7 @@ public sealed class WorldScene : IGeometryDrawer, IDisposable {
         _endPortals.Dispose();
         Weather.Dispose();
         Clouds.Dispose();
+        Sky.Dispose();
         CameraOverlays.Dispose();
         ScreenEffects.Dispose();
         _translucentBatch.Dispose();

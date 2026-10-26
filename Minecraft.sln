@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicalClient", "Graphica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientLib.Testing", "ClientLib.Testing\ClientLib.Testing.csproj", "{DC350D24-5E50-4CFF-A38E-8CA1F31201BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphicalClient.Testing", "GraphicalClient.Testing\GraphicalClient.Testing.csproj", "{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -258,6 +260,18 @@ Global
 		{DC350D24-5E50-4CFF-A38E-8CA1F31201BF}.Release|x64.Build.0 = Release|Any CPU
 		{DC350D24-5E50-4CFF-A38E-8CA1F31201BF}.Release|x86.ActiveCfg = Release|Any CPU
 		{DC350D24-5E50-4CFF-A38E-8CA1F31201BF}.Release|x86.Build.0 = Release|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Debug|x64.Build.0 = Debug|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Debug|x86.Build.0 = Debug|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Release|x64.ActiveCfg = Release|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Release|x64.Build.0 = Release|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Release|x86.ActiveCfg = Release|Any CPU
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -280,5 +294,6 @@ Global
 		{162274BF-3AF8-4888-947A-FAAB160C9F65} = {2CB42F12-E813-91B3-7D11-3220E40BEF4A}
 		{2994B07A-FCE6-41F7-886F-C906657286CC} = {2CB42F12-E813-91B3-7D11-3220E40BEF4A}
 		{DC350D24-5E50-4CFF-A38E-8CA1F31201BF} = {2CB42F12-E813-91B3-7D11-3220E40BEF4A}
+		{AE9FFCE9-799C-46E9-B31C-FC187AD1A28A} = {2CB42F12-E813-91B3-7D11-3220E40BEF4A}
 	EndGlobalSection
 EndGlobal

@@ -8,10 +8,12 @@ namespace ManagedServer.Terrain.Structures;
 /// <c>StructureStart</c>: one instance of a structure, at the source chunk that decided it exists.
 /// </summary>
 /// <remarks>
-/// A start is <b>a pure function of the world seed and its source chunk position</b>, which is what
-/// lets the pass recompute one rather than store it. Nothing about a start depends on which chunk is
-/// being generated, so two neighbours replaying the same source chunk build the same start and place
-/// consistent halves of it.
+/// A start's layout is <b>a pure function of the world seed and its source chunk position</b>, which
+/// is what lets the pass recompute one rather than store it. Nothing about a start depends on which
+/// chunk is being generated, so two neighbours replaying the same source chunk build the same start
+/// and place consistent halves of it. The one thing a placement leaves on it is what
+/// <see cref="StructurePiece.SettleOnce"/> decides, and that is drawn as the source chunk would draw
+/// it, so a start laid out again decides the same.
 /// </remarks>
 public sealed class StructureStart(Structure structure, int chunkX, int chunkZ,
     PiecesContainer pieces) {
@@ -43,8 +45,9 @@ public sealed class StructureStart(Structure structure, int chunkX, int chunkZ,
     /// The reference position is the middle of the <b>first</b> piece at its floor, so it is the same
     /// for every chunk the structure spans however few pieces land in any one of them.
     /// </remarks>
+    /// <param name="sourceRandom">What <see cref="StructurePiece.SettleOnce"/> draws from.</param>
     public void PlaceInChunk(IFeatureLevel level, PlacementContext features, RandomSource random,
-        BoundingBox chunkBox, int targetChunkX, int targetChunkZ) {
+        Func<RandomSource> sourceRandom, BoundingBox chunkBox, int targetChunkX, int targetChunkZ) {
 
         if (pieces.Pieces.Count == 0) {
             return;
@@ -59,15 +62,18 @@ public sealed class StructureStart(Structure structure, int chunkX, int chunkZ,
                 continue;
             }
 
-            // A jigsaw piece may hold a feature rather than a template, and the feature pass's own
-            // context is the only thing that can run one. Set here rather than carried on the piece
-            // from layout, because a start is shared by every chunk that replays it and the context
-            // is per chunk.
-            if (piece is PoolElementStructurePiece pool) {
-                pool.Features = features;
-            }
+            piece.SettleOnce(level, sourceRandom);
 
-            piece.PostProcess(level, random, chunkBox, targetChunkX, targetChunkZ, reference);
+            // A jigsaw piece may hold a feature rather than a template, and the feature pass's own
+            // context is the only thing that can run one. Handed over per call rather than stored on
+            // the piece, because a start is shared by every chunk that replays it, several of them at
+            // once, and the context is per chunk.
+            if (piece is PoolElementStructurePiece pool) {
+                pool.PostProcess(level, features, random, chunkBox, targetChunkX, targetChunkZ,
+                    reference);
+            } else {
+                piece.PostProcess(level, random, chunkBox, targetChunkX, targetChunkZ, reference);
+            }
         }
 
         structure.AfterPlace(level, random, chunkBox, targetChunkX, targetChunkZ, pieces);

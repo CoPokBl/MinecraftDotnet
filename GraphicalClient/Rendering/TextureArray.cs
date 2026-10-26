@@ -18,7 +18,12 @@ public sealed class TextureArray : IDisposable {
     public int Size { get; }
     public int Levels { get; }
 
-    public unsafe TextureArray(GL gl, IEnumerable<string> keys, Func<string, TextureImage> images) {
+    /// <param name="levels">
+    /// A texture's mipmap levels at the array's size and level count; null makes every texture's with the default
+    /// settings, as a still texture without a <c>.mcmeta</c> gets them.
+    /// </param>
+    public unsafe TextureArray(GL gl, IEnumerable<string> keys, Func<string, TextureImage> images,
+        Func<string, TextureImage, int, int, TextureImage[]>? levels = null) {
         _gl = gl;
         List<string> ordered = ["missing", .. keys.Where(k => k != "missing").OrderBy(k => k, StringComparer.Ordinal)];
         Count = ordered.Count;
@@ -32,21 +37,23 @@ public sealed class TextureArray : IDisposable {
 
         Handle = gl.GenTexture();
         gl.BindTexture(TextureTarget.Texture2DArray, Handle);
-        int levels = Math.Min(5, (int)Math.Log2(Size) + 1);
-        Levels = levels;
-        gl.TexStorage3D(TextureTarget.Texture2DArray, (uint)levels, SizedInternalFormat.Rgba8, (uint)Size, (uint)Size, (uint)Count);
+        Levels = Math.Min(5, (int)Math.Log2(Size) + 1);
+        gl.TexStorage3D(TextureTarget.Texture2DArray, (uint)Levels, SizedInternalFormat.Rgba8, (uint)Size, (uint)Size, (uint)Count);
         for (int layer = 0; layer < Count; layer++) {
             _layers[ordered[layer]] = layer;
-            byte[] data = loaded[layer].Resized(Size).Rgba;
-            fixed (byte* p = data) {
-                gl.TexSubImage3D(TextureTarget.Texture2DArray, 0, 0, 0, layer, (uint)Size, (uint)Size, 1,
-                    PixelFormat.Rgba, PixelType.UnsignedByte, p);
+            TextureImage[] chain = levels?.Invoke(ordered[layer], loaded[layer], Size, Levels)
+                                   ?? Mipmaps.Generate(loaded[layer].Resized(Size), TextureMipSettings.Default, false, Levels);
+            for (int level = 0; level < Levels; level++) {
+                int size = Math.Max(1, Size >> level);
+                fixed (byte* p = chain[level].Rgba) {
+                    gl.TexSubImage3D(TextureTarget.Texture2DArray, level, 0, 0, layer, (uint)size, (uint)size, 1,
+                        PixelFormat.Rgba, PixelType.UnsignedByte, p);
+                }
             }
         }
-        gl.GenerateMipmap(TextureTarget.Texture2DArray);
         gl.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.NearestMipmapLinear);
         gl.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-        gl.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMaxLevel, levels - 1);
+        gl.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureMaxLevel, Levels - 1);
         gl.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
         gl.TexParameter(TextureTarget.Texture2DArray, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
     }

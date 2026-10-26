@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using ManagedServer.Terrain;
 using Minecraft.Lighting;
@@ -100,6 +101,8 @@ public static class ChunkPipelineQuickBench {
         Report("generate (void baseline)", voidMs, count);
 
         Console.WriteLine();
+        CompareNeighbourReads(registry, viewDistance, count);
+        Console.WriteLine();
 
         // --- everything after generation ---
         CalculatedLightingProvider lighting = new(registry);
@@ -169,6 +172,64 @@ public static class ChunkPipelineQuickBench {
             $"gen2 {GC.CollectionCount(2)}, allocated {GC.GetTotalAllocatedBytes() / 1024.0 / 1024.0:F0} MB.");
     }
 
+    /// <summary>
+    /// The full pass into a host that holds what it generated, as a world does, once with neighbour
+    /// reads served and once refused. Both apply every fork to a loaded chunk, so the difference is
+    /// only the snapshots a decorating chunk takes of its generated neighbours.
+    /// </summary>
+    /// <remarks>
+    /// A fork into a loaded chunk discards its snapshot, so a neighbour can be copied more than once.
+    /// The parallel pair is the server's shape: there the snapshot is taken under the chunk's lock,
+    /// which a fork landing in it from another thread waits on.
+    /// <p/>
+    /// Over 17x17 in order a pass takes about 1000 snapshots, 5ms of copying in all since a snapshot
+    /// shares the chunk's immutable palettes. Reads on is about 1.5% slower across ten paired runs in
+    /// order (9 of 10 slower, 31.0 against 31.5 ms per chunk), so nearly all of it is reading blocks
+    /// through the snapshot and the features answering what they find there, not the copy. The
+    /// parallel pair swings 15% run to run and shows nothing either way.
+    /// </remarks>
+    private static void CompareNeighbourReads(MinecraftRegistry registry, int viewDistance, int count) {
+        foreach (bool parallel in (bool[])[false, true]) {
+            string order = parallel ? "parallel" : "in order";
+
+            foreach (bool reads in (bool[])[false, true]) {
+                GeneratorTerrainProvider provider = VanillaTerrainGenerator
+                    .Overworld(VanillaPack.Source, Seed, registry).WithFeatures().WithStructures().AsProvider();
+                LoadedHost host = new(registry, reads);
+                provider.Attach(host);
+
+                long allocated = GC.GetTotalAllocatedBytes(true);
+                double ms = Time(() => {
+                    List<Vec2<int>> positions = [];
+                    for (int x = -viewDistance; x <= viewDistance; x++) {
+                        for (int z = -viewDistance; z <= viewDistance; z++) {
+                            positions.Add(new Vec2<int>(x, z));
+                        }
+                    }
+
+                    void Generate(Vec2<int> pos) {
+                        ChunkData data = new(WorldHeight) { ChunkX = pos.X, ChunkZ = pos.Y, MinY = MinY };
+                        provider.GetChunk(ref data);
+                        data.MinY = MinY;
+                        data.PackData(registry);
+                        host.Publish(pos, data);
+                    }
+
+                    if (parallel) {
+                        Parallel.ForEach(positions, Generate);
+                    } else {
+                        positions.ForEach(Generate);
+                    }
+                });
+                double allocatedMb = (GC.GetTotalAllocatedBytes(true) - allocated) / 1024.0 / 1024.0;
+
+                Report($"loaded host, {order}, neighbour reads {(reads ? "on" : "off")}", ms, count);
+                Console.WriteLine($"{"",-48} {host.Reads,8} reads  {host.Snapshots,7} snapshots  " +
+                    $"{host.CopyMs,5:F0} ms copying  {allocatedMb,6:F0} MB allocated");
+            }
+        }
+    }
+
     private static double TimeGeneration(ITerrainProvider provider, MinecraftRegistry registry,
         int viewDistance, Dictionary<Vec2<int>, ChunkData>? into) {
 
@@ -229,5 +290,67 @@ public static class ChunkPipelineQuickBench {
         public MinecraftRegistry Registry => registry;
 
         public bool TryApplyToLoadedChunk(Vec2<int> chunk, Action<ChunkData> apply) => false;
+    }
+
+    /// <summary>
+    /// A host holding every chunk it is handed, with a snapshot cached per chunk and discarded by a
+    /// write, as <c>ChunkStore</c> does.
+    /// </summary>
+    private sealed class LoadedHost(MinecraftRegistry registry, bool neighbourReads) : ITerrainHost {
+        private readonly ConcurrentDictionary<Vec2<int>, Loaded> _chunks = new();
+        private int _reads;
+        private int _snapshots;
+        private long _copyTicks;
+
+        public event Action<Vec2<int>>? ChunkAvailable;
+
+        public int MinY => -64;
+        public int MaxY => -64 + WorldHeight;
+        public MinecraftRegistry Registry => registry;
+        public int Reads => _reads;
+        public int Snapshots => _snapshots;
+        public double CopyMs => TimeSpan.FromTicks(Interlocked.Read(ref _copyTicks)).TotalMilliseconds;
+
+        public void Publish(Vec2<int> pos, ChunkData chunk) {
+            _chunks[pos] = new Loaded(chunk);
+            ChunkAvailable?.Invoke(pos);
+        }
+
+        public bool TryApplyToLoadedChunk(Vec2<int> chunk, Action<ChunkData> apply) {
+            if (!_chunks.TryGetValue(chunk, out Loaded? loaded)) {
+                return false;
+            }
+
+            lock (loaded) {
+                apply(loaded.Chunk);
+                loaded.Snapshot = null;
+            }
+
+            return true;
+        }
+
+        public ChunkData? SnapshotLoadedChunk(Vec2<int> chunk) {
+            if (!neighbourReads || !_chunks.TryGetValue(chunk, out Loaded? loaded)) {
+                return null;
+            }
+
+            Interlocked.Increment(ref _reads);
+            lock (loaded) {
+                if (loaded.Snapshot is null) {
+                    long start = Stopwatch.GetTimestamp();
+                    loaded.Snapshot = loaded.Chunk.Snapshot();
+                    loaded.Snapshot.PackData(registry);
+                    Interlocked.Add(ref _copyTicks, Stopwatch.GetElapsedTime(start).Ticks);
+                    Interlocked.Increment(ref _snapshots);
+                }
+
+                return loaded.Snapshot;
+            }
+        }
+
+        private sealed class Loaded(ChunkData chunk) {
+            public readonly ChunkData Chunk = chunk;
+            public ChunkData? Snapshot;
+        }
     }
 }

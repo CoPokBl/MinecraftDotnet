@@ -2,6 +2,7 @@ using System.Numerics;
 using GraphicalClient.Assets;
 using GraphicalClient.Assets.ResourcePacks;
 using Minecraft.Data.Blocks;
+using Minecraft.Data.Generated;
 using Minecraft.Registry;
 using Minecraft.Schemas;
 using Minecraft.Schemas.Shapes;
@@ -33,8 +34,18 @@ public sealed class MeshQuad {
     public bool OnBoundary;
 
     public TintSource Tint;
-    public bool Shade;
+
+    /// <summary>Lit as a plant, from either side: the model shades it as facing up, as a cross's and a vine's planes are.</summary>
+    public bool Plant;
+
+    /// <summary>The element's <c>light_emission</c>, which <c>putBlockBakedQuad</c> raises the quad's light to.</summary>
     public byte Emission;
+
+    /// <summary>The element's <c>shade_direction_override</c>, or -1 to be shaded as <see cref="Direction"/>.</summary>
+    public sbyte ShadeOverride = -1;
+
+    /// <summary>The <see cref="Face"/> <c>getDirectionalBrightness</c> shades the quad as.</summary>
+    public int ShadeDirection => ShadeOverride >= 0 ? ShadeOverride : Direction;
 }
 
 /// <summary>One of a part's weighted alternatives.</summary>
@@ -50,6 +61,20 @@ public sealed class MeshPart {
     public int TotalWeight;
 }
 
+/// <summary>Which <c>skipRendering</c> override a block's class inherits, the nearest up its chain.</summary>
+public enum SkipRendering : byte {
+    None,
+
+    /// <summary><c>HalfTransparentBlock</c> and <c>PowderSnowBlock</c>: hidden against the same block.</summary>
+    SameBlock,
+
+    /// <summary><c>IronBarsBlock</c>: against the same block or other bars, vertically, or where both connect.</summary>
+    Bars,
+
+    /// <summary><c>MangroveRootsBlock</c>: vertically against mangrove roots.</summary>
+    MangroveRoots
+}
+
 /// <summary>Everything the mesher needs about one block state, flattened so a worker thread reads arrays.</summary>
 public sealed class BlockModel {
     public BlockGeometry Geometry;
@@ -61,10 +86,44 @@ public sealed class BlockModel {
     /// <summary>Bit per <see cref="Face"/>: this state's occlusion shape covers that whole face of the cube.</summary>
     public byte OccludesFaces;
 
-    /// <summary><c>getShadeBrightness</c>: 0.2 for a block whose collision shape is a full cube, else 1.</summary>
-    public float AoShade = 1.0F;
+    /// <summary>The occlusion shape's boxes, none for a state that does not occlude.</summary>
+    public ModelBox[] OcclusionBoxes = [];
 
-    public bool Emissive;
+    /// <summary>Bit per <see cref="Face"/> whose <c>getFaceOcclusionShape</c> is <c>Shapes.block()</c>, which hides a neighbour's face outright.</summary>
+    public byte BlockFaces;
+
+    /// <summary>Bit per <see cref="Face"/> whose <c>getFaceOcclusionShape</c> is empty.</summary>
+    public byte EmptyFaces = 0x3F;
+
+    /// <summary><c>getShadeBrightness</c>: how dark the state makes the smooth light corners around it.</summary>
+    public float ShadeBrightness = 1.0F;
+
+    /// <summary><c>isSolidRender</c>.</summary>
+    public bool SolidRender;
+
+    /// <summary><c>isLightPermeable</c>: a smooth light corner may look past it to the diagonal.</summary>
+    public bool LightPermeable = true;
+
+    /// <summary><c>isCollisionShapeFullBlock</c>.</summary>
+    public bool CollisionShapeFullBlock;
+
+    /// <summary><c>emissiveRendering</c>: lit at full brightness whatever the light around it, as magma is.</summary>
+    public bool EmissiveRendering;
+
+    /// <summary><c>isSolid</c>, the legacy solidity a fluid's corner height asks of its neighbours.</summary>
+    public bool Solid;
+
+    /// <summary>A <c>HalfTransparentBlock</c> or <c>LeavesBlock</c>, which water's side shows its overlay sprite against.</summary>
+    public bool Overlay;
+
+    public SkipRendering Skip;
+
+    /// <summary>In the <c>bars</c> block tag.</summary>
+    public bool InBarsTag;
+
+    /// <summary>For <see cref="SkipRendering.Bars"/>: bit per horizontal <see cref="Face"/> whose connection property is true.</summary>
+    public byte Connections;
+
     public TintKind Tint;
     public byte TintFaces;
 
@@ -87,7 +146,7 @@ public sealed class BlockModel {
     public MeshPart[] Parts = [];
     public bool Multipart;
 
-    /// <summary>Light the block gives off; vanilla lights such blocks flat rather than smooth.</summary>
+    /// <summary><c>getLightEmission</c>; <c>tesselateBlock</c> lights a block that gives any off flat rather than smooth.</summary>
     public int LightEmission;
 
     /// <summary>
@@ -145,6 +204,8 @@ public sealed class BlockModels {
     /// <summary><c>ModelBakery.FIRE_1</c>.</summary>
     public static readonly Identifier Fire1 = "minecraft:block/fire_1";
 
+    private static readonly Identifier BarsTag = "minecraft:bars";
+
     /// <summary>Sprites code draws, which go in the array whether or not a block model names them.</summary>
     private static readonly Identifier[] CodeSprites = [Fire0, Fire1];
 
@@ -163,7 +224,8 @@ public sealed class BlockModels {
 
     private static TextureImage MissingImage() => new(1, 1, [0xF8, 0, 0xF8, 0xFF]);
 
-    public BlockModels(MinecraftRegistry registry, IResourceSource source, Func<IEnumerable<string>, Func<string, TextureImage>, TextureArray> buildTextures) {
+    public BlockModels(MinecraftRegistry registry, IResourceSource source,
+        Func<IEnumerable<string>, Func<string, TextureImage>, Func<string, TextureImage, int, int, TextureImage[]>, TextureArray> buildTextures) {
         int count = (int)registry.Blocks.StatesCount;
         _source = source;
         _particles = new string[count];
@@ -204,16 +266,24 @@ public sealed class BlockModels {
             }
             return image;
         }
-        Textures = buildTextures(keys, Image);
+        Dictionary<string, TextureAnimation?> animations = new();
+        TextureAnimation? AnimationOf(string key) =>
+            animations.TryGetValue(key, out TextureAnimation? animation) ? animation : animations[key] = source.Animation(key);
+        // An animated texture shows its first frame until the animator takes over, cut from the strip's own levels.
+        TextureImage[] Levels(string key, TextureImage image, int size, int levels) => AnimationOf(key) is { } animation
+            ? animation.FrameLevels(0, size, levels)
+            : Mipmaps.Generate(image.Resized(size), source.MipSettings(key), ResourcePackSource.IsItemSprite(key), levels);
+        Textures = buildTextures(keys, Image, Levels);
         foreach ((Identifier sprite, string key) in spriteKeys) {
             _sprites[sprite] = (Textures.LayerOf(key), Image(key));
         }
         foreach (string key in keys) {
-            if (source.Animation(key) is { } animation) {
+            if (AnimationOf(key) is { } animation) {
                 Animations.Add((Textures.LayerOf(key), animation));
             }
         }
         Dictionary<(string, int, int, int, int), RenderLayer> transparency = new();
+        HashSet<Identifier> bars = registry.Blocks.Tags.Contains(BarsTag) ? registry.Blocks.Tags[BarsTag].GetValueIds(registry).ToHashSet() : [];
 
         for (uint state = 0; state < count; state++) {
             IBlock block = registry.Blocks.GetByStateId(state);
@@ -221,40 +291,77 @@ public sealed class BlockModels {
             BlockModel model = new() {
                 Geometry = appearance.Geometry,
                 Layer = appearance.Layer,
-                Emissive = appearance.Emissive,
                 Tint = appearance.Tint,
                 TintFaces = appearance.TintFaces,
-                Info = block.Info,
                 BlockKey = BlockKeyOf(blockKeys, block.Identifier.ToString())
             };
             for (int face = 0; face < 6; face++) {
                 string key = appearance.Textures[face];
                 model.TextureLayers[face] = key.Length > 0 ? (ushort)Textures.LayerOf(key) : (ushort)0;
             }
-
-            model.Boxes = BoxesOf(block.BlockShape);
-            model.FullCube = model.Boxes.Length == 1 && IsUnit(model.Boxes[0]);
-            model.HasOffset = block.Info.Offsets(BlockShapeOffsets.Block);
-            if (block.Occludes) {
-                model.OccludesFaces = FullFaces(BoxesOf(block.OcclusionShape));
-            }
-            ModelBox[] collision = BoxesOf(block.CollisionShape);
-            model.AoShade = collision.Length == 1 && IsUnit(collision[0]) ? 0.2F : 1.0F;
-            model.LightEmission = block.LightEmission;
+            ApplyState(model, block, state, bars);
             if (appearance.Model is { } baked) {
                 ConvertModel(model, baked, appearance.Tints ?? [], Image, transparency);
             }
-
-            string path = block.Identifier.Key;
-            if (path == "lava") {
-                model.IsLava = true;
-                model.FluidLevel = IntProperty(block, "level");
-            }
-            else if (path == "water" || (block.Fluid?.Key is "water" or "flowing_water")) {
-                model.HasWater = true;
-                model.FluidLevel = path == "water" ? IntProperty(block, "level") : 0;
-            }
             ByState[state] = model;
+        }
+    }
+
+    /// <summary>What the mesher reads of a state that does not come from the pack: its shapes, the lighter's flags and its fluid.</summary>
+    /// <param name="bars">The <c>bars</c> block tag's members.</param>
+    public static void ApplyState(BlockModel model, IBlock block, uint state, IReadOnlySet<Identifier> bars) {
+        model.Info = block.Info;
+        model.Boxes = BoxesOf(block.BlockShape);
+        model.FullCube = model.Boxes.Length == 1 && IsUnit(model.Boxes[0]);
+        model.HasOffset = block.Info.Offsets(BlockShapeOffsets.Block);
+        if (block.Occludes) {
+            model.OcclusionBoxes = BoxesOf(block.OcclusionShape);
+            model.OccludesFaces = FullFaces(model.OcclusionBoxes);
+        }
+        model.BlockFaces = BlockRenderTable.FullFacesOf(state);
+        model.EmptyFaces = BlockRenderTable.EmptyFacesOf(state);
+        byte render = BlockRenderTable.FlagsOf(state);
+        model.SolidRender = (render & BlockRenderTable.SolidRender) != 0;
+        model.LightPermeable = (render & BlockRenderTable.LightPermeable) != 0;
+        model.CollisionShapeFullBlock = (render & BlockRenderTable.CollisionShapeFullBlock) != 0;
+        model.EmissiveRendering = (render & BlockRenderTable.EmissiveRendering) != 0;
+        model.ShadeBrightness = BlockRenderTable.ShadeBrightnessOf(state);
+        model.Solid = block.Solid;
+        model.Overlay = BlockClasses.Is(block.Identifier, BlockClass.HalfTransparentBlock) || BlockClasses.Is(block.Identifier, BlockClass.LeavesBlock);
+        model.LightEmission = block.LightEmission;
+        model.InBarsTag = bars.Contains(block.Identifier);
+        foreach (BlockClass type in BlockClasses.Of(block.Identifier)) {
+            if (type == BlockClass.HalfTransparentBlock || type == BlockClass.PowderSnowBlock) {
+                model.Skip = SkipRendering.SameBlock;
+            }
+            else if (type == BlockClass.IronBarsBlock) {
+                model.Skip = SkipRendering.Bars;
+            }
+            else if (type == BlockClass.MangroveRootsBlock) {
+                model.Skip = SkipRendering.MangroveRoots;
+            }
+            else if (type != BlockClass.LeavesBlock) {
+                continue;
+            }
+            break;
+        }
+        if (model.Skip == SkipRendering.Bars) {
+            Dictionary<string, string> properties = StateProperties.Of(block);
+            foreach ((string name, Face face) in (ReadOnlySpan<(string, Face)>)[("north", Face.North), ("south", Face.South), ("west", Face.West), ("east", Face.East)]) {
+                if (properties.TryGetValue(name, out string? value) && value == "true") {
+                    model.Connections |= (byte)(1 << (int)face);
+                }
+            }
+        }
+
+        string path = block.Identifier.Key;
+        if (path == "lava") {
+            model.IsLava = true;
+            model.FluidLevel = IntProperty(block, "level");
+        }
+        else if (path == "water" || (block.Fluid?.Key is "water" or "flowing_water")) {
+            model.HasWater = true;
+            model.FluidLevel = path == "water" ? IntProperty(block, "level") : 0;
         }
     }
 
@@ -294,7 +401,7 @@ public sealed class BlockModels {
         TintKind tint = TintKind.None;
         foreach (MeshPart part in model.Parts) {
             foreach (MeshQuad quad in part.Options[0].Quads) {
-                if (!quad.OnBoundary || (set & 1 << quad.Facing) != 0) {
+                if (!quad.OnBoundary || quad.Facing >= 6 || (set & 1 << quad.Facing) != 0) {
                     continue;
                 }
                 set |= (byte)(1 << quad.Facing);
@@ -315,9 +422,11 @@ public sealed class BlockModels {
     }
 
     /// <summary>
-    /// Drops the second of each back to back pair of cutout quads, as a cross model's planes come. Cutout
-    /// is drawn without back face culling, so both would draw in one plane and fight for depth, each with
-    /// its texture mirrored against the other's. The one kept is seen from behind mirrored.
+    /// Drops the second of each back to back pair of cutout plant quads, as a cross model's planes come.
+    /// A plant is drawn from both sides, so both would draw in one plane and fight for depth, each with
+    /// its texture mirrored against the other's. The one kept is seen from behind mirrored, and is filed
+    /// as unaligned so it is not culled with the faces turned away from the camera. Any other pair, leaf
+    /// litter's top and underside, stays two quads that are each drawn from the front only.
     /// </summary>
     private static MeshQuad[] OneSidedCutout(MeshQuad[] quads) {
         List<MeshQuad>? kept = null;
@@ -326,9 +435,12 @@ public sealed class BlockModels {
             bool twin = false;
             for (int j = 0; j < i && !twin; j++) {
                 MeshQuad other = quads[j];
-                twin = quad.Layer == RenderLayer.Cutout && other.Layer == RenderLayer.Cutout && quad.Texture == other.Texture
-                       && quad.Cull == other.Cull && SamePoints(quad.Positions, other.Positions)
+                twin = quad.Layer == RenderLayer.Cutout && other.Layer == RenderLayer.Cutout && quad.Plant && other.Plant
+                       && quad.Texture == other.Texture && quad.Cull == other.Cull && SamePoints(quad.Positions, other.Positions)
                        && Vector3.Dot(Normal(quad.Positions), Normal(other.Positions)) < 0;
+                if (twin) {
+                    other.Facing = SectionMesh.Unaligned;
+                }
             }
             if (twin) {
                 kept ??= quads.Take(i).ToList();
@@ -371,8 +483,9 @@ public sealed class BlockModels {
             Direction = (byte)q.Direction,
             OnBoundary = onBoundary,
             Tint = q.TintIndex >= 0 && q.TintIndex < tints.Length ? tints[q.TintIndex] : new TintSource(TintKind.None),
-            Shade = q.Shade,
-            Emission = (byte)q.LightEmission
+            Plant = q.ShadeDirection == (int)Face.Up,
+            Emission = (byte)q.LightEmission,
+            ShadeOverride = (sbyte)(q.ShadeDirection ?? -1)
         };
     }
 

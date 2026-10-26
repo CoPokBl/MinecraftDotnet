@@ -50,9 +50,11 @@ public class FeatureOrderHarness {
         try (DataOutputStream out = new DataOutputStream(new GZIPOutputStream(
             new BufferedOutputStream(new FileOutputStream(fixture.toFile()))))) {
 
-            out.writeInt(2);
-            write(out, registries, "minecraft:overworld", MultiNoiseBiomeSourceParameterLists.OVERWORLD);
-            write(out, registries, "minecraft:nether", MultiNoiseBiomeSourceParameterLists.NETHER);
+            out.writeInt(3);
+            write(out, registries, "minecraft:overworld", preset(registries, MultiNoiseBiomeSourceParameterLists.OVERWORLD));
+            write(out, registries, "minecraft:nether", preset(registries, MultiNoiseBiomeSourceParameterLists.NETHER));
+            write(out, registries, "minecraft:the_end",
+                net.minecraft.world.level.biome.TheEndBiomeSource.create(registries.lookupOrThrow(Registries.BIOME)));
         }
 
         System.out.println("=== feature order fixture vs " + SharedConstants.getCurrentVersion().name()
@@ -60,14 +62,15 @@ public class FeatureOrderHarness {
         System.out.println(Files.size(fixture) + " bytes written to " + fixture);
     }
 
+    private static BiomeSource preset(RegistryAccess.Frozen registries, ResourceKey<MultiNoiseBiomeSourceParameterList> preset) {
+        return MultiNoiseBiomeSource.createFromPreset(
+            registries.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST).getOrThrow(preset));
+    }
+
     private static void write(DataOutputStream out, RegistryAccess.Frozen registries, String name,
-        ResourceKey<MultiNoiseBiomeSourceParameterList> preset) throws Exception {
+        BiomeSource source) throws Exception {
 
         Registry<PlacedFeature> placed = registries.lookupOrThrow(Registries.PLACED_FEATURE);
-        Holder<MultiNoiseBiomeSourceParameterList> parameters =
-            registries.lookupOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST).getOrThrow(preset);
-
-        BiomeSource source = MultiNoiseBiomeSource.createFromPreset(parameters);
         List<Holder<Biome>> biomes = List.copyOf(source.possibleBiomes());
 
         List<FeatureSorter.StepFeatureData> steps = FeatureSorter.buildFeaturesPerStep(biomes,

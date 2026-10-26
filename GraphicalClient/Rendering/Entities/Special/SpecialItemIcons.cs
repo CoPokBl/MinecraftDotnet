@@ -55,6 +55,6 @@ public sealed class SpecialItemIcons(Func<SpriteId, TextureImage?> images) {
         public readonly List<IconQuad> Quads = [];
 
         public void Quad(ReadOnlySpan<Vector3> corners, ReadOnlySpan<Vector2> uvs, Vector3 normal, ModelDrawState draw) =>
-            Quads.Add(new IconQuad(corners.ToArray(), uvs.ToArray(), sprites.ImageOf(draw.Texture), draw.Argb & 0xFFFFFF, true));
+            Quads.Add(new IconQuad(corners.ToArray(), uvs.ToArray(), sprites.ImageOf(draw.Texture), draw.Argb & 0xFFFFFF));
     }
 }

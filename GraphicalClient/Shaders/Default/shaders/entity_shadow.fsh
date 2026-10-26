@@ -1,50 +1,53 @@
 #include "common.glsl"
 
 flat in vec4 vCentreRadius;
-flat in vec2 vPowerBottom;
+flat in vec3 vPowerBottomBrightness;
 flat in vec4 vShadowUv;
 
-uniform sampler2D sceneDepth;
-uniform sampler2D gNormal;
-uniform sampler2D gLight;
+uniform sampler2D depth;
 
 layout(location = 0) out vec4 fragColour;
 
-// Vanilla's round shadow, laid on whatever ground the opaque pass left inside the box under the entity:
-// the shadow texture spread over twice the radius, as dark as the entity's power less half a level for each
-// block the ground lies below its feet, times how bright that ground is.
+vec3 relativeAt(ivec2 pixel) {
+    float d = texelFetch(depth, pixel, 0).r;
+    vec4 world = inverseViewProjection * vec4((vec2(pixel) + 0.5) * screen.zw * 2.0 - 1.0, d * 2.0 - 1.0, 1.0);
+    return world.xyz / world.w;
+}
+
+// The step to a neighbouring pixel on the same surface: whichever side is nearer in depth, so an edge does not bend
+// the normal of the face it bounds.
+vec3 alongSurface(ivec2 pixel, ivec2 step, vec3 centre) {
+    vec3 forward = relativeAt(pixel + step) - centre;
+    vec3 backward = centre - relativeAt(pixel - step);
+    return dot(forward, forward) < dot(backward, backward) ? forward : backward;
+}
+
+// Vanilla's round shadow: extractShadow lays a quad on the top of each full block under the entity, the shadow texture
+// spread over twice the radius, as dark as the entity's power less half a level for each block the top lies below its
+// feet, times the brightness above it, and rendertype_entity_shadow draws it fogged. Here the tops are found in the
+// depth already drawn: a surface facing up at a whole block's height.
 void main() {
-    vec2 uv = gl_FragCoord.xy * screen.zw;
-    float depth = texture(sceneDepth, uv).r;
-    if (depth >= 1.0) {
+    ivec2 pixel = ivec2(gl_FragCoord.xy);
+    if (texelFetch(depth, pixel, 0).r >= 1.0) {
         discard;
     }
-    vec4 world = inverseViewProjection * vec4(uv * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0);
-    vec3 relative = world.xyz / world.w;
+    vec3 relative = relativeAt(pixel);
     vec3 local = relative - vCentreRadius.xyz;
     float radius = vCentreRadius.w;
-    if (abs(local.x) > radius || abs(local.z) > radius || local.y > 0.02 || relative.y < vPowerBottom.y) {
+    if (abs(local.x) > radius || abs(local.z) > radius || local.y > 0.02 || relative.y < vPowerBottomBrightness.y) {
         discard;
     }
-    vec4 light = texture(gLight, uv);
-    // Entities write an alpha of a half: a shadow falls on the ground, never on a mob.
-    if (light.a < 0.75) {
+    float worldY = relative.y + cameraPosition.y;
+    if (abs(worldY - round(worldY)) > 0.01) {
         discard;
     }
-    float facing = smoothstep(0.5, 0.9, normalize(texture(gNormal, uv).xyz).y);
-    // getMaxLocalRawBrightness, with the day's darkening, and nothing at all at 3 or under.
-    float level = max(light.r * sunDirection.w, light.g) * 15.0;
-    if (level <= 3.0 || facing <= 0.0) {
+    vec3 normal = normalize(cross(alongSurface(pixel, ivec2(1, 0), relative), alongSurface(pixel, ivec2(0, 1), relative)));
+    if (abs(normal.y) < 0.9) {
         discard;
     }
-    // Lightmap.getBrightness: the dimension's curve, lifted by its ambient light.
-    float f = level / 15.0;
-    float brightness = mix(f / (4.0 - 3.0 * f), 1.0, weather.w);
-    float power = vPowerBottom.x - (-local.y) * 0.5;
-    vec2 st = -local.xz / (2.0 * radius) + 0.5;
-    vec4 texel = texture(entityAtlas, mix(vShadowUv.xy, vShadowUv.zw, st));
-    float alpha = clamp(power * 0.5 * brightness, 0.0, 1.0) * texel.a * facing * (1.0 - fogAmount(relative));
-    // Vanilla blends in sRGB; this darkens the linear colour by as much as that darkens what is shown.
-    alpha = 1.0 - pow(1.0 - alpha, 2.2);
-    fragColour = vec4(toLinear(texel.rgb), alpha);
+    float powerAtDepth = vPowerBottomBrightness.x - (-local.y) * 0.5;
+    float alpha = clamp(powerAtDepth * 0.5 * vPowerBottomBrightness.z, 0.0, 1.0);
+    vec2 st = clamp(-local.xz / (2.0 * radius) + 0.5, 0.0, 1.0);
+    vec4 colour = texture(entityAtlas, mix(vShadowUv.xy, vShadowUv.zw, st)) * vec4(1.0, 1.0, 1.0, alpha);
+    fragColour = applyFog(colour, fogSphericalDistance(relative), fogCylindricalDistance(relative));
 }

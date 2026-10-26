@@ -312,11 +312,15 @@ public abstract class EntityRenderer<S> : EntityRenderer where S : EntityRenderS
         state.DisplayFireAnimation = DisplayFireAnimation(entity, context.Client);
         state.OutlineColour = OutlineColourOf(entity, context.Client);
         state.LeashStates = LeashFeatureRenderer.Extract(entity, partialTick, context.Client, context.Level, state.LeashStates);
-        // getPackedLightCoords: the light where the entity's eyes are, full block light while burning.
-        int bx = (int)Math.Floor(state.X), by = (int)Math.Floor(state.Y + state.EyeHeight), bz = (int)Math.Floor(state.Z);
-        state.SkyLight = context.Level.GetSkyLight(bx, by, bz);
-        state.BlockLight = entity.IsOnFire ? 15 : context.Level.GetBlockLight(bx, by, bz);
+        // getPackedLightCoords at getLightProbePosition, the eyes by the current pose, with full block light while burning.
+        LightAt(entity, state, (int)Math.Floor(state.X), (int)Math.Floor(state.Y + entity.CurrentEyeHeight), (int)Math.Floor(state.Z), context.Level);
         NameTags.Extract(entity, state, partialTick, context, NameTagRule);
+    }
+
+    /// <summary><c>getSkyLightLevel</c> and <c>getBlockLightLevel</c> at a probe position, before a renderer's own overrides.</summary>
+    protected static void LightAt(ClientEntity entity, EntityRenderState state, int x, int y, int z, ClientLevel level) {
+        state.SkyLight = level.GetSkyLight(x, y, z);
+        state.BlockLight = entity.IsOnFire ? 15 : level.GetBlockLight(x, y, z);
     }
 
     /// <summary>Whose <c>shouldShowName</c> this renderer has.</summary>

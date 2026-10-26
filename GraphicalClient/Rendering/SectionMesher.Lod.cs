@@ -211,7 +211,7 @@ public sealed partial class SectionMesher {
                 }
             }
         }
-        float sky = brightestSky, block = model.Emissive ? 15 : brightestBlock;
+        int light = Minecraft.Lighting.LightCoords.Of(model.EmissiveRendering, model.LightEmission, Minecraft.Lighting.LightCoords.Pack(brightestBlock, brightestSky));
         uint tint = kind == CellKind.Water
             ? TintOf(snap, TintKind.Water, Math.Clamp((lx0 + lx1) / 2, 0, 15), Math.Clamp((ly0 + ly1) / 2, 0, 15), Math.Clamp((lz0 + lz1) / 2, 0, 15))
             : FaceTint(snap, model, face, x0, y0, z0);
@@ -239,7 +239,7 @@ public sealed partial class SectionMesher {
                     float py = Corners[face, c, 1] == 0 ? 0 : face == 1 ? top : 1;
                     float pz = Corners[face, c, 2];
                     (float u, float v) = Uv(face, px, Corners[face, c, 1], pz);
-                    target.Add(Vertex(bx + px, by + py, bz + pz, u, v, texture, sky, block, 1.0F, face, tint, flags));
+                    target.Add(Vertex(bx + px, by + py, bz + pz, u, v, texture, light, 255, face, face, tint, flags));
                 }
             }
         }

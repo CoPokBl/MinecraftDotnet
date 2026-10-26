@@ -59,11 +59,23 @@ public sealed partial class GameSettings {
     /// <summary>The accessibility option <c>fovEffectScale</c>, 0 to 1: how far speed, flight, a bow and fluids change the field of view.</summary>
     public double FovEffectScale { get; set; } = 1.0;
 
+    /// <summary>
+    /// The accessibility option <c>darknessEffectScale</c>, 0 to 1: how far the darkness effect dims and pulses the
+    /// lightmap. Its slider and <c>options.txt</c> hold the square root, as <c>fovEffectScale</c>'s do.
+    /// </summary>
+    public double DarknessEffectScale { get; set; } = 1.0;
+
+    /// <summary>The video option <c>gamma</c>, shown as Brightness: 0 is Moody, 0.5 the default, 1 Bright.</summary>
+    public double Gamma { get; set; } = 0.5;
+
     /// <summary>The video option <c>particles</c>, which the server is told of too.</summary>
     public ParticleStatus Particles { get; set; } = ParticleStatus.All;
 
     /// <summary>The video option <c>vignette</c>: the darkening at the screen's edges, and the world border's warning tint.</summary>
     public bool Vignette { get; set; } = true;
+
+    /// <summary>The video option <c>ao</c>, Smooth Lighting: blocks whose model asks for it are lit with ambient occlusion.</summary>
+    public bool AmbientOcclusion { get; set; } = true;
 
     /// <summary>The video option <c>entityShadows</c>: the round shadows under entities, and entities throwing shadows at all.</summary>
     public bool EntityShadows { get; set; } = true;
@@ -237,6 +249,9 @@ public sealed partial class GameSettings {
         if (key == "entityShadows") {
             return Bool(value, on => EntityShadows = on);
         }
+        if (key == "ao") {
+            return Bool(value, on => AmbientOcclusion = on);
+        }
         if (key == "vignette") {
             if (bool.TryParse(value, out bool on)) {
                 Vignette = on;
@@ -263,8 +278,23 @@ public sealed partial class GameSettings {
             case "screenEffectScale":
                 ScreenEffectScale = Math.Clamp(number, 0.0, 1.0);
                 return true;
+            // Both are UnitDouble.xmap(square, sqrt): the file holds the slider's position, and one outside the
+            // unit range is skipped, keeping the default.
             case "fovEffectScale":
-                FovEffectScale = Math.Clamp(number, 0.0, 1.0);
+                if (number is >= 0.0 and <= 1.0) {
+                    FovEffectScale = number * number;
+                }
+                return true;
+            case "darknessEffectScale":
+                if (number is >= 0.0 and <= 1.0) {
+                    DarknessEffectScale = number * number;
+                }
+                return true;
+            case "gamma":
+                // UnitDouble's codec: a value outside it is skipped, keeping the default.
+                if (number is >= 0.0 and <= 1.0) {
+                    Gamma = number;
+                }
                 return true;
             case "entityDistanceScaling":
                 // Codec.doubleRange: a value outside it is skipped, keeping the default.
@@ -436,9 +466,12 @@ public sealed partial class GameSettings {
             "glintSpeed:" + GlintSpeed.ToString(CultureInfo.InvariantCulture),
             "glintStrength:" + GlintStrength.ToString(CultureInfo.InvariantCulture),
             "screenEffectScale:" + ScreenEffectScale.ToString(CultureInfo.InvariantCulture),
-            "fovEffectScale:" + FovEffectScale.ToString(CultureInfo.InvariantCulture),
+            "fovEffectScale:" + Math.Sqrt(FovEffectScale).ToString(CultureInfo.InvariantCulture),
+            "darknessEffectScale:" + Math.Sqrt(DarknessEffectScale).ToString(CultureInfo.InvariantCulture),
+            "gamma:" + Gamma.ToString(CultureInfo.InvariantCulture),
             "vignette:" + (Vignette ? "true" : "false"),
             "entityShadows:" + Lower(EntityShadows),
+            "ao:" + Lower(AmbientOcclusion),
             "particles:" + (int)Particles,
             "entityDistanceScaling:" + EntityDistanceScaling.ToString(CultureInfo.InvariantCulture)
         ];

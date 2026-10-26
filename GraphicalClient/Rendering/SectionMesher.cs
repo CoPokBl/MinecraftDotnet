@@ -9,14 +9,18 @@ namespace GraphicalClient.Rendering;
 public struct BlockVertex {
     /// <summary>Section local position plus 16, in 1/1024ths of a block.</summary>
     public ushort X, Y, Z;
+
+    /// <summary>The facing in the low three bits, and above them the shade the colour takes, see <see cref="SectionMesher.ShadeShift"/>.</summary>
     public byte Face;
     public byte Flags;
 
     /// <summary>Texture coordinates in 1/2048ths of the texture, so a merged face can repeat it up to 31 times.</summary>
     public ushort U, V;
     public ushort Layer;
-    /// <summary>Light levels times sixteen, so averaged corners keep their fraction.</summary>
+    /// <summary>Vanilla's UV2, the light levels times sixteen with smooth light's fraction: <c>LightCoords.SmoothSky</c> and <c>SmoothBlock</c>.</summary>
     public byte Sky, Block;
+
+    /// <summary>The tint in red, green and blue, and the ambient occlusion gray in alpha.</summary>
     public uint Colour;
 
     public const int Size = 20;
@@ -55,7 +59,7 @@ public sealed class SectionMesh {
 /// Turns a section snapshot into quads: every block at full detail, or coarse cells for distant terrain.
 /// Holds scratch buffers, so one per worker thread.
 /// </summary>
-public sealed partial class SectionMesher(BlockModels models) {
+public sealed partial class SectionMesher(BlockModel[] models) {
     /// <summary>Set in <see cref="BlockVertex.Flags"/> for the planes plants are drawn with.</summary>
     public const byte PlantFlag = 1;
 
@@ -68,7 +72,21 @@ public sealed partial class SectionMesher(BlockModels models) {
     /// <summary>One whole texture in <see cref="BlockVertex.U"/> and <see cref="BlockVertex.V"/>.</summary>
     public const int UvUnit = 2048;
 
-    private readonly BlockModel[] _models = models.ByState;
+    /// <summary>
+    /// Where the shade sits in <see cref="BlockVertex.Face"/>: a <see cref="Face"/> whose
+    /// <c>CardinalLighting.byFace</c> the colour is scaled by, or one of the two products the fluid
+    /// renderer scales a side by.
+    /// </summary>
+    public const int ShadeShift = 3;
+
+    /// <summary><c>FluidRenderer</c>'s shade for a north or south side: <c>up() * north()</c>.</summary>
+    public const int FluidSideZShade = 6;
+
+    /// <summary><c>FluidRenderer</c>'s shade for a west or east side: <c>up() * west()</c>.</summary>
+    public const int FluidSideXShade = 7;
+
+    private readonly BlockModel[] _models = models;
+    private readonly BlockModelLighter _lighter = new(models);
     private readonly List<BlockVertex>[] _buckets = Enumerable.Range(0, SectionMesh.Buckets).Select(_ => new List<BlockVertex>(512)).ToArray();
     private readonly FaceMerger _merger = new();
     private readonly VisibilityGraph _visibility = new();
@@ -78,6 +96,9 @@ public sealed partial class SectionMesher(BlockModels models) {
 
     /// <summary>The plain water state, whose model carries the water texture.</summary>
     public int WaterState { get; set; }
+
+    /// <summary>The <c>ao</c> option: smooth lighting for the blocks whose model asks for it.</summary>
+    public bool AmbientOcclusion { get; set; } = true;
 
     /// <summary>Where vertex arrays are rented from, or null to allocate each one.</summary>
     internal VertexArrayPool? Pool { get; init; }
@@ -190,26 +211,27 @@ public sealed partial class SectionMesher(BlockModels models) {
     private static uint QuadTint(SectionSnapshot snap, MeshQuad quad, int x, int y, int z) =>
         quad.Tint.Kind == TintKind.None ? quad.Tint.Rgb : TintOf(snap, quad.Tint.Kind, x, y, z);
 
-    /// <param name="occlusion">Ambient occlusion, 1 for none; it travels in the colour's alpha.</param>
+    /// <param name="light">Packed light coords, <see cref="Minecraft.Lighting.LightCoords"/>.</param>
+    /// <param name="occlusion">The ambient occlusion gray, 255 for none; it travels in the colour's alpha.</param>
+    /// <param name="shade">What the colour is shaded as, see <see cref="ShadeShift"/>.</param>
     /// <param name="tint">The biome colour, 0xRRGGBB, in the colour's other three channels.</param>
-    private BlockVertex Vertex(float x, float y, float z, float u, float v, ushort layer, float sky, float block, float occlusion, int face,
+    private BlockVertex Vertex(float x, float y, float z, float u, float v, ushort layer, int light, byte occlusion, int face, int shade,
         uint tint = 0xFFFFFF, byte flags = 0) {
         int r = (int)((tint >> 16) & 0xFF);
         int g = (int)((tint >> 8) & 0xFF);
         int b = (int)(tint & 0xFF);
-        int a = Math.Clamp((int)(occlusion * 255.0F), 0, 255);
         return new BlockVertex {
             X = (ushort)((x + 16.0F) * 1024.0F),
             Y = (ushort)((y + 16.0F) * 1024.0F),
             Z = (ushort)((z + 16.0F) * 1024.0F),
-            Face = (byte)face,
+            Face = (byte)(face | shade << ShadeShift),
             Flags = (byte)(flags | _materialBits),
             U = (ushort)(Math.Clamp(u, 0.0F, 1.0F) * UvUnit),
             V = (ushort)(Math.Clamp(v, 0.0F, 1.0F) * UvUnit),
             Layer = layer,
-            Sky = (byte)Math.Clamp((int)(sky * 16.0F), 0, 240),
-            Block = (byte)Math.Clamp((int)(block * 16.0F), 0, 240),
-            Colour = (uint)(a << 24 | b << 16 | g << 8 | r)
+            Sky = (byte)Minecraft.Lighting.LightCoords.SmoothSky(light),
+            Block = (byte)Minecraft.Lighting.LightCoords.SmoothBlock(light),
+            Colour = (uint)(occlusion << 24 | b << 16 | g << 8 | r)
         };
     }
 }

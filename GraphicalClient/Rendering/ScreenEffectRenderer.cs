@@ -87,7 +87,7 @@ public sealed class ScreenEffectRenderer : IDisposable {
     /// <summary><c>submitWater</c>: the overlay tiles four times across and slides as the view turns.</summary>
     private void SubmitWater(GuiRenderer gui, Matrix4x4 projection, LocalPlayer player, ClientLevel level, int skyDarkening) {
         int x = (int)Math.Floor(player.Position.X), y = (int)Math.Floor(player.Position.Y + player.CurrentEyeHeight), z = (int)Math.Floor(player.Position.Z);
-        float brightness = Lighting.Brightness(level.DimensionType.AmbientLight, level.MaxLocalRawBrightness(x, y, z, skyDarkening));
+        float brightness = ClientLib.World.Lightmap.Brightness(level.DimensionType.AmbientLight, level.MaxLocalRawBrightness(x, y, z, skyDarkening));
         uint channel = (uint)(int)Math.Floor(brightness * 255.0F);
         uint color = (uint)(int)Math.Floor(0.1F * 255.0F) << 24 | channel << 16 | channel << 8 | channel;
         float u0 = -player.YRot / 64.0F;

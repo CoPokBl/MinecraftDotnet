@@ -18,6 +18,6 @@ public sealed class BreezeWindLayer : RenderLayer<BreezeRenderState, BreezeModel
         _model.SetupAnim(state);
         Vector2 offset = new(state.AgeInTicks * 0.02F % 1.0F, 0.0F);
         EntityTexture? tiled = TiledTextures.Get(context.Textures, TextureLocation, ScrollingSink.Tiles, ScrollingSink.Tiles);
-        _model.RenderToBuffer(pose, new ScrollingSink(context.TranslucentBatch, offset, tiled), new ModelDrawState(texture, state) { NoOutline = true });
+        _model.RenderToBuffer(pose, new ScrollingSink(context.TranslucentBatch, offset, tiled), new ModelDrawState(texture, state) { NoOutline = true, Unshaded = true });
     }
 }

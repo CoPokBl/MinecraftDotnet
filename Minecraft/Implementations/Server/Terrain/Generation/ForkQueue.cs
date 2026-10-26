@@ -88,6 +88,28 @@ internal sealed class ForkQueue {
     }
 
     /// <summary>
+    /// Replays what is parked for a chunk without taking it, for a neighbour reading across the border
+    /// before that chunk exists. Returns whether anything was.
+    /// </summary>
+    /// <remarks>
+    /// Under the lock throughout: the overlays are pooled, and the chunk that takes them releases them
+    /// once replayed, which a read outside the lock could overlap.
+    /// </remarks>
+    public bool Peek(Vec2<int> chunk, Action<ForkedSection> read) {
+        lock (_gate) {
+            if (!_parked.TryGetValue(chunk, out List<ForkedSection>? pending)) {
+                return false;
+            }
+
+            foreach (ForkedSection fork in pending) {
+                read(fork);
+            }
+
+            return true;
+        }
+    }
+
+    /// <summary>
     /// Hands over whatever was parked for a chunk that is about to be generated, so it can be written
     /// into the terrain the generator is about to decorate.
     /// </summary>

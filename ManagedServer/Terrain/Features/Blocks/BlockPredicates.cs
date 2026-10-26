@@ -151,12 +151,12 @@ public abstract record BlockPredicate {
     /// <c>HeightRangePredicate</c>: the position's y inside two anchors, both ends included.
     /// </summary>
     /// <remarks>
-    /// The anchors resolve against <c>WorldGenerationContext.of(level)</c>, which for a world generation
-    /// level is the generator's range and sea level; the level's own are the same numbers here.
+    /// The anchors resolve against <c>WorldGenerationContext.of(level)</c>, the generator's range rather
+    /// than the level's.
     /// </remarks>
     public sealed record HeightRange(VerticalAnchor MinInclusive, VerticalAnchor MaxInclusive) : BlockPredicate {
         public override bool Test(IFeatureLevel level, int x, int y, int z) {
-            GenerationHeightContext context = new(level.MinY, level.MaxY - level.MinY, level.SeaLevel);
+            GenerationHeightContext context = level.WorldGeneration;
             int min = MinInclusive.ResolveY(context);
             int max = MaxInclusive.ResolveY(context);
             return y >= min && y <= max;

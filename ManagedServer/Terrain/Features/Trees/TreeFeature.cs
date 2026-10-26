@@ -22,6 +22,7 @@ public sealed record TreeFeature(TreeConfiguration Config) : ConfiguredFeature {
     public static readonly Identifier LogsTag = "minecraft:logs";
     public static readonly Identifier LeavesTag = "minecraft:leaves";
     public static readonly Identifier ReplaceableByTreesTag = "minecraft:replaceable_by_trees";
+    private static readonly Identifier PreventsNearbyLeafDecayTag = "minecraft:prevents_nearby_leaf_decay";
 
     /// <summary>How far a leaf may be from a log before it decays, and so the highest distance stored.</summary>
     private const int MaxLeafDistance = 7;
@@ -155,10 +156,10 @@ public sealed record TreeFeature(TreeConfiguration Config) : ConfiguredFeature {
     /// the smaller number. Roots and decorations are pre-filled into the visited set rather than being
     /// walked from, because they are not logs and must not seed a distance of zero.
     /// <p/>
-    /// Bounded by the tree's own box, so the walk cannot wander into a neighbouring tree. Vanilla then
-    /// calls <c>StructureTemplate.updateShapeAtEdge</c>, which reconciles the surface of that box with
-    /// what is around it. It is not ported and does not need to be: what it does for a leaf is schedule
-    /// a tick, and the tick's answer is the minimum this walk already takes.
+    /// Bounded by the tree's own box, so the walk cannot follow a neighbouring tree out of it. The shape it
+    /// fills then goes to <c>StructureTemplate.updateShapeAtEdge</c>, which reconciles its surface with
+    /// what is around it. What that does for a leaf is schedule a tick, and the tick's answer is the
+    /// minimum this walk already takes.
     /// </remarks>
     private static void UpdateLeaves(IFeatureLevel level, TreeWriter writer) {
         if (!BoundsOf(writer, out Vec3<int> min, out Vec3<int> max)) {
@@ -240,14 +241,21 @@ public sealed record TreeFeature(TreeConfiguration Config) : ConfiguredFeature {
                         continue;
                     }
 
-                    IBlock neighbourState = level.Registry.Blocks
-                        .GetByStateId(level.GetState(neighbour.X, neighbour.Y, neighbour.Z));
+                    uint neighbourId = level.GetState(neighbour.X, neighbour.Y, neighbour.Z);
 
-                    if (neighbourState is not IDistanced existing) {
+                    // LeavesBlock.getOptionalDistanceAt, which answers zero for any log rather than
+                    // only this tree's. A fallen log or another tree's trunk inside the box is walked
+                    // into and filled, so the edge update then reaches what sits on top of it.
+                    int distance;
+                    if (level.Blocks.IsIn(PreventsNearbyLeafDecayTag, neighbourId)) {
+                        distance = 0;
+                    } else if (level.Registry.Blocks.GetByStateId(neighbourId) is IDistanced existing) {
+                        distance = existing.Distance;
+                    } else {
                         continue;
                     }
 
-                    int newDistance = Math.Min(existing.Distance, smallest + 1);
+                    int newDistance = Math.Min(distance, smallest + 1);
                     if (newDistance < MaxLeafDistance) {
                         byDistance[newDistance].Add(neighbour);
 

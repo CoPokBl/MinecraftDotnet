@@ -3,8 +3,10 @@ using System.Text;
 using ClientLib.Network;
 using ClientLib.World;
 using Minecraft;
+using Minecraft.Data.Components.Types;
 using Minecraft.Data.Entities;
 using Minecraft.Data.Generated;
+using Minecraft.Data.Items;
 using Minecraft.Implementations.Client;
 using Minecraft.Packets;
 using Minecraft.Packets.Config.ClientBound;
@@ -17,6 +19,8 @@ using Minecraft.Packets.Play.ServerBound;
 using Minecraft.Registry;
 using Minecraft.Registry.Templates;
 using Minecraft.Schemas;
+using Minecraft.Schemas.Items;
+using Minecraft.Schemas.Tags;
 using Minecraft.Text;
 
 namespace ClientLib;
@@ -107,6 +111,25 @@ public sealed partial class MinecraftClient {
 
     internal bool InEntityTypeTag(IEntityType type, Identifier tag) =>
         TagMembers(EntityTypeRegistry, tag) is { } members && Array.IndexOf(members, Registry.EntityTypes.GetProtocolId(type)) >= 0;
+
+    internal bool InItemSet(IdSet set, IItem item) {
+        int id = Registry.Items.GetProtocolId(item);
+        return set switch {
+            IdSet.Ids ids => Array.IndexOf(ids.Values, id) >= 0,
+            IdSet.Tag tag => TagMembers("minecraft:item", tag.TagName) is { } members && Array.IndexOf(members, id) >= 0,
+            _ => false
+        };
+    }
+
+    internal bool InItemTag(ItemStack stack, Identifier tag) => !stack.IsAir() && InItemSet(new IdSet.Tag(tag), stack.Type);
+
+    /// <summary><c>Equippable.canBeEquippedBy</c>.</summary>
+    internal bool CanBeEquippedBy(EquippableComponent.Data equippable, IEntityType type) => equippable.AllowedEntities switch {
+        null => true,
+        IdSet.Ids ids => Array.IndexOf(ids.Values, Registry.EntityTypes.GetProtocolId(type)) >= 0,
+        IdSet.Tag tag => InEntityTypeTag(type, tag.TagName),
+        _ => false
+    };
 
     private static readonly Identifier EntityTypeRegistry = "minecraft:entity_type";
 

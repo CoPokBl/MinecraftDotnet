@@ -46,6 +46,10 @@ internal sealed class WorldTerrainHost(World world, ChunkStore chunks) : ITerrai
         return true;
     }
 
+    public ChunkData? SnapshotLoadedChunk(Vec2<int> chunk) {
+        return chunks.SnapshotFor(chunk, out _);
+    }
+
     public void NotifyChunkChanged(Vec2<int> chunk) {
         world.ResendChunk(chunk);
     }

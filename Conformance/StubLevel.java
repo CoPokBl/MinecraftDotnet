@@ -42,6 +42,14 @@ import net.minecraft.world.level.material.FluidState;
  */
 public final class StubLevel implements WorldGenLevel {
 
+    /**
+     * Whether the scenes are the nether's or the end's, from {@code PARITY_DIMENSION}. It decides the
+     * dimension type, the sea level and the sky light, which is all of the dimension a feature reads.
+     */
+    public static final boolean NETHER = "nether".equals(System.getenv("PARITY_DIMENSION"));
+
+    public static final boolean END = "end".equals(System.getenv("PARITY_DIMENSION"));
+
     private final ParityScene scene;
     private final RegistryAccess.Frozen registries;
     private final List<BlockState> palette = new ArrayList<>();
@@ -426,7 +434,10 @@ public final class StubLevel implements WorldGenLevel {
 
     @Override
     public net.minecraft.world.level.dimension.DimensionType dimensionType() {
-        throw new UnsupportedOperationException("dimensionType");
+        return registryAccess().lookupOrThrow(Registries.DIMENSION_TYPE)
+            .getOrThrow(NETHER ? net.minecraft.world.level.dimension.BuiltinDimensionTypes.NETHER
+                : END ? net.minecraft.world.level.dimension.BuiltinDimensionTypes.END
+                : net.minecraft.world.level.dimension.BuiltinDimensionTypes.OVERWORLD).value();
     }
 
     /**
@@ -440,8 +451,16 @@ public final class StubLevel implements WorldGenLevel {
 
     @Override
     public net.minecraft.world.attribute.EnvironmentAttributeReader environmentAttributes() {
-        throw new UnsupportedOperationException("environmentAttributes");
+        // WorldGenRegion's own: the dimension's and the biomes' layers, with no time or weather.
+        if (environment == null) {
+            environment = net.minecraft.world.attribute.EnvironmentAttributeSystem.builder()
+                .addStaticLayers(this).build();
+        }
+
+        return environment;
     }
+
+    private net.minecraft.world.attribute.EnvironmentAttributeSystem environment;
 
     @Override
     public void gameEvent(net.minecraft.core.Holder<net.minecraft.world.level.gameevent.GameEvent> p0, net.minecraft.world.phys.Vec3 p1, net.minecraft.world.level.gameevent.GameEvent.Context p2) {
@@ -511,9 +530,63 @@ public final class StubLevel implements WorldGenLevel {
         return new BlockPos(p1.getX(), getHeight(p0, p1.getX(), p1.getZ()), p1.getZ());
     }
 
+    /** The generator the harness decorates with, which is all {@link #getLevel} can answer for. */
+    public static net.minecraft.world.level.chunk.ChunkGenerator generator;
+
+    private static net.minecraft.server.level.ServerLevel generatorOnly;
+
+    /**
+     * A {@code ServerLevel} with nothing on it but the way to its chunk generator.
+     * <p>
+     * {@code WorldGenerationContext(WorldGenLevel)} reads {@code getLevel().getChunkSource().getGenerator()},
+     * and a {@code height_range} block predicate builds one per test, which is every basalt column in
+     * the nether. Allocated without running a constructor, so it is handed to that caller alone: any
+     * other one reaching for the level wants something it does not have, as a processor reading the
+     * world seed does, and is refused the way it always was.
+     */
     @Override
     public net.minecraft.server.level.ServerLevel getLevel() {
-        throw new UnsupportedOperationException("getLevel");
+        boolean forContext = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
+            .walk(frames -> frames.skip(1).findFirst()
+                .map(frame -> frame.getDeclaringClass() == net.minecraft.world.level.levelgen.WorldGenerationContext.class)
+                .orElse(false));
+
+        if (generator == null || !forContext) {
+            throw new UnsupportedOperationException("getLevel");
+        }
+
+        if (generatorOnly == null) {
+            try {
+                java.lang.reflect.Field theUnsafe = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
+                theUnsafe.setAccessible(true);
+                sun.misc.Unsafe unsafe = (sun.misc.Unsafe) theUnsafe.get(null);
+
+                net.minecraft.server.level.ChunkMap map = (net.minecraft.server.level.ChunkMap)
+                    unsafe.allocateInstance(net.minecraft.server.level.ChunkMap.class);
+                set(map, net.minecraft.server.level.ChunkMap.class, "worldGenContext",
+                    new net.minecraft.world.level.chunk.status.WorldGenContext(null, generator, null, null, null, null));
+
+                net.minecraft.server.level.ServerChunkCache cache = (net.minecraft.server.level.ServerChunkCache)
+                    unsafe.allocateInstance(net.minecraft.server.level.ServerChunkCache.class);
+                set(cache, net.minecraft.server.level.ServerChunkCache.class, "chunkMap", map);
+
+                net.minecraft.server.level.ServerLevel level = (net.minecraft.server.level.ServerLevel)
+                    unsafe.allocateInstance(net.minecraft.server.level.ServerLevel.class);
+                set(level, net.minecraft.server.level.ServerLevel.class, "chunkSource", cache);
+
+                generatorOnly = level;
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
+        return generatorOnly;
+    }
+
+    private static void set(Object on, Class<?> type, String name, Object value) throws ReflectiveOperationException {
+        java.lang.reflect.Field field = type.getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(on, value);
     }
 
     @Override
@@ -539,15 +612,18 @@ public final class StubLevel implements WorldGenLevel {
      * <b>So a crop placed by a structure survives its own {@code updateShape}, and answering zero here
      * kills it.</b> That is not the port erring permissive: a mansion's farm room really does keep its
      * wheat, because the light that would refuse it is not computed until the pass is over.
+     * <p>
+     * The nether has no sky layer at all, so the engine asks the dummy listener and gets 0. The end's
+     * dimension type has one.
      */
     @Override
     public int getBrightness(net.minecraft.world.level.LightLayer layer, net.minecraft.core.BlockPos pos) {
-        return layer == net.minecraft.world.level.LightLayer.SKY ? 15 : 0;
+        return layer == net.minecraft.world.level.LightLayer.SKY && !NETHER ? 15 : 0;
     }
 
     @Override
     public int getRawBrightness(net.minecraft.core.BlockPos pos, int skyDarken) {
-        return Math.max(0, 15 - skyDarken);
+        return NETHER ? 0 : Math.max(0, 15 - skyDarken);
     }
 
     @Override
@@ -560,7 +636,7 @@ public final class StubLevel implements WorldGenLevel {
 
     @Override
     public int getSeaLevel() {
-        return 63;
+        return NETHER ? 32 : END ? 0 : 63;
     }
 
     @Override

@@ -44,6 +44,15 @@ public sealed class BlockModelRenderer {
             entry = (_pack.BlockModel(state), BlockTints.For(state));
             _models[state] = entry;
         }
+        // BlockModelResolver's blockLightCoords, which the model is drawn at the brighter of: full for an emissive
+        // rendering block, else the block's own emission. Magma is the one block that always renders emissive; an
+        // active sculk sensor does too and is drawn at its emission here.
+        if (state.StateId == Minecraft.Data.Generated.Block.MagmaBlock.StateId) {
+            (skyLight, blockLight) = (15, 15);
+        }
+        else {
+            blockLight = Math.Max(blockLight, state.LightEmission);
+        }
         return entry.Model is { } model && Draw(model, entry.Tints, pose, sink, skyLight, blockLight, argb, whiteOverlay);
     }
 
@@ -80,8 +89,10 @@ public sealed class BlockModelRenderer {
                     corners[i] = Vector3.Transform(quad.Positions[i], matrix);
                 }
                 uint colour = Argb.Multiply(argb, 0xFF000000 | tint);
+                // LightCoordsUtil.lightCoordsWithEmission: a quad's own emission raises both channels.
+                float sky = quad.LightEmission > 0 ? Math.Max(skyLight, quad.LightEmission) : skyLight;
                 float block = quad.LightEmission > 0 ? Math.Max(blockLight, quad.LightEmission) : blockLight;
-                sink.Quad(corners, quad.Uvs, pose.TransformNormal(Directions.Normals[quad.Direction]), new ModelDrawState(texture, colour, skyLight, block, 0, whiteOverlay));
+                sink.Quad(corners, quad.Uvs, pose.TransformNormal(Directions.Normals[quad.Direction]), new ModelDrawState(texture, colour, sky, block, 0, whiteOverlay));
             }
         }
         return true;

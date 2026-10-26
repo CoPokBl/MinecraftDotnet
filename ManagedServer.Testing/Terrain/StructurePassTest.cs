@@ -200,7 +200,8 @@ public class StructurePassTest {
         BoundingBox chunkBox = new(box.MinX, level.MinY, box.MinZ, box.MinX + 15, level.MaxY,
             box.MinZ + 15);
 
-        start.PlaceInChunk(level, FlatFeatures(level), new LegacyRandomSource(Seed), chunkBox,
+        start.PlaceInChunk(level, FlatFeatures(level), new LegacyRandomSource(Seed),
+            () => new LegacyRandomSource(Seed), chunkBox,
             box.MinX >> 4, box.MinZ >> 4);
 
         Assert.That(level.Written, Is.Not.Empty, $"{id} placed no blocks at all");
@@ -260,7 +261,8 @@ public class StructurePassTest {
             BoundingBox chunkBox = new(chunk.X << 4, level.MinY, chunk.Y << 4,
                 (chunk.X << 4) + 15, level.MaxY, (chunk.Y << 4) + 15);
 
-            start.PlaceInChunk(level, FlatFeatures(level), new LegacyRandomSource(Seed), chunkBox,
+            start.PlaceInChunk(level, FlatFeatures(level), new LegacyRandomSource(Seed),
+                () => new LegacyRandomSource(Seed), chunkBox,
                 chunk.X, chunk.Y);
 
             heights.Add(start.Pieces
@@ -367,6 +369,7 @@ public class StructurePassTest {
                         (chunkX << 4) + 15, level.MaxY, (chunkZ << 4) + 15);
 
                     start.PlaceInChunk(level, FlatFeatures(level), new LegacyRandomSource(Seed),
+                        () => new LegacyRandomSource(Seed),
                         chunkBox, chunkX, chunkZ);
                 }
             }
@@ -457,7 +460,8 @@ public class StructurePassTest {
         BoundingBox chunkBox = new(room.MinX, level.MinY, room.MinZ, room.MinX + 15, level.MaxY,
             room.MinZ + 15);
 
-        start.PlaceInChunk(level, FlatFeatures(level), new LegacyRandomSource(Seed), chunkBox,
+        start.PlaceInChunk(level, FlatFeatures(level), new LegacyRandomSource(Seed),
+            () => new LegacyRandomSource(Seed), chunkBox,
             room.MinX >> 4, room.MinZ >> 4);
 
         Assert.That(level.Written, Is.Not.Empty, $"{id} placed no blocks at all");

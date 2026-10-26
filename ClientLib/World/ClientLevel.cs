@@ -105,6 +105,15 @@ public sealed class ClientLevel {
     public ClientLight Light => _light ??= new ClientLight(this);
     private ClientLight? _light;
 
+    public ClientEnvironment Environment => _environment ??= new ClientEnvironment(this);
+    private ClientEnvironment? _environment;
+
+    /// <summary>A timeline tag's entries as protocol ids, which a dimension type's <c>timelines</c> may name.</summary>
+    public Func<Identifier, int[]?>? TimelineTag { get; set; }
+
+    /// <summary><c>Level.getSkyDarken</c>.</summary>
+    public int SkyDarken => Environment.SkyDarken;
+
     /// <summary><c>ClientLevel.tickTime</c>.</summary>
     public void TickTime() {
         GameTime++;
